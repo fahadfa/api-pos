@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var SyncService_1 = require("./sync/SyncService");
-new SyncService_1.SyncService();
+//new SyncService();
 var AutoUpdater = require("auto-updater");
 var autoupdater = new AutoUpdater({
     pathToJson: "",
@@ -67,8 +66,8 @@ autoupdater.on("error", function (data, e) {
     console.error(data, e);
 });
 // Start checking
-if (process.env.ENV_STORE_ID) {
-    setInterval(function () {
-        autoupdater.fire("check");
-    }, 120000);
-}
+//if (process.env.ENV_STORE_ID) {
+setInterval(function () {
+    autoupdater.fire("check");
+}, 60000);
+//}
