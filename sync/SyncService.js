@@ -38,7 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var SyncDMLService_1 = require("./SyncDMLService");
 var SyncDDLService_1 = require("./SyncDDLService");
 var App_1 = require("../utils/App");
-var checkInternetConnected = require("check-internet-connected");
+var isOnline = require("is-online");
 var stagingId = "STAGING";
 var storeId = process.env.ENV_STORE_ID || "LOCAL-TEST";
 var SyncService = /** @class */ (function () {
@@ -52,38 +52,39 @@ var SyncService = /** @class */ (function () {
     }
     SyncService.prototype.init = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
             return __generator(this, function (_a) {
-                App_1.App.Sleep(2000);
-                checkInternetConnected()
-                    .then(function (result) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0:
-                                App_1.App.Sleep(2000);
-                                console.log("\n\n(((((((((( SYNC START ))))))))))\n\n");
-                                return [4 /*yield*/, this.syncDDLService.execute()];
-                            case 1:
-                                _a.sent();
-                                return [4 /*yield*/, this.syncDMLService.execute()];
-                            case 2:
-                                _a.sent();
-                                console.log("\n\n(((((((((( SYNC CLOSE ))))))))))\n\n");
-                                App_1.App.Sleep(2000);
-                                return [2 /*return*/];
-                        }
-                    });
-                }); })
-                    .catch(function (ex) {
-                    App_1.App.Sleep(2000);
-                    console.log("\n\n(((((((((( No Internet connection ))))))))))"); // cannot connect to a server or error occurred.
-                });
-                App_1.App.Sleep(4000);
-                console.log("888888888888888888888888888888888888888888888888");
-                App_1.App.Sleep(4000);
-                console.log("888888888888888888888888888888888888888888888888");
-                this.init();
-                return [2 /*return*/];
+                switch (_a.label) {
+                    case 0:
+                        App_1.App.Sleep(2000);
+                        return [4 /*yield*/, isOnline()];
+                    case 1:
+                        if (!_a.sent()) return [3 /*break*/, 4];
+                        App_1.App.Sleep(2000);
+                        console.log("\n\n(((((((((( SYNC START ))))))))))\n\n");
+                        return [4 /*yield*/, this.syncDDLService.execute()];
+                    case 2:
+                        _a.sent();
+                        App_1.App.Sleep(2000);
+                        return [4 /*yield*/, this.syncDMLService.execute()];
+                    case 3:
+                        _a.sent();
+                        console.log("\n\n(((((((((( SYNC CLOSE ))))))))))\n\n");
+                        App_1.App.Sleep(2000);
+                        return [3 /*break*/, 5];
+                    case 4:
+                        App_1.App.Sleep(2000);
+                        console.log("\n\n(((((((((( No Internet connection ))))))))))");
+                        _a.label = 5;
+                    case 5:
+                        App_1.App.Sleep(2000);
+                        console.log("888888888888888888888888888888888888888888888888");
+                        App_1.App.Sleep(2000);
+                        console.log("888888888888888888888888888888888888888888888888");
+                        return [4 /*yield*/, this.init()];
+                    case 6:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
             });
         });
     };

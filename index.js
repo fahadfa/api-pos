@@ -96,10 +96,12 @@ var run = function () { return __awaiter(_this, void 0, void 0, function () {
     });
 }); };
 run();
-var fs = require('fs');
+var fs = require("fs");
 var syncFile = __dirname + "/sync.ts";
-syncFile = fs.existsSync(syncFile) ? __dirname + "/sync.ts" : __dirname + "/sync.js";
-var child_process = require('child_process');
+syncFile = fs.existsSync(syncFile)
+    ? __dirname + "/sync.ts"
+    : __dirname + "/sync.js";
+var child_process = require("child_process");
 child_process.fork(syncFile);
 process.on("uncaughtException", function (err) {
     Log_1.log.error("Caught exception: " + err);

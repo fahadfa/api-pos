@@ -148,11 +148,6 @@ exports.setEnvConfig = function() {
       exports.dbOptions.username = envData.dbUser;
       exports.dbOptions.password = envData.dbPassword;
       exports.dbOptions.database = envData.dbDatabase;
-      exports.stageDbOptions.host = envData.dbHost;
-      exports.stageDbOptions.port = envData.dbPort;
-      exports.stageDbOptions.username = envData.dbUser;
-      exports.stageDbOptions.password = envData.dbPassword;
-      exports.stageDbOptions.database = envData.dbDatabase;
     }
     if (envData.mailHost) {
       exports.mailOptions.host = envData.mailHost;
@@ -161,4 +156,5 @@ exports.setEnvConfig = function() {
       exports.mailOptions.pass = envData.mailPassword;
     }
   }
+  console.log(exports.dbOptions);
 };
