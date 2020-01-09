@@ -12,6 +12,18 @@ require("reflect-metadata");
 // password: "mpos!234",
 // database: "mpos_db",
 // ============= LOCAL DATABASE ============
+// export let dbOptions: any = {
+//   name: "default",
+//   type: "postgres",
+//   host: "localhost",
+//   port: 5432,
+//   username: "postgres",
+//   password: "Test!234",
+//   database: "jps_prod",
+//   logging: true,
+//   synchronize: false,
+//   entities: [__dirname + "/../entities/**/*{.ts,.js}"]
+// };
 exports.dbOptions = {
     name: "default",
     type: "postgres",
@@ -89,18 +101,6 @@ exports.localDbOptions = {
 //     entities: [__dirname + "/../entities/**/*{.ts,.js}"]
 // };
 //======= PREPROD FOR KEY USERS DATABASE ======
-//   export let dbOptions: any = {
-//     name: "default",
-//     type: "postgres",
-//     host: "mposdb-preprod.cw34ebrphxxg.eu-central-1.rds.amazonaws.com",
-//     port: 5432,
-//     username: "mposdb",
-//     password: "mdbmpfpp",
-//     database: "jpos_qa",
-//     logging: true,
-//     synchronize: false,
-//     entities: [__dirname + "/../entities/**/*{.ts,.js}"]
-// };
 // export let dbOptions: any = {
 //     name: "default",
 //     type: "postgres",

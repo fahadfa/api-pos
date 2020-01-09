@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-//new SyncService();
+var SyncService_1 = require("./sync/SyncService");
+new SyncService_1.SyncService();
 var AutoUpdater = require("auto-updater");
 var autoupdater = new AutoUpdater({
     pathToJson: "",
@@ -50,10 +51,10 @@ autoupdater.on("download.start", function (data) {
     console.log("Starting downloading: " + data);
 });
 autoupdater.on("download.progress", function (name, perc) {
-    process.stdout.write("Downloading " + perc + "% ");
+    process.stdout.write("Downloading " + perc + "%\r\n");
 });
 autoupdater.on("download.end", function (data) {
-    console.log("Downloaded " + name);
+    console.log("Downloaded " + data);
 });
 autoupdater.on("download.error", function (err) {
     console.error("Error when downloading: " + err);
@@ -65,9 +66,11 @@ autoupdater.on("end", function () {
 autoupdater.on("error", function (data, e) {
     console.error(data, e);
 });
-// Start checking
-//if (process.env.ENV_STORE_ID) {
 setInterval(function () {
-    autoupdater.fire("check");
+    try {
+        autoupdater.fire("check");
+    }
+    catch (error) {
+        console.error("******* Error on Downlooad **********");
+    }
 }, 60000);
-//}

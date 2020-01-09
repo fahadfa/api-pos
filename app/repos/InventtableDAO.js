@@ -46,18 +46,24 @@ var InventtableDAO = /** @class */ (function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.dao
-                            .createQueryBuilder("Inventtable")
-                            .leftJoinAndSelect("Inventtable.product", "inventtable")
-                            .where("Inventtable.code IN (:...names)", { names: items })
-                            .orderBy("Inventtable.nameEn", "ASC")
-                            .getMany()];
+                    case 0:
+                        if (!(items.length > 0)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.dao
+                                .createQueryBuilder("Inventtable")
+                                .leftJoinAndSelect("Inventtable.product", "inventtable")
+                                .where("Inventtable.code IN (:...names)", { names: items })
+                                .orderBy("Inventtable.nameEn", "ASC")
+                                .getMany()];
                     case 1:
                         result = _a.sent();
                         result.map(function (v) {
                             v.product = v.product ? v.product : {};
                         });
-                        return [2 /*return*/, result];
+                        return [3 /*break*/, 3];
+                    case 2:
+                        result = [];
+                        _a.label = 3;
+                    case 3: return [2 /*return*/, result];
                 }
             });
         });

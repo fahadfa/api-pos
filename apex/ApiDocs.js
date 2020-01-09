@@ -22,7 +22,7 @@ var APIDocs = /** @class */ (function () {
         return "" + (needProtype ? "http://" : "") + req.headers.host;
     };
     APIDocs.prototype.apiDocsConfig = function (host) {
-        var apiList = APIDocs.getAllRoutes(path.join(__dirname, "./../../spec"), []);
+        var apiList = APIDocs.getAllRoutes(path.join(__dirname, "./../assets/spec"), []);
         var spec = swaggerJSDoc({
             swaggerDefinition: {
                 info: {

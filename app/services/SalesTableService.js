@@ -170,7 +170,7 @@ var SalesTableService = /** @class */ (function () {
                         baseSizeBatchesList_1 = _d.sent();
                         if (data.transkind == "SALESORDER" || data.transkind == "TRANSFERORDER") {
                             salesLine.map(function (item) {
-                                item.batches = baseSizeBatchesList_1.filter(function (v) { return v.itemid == item.itemid && v.configid == item.configId && v.inventsizeid == item.inventsizeid; });
+                                item.batches = baseSizeBatchesList_1.filter(function (v) { return v.itemid == item.itemid && v.configid == item.configId && v.inventsizeid == item.inventsizeid && v.saleslineid == item.id; });
                             });
                         }
                         if (type == "mobile") {

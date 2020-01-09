@@ -45,14 +45,17 @@ var ConfigtableDAO = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.dao
-                            .createQueryBuilder("Configtable")
-                            //  .leftJoinAndSelect("Configtable.product", "inventtable")
-                            .where("Configtable.code IN (:...names)", { names: items })
-                            .andWhere("Configtable.itemid = '" + data.itemid + "'")
-                            .orderBy("Configtable.nameEnglish", "ASC")
-                            .getMany()];
+                    case 0:
+                        if (!(items.length > 0)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.dao
+                                .createQueryBuilder("Configtable")
+                                //  .leftJoinAndSelect("Configtable.product", "inventtable")
+                                .where("Configtable.code IN (:...names)", { names: items })
+                                .andWhere("Configtable.itemid = '" + data.itemid + "'")
+                                .orderBy("Configtable.nameEnglish", "ASC")
+                                .getMany()];
                     case 1: return [2 /*return*/, _a.sent()];
+                    case 2: return [2 /*return*/, []];
                 }
             });
         });
