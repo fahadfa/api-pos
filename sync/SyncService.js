@@ -38,7 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var SyncDMLService_1 = require("./SyncDMLService");
 var SyncDDLService_1 = require("./SyncDDLService");
 var App_1 = require("../utils/App");
-var isOnline = require("is-online");
+var dns = require("dns").promises;
 var stagingId = "STAGING";
 var storeId = process.env.ENV_STORE_ID || "LOCAL-TEST";
 var SyncService = /** @class */ (function () {
@@ -56,7 +56,7 @@ var SyncService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         App_1.App.Sleep(2000);
-                        return [4 /*yield*/, isOnline()];
+                        return [4 /*yield*/, this.checkInternet()];
                     case 1:
                         if (!_a.sent()) return [3 /*break*/, 4];
                         App_1.App.Sleep(2000);
@@ -85,6 +85,16 @@ var SyncService = /** @class */ (function () {
                         _a.sent();
                         return [2 /*return*/];
                 }
+            });
+        });
+    };
+    SyncService.prototype.checkInternet = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, dns
+                        .lookup("google.com")
+                        .then(function () { return true; })
+                        .catch(function () { return false; })];
             });
         });
     };
