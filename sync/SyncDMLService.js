@@ -53,7 +53,11 @@ var SyncDMLService = /** @class */ (function () {
                         console.log("###########################################");
                         console.log("###########################################");
                         // App.Sleep(2000);
-                        console.log("!!!!!!!!!!!!!!!!!!!! " + STORE_ID + " - " + new Date().toISOString() + "!!!!!!!!!!!!!!!!!!!!");
+                        console.log("!!!!!!!!!!!!!!!!!!!! " +
+                            STORE_ID +
+                            " - " +
+                            new Date().toISOString() +
+                            "!!!!!!!!!!!!!!!!!!!!");
                         currentTime = new Date();
                         _a.label = 1;
                     case 1:
@@ -66,7 +70,7 @@ var SyncDMLService = /** @class */ (function () {
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(stageDbConfig, sql)];
                     case 2:
                         syncResults = _a.sent();
-                        syncResults = syncResults.rows;
+                        syncResults = syncResults ? syncResults.rows : [];
                         syncResults = syncResults.length > 0 ? syncResults[0] : null;
                         console.table(syncResults);
                         if (!syncResults)
