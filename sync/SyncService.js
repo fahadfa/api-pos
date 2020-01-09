@@ -91,10 +91,11 @@ var SyncService = /** @class */ (function () {
     SyncService.prototype.checkInternet = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, dns
-                        .lookup("google.com")
-                        .then(function () { return true; })
-                        .catch(function () { return false; })];
+                // return dns
+                //   .lookup("google.com")
+                //   .then(() => true)
+                //   .catch(() => false);
+                return [2 /*return*/, Promise.resolve(true)];
             });
         });
     };
