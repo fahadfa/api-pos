@@ -1,29 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
-// host: "qa-jazsales.cuy19ulnh0kz.us-east-1.rds.amazonaws.com",
-// port: 5432,
-// username: "jazsales",
-// password: "Evoke1234",
-// database: "jazsalesqa",
-// host: "localhost",
-// port: 5432,
-// username: "mpos_user",
-// password: "mpos!234",
-// database: "mpos_db",
-// ============= LOCAL DATABASE ============
-// export let dbOptions: any = {
-//   name: "default",
-//   type: "postgres",
-//   host: "localhost",
-//   port: 5432,
-//   username: "postgres",
-//   password: "Test!234",
-//   database: "jps_prod",
-//   logging: true,
-//   synchronize: false,
-//   entities: [__dirname + "/../entities/**/*{.ts,.js}"]
-// };
 exports.dbOptions = {
   name: "default",
   type: "postgres",
@@ -124,7 +101,7 @@ exports.mailOptions = {
 exports.logOptions = {
   file: {
     level: "debug",
-    filename: "/tmp/mpos-app.log",
+    filename: __dirname + "/../../logs/jpos.log",
     handleExceptions: true,
     json: false,
     maxsize: 10485760,
@@ -156,5 +133,5 @@ exports.setEnvConfig = function() {
       exports.mailOptions.pass = envData.mailPassword;
     }
   }
-  console.log(exports.dbOptions);
+  console.log(envData);
 };

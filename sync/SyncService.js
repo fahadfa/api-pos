@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var SyncDMLService_1 = require("./SyncDMLService");
 var SyncDDLService_1 = require("./SyncDDLService");
+var Log_1 = require("../utils/Log");
 var dns = require("dns").promises;
 var cron = require("node-cron");
 var stagingId = "STAGING";
@@ -45,7 +46,7 @@ var SyncService = /** @class */ (function () {
     function SyncService() {
         this.syncDMLService = new SyncDMLService_1.SyncDMLService();
         this.syncDDLService = new SyncDDLService_1.SyncDDLService();
-        console.log("&&&&&&&&&&&&&&&&&&&&&& ENV_STORE_ID : " + process.env.ENV_STORE_ID + " &&&&&&&&&&&&&&&&&&&&&&");
+        Log_1.log.log("debug", "&&&&&&&&&&&&&&&&&&&&&& ENV_STORE_ID : " + process.env.ENV_STORE_ID + " &&&&&&&&&&&&&&&&&&&&&&");
         if (process.env.ENV_STORE_ID) {
             this.init();
         }
@@ -54,28 +55,29 @@ var SyncService = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                console.log(">>>>>>>>>>>>>>>>> INIT <<<<<<<<<<<<<<<<<<<");
+                Log_1.log.log("info", ">>>>>>>>>>>>>>>>> INIT <<<<<<<<<<<<<<<<<<<");
                 cron.schedule("*/15 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                console.log("\n\n(((((((((( SYNC START ))))))))))\n\n");
+                                Log_1.log.log("info", "(((((((((( SYNC START ))))))))))");
                                 return [4 /*yield*/, this.checkInternet()];
                             case 1:
                                 if (!_a.sent()) return [3 /*break*/, 4];
+                                Log_1.log.log("info", ">>>>>>>>>>>>>>>> DDL <<<<<<<<<<<<<<<<<<<<<<<");
                                 return [4 /*yield*/, this.syncDDLService.execute()];
                             case 2:
                                 _a.sent();
-                                console.log(">>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<");
+                                Log_1.log.log("info", ">>>>>>>>>>>>>>>>> DML <<<<<<<<<<<<<<<<<<<<<<<");
                                 return [4 /*yield*/, this.syncDMLService.execute()];
                             case 3:
                                 _a.sent();
                                 return [3 /*break*/, 5];
                             case 4:
-                                console.log("\n\n>>>>>>>>>>>>>>>>> No Internet connection <<<<<<<<<<<<<<<<<<<<");
+                                Log_1.log.log("debug", ">>>>>>>>>>>>>>>>> No Internet connection <<<<<<<<<<<<<<<<<<<<");
                                 _a.label = 5;
                             case 5:
-                                console.log("\n\n(((((((((( SYNC CLOSE ))))))))))\n\n");
+                                Log_1.log.log("info", "(((((((((( SYNC CLOSE ))))))))))");
                                 return [2 /*return*/];
                         }
                     });

@@ -72,6 +72,9 @@ var DiscountService = /** @class */ (function () {
                         }
                         _a.label = 4;
                     case 4:
+                        if (!checkCustomer) {
+                            throw { message: "INVALID CUSTOMER" };
+                        }
                         reqData.cashdisc = checkCustomer.cashdisc;
                         reqData.paymtermid = checkCustomer.paymtermid;
                         reqData.custtype = checkCustomer.custtype;
