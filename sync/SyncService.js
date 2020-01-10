@@ -54,7 +54,8 @@ var SyncService = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                cron.schedule("10 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
+                console.log(">>>>>>>>>>>>>>>>> INIT <<<<<<<<<<<<<<<<<<<");
+                cron.schedule("*/15 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
