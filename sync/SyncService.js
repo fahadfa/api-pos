@@ -57,10 +57,11 @@ var SyncService = /** @class */ (function () {
                 cron.schedule("10 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0: return [4 /*yield*/, this.checkInternet()];
+                            case 0:
+                                console.log("\n\n(((((((((( SYNC START ))))))))))\n\n");
+                                return [4 /*yield*/, this.checkInternet()];
                             case 1:
                                 if (!_a.sent()) return [3 /*break*/, 4];
-                                console.log("\n\n(((((((((( SYNC START ))))))))))\n\n");
                                 return [4 /*yield*/, this.syncDDLService.execute()];
                             case 2:
                                 _a.sent();
@@ -68,12 +69,13 @@ var SyncService = /** @class */ (function () {
                                 return [4 /*yield*/, this.syncDMLService.execute()];
                             case 3:
                                 _a.sent();
-                                console.log("\n\n(((((((((( SYNC CLOSE ))))))))))\n\n");
                                 return [3 /*break*/, 5];
                             case 4:
-                                console.log("\n\n(((((((((( No Internet connection ))))))))))");
+                                console.log("\n\n>>>>>>>>>>>>>>>>> No Internet connection <<<<<<<<<<<<<<<<<<<<");
                                 _a.label = 5;
-                            case 5: return [2 /*return*/];
+                            case 5:
+                                console.log("\n\n(((((((((( SYNC CLOSE ))))))))))\n\n");
+                                return [2 /*return*/];
                         }
                     });
                 }); });
@@ -84,11 +86,10 @@ var SyncService = /** @class */ (function () {
     SyncService.prototype.checkInternet = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                // return dns
-                //   .lookup("google.com")
-                //   .then(() => true)
-                //   .catch(() => false);
-                return [2 /*return*/, Promise.resolve(true)];
+                return [2 /*return*/, dns
+                        .lookup("google.com")
+                        .then(function () { return true; })
+                        .catch(function () { return false; })];
             });
         });
     };
