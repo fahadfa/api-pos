@@ -38,6 +38,7 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var Log_1 = require("./utils/Log");
 var SyncService_1 = require("./sync/SyncService");
+var cmd = require("node-cmd");
 try {
     new SyncService_1.SyncService();
 }
@@ -75,16 +76,11 @@ try {
     });
     autoupdater.on("check.out-dated", function (v_old, v) {
         Log_1.log.warn("Your version is outdated. " + v_old + " of " + v);
-        //autoupdater.fire("download-update"); // If autoupdate: false, you'll have to do this manually.
+        autoupdater.fire("download-update"); // If autoupdate: false, you'll have to do this manually.
         // Maybe ask if the'd like to download the update.
     });
     autoupdater.on("update.downloaded", function () {
         Log_1.log.info("Update downloaded and ready for install");
-        // autoupdater.fire("extract"); // If autoupdate: false, you'll have to do this manually.
-    });
-    autoupdater.on("update.not-installed", function () {
-        Log_1.log.info("The Update was already in your folder! It's read for install");
-        //autoupdater.fire("extract"); // If autoupdate: false, you'll have to do this manually.
         var AdmZip = require("adm-zip");
         var fs = require("fs");
         var fileName = null;
@@ -96,6 +92,15 @@ try {
         var zip = new AdmZip(__dirname + "/" + fileName);
         zip.extractAllTo("../", true);
         fs.unlinkSync(__dirname + "/" + fileName);
+        Log_1.log.debug("nssm.exe restart jpos-offline");
+        cmd.get("nssm.exe restart jpos-offline", function (err, data) {
+            Log_1.log.log("info", data);
+        });
+        // autoupdater.fire("extract"); // If autoupdate: false, you'll have to do this manually.
+    });
+    autoupdater.on("update.not-installed", function () {
+        Log_1.log.info("The Update was already in your folder! It's read for install");
+        //autoupdater.fire("extract"); // If autoupdate: false, you'll have to do this manually
     });
     autoupdater.on("update.extracted", function () {
         Log_1.log.info("Update extracted successfully!");

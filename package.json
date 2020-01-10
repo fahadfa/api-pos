@@ -1,6 +1,6 @@
 {
   "name": "pos-api",
-  "version": "1.0.7",
+  "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "start": "npm run build:live",
@@ -58,6 +58,7 @@
     "mobily-sms": "1.0.0",
     "moment": "2.24.0",
     "node-cron": "2.0.3",
+    "node-cmd": "3.0.0",
     "node-cache": "4.2.0",
     "nodemailer": "5.1.1",
     "ono": "5.1.0",
