@@ -48,7 +48,7 @@ try {
     var AutoUpdater = require("auto-updater");
     var autoupdater = new AutoUpdater({
         pathToJson: "",
-        autoupdate: true,
+        autoupdate: false,
         checkgit: false,
         jsonhost: "raw.githubusercontent.com",
         contenthost: "codeload.github.com",
@@ -75,30 +75,27 @@ try {
     });
     autoupdater.on("check.out-dated", function (v_old, v) {
         Log_1.log.warn("Your version is outdated. " + v_old + " of " + v);
-        autoupdater.fire("download-update"); // If autoupdate: false, you'll have to do this manually.
+        //autoupdater.fire("download-update"); // If autoupdate: false, you'll have to do this manually.
         // Maybe ask if the'd like to download the update.
     });
     autoupdater.on("update.downloaded", function () {
         Log_1.log.info("Update downloaded and ready for install");
-        autoupdater.fire("extract"); // If autoupdate: false, you'll have to do this manually.
-        /**
-         *     var AdmZip = require("adm-zip");
-        var fs = require("fs");
-        let fileName = null;
-        fs.readdirSync("./").forEach(file => {
-          if (file.endsWith(".zip")) {
-            fileName = file;
-          }
-        });
-        console.log(fileName);
-        var zip = new AdmZip(__dirname + "/" + fileName);
-        //
-        zip.extractAllTo("../", true);
-         */
+        // autoupdater.fire("extract"); // If autoupdate: false, you'll have to do this manually.
     });
     autoupdater.on("update.not-installed", function () {
         Log_1.log.info("The Update was already in your folder! It's read for install");
-        autoupdater.fire("extract"); // If autoupdate: false, you'll have to do this manually.
+        //autoupdater.fire("extract"); // If autoupdate: false, you'll have to do this manually.
+        var AdmZip = require("adm-zip");
+        var fs = require("fs");
+        var fileName = null;
+        fs.readdirSync("./").forEach(function (file) {
+            if (file.endsWith(".zip")) {
+                fileName = file;
+            }
+        });
+        var zip = new AdmZip(__dirname + "/" + fileName);
+        zip.extractAllTo("../", true);
+        fs.unlinkSync(__dirname + "/" + fileName);
     });
     autoupdater.on("update.extracted", function () {
         Log_1.log.info("Update extracted successfully!");
@@ -130,7 +127,9 @@ var cron = require("node-cron");
 cron.schedule("*/2 * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
     return __generator(this, function (_a) {
         try {
+            //if (process.env.ENV_STORE_ID) {
             autoupdater.fire("check");
+            //}
         }
         catch (error) {
             Log_1.log.error("******* Error on Downlooad **********");
