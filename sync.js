@@ -48,12 +48,12 @@ try {
     var AutoUpdater = require("auto-updater");
     var autoupdater = new AutoUpdater({
         pathToJson: "",
-        autoupdate: false,
+        autoupdate: true,
         checkgit: false,
         jsonhost: "raw.githubusercontent.com",
         contenthost: "codeload.github.com",
         progressDebounce: 1,
-        devmode: true
+        devmode: false
     });
     // State the events
     autoupdater.on("git-clone", function () {
@@ -81,6 +81,20 @@ try {
     autoupdater.on("update.downloaded", function () {
         Log_1.log.info("Update downloaded and ready for install");
         autoupdater.fire("extract"); // If autoupdate: false, you'll have to do this manually.
+        /**
+         *     var AdmZip = require("adm-zip");
+        var fs = require("fs");
+        let fileName = null;
+        fs.readdirSync("./").forEach(file => {
+          if (file.endsWith(".zip")) {
+            fileName = file;
+          }
+        });
+        console.log(fileName);
+        var zip = new AdmZip(__dirname + "/" + fileName);
+        //
+        zip.extractAllTo("../", true);
+         */
     });
     autoupdater.on("update.not-installed", function () {
         Log_1.log.info("The Update was already in your folder! It's read for install");
@@ -88,7 +102,7 @@ try {
     });
     autoupdater.on("update.extracted", function () {
         Log_1.log.info("Update extracted successfully!");
-        console.warn("RESTART THE APP!");
+        Log_1.log.warn("RESTART THE APP!");
     });
     autoupdater.on("download.start", function (data) {
         Log_1.log.info("Starting downloading: " + data);
@@ -100,7 +114,7 @@ try {
         Log_1.log.info("Downloaded " + data);
     });
     autoupdater.on("download.error", function (err) {
-        console.error("Error when downloading: " + err);
+        Log_1.log.error("Error when downloading: " + err);
     });
     autoupdater.on("end", function () {
         Log_1.log.info("The app is ready to function");
