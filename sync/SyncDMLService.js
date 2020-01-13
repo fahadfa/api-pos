@@ -39,6 +39,7 @@ var SyncServiceHelper_1 = require("../sync/SyncServiceHelper");
 var Props_1 = require("../constants/Props");
 var moment = require("moment");
 var format = require("pg-format");
+var Log_1 = require("../utils/Log");
 var STAGING_ID = "STAGING";
 var STORE_ID = process.env.ENV_STORE_ID || "LOCAL-TEST";
 var SyncDMLService = /** @class */ (function () {
@@ -46,24 +47,26 @@ var SyncDMLService = /** @class */ (function () {
     }
     SyncDMLService.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var currentTime, sql, stageDbConfig, localDbConfig, syncResults, sourceDB, targetDB, error_1;
+            var stageDbConfig, localDbConfig, sql, currentTime, syncResults, sourceDB, targetDB, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log("###########################################");
-                        console.log("###########################################");
+                        Log_1.log.info("###########################################");
+                        Log_1.log.info("###########################################");
                         // App.Sleep(2000);
-                        console.log("!!!!!!!!!!!!!!!!!!!! " +
+                        Log_1.log.info("!!!!!!!!!!!!!!!!!!!! " +
                             STORE_ID +
                             " - " +
                             new Date().toISOString() +
                             "!!!!!!!!!!!!!!!!!!!!");
-                        currentTime = new Date();
+                        stageDbConfig = SyncServiceHelper_1.SyncServiceHelper.StageDBOptions();
+                        localDbConfig = SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions();
+                        sql = "SELECT to_char (now(), 'YYYY-MM-DD\"T\"HH24:MI:SS') as utc_date";
+                        currentTime = moment().format();
+                        Log_1.log.info("currentTime Date: ", currentTime);
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 5, , 6]);
-                        stageDbConfig = SyncServiceHelper_1.SyncServiceHelper.StageDBOptions();
-                        localDbConfig = SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions();
                         if (stageDbConfig.host == localDbConfig.host)
                             throw { message: "Invalid DB config Data" };
                         sql = " select * from sync_table \n                    where (source_id = '" + STORE_ID + "' or target_id = '" + STORE_ID + "' ) \n                    and active = true \n                    order by updated_on  ASC \n                    limit 1";
@@ -85,11 +88,11 @@ var SyncDMLService = /** @class */ (function () {
                     case 4: return [3 /*break*/, 6];
                     case 5:
                         error_1 = _a.sent();
-                        console.log(error_1);
+                        Log_1.log.info(error_1);
                         return [3 /*break*/, 6];
                     case 6:
-                        console.log("###########################################");
-                        console.log("###########################################");
+                        Log_1.log.info("###########################################");
+                        Log_1.log.info("###########################################");
                         return [2 /*return*/];
                 }
             });
@@ -101,7 +104,7 @@ var SyncDMLService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log(sync);
+                        Log_1.log.info(sync);
                         updateSyncConfig = SyncServiceHelper_1.SyncServiceHelper.StageDBOptions();
                         batchSql = [];
                         _a.label = 1;
@@ -125,8 +128,8 @@ var SyncDMLService = /** @class */ (function () {
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.MetadataTable(targetDb, sync.target_table)];
                     case 5:
                         metaDataTable = _a.sent();
-                        console.log("\n\n************* ***** *************");
-                        console.log("************* ***** *************");
+                        Log_1.log.info("\n\n************* ***** *************");
+                        Log_1.log.info("************* ***** *************");
                         if (!(rowsAvalible_1 && rowsAvalible_1.length > 0)) return [3 /*break*/, 7];
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.PrepareQuery(sync.target_table, metaDataTable, soruceRes.rows, rowsAvalible_1, "UPDATE", sync.source_pk, sync.target_pk)];
                     case 6:
@@ -147,28 +150,28 @@ var SyncDMLService = /** @class */ (function () {
                         _a.sent();
                         _a.label = 11;
                     case 11:
-                        updateQuery = "update sync_table set last_update = '" + currentTime.toISOString() + "', updated_on = '" + currentTime.toISOString() + "'  where id='" + sync.id + "'";
+                        updateQuery = "update sync_table set last_update = '" + currentTime + "', updated_on = '" + currentTime + "'  where id='" + sync.id + "'";
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(updateSyncConfig, [updateQuery])];
                     case 12:
                         _a.sent();
-                        console.log("************* ***** *************");
-                        console.log("************* ***** *************\n\n");
+                        Log_1.log.info("************* ***** *************");
+                        Log_1.log.info("************* ***** *************\n\n");
                         return [3 /*break*/, 15];
                     case 13:
                         err_1 = _a.sent();
-                        console.log(":::::::::::::::::::CATCH BLOCK START ::::::::::::::::::::::");
-                        console.log(err_1);
+                        Log_1.log.info(":::::::::::::::::::CATCH BLOCK START ::::::::::::::::::::::");
+                        Log_1.log.info(err_1);
                         updateQuery = null;
                         if (err_1 == Props_1.Props.RECORD_NOT_FOUND) {
-                            updateQuery = "update sync_table set last_update = '" + currentTime.toISOString() + "', updated_on = '" + currentTime.toISOString() + "'  where id='" + sync.id + "'";
+                            updateQuery = "update sync_table set last_update = '" + currentTime + "', updated_on = '" + currentTime + "'  where id='" + sync.id + "'";
                         }
                         else {
-                            updateQuery = "update sync_table set updated_on = '" + currentTime.toISOString() + "'  where id='" + sync.id + "'";
+                            updateQuery = "update sync_table set updated_on = '" + currentTime + "'  where id='" + sync.id + "'";
                         }
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(updateSyncConfig, [updateQuery])];
                     case 14:
                         _a.sent();
-                        console.log(":::::::::::::::::::CATCH BLOCK ENDS ::::::::::::::::::::::");
+                        Log_1.log.info(":::::::::::::::::::CATCH BLOCK ENDS ::::::::::::::::::::::");
                         return [3 /*break*/, 15];
                     case 15: return [2 /*return*/];
                 }

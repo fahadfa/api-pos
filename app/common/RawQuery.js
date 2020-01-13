@@ -465,14 +465,16 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select inventsizeid from \n                  (select sz.inventsizeid from inventsize sz\n                    inner join configtable c on c.itemid = sz.itemid\n                  inner join inventory_onhand ioh on ioh.itemid = c.itemid and ioh.inventsizeid = sz.inventsizeid and c.configid = ioh.configid\n                  where ioh.inventlocationid='" + param.inventlocationid + "' and ioh.itemid = '" + param.itemid + "' and ioh.configid = '" + param.configid + "' GROUP BY\n                  sz.inventsizeid \n                  having SUM(ioh.qty_in-ioh.qty_out-ioh.qty_reserved)>0)  as i \n               ";
+                        query = " select distinct io.inventsizeid from inventory_onhand io\n                  where io.inventlocationid='" + param.inventlocationid + "' and io.itemid = '" + param.itemid + "' and io.configid = '" + param.configid + "'\n                  group by  io.inventsizeid having SUM(io.qty_in-io.qty_out-io.qty_reserved)>0 \n               ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
+                        console.log(data);
                         new_data = [];
                         new_data = data.map(function (element) {
                             return element.inventsizeid;
                         });
+                        console.log(new_data);
                         return [2 /*return*/, new_data];
                 }
             });

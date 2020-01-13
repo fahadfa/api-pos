@@ -47,6 +47,7 @@ var SyncServiceHelper_1 = require("../sync/SyncServiceHelper");
 var App_1 = require("../utils/App");
 var STAGING_ID = "STAGING";
 var STORE_ID = process.env.ENV_STORE_ID || "LOCAL-TEST";
+var Log_1 = require("../utils/Log");
 var SyncDDLService = /** @class */ (function () {
     function SyncDDLService() {
     }
@@ -56,9 +57,11 @@ var SyncDDLService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                        console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                        console.log("!!!!!!!!!!!!!!!!!!!! SYNC_DDL - " + new Date().toISOString() + "!!!!!!!!!!!!!!!!!!!!");
+                        Log_1.log.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                        Log_1.log.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                        Log_1.log.info("!!!!!!!!!!!!!!!!!!!! SYNC_DDL - " +
+                            new Date().toISOString() +
+                            "!!!!!!!!!!!!!!!!!!!!");
                         sync = null;
                         currentTime = new Date();
                         _a.label = 1;
@@ -77,8 +80,8 @@ var SyncDDLService = /** @class */ (function () {
                         return [4 /*yield*/, this.syncDDL(syncResults, currentTime)];
                     case 3:
                         _a.sent();
-                        console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                        console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                        Log_1.log.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                        Log_1.log.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
                         return [3 /*break*/, 5];
                     case 4:
                         error_1 = _a.sent();
@@ -135,10 +138,18 @@ var SyncDDLService = /** @class */ (function () {
                         if (index > -1)
                             syncDDLval.splice(index, 1);
                         if (syncDDLval.length == 0) {
-                            sql = "UPDATE sync_source SET  sync_ddl = NULL WHERE id='" + sync.id + "'";
+                            sql =
+                                "UPDATE sync_source SET  sync_ddl = NULL WHERE id='" +
+                                    sync.id +
+                                    "'";
                         }
                         else {
-                            sql = "UPDATE sync_source SET  sync_ddl= '{" + syncDDLval + "}' WHERE id='" + sync.id + "'";
+                            sql =
+                                "UPDATE sync_source SET  sync_ddl= '{" +
+                                    syncDDLval +
+                                    "}' WHERE id='" +
+                                    sync.id +
+                                    "'";
                         }
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(stageDb, [sql])];
                     case 8:

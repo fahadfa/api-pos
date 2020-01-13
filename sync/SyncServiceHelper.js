@@ -52,6 +52,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var pg_1 = require("pg");
 var Config = __importStar(require("../utils/Config"));
 var format = require("pg-format");
+var Log_1 = require("../utils/Log");
 var SyncServiceHelper = /** @class */ (function () {
     function SyncServiceHelper() {
     }
@@ -62,9 +63,9 @@ var SyncServiceHelper = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        console.log("-------------- Batch Query Starts --------------");
-                        console.log("\tHost Query: " + config.host);
-                        console.log(sqls);
+                        Log_1.log.info("-------------- Batch Query Starts --------------");
+                        Log_1.log.info("\tHost Query: " + config.host);
+                        Log_1.log.info(sqls);
                         db = new pg_1.Client(config);
                         _b.label = 1;
                     case 1:
@@ -108,7 +109,7 @@ var SyncServiceHelper = /** @class */ (function () {
                         return [7 /*endfinally*/];
                     case 15: return [7 /*endfinally*/];
                     case 16:
-                        console.log("END");
+                        Log_1.log.info("END");
                         return [4 /*yield*/, db.query("COMMIT")];
                     case 17:
                         _b.sent();
@@ -124,7 +125,7 @@ var SyncServiceHelper = /** @class */ (function () {
                         db.end();
                         return [7 /*endfinally*/];
                     case 21:
-                        console.log("-------------- Batch Query Ends --------------");
+                        Log_1.log.info("-------------- Batch Query Ends --------------");
                         return [2 /*return*/];
                 }
             });
@@ -136,10 +137,10 @@ var SyncServiceHelper = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        console.log("----------------- Query Starts----------------------------");
+                        Log_1.log.info("----------------- Query Starts----------------------------");
                         db = null;
-                        console.log("\tHost Query: " + config.host);
-                        console.log(sql);
+                        Log_1.log.info("\tHost Query: " + config.host);
+                        Log_1.log.info(sql);
                         res = null;
                         _b.label = 1;
                     case 1:
@@ -167,7 +168,7 @@ var SyncServiceHelper = /** @class */ (function () {
                             db.release();
                         return [7 /*endfinally*/];
                     case 9:
-                        console.log("----------------- Query Ends----------------------------");
+                        Log_1.log.info("----------------- Query Ends----------------------------");
                         return [2 /*return*/];
                 }
             });
