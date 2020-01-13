@@ -58,21 +58,21 @@ try {
     });
     // State the events
     autoupdater.on("git-clone", function () {
-        Log_1.log.log("info", "You have a clone of the repository. Use 'git pull' to be up-to-date");
+        Log_1.log.log("warn", "You have a clone of the repository. Use 'git pull' to be up-to-date");
         var spawn = require("child_process").spawn;
         var ls = spawn("git", ["pull"]);
         ls.stdout.on("data", function (data) {
-            Log_1.log.info("stdout: " + data);
+            Log_1.log.warn("stdout: " + data);
         });
         ls.stderr.on("data", function (data) {
             Log_1.log.error("stderr: " + data);
         });
         ls.on("close", function (data) {
-            Log_1.log.info("child process exited with code " + data);
+            Log_1.log.warn("child process exited with code " + data);
         });
     });
     autoupdater.on("check.up-to-date", function (data) {
-        Log_1.log.info("You have the latest version: " + data);
+        Log_1.log.warn("You have the latest version: " + data);
     });
     autoupdater.on("check.out-dated", function (v_old, v) {
         Log_1.log.warn("Your version is outdated. " + v_old + " of " + v);
@@ -80,7 +80,7 @@ try {
         // Maybe ask if the'd like to download the update.
     });
     autoupdater.on("update.downloaded", function () {
-        Log_1.log.info("Update downloaded and ready for install");
+        Log_1.log.warn("Update downloaded and ready for install");
         var AdmZip = require("adm-zip");
         var fs = require("fs");
         var fileName = null;
@@ -93,33 +93,36 @@ try {
         zip.extractAllTo("../", true);
         fs.unlinkSync(__dirname + "/" + fileName);
         Log_1.log.debug("nssm.exe restart jpos-offline");
-        cmd.get("nssm.exe restart jpos-offline", function (err, data) {
-            Log_1.log.log("info", data);
+        cmd.get("net stop jpos-offline", function (err, data) {
+            Log_1.log.log("warn", err, data);
+            cmd.get("net start jpos-offline", function (err, data) {
+                Log_1.log.log("warn", err, data);
+            });
         });
         // autoupdater.fire("extract"); // If autoupdate: false, you'll have to do this manually.
     });
     autoupdater.on("update.not-installed", function () {
-        Log_1.log.info("The Update was already in your folder! It's read for install");
+        Log_1.log.warn("The Update was already in your folder! It's read for install");
         //autoupdater.fire("extract"); // If autoupdate: false, you'll have to do this manually
     });
     autoupdater.on("update.extracted", function () {
-        Log_1.log.info("Update extracted successfully!");
+        Log_1.log.warn("Update extracted successfully!");
         Log_1.log.warn("RESTART THE APP!");
     });
     autoupdater.on("download.start", function (data) {
-        Log_1.log.info("Starting downloading: " + data);
+        Log_1.log.warn("Starting downloading: " + data);
     });
     autoupdater.on("download.progress", function (name, perc) {
         process.stdout.write("Downloading " + perc + "%\r\n");
     });
     autoupdater.on("download.end", function (data) {
-        Log_1.log.info("Downloaded " + data);
+        Log_1.log.warn("Downloaded " + data);
     });
     autoupdater.on("download.error", function (err) {
         Log_1.log.error("Error when downloading: " + err);
     });
     autoupdater.on("end", function () {
-        Log_1.log.info("The app is ready to function");
+        Log_1.log.warn("The app is ready to function");
     });
     autoupdater.on("error", function (data, e) {
         Log_1.log.error(data, e);

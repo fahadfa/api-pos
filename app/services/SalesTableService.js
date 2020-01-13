@@ -119,11 +119,19 @@ var SalesTableService = /** @class */ (function () {
                     case 5:
                         _c.painter = _d.sent();
                         data.painter = data.painter ? data.painter : {};
-                        data.instantDiscChecked = data.instantDiscChecked ? data.instantDiscChecked : false;
-                        data.voucherDiscChecked = data.voucherDiscChecked ? data.voucherDiscChecked : false;
-                        data.originalPrinted = data.originalPrinted ? data.originalPrinted : false;
+                        data.instantDiscChecked = data.instantDiscChecked
+                            ? data.instantDiscChecked
+                            : false;
+                        data.voucherDiscChecked = data.voucherDiscChecked
+                            ? data.voucherDiscChecked
+                            : false;
+                        data.originalPrinted = data.originalPrinted
+                            ? data.originalPrinted
+                            : false;
                         data.deleted = data.deleted ? data.deleted : false;
-                        data.designServiceRedeemAmount = data.designServiceRedeemAmount ? parseFloat(data.designServiceRedeemAmount) : 0;
+                        data.designServiceRedeemAmount = data.designServiceRedeemAmount
+                            ? parseFloat(data.designServiceRedeemAmount)
+                            : 0;
                         data.isMovementIn = data.isMovementIn ? data.isMovementIn : false;
                         data.deleted = data.deleted ? data.deleted : false;
                         data.isCash = data.isCash ? data.isCash : false;
@@ -155,7 +163,8 @@ var SalesTableService = /** @class */ (function () {
                         _d.sent();
                         return [3 /*break*/, 11];
                     case 9:
-                        if (!(data.transkind == "TRANSFERORDER" && data.custAccount == this.sessionInfo.inventlocationid)) return [3 /*break*/, 11];
+                        if (!(data.transkind == "TRANSFERORDER" &&
+                            data.custAccount == this.sessionInfo.inventlocationid)) return [3 /*break*/, 11];
                         //console.log("---------------------------------------------------------------------------------------", data.transkind, data.status);
                         return [4 /*yield*/, this.inventoryOnHandCheck(item, data.transkind, data.custAccount)];
                     case 10:
@@ -170,7 +179,12 @@ var SalesTableService = /** @class */ (function () {
                         baseSizeBatchesList_1 = _d.sent();
                         if (data.transkind == "SALESORDER" || data.transkind == "TRANSFERORDER") {
                             salesLine.map(function (item) {
-                                item.batches = baseSizeBatchesList_1.filter(function (v) { return v.itemid == item.itemid && v.configid == item.configId && v.inventsizeid == item.inventsizeid && v.saleslineid == item.id; });
+                                item.batches = baseSizeBatchesList_1.filter(function (v) {
+                                    return v.itemid == item.itemid &&
+                                        v.configid == item.configId &&
+                                        v.inventsizeid == item.inventsizeid &&
+                                        v.saleslineid == item.id;
+                                });
                             });
                         }
                         if (type == "mobile") {
@@ -218,26 +232,40 @@ var SalesTableService = /** @class */ (function () {
             v.salesUnit = v.salesUnit ? parseFloat(v.salesUnit) : 0;
             v.netAmount = v.netAmount ? parseFloat(v.netAmount) : 0;
             v.qtyOrdered = v.qtyOrdered ? parseFloat(v.qtyOrdered) : 0;
-            v.remainSalesPhysical = v.remainSalesPhysical ? parseFloat(v.remainSalesPhysical) : 0;
-            v.remainSalesFinancial = v.remainSalesFinancial ? parseFloat(v.remainSalesFinancial) : 0;
+            v.remainSalesPhysical = v.remainSalesPhysical
+                ? parseFloat(v.remainSalesPhysical)
+                : 0;
+            v.remainSalesFinancial = v.remainSalesFinancial
+                ? parseFloat(v.remainSalesFinancial)
+                : 0;
             v.lineTotalDisc = v.lineTotalDisc ? parseFloat(v.lineTotalDisc) : 0;
-            v.supplMultipleQty = v.supplMultipleQty ? parseFloat(v.supplMultipleQty) : 0;
+            v.supplMultipleQty = v.supplMultipleQty
+                ? parseFloat(v.supplMultipleQty)
+                : 0;
             v.supplFreeQty = v.supplFreeQty ? parseFloat(v.supplFreeQty) : 0;
             v.multilndisc = v.multilndisc ? parseFloat(v.multilndisc) : 0;
             v.multilnPercent = v.multilnPercent ? parseFloat(v.multilnPercent) : 0;
             v.endDisc = v.endDisc ? parseFloat(v.endDisc) : 0;
             v.enddiscamt = v.enddiscamt ? parseFloat(v.enddiscamt) : 0;
             v.colorantprice = v.colorantprice ? parseFloat(v.colorantprice) : 0;
-            v.totalReturnedQuantity = v.totalReturnedQuantity ? parseFloat(v.totalReturnedQuantity) : 0;
-            v.totalSettledAmount = v.totalSettledAmount ? parseFloat(v.totalSettledAmount) : 0;
+            v.totalReturnedQuantity = v.totalReturnedQuantity
+                ? parseFloat(v.totalReturnedQuantity)
+                : 0;
+            v.totalSettledAmount = v.totalSettledAmount
+                ? parseFloat(v.totalSettledAmount)
+                : 0;
             v.vatamount = v.vatamount ? parseFloat(v.vatamount) : 0;
             v.vat = v.vat ? parseFloat(v.vat) : 0;
             v.voucherdiscamt = v.voucherdiscamt ? parseFloat(v.voucherdiscamt) : 0;
-            v.voucherdiscpercent = v.voucherdiscpercent ? parseFloat(v.voucherdiscpercent) : 0;
+            v.voucherdiscpercent = v.voucherdiscpercent
+                ? parseFloat(v.voucherdiscpercent)
+                : 0;
             v.appliedDiscounts = v.appliedDiscounts ? v.appliedDiscounts : [];
             v.appliedDiscounts.map(function (value) {
                 value.percentage = value.percentage ? parseFloat(value.percentage) : 0;
-                value.discountAmount = value.discountAmount ? parseFloat(value.discountAmount) : 0;
+                value.discountAmount = value.discountAmount
+                    ? parseFloat(value.discountAmount)
+                    : 0;
             });
         });
     };
@@ -267,7 +295,9 @@ var SalesTableService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.rawQuery.inventoryOnHand({
-                            inventlocationid: custAccount == this.sessionInfo.inventlocationid ? custAccount : this.sessionInfo.inventlocationid,
+                            inventlocationid: custAccount == this.sessionInfo.inventlocationid
+                                ? custAccount
+                                : this.sessionInfo.inventlocationid,
                             itemId: item.itemid,
                             configid: item.color ? item.color.code : null,
                             inventsizeid: item.size.code
@@ -286,7 +316,8 @@ var SalesTableService = /** @class */ (function () {
                                 item.availablequatity = availabilty;
                                 item.adjustedquantity = item.salesQty - availabilty;
                             }
-                            else if (parseInt(item.salesQty) > availabilty && transkind == "TRANSFERORDER") {
+                            else if (parseInt(item.salesQty) > availabilty &&
+                                transkind == "TRANSFERORDER") {
                                 if (item.status == "REQUESTED") {
                                     item.requestedQuantity = item.salesQty;
                                     item.availableQuantity = availabilty;
@@ -311,7 +342,8 @@ var SalesTableService = /** @class */ (function () {
                                 }
                             }
                             else {
-                                if (transkind == "TRANSFERORDER" && (item.status == "REQUESTED" || item.status == null)) {
+                                if (transkind == "TRANSFERORDER" &&
+                                    (item.status == "REQUESTED" || item.status == null)) {
                                     item.requestedQuantity = item.salesQty;
                                     item.availableQuantity = availabilty;
                                 }
@@ -410,7 +442,8 @@ var SalesTableService = /** @class */ (function () {
                         data = _a;
                         newData_1 = [];
                         data.forEach(function (item) {
-                            if (item.custAccount == _this.sessionInfo.inventlocationid && item.status != "CREATED") {
+                            if (item.custAccount == _this.sessionInfo.inventlocationid &&
+                                item.status != "CREATED") {
                                 newData_1.push(item);
                             }
                             else if (item.inventLocationId == _this.sessionInfo.inventlocationid) {
@@ -514,13 +547,15 @@ var SalesTableService = /** @class */ (function () {
                     case 13: return [4 /*yield*/, this.saveQuotation(reqData)];
                     case 14: return [2 /*return*/, _b.sent()];
                     case 15:
-                        if (!(reqData.interCompanyOriginalSalesId && reqData.interCompanyOriginalSalesId != "")) return [3 /*break*/, 17];
+                        if (!(reqData.interCompanyOriginalSalesId &&
+                            reqData.interCompanyOriginalSalesId != "")) return [3 /*break*/, 17];
                         return [4 /*yield*/, this.saveOrderShipment(reqData)];
                     case 16: return [2 /*return*/, _b.sent()];
                     case 17: throw { message: Props_1.Props.SALES_ID_REQUIRED };
                     case 18: return [3 /*break*/, 34];
                     case 19:
-                        if (!(reqData.interCompanyOriginalSalesId && reqData.interCompanyOriginalSalesId != "")) return [3 /*break*/, 21];
+                        if (!(reqData.interCompanyOriginalSalesId &&
+                            reqData.interCompanyOriginalSalesId != "")) return [3 /*break*/, 21];
                         return [4 /*yield*/, this.saveOrderReceive(reqData)];
                     case 20: return [2 /*return*/, _b.sent()];
                     case 21: throw { message: Props_1.Props.SALES_ID_REQUIRED };
@@ -781,7 +816,8 @@ var SalesTableService = /** @class */ (function () {
                         reqData.message = "CONVERTED";
                         reqData.status = "CREATED";
                         _a = reqData.warehouse;
-                        return [4 /*yield*/, this.sessionInfo.inventlocationid];
+                        return [4 /*yield*/, this.sessionInfo
+                                .inventlocationid];
                     case 3:
                         _a.inventLocationId = _b.sent();
                         delete reqData.warehouse;
@@ -862,7 +898,8 @@ var SalesTableService = /** @class */ (function () {
                     case 3:
                         purchaseOrderData = _b.sent();
                         //console.log(purchaseOrderData);
-                        purchaseOrderData = purchaseOrderData.length > 0 ? purchaseOrderData[0] : {};
+                        purchaseOrderData =
+                            purchaseOrderData.length > 0 ? purchaseOrderData[0] : {};
                         if (!(purchaseOrderData == {})) return [3 /*break*/, 4];
                         throw { message: Props_1.Props.TECHNICAL_ISSUE };
                     case 4: return [4 /*yield*/, this.rawQuery.salesTableInterCompanyOriginalData(purchaseOrderData.salesid, "SALESORDER")];
@@ -870,7 +907,9 @@ var SalesTableService = /** @class */ (function () {
                         salesOrderData = _b.sent();
                         salesOrderData = salesOrderData.length > 0 ? salesOrderData[0] : {};
                         purchaseReturnData.interCompanyOriginalSalesId = salesOrderData.salesid;
-                        return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: purchaseReturnData.salesId })];
+                        return [4 /*yield*/, this.inventTransDAO.findAll({
+                                invoiceid: purchaseReturnData.salesId
+                            })];
                     case 6:
                         batches = _b.sent();
                         for (_i = 0, batches_1 = batches; _i < batches_1.length; _i++) {
@@ -887,7 +926,11 @@ var SalesTableService = /** @class */ (function () {
                         salesLine = purchaseReturnData.salesLine;
                         _loop_1 = function (item) {
                             //console.log(item);
-                            var batch = batches.filter(function (v) { return v.itemid == item.itemid && v.inventsizeid == item.inventsizeid && v.configid == item.configId; });
+                            var batch = batches.filter(function (v) {
+                                return v.itemid == item.itemid &&
+                                    v.inventsizeid == item.inventsizeid &&
+                                    v.configid == item.configId;
+                            });
                             //console.log(batch);
                             item.batches = batch;
                         };
@@ -897,7 +940,8 @@ var SalesTableService = /** @class */ (function () {
                             _loop_1(item);
                         }
                         reqData.inventLocationId = purchaseReturnData.jazeeraWarehouse;
-                        reqData.warehouse.inventLocationId = purchaseReturnData.jazeeraWarehouse;
+                        reqData.warehouse.inventLocationId =
+                            purchaseReturnData.jazeeraWarehouse;
                         return [4 /*yield*/, this.rawQuery.get_vedor_related_custaccount(purchaseReturnData.custAccount)];
                     case 7:
                         custAccount = _b.sent();
@@ -980,7 +1024,9 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.salestableDAO.save(reqData)];
                     case 2:
                         salesTable = _a.sent();
-                        return [4 /*yield*/, this.salesLineDAO.findAll({ salesId: reqData.salesId })];
+                        return [4 /*yield*/, this.salesLineDAO.findAll({
+                                salesId: reqData.salesId
+                            })];
                     case 3:
                         lineData = _a.sent();
                         if (!lineData) return [3 /*break*/, 5];
@@ -1066,7 +1112,9 @@ var SalesTableService = /** @class */ (function () {
                     case 1:
                         cond = _g.sent();
                         if (!(cond == true)) return [3 /*break*/, 55];
-                        !reqData.warehouse ? (reqData.warehouse = {}) : (reqData.warehouse = reqData.warehouse);
+                        !reqData.warehouse
+                            ? (reqData.warehouse = {})
+                            : (reqData.warehouse = reqData.warehouse);
                         reqData.warehouse.inventLocationId = this.sessionInfo.inventlocationid;
                         return [4 /*yield*/, this.salestableDAO.save(reqData)];
                     case 2:
@@ -1076,7 +1124,9 @@ var SalesTableService = /** @class */ (function () {
                     case 3:
                         _g.sent();
                         _g.label = 4;
-                    case 4: return [4 /*yield*/, this.salesLineDAO.findAll({ salesId: reqData.salesId })];
+                    case 4: return [4 /*yield*/, this.salesLineDAO.findAll({
+                            salesId: reqData.salesId
+                        })];
                     case 5:
                         lineData = _g.sent();
                         if (!lineData) return [3 /*break*/, 7];
@@ -1092,7 +1142,9 @@ var SalesTableService = /** @class */ (function () {
                         // }
                         _g.sent();
                         _g.label = 7;
-                    case 7: return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: reqData.salesId })];
+                    case 7: return [4 /*yield*/, this.inventTransDAO.findAll({
+                            invoiceid: reqData.salesId
+                        })];
                     case 8:
                         batches = _g.sent();
                         _i = 0, batches_3 = batches;
@@ -1163,7 +1215,10 @@ var SalesTableService = /** @class */ (function () {
                         batch.qty = -batch.quantity;
                         batch.reserveStatus = reqData.status;
                         batch.dataareaid = this.sessionInfo.dataareaid;
-                        batch.transactionClosed = reqData.status == "PAID" || reqData.status == "RESERVED" ? true : false;
+                        batch.transactionClosed =
+                            reqData.status == "PAID" || reqData.status == "RESERVED"
+                                ? true
+                                : false;
                         batch.dateinvent = new Date(App_1.App.dateNow());
                         batches.push(batch);
                         _g.label = 18;
@@ -1200,7 +1255,9 @@ var SalesTableService = /** @class */ (function () {
                     case 27: return [4 /*yield*/, this.salesLineDAO.save(salesLine)];
                     case 28:
                         salesline = _g.sent();
-                        return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: reqData.salesId })];
+                        return [4 /*yield*/, this.inventTransDAO.findAll({
+                                invoiceid: reqData.salesId
+                            })];
                     case 29:
                         batches = _g.sent();
                         if (!(reqData.status == "PAID")) return [3 /*break*/, 54];
@@ -1224,7 +1281,9 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.updateSalesTableWorkFlowStatus(reqData.interCompanyOriginalSalesId, "PAID")];
                     case 33:
                         _g.sent();
-                        return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: reqData.salesId })];
+                        return [4 /*yield*/, this.inventTransDAO.findAll({
+                                invoiceid: reqData.salesId
+                            })];
                     case 34:
                         batches = _g.sent();
                         _e = 0, batches_5 = batches;
@@ -1270,7 +1329,10 @@ var SalesTableService = /** @class */ (function () {
                         visitorData.purchased = "Yes";
                         visitorData.visitorMobileNumber = customerDetails.phone;
                         visitorData.visitorType =
-                            Props_1.Props.RCUSTTYPE[customerDetails.rcusttype] && Props_1.Props.RCUSTTYPE[customerDetails.rcusttype][1] ? Props_1.Props.RCUSTTYPE[customerDetails.rcusttype][1] : "Individual";
+                            Props_1.Props.RCUSTTYPE[customerDetails.rcusttype] &&
+                                Props_1.Props.RCUSTTYPE[customerDetails.rcusttype][1]
+                                ? Props_1.Props.RCUSTTYPE[customerDetails.rcusttype][1]
+                                : "Individual";
                         return [4 /*yield*/, this.visitCustomerService.save(visitorData)];
                     case 44:
                         _g.sent();
@@ -1377,7 +1439,9 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.salestableDAO.save(reqData)];
                     case 2:
                         salesTable = _c.sent();
-                        return [4 /*yield*/, this.salesLineDAO.findAll({ salesId: reqData.salesId })];
+                        return [4 /*yield*/, this.salesLineDAO.findAll({
+                                salesId: reqData.salesId
+                            })];
                     case 3:
                         lineData = _c.sent();
                         if (!lineData) return [3 /*break*/, 5];
@@ -1409,7 +1473,10 @@ var SalesTableService = /** @class */ (function () {
                         batches.itemid = item.itemid;
                         batches.transrefid = reqData.interCompanyOriginalSalesId;
                         batches.invoiceid = item.salesId;
-                        batches.qty = reqData.transkind == "PURCHASERETURN" ? -batches.returnQuantity : batches.returnQuantity;
+                        batches.qty =
+                            reqData.transkind == "PURCHASERETURN"
+                                ? -batches.returnQuantity
+                                : batches.returnQuantity;
                         batches.batchno = batches.batchno;
                         batches.configid = item.configId;
                         batches.inventsizeid = item.inventsizeid;
@@ -1440,13 +1507,17 @@ var SalesTableService = /** @class */ (function () {
                         return [3 /*break*/, 6];
                     case 13:
                         if (!(reqData.transkind == "DESIGNERSERVICERETURN")) return [3 /*break*/, 17];
-                        return [4 /*yield*/, this.salestableDAO.find({ interCompanyOriginalSalesId: reqData.interCompanyOriginalSalesId })];
+                        return [4 /*yield*/, this.salestableDAO.find({
+                                interCompanyOriginalSalesId: reqData.interCompanyOriginalSalesId
+                            })];
                     case 14:
                         PrevReturnedData = _c.sent();
                         if (PrevReturnedData.length > 0) {
                             throw { message: "Already Returned" };
                         }
-                        return [4 /*yield*/, this.designerServiceDAO.findOne({ invoiceid: reqData.interCompanyOriginalSalesId })];
+                        return [4 /*yield*/, this.designerServiceDAO.findOne({
+                                invoiceid: reqData.interCompanyOriginalSalesId
+                            })];
                     case 15:
                         designerServiceData = _c.sent();
                         delete designerServiceData.serviceid;
@@ -1480,7 +1551,9 @@ var SalesTableService = /** @class */ (function () {
                         reqData.interCompanyOriginalSalesId;
                         transactionClosed = false;
                         checkStatus = false;
-                        return [4 /*yield*/, this.salestableDAO.findOne({ salesId: reqData.interCompanyOriginalSalesId })];
+                        return [4 /*yield*/, this.salestableDAO.findOne({
+                                salesId: reqData.interCompanyOriginalSalesId
+                            })];
                     case 1:
                         salesData = _c.sent();
                         if (!salesData) return [3 /*break*/, 3];
@@ -1493,20 +1566,19 @@ var SalesTableService = /** @class */ (function () {
                         reqData.isMovementIn = false;
                         reqData.status = "SHIPPED";
                         transactionClosed = true;
-                        return [3 /*break*/, 4];
-                    case 3: throw { message: Props_1.Props.INVALID_DATA };
-                    case 4: return [4 /*yield*/, this.validate(reqData)];
-                    case 5:
+                        _c.label = 3;
+                    case 3: return [4 /*yield*/, this.validate(reqData)];
+                    case 4:
                         cond = _c.sent();
-                        if (!(cond == true)) return [3 /*break*/, 14];
+                        if (!(cond == true)) return [3 /*break*/, 13];
                         return [4 /*yield*/, this.salestableDAO.save(reqData)];
-                    case 6:
+                    case 5:
                         salesTable = _c.sent();
                         salesLine = salesLine.filter(function (v) { return v.status == "SHIPPED"; });
                         _i = 0, salesLine_6 = salesLine;
-                        _c.label = 7;
-                    case 7:
-                        if (!(_i < salesLine_6.length)) return [3 /*break*/, 12];
+                        _c.label = 6;
+                    case 6:
+                        if (!(_i < salesLine_6.length)) return [3 /*break*/, 11];
                         item = salesLine_6[_i];
                         delete item.id;
                         item.id = uuid();
@@ -1515,15 +1587,17 @@ var SalesTableService = /** @class */ (function () {
                         item.createdBy = this.sessionInfo.userName;
                         item.numberSequenceGroupId = this.seqNum;
                         item.batch = [];
-                        if (!(item.batches && item.batches.length > 0)) return [3 /*break*/, 11];
+                        if (!(item.batches && item.batches.length > 0)) return [3 /*break*/, 10];
                         _a = 0, _b = item.batches;
-                        _c.label = 8;
-                    case 8:
-                        if (!(_a < _b.length)) return [3 /*break*/, 11];
+                        _c.label = 7;
+                    case 7:
+                        if (!(_a < _b.length)) return [3 /*break*/, 10];
                         batches = _b[_a];
-                        if (!(batches.quantity > 0)) return [3 /*break*/, 10];
+                        if (!(batches.quantity > 0)) return [3 /*break*/, 9];
                         batches.itemid = item.itemid;
-                        batches.transrefid = reqData.interCompanyOriginalSalesId ? reqData.interCompanyOriginalSalesId : reqData.salesId;
+                        batches.transrefid = reqData.interCompanyOriginalSalesId
+                            ? reqData.interCompanyOriginalSalesId
+                            : reqData.salesId;
                         batches.invoiceid = reqData.salesId;
                         batches.qty = -parseInt(batches.quantity);
                         batches.batchno = batches.batchNo;
@@ -1532,7 +1606,7 @@ var SalesTableService = /** @class */ (function () {
                         batches.inventlocationid = reqData.inventLocationId;
                         batches.dataareaid = reqData.dataareaid;
                         batches.reserveStatus = reqData.status;
-                        batches.transactionClosed = transactionClosed;
+                        batches.transactionClosed = true;
                         batches.dateinvent = moment().format();
                         batches.salesLineId = item.id;
                         item.batch.push({
@@ -1540,17 +1614,17 @@ var SalesTableService = /** @class */ (function () {
                             quantity: batches.quantity
                         });
                         return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches, true)];
-                    case 9:
+                    case 8:
                         _c.sent();
-                        _c.label = 10;
-                    case 10:
+                        _c.label = 9;
+                    case 9:
                         _a++;
-                        return [3 /*break*/, 8];
-                    case 11:
-                        _i++;
                         return [3 /*break*/, 7];
-                    case 12: return [4 /*yield*/, this.salesLineDAO.save(salesLine)];
-                    case 13:
+                    case 10:
+                        _i++;
+                        return [3 /*break*/, 6];
+                    case 11: return [4 /*yield*/, this.salesLineDAO.save(salesLine)];
+                    case 12:
                         salesline = _c.sent();
                         returnData = {
                             id: salesTable.salesId,
@@ -1559,61 +1633,73 @@ var SalesTableService = /** @class */ (function () {
                         };
                         // //console.log(returnData);
                         return [2 /*return*/, returnData];
-                    case 14: return [2 /*return*/];
+                    case 13: return [2 /*return*/];
                 }
             });
         });
     };
     SalesTableService.prototype.saveOrderReceive = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var salesLine, transactionClosed, salesData, checkStatus, transferData, cond, salesTable, batches_6, _i, salesLine_7, item, _a, _b, batches_7, salesline, returnData;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+            var salesLine, transactionClosed, salesData, checkStatus, transferData, cond, salesTable, batches_6, _i, salesLine_7, item, _a, _b, batches_7, _c, _d, batches_8, salesline, returnData;
+            return __generator(this, function (_e) {
+                switch (_e.label) {
                     case 0:
                         salesLine = reqData.salesLine;
                         delete reqData.salesLine;
                         reqData.interCompanyOriginalSalesId;
                         transactionClosed = false;
                         checkStatus = false;
-                        return [4 /*yield*/, this.salestableDAO.findOne({ salesId: reqData.interCompanyOriginalSalesId })];
+                        return [4 /*yield*/, this.salestableDAO.findOne({
+                                salesId: reqData.interCompanyOriginalSalesId
+                            })];
                     case 1:
-                        salesData = _c.sent();
+                        salesData = _e.sent();
                         if (!salesData) return [3 /*break*/, 5];
                         // salesData.status = "RECEIVED";
                         salesData.salesType = 3;
                         return [4 /*yield*/, this.salestableDAO.save(salesData)];
                     case 2:
-                        _c.sent();
+                        _e.sent();
                         reqData.salesType = 3;
                         reqData.isMovementIn = true;
                         reqData.status = "RECEIVED";
                         transactionClosed = true;
-                        return [4 /*yield*/, this.salestableDAO.findOne({ salesId: salesData.interCompanyOriginalSalesId })];
+                        return [4 /*yield*/, this.salestableDAO.findOne({
+                                salesId: salesData.interCompanyOriginalSalesId
+                            })];
                     case 3:
-                        transferData = _c.sent();
+                        transferData = _e.sent();
                         transferData.status = "RECEIVED";
                         return [4 /*yield*/, this.salestableDAO.save(transferData)];
                     case 4:
-                        _c.sent();
-                        return [3 /*break*/, 6];
-                    case 5: throw { message: Props_1.Props.INVALID_DATA };
-                    case 6: return [4 /*yield*/, this.validate(reqData)];
-                    case 7:
-                        cond = _c.sent();
-                        if (!(cond == true)) return [3 /*break*/, 17];
+                        _e.sent();
+                        _e.label = 5;
+                    case 5: return [4 /*yield*/, this.validate(reqData)];
+                    case 6:
+                        cond = _e.sent();
+                        if (!(cond == true)) return [3 /*break*/, 21];
                         return [4 /*yield*/, this.salestableDAO.save(reqData)];
+                    case 7:
+                        salesTable = _e.sent();
+                        salesLine = salesLine.filter(function (v) { return v.status == "RECEIVED"; });
+                        return [4 /*yield*/, this.inventTransDAO.findAll({
+                                invoiceid: reqData.interCompanyOriginalSalesId
+                            })];
                     case 8:
-                        salesTable = _c.sent();
-                        return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: reqData.interCompanyOriginalSalesId })];
-                    case 9:
-                        batches_6 = _c.sent();
-                        salesLine.map(function (v) {
-                            v.batches = batches_6.filter(function (b) { return b.configid == v.configId && b.itemid == v.itemid && b.inventsizeid == v.inventsizeid; });
-                        });
+                        batches_6 = _e.sent();
+                        if (batches_6.length > 0) {
+                            salesLine.map(function (v) {
+                                v.batches = batches_6.filter(function (b) {
+                                    return b.configid == v.configId &&
+                                        b.itemid == v.itemid &&
+                                        b.inventsizeid == v.inventsizeid;
+                                });
+                            });
+                        }
                         _i = 0, salesLine_7 = salesLine;
-                        _c.label = 10;
-                    case 10:
-                        if (!(_i < salesLine_7.length)) return [3 /*break*/, 15];
+                        _e.label = 9;
+                    case 9:
+                        if (!(_i < salesLine_7.length)) return [3 /*break*/, 19];
                         item = salesLine_7[_i];
                         delete item.id;
                         item.id = uuid();
@@ -1622,11 +1708,11 @@ var SalesTableService = /** @class */ (function () {
                         item.createdBy = this.sessionInfo.userName;
                         item.numberSequenceGroupId = this.seqNum;
                         item.batch = [];
-                        if (!(item.batches && item.batches.length > 0)) return [3 /*break*/, 14];
+                        if (!(batches_6 && batches_6.length > 0)) return [3 /*break*/, 14];
                         _a = 0, _b = item.batches;
-                        _c.label = 11;
-                    case 11:
-                        if (!(_a < _b.length)) return [3 /*break*/, 14];
+                        _e.label = 10;
+                    case 10:
+                        if (!(_a < _b.length)) return [3 /*break*/, 13];
                         batches_7 = _b[_a];
                         batches_7.itemid = item.itemid;
                         batches_7.transrefid = reqData.interCompanyOriginalSalesId;
@@ -1638,7 +1724,7 @@ var SalesTableService = /** @class */ (function () {
                         batches_7.inventlocationid = reqData.inventLocationId;
                         batches_7.dataareaid = reqData.dataareaid;
                         batches_7.reserveStatus = reqData.status;
-                        batches_7.transactionClosed = transactionClosed;
+                        batches_7.transactionClosed = true;
                         batches_7.dateinvent = moment().format();
                         batches_7.salesLineId = item.id;
                         item.batch.push({
@@ -1646,18 +1732,53 @@ var SalesTableService = /** @class */ (function () {
                             quantity: batches_7.quantity
                         });
                         return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches_7, true)];
+                    case 11:
+                        _e.sent();
+                        _e.label = 12;
                     case 12:
-                        _c.sent();
-                        _c.label = 13;
-                    case 13:
                         _a++;
-                        return [3 /*break*/, 11];
-                    case 14:
-                        _i++;
                         return [3 /*break*/, 10];
-                    case 15: return [4 /*yield*/, this.salesLineDAO.save(salesLine)];
+                    case 13: return [3 /*break*/, 18];
+                    case 14:
+                        if (!(item.batches && item.batches.length > 0)) return [3 /*break*/, 18];
+                        _c = 0, _d = item.batches;
+                        _e.label = 15;
+                    case 15:
+                        if (!(_c < _d.length)) return [3 /*break*/, 18];
+                        batches_8 = _d[_c];
+                        if (!(batches_8.quantity > 0)) return [3 /*break*/, 17];
+                        batches_8.itemid = item.itemid;
+                        batches_8.transrefid = reqData.interCompanyOriginalSalesId
+                            ? reqData.interCompanyOriginalSalesId
+                            : reqData.salesId;
+                        batches_8.invoiceid = reqData.salesId;
+                        batches_8.qty = parseInt(batches_8.quantity);
+                        batches_8.batchno = batches_8.batchNo;
+                        batches_8.configid = item.configId;
+                        batches_8.inventsizeid = item.inventsizeid;
+                        batches_8.inventlocationid = reqData.inventLocationId;
+                        batches_8.dataareaid = reqData.dataareaid;
+                        batches_8.reserveStatus = reqData.status;
+                        batches_8.transactionClosed = true;
+                        batches_8.dateinvent = moment().format();
+                        batches_8.salesLineId = item.id;
+                        item.batch.push({
+                            batchNo: batches_8.batchNo,
+                            quantity: batches_8.quantity
+                        });
+                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches_8, true)];
                     case 16:
-                        salesline = _c.sent();
+                        _e.sent();
+                        _e.label = 17;
+                    case 17:
+                        _c++;
+                        return [3 /*break*/, 15];
+                    case 18:
+                        _i++;
+                        return [3 /*break*/, 9];
+                    case 19: return [4 /*yield*/, this.salesLineDAO.save(salesLine)];
+                    case 20:
+                        salesline = _e.sent();
                         returnData = {
                             id: salesTable.salesId,
                             message: Props_1.Props.SAVED_SUCCESSFULLY,
@@ -1665,14 +1786,14 @@ var SalesTableService = /** @class */ (function () {
                         };
                         // //console.log(returnData);
                         return [2 /*return*/, returnData];
-                    case 17: return [2 /*return*/];
+                    case 21: return [2 /*return*/];
                 }
             });
         });
     };
     SalesTableService.prototype.saveInventoryMovementOrder = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var salesLine, transactionClosed, salesData, checkStatus, cond, salesTable, lineData, batches, _i, batches_8, batch, _a, salesLine_8, item, _b, _c, batches_10, batches_11, _d, batches_9, batch, returnData;
+            var salesLine, transactionClosed, salesData, checkStatus, cond, salesTable, lineData, batches, _i, batches_9, batch, _a, salesLine_8, item, _b, _c, batches_11, batches_12, _d, batches_10, batch, returnData;
             return __generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
@@ -1702,7 +1823,9 @@ var SalesTableService = /** @class */ (function () {
                     case 3:
                         _e.sent();
                         _e.label = 4;
-                    case 4: return [4 /*yield*/, this.salesLineDAO.findAll({ salesId: reqData.salesId })];
+                    case 4: return [4 /*yield*/, this.salesLineDAO.findAll({
+                            salesId: reqData.salesId
+                        })];
                     case 5:
                         lineData = _e.sent();
                         if (!lineData) return [3 /*break*/, 7];
@@ -1710,14 +1833,16 @@ var SalesTableService = /** @class */ (function () {
                     case 6:
                         _e.sent();
                         _e.label = 7;
-                    case 7: return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: reqData.salesId })];
+                    case 7: return [4 /*yield*/, this.inventTransDAO.findAll({
+                            invoiceid: reqData.salesId
+                        })];
                     case 8:
                         batches = _e.sent();
-                        _i = 0, batches_8 = batches;
+                        _i = 0, batches_9 = batches;
                         _e.label = 9;
                     case 9:
-                        if (!(_i < batches_8.length)) return [3 /*break*/, 12];
-                        batch = batches_8[_i];
+                        if (!(_i < batches_9.length)) return [3 /*break*/, 12];
+                        batch = batches_9[_i];
                         if (!(batch.reserveStatus == "RESERVED")) return [3 /*break*/, 11];
                         return [4 /*yield*/, this.updateInventoryService.updateUnReserveQty(batch)];
                     case 10:
@@ -1744,45 +1869,49 @@ var SalesTableService = /** @class */ (function () {
                         _e.label = 14;
                     case 14:
                         if (!(_b < _c.length)) return [3 /*break*/, 19];
-                        batches_10 = _c[_b];
-                        if (!(batches_10.quantity > 0)) return [3 /*break*/, 18];
-                        batches_10.itemid = item.itemid;
-                        batches_10.transrefid = reqData.interCompanyOriginalSalesId ? reqData.interCompanyOriginalSalesId : reqData.salesId;
-                        batches_10.invoiceid = reqData.salesId;
-                        batches_10.qty = reqData.isMovementIn ? parseInt(batches_10.quantity) : -parseInt(batches_10.quantity);
-                        batches_10.batchno = batches_10.batchNo;
-                        batches_10.configid = item.configId;
-                        batches_10.inventsizeid = item.inventsizeid;
-                        batches_10.inventlocationid = this.sessionInfo.inventlocationid;
-                        batches_10.dataareaid = this.sessionInfo.dataareaid;
-                        batches_10.reserveStatus = reqData.transkind;
-                        batches_10.transactionClosed = transactionClosed;
-                        batches_10.dateinvent = new Date();
-                        batches_10.salesLineId = item.id;
+                        batches_11 = _c[_b];
+                        if (!(batches_11.quantity > 0)) return [3 /*break*/, 18];
+                        batches_11.itemid = item.itemid;
+                        batches_11.transrefid = reqData.interCompanyOriginalSalesId
+                            ? reqData.interCompanyOriginalSalesId
+                            : reqData.salesId;
+                        batches_11.invoiceid = reqData.salesId;
+                        batches_11.qty = reqData.isMovementIn
+                            ? parseInt(batches_11.quantity)
+                            : -parseInt(batches_11.quantity);
+                        batches_11.batchno = batches_11.batchNo;
+                        batches_11.configid = item.configId;
+                        batches_11.inventsizeid = item.inventsizeid;
+                        batches_11.inventlocationid = this.sessionInfo.inventlocationid;
+                        batches_11.dataareaid = this.sessionInfo.dataareaid;
+                        batches_11.reserveStatus = reqData.transkind;
+                        batches_11.transactionClosed = transactionClosed;
+                        batches_11.dateinvent = new Date();
+                        batches_11.salesLineId = item.id;
                         if (!reqData.isMovementIn) return [3 /*break*/, 16];
-                        batches_10.inventbatch = {
-                            inventBatchId: batches_10.batchNo,
+                        batches_11.inventbatch = {
+                            inventBatchId: batches_11.batchNo,
                             itemId: item.itemid,
                             configId: item.configId,
-                            expDate: new Date(batches_10.expDate),
-                            prodDate: batches_10.prodDate,
-                            description: batches_10.description,
+                            expDate: new Date(batches_11.expDate),
+                            prodDate: batches_11.prodDate,
+                            description: batches_11.description,
                             dataAreaId: this.sessionInfo.dataareaid,
                             createdDateTime: new Date(),
                             dateinvent: new Date()
                         };
-                        return [4 /*yield*/, this.inventbatchDAO.save(batches_10.inventbatch)];
+                        return [4 /*yield*/, this.inventbatchDAO.save(batches_11.inventbatch)];
                     case 15:
                         _e.sent();
                         _e.label = 16;
                     case 16:
                         // await this.inventTransDAO.save(batches);
                         item.batch.push({
-                            batchNo: batches_10.batchNo,
-                            quantity: batches_10.quantity
+                            batchNo: batches_11.batchNo,
+                            quantity: batches_11.quantity
                         });
                         this.updateInventoryService.sessionInfo = this.sessionInfo;
-                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches_10)];
+                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches_11)];
                     case 17:
                         _e.sent();
                         _e.label = 18;
@@ -1790,21 +1919,25 @@ var SalesTableService = /** @class */ (function () {
                         _b++;
                         return [3 /*break*/, 14];
                     case 19: return [3 /*break*/, 25];
-                    case 20: return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: reqData.interCompanyOriginalSalesId })];
+                    case 20: return [4 /*yield*/, this.inventTransDAO.findAll({
+                            invoiceid: reqData.interCompanyOriginalSalesId
+                        })];
                     case 21:
-                        batches_11 = _e.sent();
-                        _d = 0, batches_9 = batches_11;
+                        batches_12 = _e.sent();
+                        _d = 0, batches_10 = batches_12;
                         _e.label = 22;
                     case 22:
-                        if (!(_d < batches_9.length)) return [3 /*break*/, 25];
-                        batch = batches_9[_d];
+                        if (!(_d < batches_10.length)) return [3 /*break*/, 25];
+                        batch = batches_10[_d];
                         delete batch.id;
                         batch.transrefid = reqData.interCompanyOriginalSalesId;
                         batch.invoiceid = reqData.salesId;
                         batch.reserveStatus = reqData.transkind;
                         batch.transactionClosed = transactionClosed;
                         batch.inventlocationid = this.sessionInfo.inventlocationid;
-                        batch.qty = reqData.isMovementIn ? Math.abs(batch.qty) : -Math.abs(batch.qty);
+                        batch.qty = reqData.isMovementIn
+                            ? Math.abs(batch.qty)
+                            : -Math.abs(batch.qty);
                         batch.dateinvent = new Date();
                         // this.inventTransDAO.save(batch);
                         item.batch.push({
@@ -1930,7 +2063,8 @@ var SalesTableService = /** @class */ (function () {
                                 batch.invoiceid = item.salesId;
                                 batch.dataareaid = this.sessionInfo.dataareaid;
                                 batch.inventlocationid = this.sessionInfo.inventlocationid;
-                                batch.transactionClosed = status == "PAID" || status == "RESERVED" ? true : false;
+                                batch.transactionClosed =
+                                    status == "PAID" || status == "RESERVED" ? true : false;
                                 batch.qty = -batch.quantity;
                                 batch.reserveStatus = status;
                                 batch.dateinvent = moment().format();
@@ -2023,35 +2157,99 @@ var SalesTableService = /** @class */ (function () {
         });
     };
     SalesTableService.prototype.calItem = function (item) {
-        item.salesprice = item.salesprice ? Math.round(parseFloat((item.salesprice * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
-        item.salesQty = item.salesQty ? Math.round(parseFloat((item.salesQty * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
-        item.lineAmount = item.lineAmount ? Math.round(parseFloat((item.lineAmount * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
-        item.remainSalesPhysical = item.remainSalesPhysical ? Math.round(parseFloat((item.remainSalesPhysical * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
-        item.lineTotalDisc = item.lineTotalDisc ? Math.round(parseFloat((item.lineTotalDisc * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
-        item.colorantprice = item.colorantprice ? Math.round(parseFloat((item.colorantprice * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
-        item.vatamount = item.vatamount ? Math.round(parseFloat((item.vatamount * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
-        item.qtyOrdered = item.qtyOrdered ? Math.round(parseFloat((item.qtyOrdered * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
-        item.voucherdiscpercent = item.voucherdiscpercent ? Math.round(parseFloat((item.voucherdiscpercent * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
-        item.voucherdiscamt = item.voucherdiscamt ? Math.round(parseFloat((item.voucherdiscamt * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
-        item.enddiscamt = item.enddiscamt ? Math.round(parseFloat((item.enddiscamt * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
-        item.endDisc = item.endDisc ? Math.round(parseFloat((item.endDisc * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
-        item.multilnPercent = item.multilnPercent ? Math.round(parseFloat((item.multilnPercent * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
-        item.multilndisc = item.multilndisc ? Math.round(parseFloat((item.multilndisc * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
-        item.linediscpercent = item.linediscpercent ? Math.round(parseFloat((item.linediscpercent * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
-        item.linediscamt = item.linediscamt ? Math.round(parseFloat((item.linediscamt * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
-        item.lineTotalDisc = item.lineTotalDisc ? Math.round(parseFloat((item.lineTotalDisc * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
-        item.promotiondisc = item.promotiondisc ? Math.round(parseFloat((item.promotiondisc * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
-        item.instantdiscamt = item.instantdiscamt ? Math.round(parseFloat((item.instantdiscamt * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
-        item.instantDisc = item.instantDisc ? Math.round(parseFloat((item.instantDisc * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
-        item.vat = item.vat ? Math.round(parseFloat((item.vat * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
+        item.salesprice = item.salesprice
+            ? Math.round(parseFloat((item.salesprice * Math.pow(10, 2)).toFixed(2))) /
+                Math.pow(10, 2)
+            : 0;
+        item.salesQty = item.salesQty
+            ? Math.round(parseFloat((item.salesQty * Math.pow(10, 2)).toFixed(2))) /
+                Math.pow(10, 2)
+            : 0;
+        item.lineAmount = item.lineAmount
+            ? Math.round(parseFloat((item.lineAmount * Math.pow(10, 2)).toFixed(2))) /
+                Math.pow(10, 2)
+            : 0;
+        item.remainSalesPhysical = item.remainSalesPhysical
+            ? Math.round(parseFloat((item.remainSalesPhysical * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
+            : 0;
+        item.lineTotalDisc = item.lineTotalDisc
+            ? Math.round(parseFloat((item.lineTotalDisc * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
+            : 0;
+        item.colorantprice = item.colorantprice
+            ? Math.round(parseFloat((item.colorantprice * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
+            : 0;
+        item.vatamount = item.vatamount
+            ? Math.round(parseFloat((item.vatamount * Math.pow(10, 2)).toFixed(2))) /
+                Math.pow(10, 2)
+            : 0;
+        item.qtyOrdered = item.qtyOrdered
+            ? Math.round(parseFloat((item.qtyOrdered * Math.pow(10, 2)).toFixed(2))) /
+                Math.pow(10, 2)
+            : 0;
+        item.voucherdiscpercent = item.voucherdiscpercent
+            ? Math.round(parseFloat((item.voucherdiscpercent * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
+            : 0;
+        item.voucherdiscamt = item.voucherdiscamt
+            ? Math.round(parseFloat((item.voucherdiscamt * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
+            : 0;
+        item.enddiscamt = item.enddiscamt
+            ? Math.round(parseFloat((item.enddiscamt * Math.pow(10, 2)).toFixed(2))) /
+                Math.pow(10, 2)
+            : 0;
+        item.endDisc = item.endDisc
+            ? Math.round(parseFloat((item.endDisc * Math.pow(10, 2)).toFixed(2))) /
+                Math.pow(10, 2)
+            : 0;
+        item.multilnPercent = item.multilnPercent
+            ? Math.round(parseFloat((item.multilnPercent * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
+            : 0;
+        item.multilndisc = item.multilndisc
+            ? Math.round(parseFloat((item.multilndisc * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
+            : 0;
+        item.linediscpercent = item.linediscpercent
+            ? Math.round(parseFloat((item.linediscpercent * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
+            : 0;
+        item.linediscamt = item.linediscamt
+            ? Math.round(parseFloat((item.linediscamt * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
+            : 0;
+        item.lineTotalDisc = item.lineTotalDisc
+            ? Math.round(parseFloat((item.lineTotalDisc * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
+            : 0;
+        item.promotiondisc = item.promotiondisc
+            ? Math.round(parseFloat((item.promotiondisc * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
+            : 0;
+        item.instantdiscamt = item.instantdiscamt
+            ? Math.round(parseFloat((item.instantdiscamt * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
+            : 0;
+        item.instantDisc = item.instantDisc
+            ? Math.round(parseFloat((item.instantDisc * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
+            : 0;
+        item.vat = item.vat
+            ? Math.round(parseFloat((item.vat * Math.pow(10, 2)).toFixed(2))) /
+                Math.pow(10, 2)
+            : 0;
     };
     SalesTableService.prototype.calData = function (data) {
-        data.sumTax = Math.round(parseFloat((data.sumTax * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2);
-        data.vatamount = Math.round(parseFloat((data.vatamount * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2);
-        data.voucherdiscpercent = data.voucherdiscpercent ? Math.round(parseFloat((data.vatamount * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
-        data.redeemptsamt = data.redeemptsamt ? Math.round(parseFloat((data.redeemptsamt * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
-        data.voucherdiscamt = data.voucherdiscamt ? Math.round(parseFloat((data.voucherdiscamt * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
-        data.redeempts = data.redeempts ? Math.round(parseFloat((data.redeempts * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
+        data.sumTax =
+            Math.round(parseFloat((data.sumTax * Math.pow(10, 2)).toFixed(2))) /
+                Math.pow(10, 2);
+        data.vatamount =
+            Math.round(parseFloat((data.vatamount * Math.pow(10, 2)).toFixed(2))) /
+                Math.pow(10, 2);
+        data.voucherdiscpercent = data.voucherdiscpercent
+            ? Math.round(parseFloat((data.vatamount * Math.pow(10, 2)).toFixed(2))) /
+                Math.pow(10, 2)
+            : 0;
+        data.redeemptsamt = data.redeemptsamt
+            ? Math.round(parseFloat((data.redeemptsamt * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
+            : 0;
+        data.voucherdiscamt = data.voucherdiscamt
+            ? Math.round(parseFloat((data.voucherdiscamt * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
+            : 0;
+        data.redeempts = data.redeempts
+            ? Math.round(parseFloat((data.redeempts * Math.pow(10, 2)).toFixed(2))) /
+                Math.pow(10, 2)
+            : 0;
     };
     return SalesTableService;
 }());
