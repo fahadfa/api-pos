@@ -48,18 +48,22 @@ var SyncService = /** @class */ (function () {
         this.syncDDLService = new SyncDDLService_1.SyncDDLService();
         Log_1.log.log("debug", "&&&&&&&&&&&&&&&&&&&&&& ENV_STORE_ID : " + process.env.ENV_STORE_ID + " &&&&&&&&&&&&&&&&&&&&&&");
         if (process.env.ENV_STORE_ID) {
+            Log_1.log.log("info", ">>>>>>>>>>>>>>>>> INIT <<<<<<<<<<<<<<<<<<<");
             this.init();
         }
     }
     SyncService.prototype.init = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var isProceed;
             var _this = this;
             return __generator(this, function (_a) {
-                Log_1.log.log("info", ">>>>>>>>>>>>>>>>> INIT <<<<<<<<<<<<<<<<<<<");
-                cron.schedule("*/15 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
+                isProceed = true;
+                cron.schedule("*/5 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
+                                if (!(isProceed == true)) return [3 /*break*/, 6];
+                                isProceed = false;
                                 Log_1.log.log("info", "(((((((((( SYNC START ))))))))))");
                                 return [4 /*yield*/, this.checkInternet()];
                             case 1:
@@ -78,7 +82,12 @@ var SyncService = /** @class */ (function () {
                                 _a.label = 5;
                             case 5:
                                 Log_1.log.log("info", "(((((((((( SYNC CLOSE ))))))))))");
-                                return [2 /*return*/];
+                                isProceed = true;
+                                return [3 /*break*/, 7];
+                            case 6:
+                                Log_1.log.warn("still processing ...................................");
+                                _a.label = 7;
+                            case 7: return [2 /*return*/];
                         }
                     });
                 }); });

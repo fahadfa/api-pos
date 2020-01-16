@@ -92,13 +92,21 @@ try {
         var zip = new AdmZip(__dirname + "/" + fileName);
         zip.extractAllTo("../", true);
         fs.unlinkSync(__dirname + "/" + fileName);
-        Log_1.log.debug("nssm.exe restart jpos-offline");
-        cmd.get("net stop jpos-offline", function (err, data) {
-            Log_1.log.log("warn", err, data);
-            cmd.get("net start jpos-offline", function (err, data) {
-                Log_1.log.log("warn", err, data);
-            });
-        });
+        try {
+            cmd.run("net stop jpos-offline");
+            Log_1.log.log("warn", "net stop");
+            cmd.run("net start jpos-offline");
+            Log_1.log.log("warn", "net start");
+        }
+        catch (err) {
+            Log_1.log.error("update.downloaded error: ", err);
+        }
+        // cmd.get("net stop jpos-offline", (err: any, data: any) => {
+        //   log.log("warn", err, data);
+        //   cmd.get("net start jpos-offline", (err: any, data: any) => {
+        //     log.log("warn", err, data);
+        //   });
+        // });
         // autoupdater.fire("extract"); // If autoupdate: false, you'll have to do this manually.
     });
     autoupdater.on("update.not-installed", function () {
