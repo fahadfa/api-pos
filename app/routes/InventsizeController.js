@@ -51,11 +51,11 @@ var InventsizeController = /** @class */ (function () {
     InventsizeController.prototype.getRouter = function () {
         var _this = this;
         this.router.get("/:id", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
-            var params, id, result, reqData, error_1;
+            var params, id, result, reqData, reqData, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 8, , 9]);
+                        _a.trys.push([0, 10, , 11]);
                         params = request.params;
                         id = params.id;
                         // const id: any = request.params.id;
@@ -64,30 +64,37 @@ var InventsizeController = /** @class */ (function () {
                         App_1.App.PrintLog(this.constructor.name, "Entity", this.service.sessionInfo);
                         return [4 /*yield*/, App_1.App.ValildateUserAccess(this.service.sessionInfo, this.componentName, Props_1.Props.ACCESS_READ)];
                     case 1:
-                        if (!_a.sent()) return [3 /*break*/, 6];
+                        if (!_a.sent()) return [3 /*break*/, 8];
                         if (!(id == "salesorderpagesizes")) return [3 /*break*/, 3];
                         reqData = request.query ? request.query : {};
                         return [4 /*yield*/, this.service.searchSalesOrderSizes(reqData)];
                     case 2:
                         result = _a.sent();
-                        return [3 /*break*/, 5];
-                    case 3: return [4 /*yield*/, this.service.entity(id)];
+                        return [3 /*break*/, 7];
+                    case 3:
+                        if (!(id = 'sizeswithnoprice')) return [3 /*break*/, 5];
+                        reqData = request.query ? request.query : {};
+                        return [4 /*yield*/, this.service.searchSizesWithNoPrice(reqData)];
                     case 4:
                         result = _a.sent();
-                        _a.label = 5;
-                    case 5: return [3 /*break*/, 7];
-                    case 6: throw this.service.sessionInfo
+                        return [3 /*break*/, 7];
+                    case 5: return [4 /*yield*/, this.service.entity(id)];
+                    case 6:
+                        result = _a.sent();
+                        _a.label = 7;
+                    case 7: return [3 /*break*/, 9];
+                    case 8: throw this.service.sessionInfo
                         ? this.service.sessionInfo
                         : { message: Props_1.Props.TOKEN_MESSAGE };
-                    case 7:
+                    case 9:
                         response.send({ status: 1, data: result });
-                        return [3 /*break*/, 9];
-                    case 8:
+                        return [3 /*break*/, 11];
+                    case 10:
                         error_1 = _a.sent();
                         console.log(error_1);
                         response.send({ status: 0, error: error_1 });
-                        return [3 /*break*/, 9];
-                    case 9: return [2 /*return*/];
+                        return [3 /*break*/, 11];
+                    case 11: return [2 /*return*/];
                 }
             });
         }); });

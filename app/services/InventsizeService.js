@@ -129,6 +129,47 @@ var InventsizeService = /** @class */ (function () {
             });
         });
     };
+    InventsizeService.prototype.searchSizesWithNoPrice = function (params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var t0, data, items, t1, error_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 7, , 8]);
+                        console.log(params);
+                        if (!(params.itemid || params.configid)) return [3 /*break*/, 5];
+                        t0 = new Date().getTime();
+                        data = [];
+                        params.inventlocationid = this.sessionInfo.inventlocationid;
+                        return [4 /*yield*/, this.rawQuery.getSizeCodes(params)];
+                    case 1:
+                        items = _a.sent();
+                        if (!(items.length > 0)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.inventsizeDAO.search(params, items)];
+                    case 2:
+                        data = _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        data = [];
+                        _a.label = 4;
+                    case 4:
+                        console.log(data.length);
+                        t1 = new Date().getTime();
+                        console.log("took " + (t1 - t0) / 1000 + " milliseconds.");
+                        data.map(function (v) {
+                            v.price = 0;
+                        });
+                        return [2 /*return*/, data];
+                    case 5: throw "itemid and configid Required";
+                    case 6: return [3 /*break*/, 8];
+                    case 7:
+                        error_4 = _a.sent();
+                        throw error_4;
+                    case 8: return [2 /*return*/];
+                }
+            });
+        });
+    };
     InventsizeService.prototype.getPrices = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
             var defaultcustomer, queryData, _i, _a, size, amount;
