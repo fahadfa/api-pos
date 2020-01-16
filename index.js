@@ -69,10 +69,18 @@ var run = function () { return __awaiter(_this, void 0, void 0, function () {
                 if (conn.isConnected) {
                     express = new AppExpress_1.default().express;
                     express.listen(port, function (err) { return __awaiter(_this, void 0, void 0, function () {
+                        var fs, syncFile, child_process;
                         return __generator(this, function (_a) {
                             if (err) {
                                 return [2 /*return*/, Log_1.log.error(err)];
                             }
+                            fs = require("fs");
+                            syncFile = __dirname + "/sync.ts";
+                            syncFile = fs.existsSync(syncFile)
+                                ? __dirname + "/sync.ts"
+                                : __dirname + "/sync.js";
+                            child_process = require("child_process");
+                            child_process.fork(syncFile);
                             return [2 /*return*/, Log_1.log.log("info", "\n                    ***********************************************\n                            server is listening on " + port + "\n                    ***********************************************\n                ")];
                         });
                     }); });
@@ -96,13 +104,6 @@ var run = function () { return __awaiter(_this, void 0, void 0, function () {
     });
 }); };
 run();
-var fs = require("fs");
-var syncFile = __dirname + "/sync.ts";
-syncFile = fs.existsSync(syncFile)
-    ? __dirname + "/sync.ts"
-    : __dirname + "/sync.js";
-var child_process = require("child_process");
-child_process.fork(syncFile);
 process.on("uncaughtException", function (err) {
     Log_1.log.error("Caught exception: " + err);
 });
