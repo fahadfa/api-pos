@@ -46,9 +46,9 @@ var SyncService = /** @class */ (function () {
     function SyncService() {
         this.syncDMLService = new SyncDMLService_1.SyncDMLService();
         this.syncDDLService = new SyncDDLService_1.SyncDDLService();
-        Log_1.log.log("debug", "&&&&&&&&&&&&&&&&&&&&&& ENV_STORE_ID : " + process.env.ENV_STORE_ID + " &&&&&&&&&&&&&&&&&&&&&&");
+        Log_1.slog.log("debug", "&&&&&&&&&&&&&&&&&&&&&& ENV_STORE_ID : " + process.env.ENV_STORE_ID + " &&&&&&&&&&&&&&&&&&&&&&");
         if (process.env.ENV_STORE_ID) {
-            Log_1.log.log("info", ">>>>>>>>>>>>>>>>> INIT <<<<<<<<<<<<<<<<<<<");
+            Log_1.slog.log("info", ">>>>>>>>>>>>>>>>> INIT <<<<<<<<<<<<<<<<<<<");
             this.init();
         }
     }
@@ -64,28 +64,28 @@ var SyncService = /** @class */ (function () {
                             case 0:
                                 if (!(isProceed == true)) return [3 /*break*/, 6];
                                 isProceed = false;
-                                Log_1.log.log("info", "(((((((((( SYNC START ))))))))))");
+                                Log_1.slog.log("info", "(((((((((( SYNC START ))))))))))");
                                 return [4 /*yield*/, this.checkInternet()];
                             case 1:
                                 if (!_a.sent()) return [3 /*break*/, 4];
-                                Log_1.log.log("info", ">>>>>>>>>>>>>>>> DDL <<<<<<<<<<<<<<<<<<<<<<<");
+                                Log_1.slog.log("info", ">>>>>>>>>>>>>>>> DDL <<<<<<<<<<<<<<<<<<<<<<<");
                                 return [4 /*yield*/, this.syncDDLService.execute()];
                             case 2:
                                 _a.sent();
-                                Log_1.log.log("info", ">>>>>>>>>>>>>>>>> DML <<<<<<<<<<<<<<<<<<<<<<<");
+                                Log_1.slog.log("info", ">>>>>>>>>>>>>>>>> DML <<<<<<<<<<<<<<<<<<<<<<<");
                                 return [4 /*yield*/, this.syncDMLService.execute()];
                             case 3:
                                 _a.sent();
                                 return [3 /*break*/, 5];
                             case 4:
-                                Log_1.log.log("debug", ">>>>>>>>>>>>>>>>> No Internet connection <<<<<<<<<<<<<<<<<<<<");
+                                Log_1.slog.log("debug", ">>>>>>>>>>>>>>>>> No Internet connection <<<<<<<<<<<<<<<<<<<<");
                                 _a.label = 5;
                             case 5:
-                                Log_1.log.log("info", "(((((((((( SYNC CLOSE ))))))))))");
+                                Log_1.slog.log("info", "(((((((((( SYNC CLOSE ))))))))))");
                                 isProceed = true;
                                 return [3 /*break*/, 7];
                             case 6:
-                                Log_1.log.warn("still processing ...................................");
+                                Log_1.slog.warn("still processing ...................................");
                                 _a.label = 7;
                             case 7: return [2 /*return*/];
                         }

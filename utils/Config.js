@@ -2,17 +2,18 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
 exports.dbOptions = {
-  name: "default",
-  type: "postgres",
-  host: "localhost",
-  port: 5432,
-  username: "postgres",
-  password: "Mpos1234",
-  database: "mpos_db",
-  logging: true,
-  synchronize: false,
-  entities: [__dirname + "/../entities/**/*{.ts,.js}"]
+    name: "default",
+    type: "postgres",
+    host: "mposdb-preprod.cw34ebrphxxg.eu-central-1.rds.amazonaws.com",
+    port: 5432,
+    username: "mposdb",
+    password: "mdbmpfpp",
+    database: "jpos_qa",
+    logging: true,
+    synchronize: false,
+    entities: [__dirname + "/../entities/**/*{.ts,.js}"]
 };
+// ============MS SQL CONNECTION=============
 //============== QA DATABASE ================
 // export let dbOptions: any = {
 //     name: "default",
@@ -44,25 +45,25 @@ exports.dbOptions = {
 //   entities: [__dirname + "/../entities/**/*{.ts,.js}"]
 // };
 exports.stageDbOptions = {
-  name: "stage",
-  type: "postgres",
-  host: "mposdb-preprod.cw34ebrphxxg.eu-central-1.rds.amazonaws.com",
-  port: 5432,
-  username: "mposdb",
-  password: "mdbmpfpp",
-  database: "jpos_dev"
+    name: "stage",
+    type: "postgres",
+    host: "mposdb-preprod.cw34ebrphxxg.eu-central-1.rds.amazonaws.com",
+    port: 5432,
+    username: "mposdb",
+    password: "mdbmpfpp",
+    database: "jpos_qa"
 };
 exports.localDbOptions = {
-  name: "local",
-  type: "postgres",
-  host: "localhost",
-  port: 5432,
-  username: "postgres",
-  password: "Mpos1234",
-  database: "mpos_db",
-  logging: true,
-  synchronize: false,
-  entities: [__dirname + "/../entities/**/*{.ts,.js}"]
+    name: "local",
+    type: "postgres",
+    host: "localhost",
+    port: 5432,
+    username: "postgres",
+    password: "Mpos1234",
+    database: "mpos_db",
+    logging: true,
+    synchronize: false,
+    entities: [__dirname + "/../entities/**/*{.ts,.js}"]
 };
 //============ PRE PROD_DB DATABASE ==========
 // export let dbOptions: any = {
@@ -91,47 +92,79 @@ exports.localDbOptions = {
 //     entities: [__dirname + "/../entities/**/*{.ts,.js}"]
 // };
 exports.mailOptions = {
-  host: "smtp.gmail.com",
-  // port: 587,
-  port: 465,
-  // port: 25,
-  user: "jazsales1@gmail.com",
-  pass: "Admin@1234"
+    host: "smtp.gmail.com",
+    // port: 587,
+    port: 465,
+    // port: 25,
+    user: "jazsales1@gmail.com",
+    pass: "Admin@1234"
 };
 exports.logOptions = {
-  file: {
-    level: "debug",
-    filename: __dirname + "/../../logs/jpos.log",
-    handleExceptions: true,
-    json: false,
-    maxsize: 10485760,
-    maxfiles: 5000
-  },
-  console: {
-    level: "debug",
-    handleExceptions: true,
-    json: false,
-    colorize: true
-  }
+    file: {
+        level: "debug",
+        filename: __dirname + "/../../logs/jpos.log",
+        handleExceptions: true,
+        json: false,
+        maxsize: 10485760,
+        maxfiles: 5000
+    },
+    console: {
+        level: "debug",
+        handleExceptions: true,
+        json: false,
+        colorize: true
+    }
 };
-exports.setEnvConfig = function() {
-  var envData = process.env.ENV_JPOS;
-  console.log(envData);
-  if (envData) {
-    envData = JSON.parse(envData);
-    if (envData.dbHost) {
-      exports.dbOptions.host = envData.dbHost;
-      exports.dbOptions.port = envData.dbPort;
-      exports.dbOptions.username = envData.dbUser;
-      exports.dbOptions.password = envData.dbPassword;
-      exports.dbOptions.database = envData.dbDatabase;
+exports.logSyncOptions = {
+    file: {
+        level: "debug",
+        filename: __dirname + "/../../logs/sync.log",
+        handleExceptions: true,
+        json: false,
+        maxsize: 10485760,
+        maxfiles: 5000
+    },
+    console: {
+        level: "debug",
+        handleExceptions: true,
+        json: false,
+        colorize: true
     }
-    if (envData.mailHost) {
-      exports.mailOptions.host = envData.mailHost;
-      exports.mailOptions.port = envData.mailPort;
-      exports.mailOptions.user = envData.mailUser;
-      exports.mailOptions.pass = envData.mailPassword;
+};
+exports.logUpdateOptions = {
+    file: {
+        level: "debug",
+        filename: __dirname + "/../../logs/update.log",
+        handleExceptions: true,
+        json: false,
+        maxsize: 10485760,
+        maxfiles: 5000
+    },
+    console: {
+        level: "debug",
+        handleExceptions: true,
+        json: false,
+        colorize: true
     }
-  }
-  console.log(envData);
+};
+exports.setEnvConfig = function () {
+    var envData = process.env.ENV_JPOS;
+    console.log(envData);
+    if (envData) {
+        envData = JSON.parse(envData);
+        if (envData.dbHost) {
+            exports.dbOptions.host = envData.dbHost;
+            exports.dbOptions.port = envData.dbPort;
+            exports.dbOptions.username = envData.dbUser;
+            exports.dbOptions.password = envData.dbPassword;
+            exports.dbOptions.database = envData.dbDatabase;
+        }
+        if (envData.mailHost) {
+            exports.mailOptions.host = envData.mailHost;
+            exports.mailOptions.port = envData.mailPort;
+            exports.mailOptions.user = envData.mailUser;
+            exports.mailOptions.pass = envData.mailPassword;
+        }
+    }
+    console.log(envData);
 };

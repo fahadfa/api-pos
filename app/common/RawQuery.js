@@ -1088,6 +1088,21 @@ var RawQuery = /** @class */ (function () {
             });
         });
     };
+    RawQuery.prototype.deleteBalances = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.db.query("delete from inventory_onhand")];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, this.db.query("delete from inventtrans")];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     return RawQuery;
 }());
 exports.RawQuery = RawQuery;

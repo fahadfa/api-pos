@@ -63,9 +63,9 @@ var SyncServiceHelper = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        Log_1.log.info("-------------- Batch Query Starts --------------");
-                        Log_1.log.info("\tHost Query: " + config.host);
-                        Log_1.log.info(sqls);
+                        Log_1.slog.info("-------------- Batch Query Starts --------------");
+                        Log_1.slog.info("\tHost Query: " + config.host);
+                        Log_1.slog.debug("\t\tBatch length: " + sqls.length);
                         db = new pg_1.Client(config);
                         _b.label = 1;
                     case 1:
@@ -109,7 +109,7 @@ var SyncServiceHelper = /** @class */ (function () {
                         return [7 /*endfinally*/];
                     case 15: return [7 /*endfinally*/];
                     case 16:
-                        Log_1.log.info("END");
+                        Log_1.slog.info("END");
                         return [4 /*yield*/, db.query("COMMIT")];
                     case 17:
                         _b.sent();
@@ -125,7 +125,7 @@ var SyncServiceHelper = /** @class */ (function () {
                         db.end();
                         return [7 /*endfinally*/];
                     case 21:
-                        Log_1.log.info("-------------- Batch Query Ends --------------");
+                        Log_1.slog.info("-------------- Batch Query Ends --------------");
                         return [2 /*return*/];
                 }
             });
@@ -137,10 +137,10 @@ var SyncServiceHelper = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        Log_1.log.info("----------------- Query Starts----------------------------");
+                        Log_1.slog.info("----------------- Query Starts----------------------------");
                         db = null;
-                        Log_1.log.info("\tHost Query: " + config.host);
-                        Log_1.log.info(sql);
+                        Log_1.slog.info("\tHost Query: " + config.host);
+                        Log_1.slog.debug(sql);
                         res = null;
                         _b.label = 1;
                     case 1:
@@ -168,13 +168,13 @@ var SyncServiceHelper = /** @class */ (function () {
                             db.release();
                         return [7 /*endfinally*/];
                     case 9:
-                        Log_1.log.info("----------------- Query Ends----------------------------");
+                        Log_1.slog.info("----------------- Query Ends----------------------------");
                         return [2 /*return*/];
                 }
             });
         });
     };
-    SyncServiceHelper.PrepareQuery = function (table, metaData, rows, filterIds, type, sourcePk, targetPk) {
+    SyncServiceHelper.PrepareQuery = function (table, metaData, rows, filterIds, type, pk) {
         var metaData_1, metaData_1_1;
         return __awaiter(this, void 0, void 0, function () {
             var e_4, _a, columns, sql, records_1, filterRows, sql_1, ele, e_4_1, records_2, filterRows;
@@ -187,7 +187,7 @@ var SyncServiceHelper = /** @class */ (function () {
                         sql += " ( " + columns.join(",");
                         sql += " ) VALUES %L";
                         records_1 = [];
-                        filterRows = rows.filter(function (ele) { return filterIds.indexOf(ele[targetPk]) > -1; });
+                        filterRows = rows.filter(function (ele) { return filterIds.indexOf(ele[pk]) > -1; });
                         filterRows.map(function (ele) {
                             records_1.push(Object.values(ele));
                         });
@@ -206,13 +206,7 @@ var SyncServiceHelper = /** @class */ (function () {
                         if (!(metaData_1_1 = _b.sent(), !metaData_1_1.done)) return [3 /*break*/, 6];
                         ele = metaData_1_1.value;
                         sql_1 +=
-                            " " +
-                                ele.name +
-                                " = cast(c." +
-                                ele.name +
-                                " as " +
-                                SyncServiceHelper.TypeConvertion(ele.data_type) +
-                                " ), ";
+                            " " + ele.name + " = cast(c." + ele.name + " as " + SyncServiceHelper.TypeConvertion(ele.data_type) + " ), ";
                         _b.label = 5;
                     case 5: return [3 /*break*/, 3];
                     case 6: return [3 /*break*/, 13];
@@ -236,14 +230,9 @@ var SyncServiceHelper = /** @class */ (function () {
                         sql_1 = sql_1.substr(0, sql_1.length - 2) + " ";
                         sql_1 += " from ( values %L)";
                         sql_1 += " as c (" + columns.join(",") + ") where ";
-                        sql_1 +=
-                            "  cast(t." +
-                                targetPk +
-                                " as text ) =  cast(c." +
-                                sourcePk +
-                                " as text )";
+                        sql_1 += "  cast(t." + pk + " as text ) =  cast(c." + pk + " as text )";
                         records_2 = [];
-                        filterRows = rows.filter(function (ele) { return filterIds.indexOf(ele[targetPk]) > -1; });
+                        filterRows = rows.filter(function (ele) { return filterIds.indexOf(ele[pk]) > -1; });
                         filterRows.map(function (ele) {
                             records_2.push(Object.values(ele));
                         });
@@ -278,15 +267,15 @@ var SyncServiceHelper = /** @class */ (function () {
                 return type;
         }
     };
-    SyncServiceHelper.ChackAvalibleQuery = function (table, metaData, primaryKeys, targetPk) {
+    SyncServiceHelper.ChackAvalibleQuery = function (table, metaData, primaryKeys, pk) {
         return __awaiter(this, void 0, void 0, function () {
             var columns, sql;
             return __generator(this, function (_a) {
                 columns = metaData.map(function (ele) { return ele.name; });
-                sql = "select " + targetPk + " from " + table;
-                sql += " where " + targetPk + " in  (%L)";
+                sql = "select DISTINCT " + pk + " from " + table;
+                sql += " where " + pk + " in  (%L)";
                 sql = format(sql, primaryKeys);
-                return [2 /*return*/, sql];
+                return [2 /*return*/, Promise.resolve(sql)];
             });
         });
     };

@@ -1236,13 +1236,20 @@ var LoadService = /** @class */ (function () {
     };
     LoadService.prototype.batcheslist = function (param) {
         return __awaiter(this, void 0, void 0, function () {
-            var query;
+            var query, data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         query = "select distinct inventbatchid as batchno, itemid as itemid, configid as configid from inventbatch where inventbatchid ILIKE '%" + param.batchno + "%' and configid = '" + param.configid + "' and itemid = '" + param.itemid + "' limit 10";
                         return [4 /*yield*/, this.db.query(query)];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 1:
+                        data = _a.sent();
+                        data.push({
+                            batchno: '-',
+                            itemid: '-',
+                            configid: '-'
+                        });
+                        return [2 /*return*/, data];
                 }
             });
         });
@@ -1257,7 +1264,7 @@ var LoadService = /** @class */ (function () {
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
-                        return [2 /*return*/, data.length > 0 ? true : false];
+                        return [2 /*return*/, data.length > 0 || param.batchno == '-' ? true : false];
                 }
             });
         });

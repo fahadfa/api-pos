@@ -54,6 +54,10 @@ var InventoryOnhand = /** @class */ (function () {
         __metadata("design:type", String)
     ], InventoryOnhand.prototype, "inventlocationid", void 0);
     __decorate([
+        typeorm_1.Column({ name: "name" }),
+        __metadata("design:type", String)
+    ], InventoryOnhand.prototype, "name", void 0);
+    __decorate([
         typeorm_1.Column({ name: "updated_on" }),
         __metadata("design:type", Date)
     ], InventoryOnhand.prototype, "updatedOn", void 0);

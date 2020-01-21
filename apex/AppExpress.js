@@ -61,8 +61,9 @@ var AppExpress = /** @class */ (function () {
             }
         };
         this.express = express_1.default();
-        this.express.use(body_parser_1.json());
+        this.express.use(body_parser_1.json({ limit: '150mb' }));
         this.express.use(express_fileupload_1.default());
+        // this.express.use(bodyParser.json({limit: '150mb'}))
         this.errorHandle();
         this.chunkDataHandle();
         this.mountRoutes();
