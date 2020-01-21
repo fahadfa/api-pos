@@ -92,22 +92,21 @@ try {
         var zip = new AdmZip(__dirname + "/" + fileName);
         zip.extractAllTo("../", true);
         fs.unlinkSync(__dirname + "/" + fileName);
-        cmd.get("npm i", function (npmerr, npmdata) {
-            if (npmerr)
-                Log_1.ulog.error(npmerr);
-            Log_1.ulog.info(npmdata);
-            cmd.get("sc query  jpos-offline", function (err, data) {
-                if (err)
-                    Log_1.ulog.error(err);
-                Log_1.ulog.warn(data);
-                if (data && data.includes("STOPPED")) {
-                    cmd.run("net start jpos-offline & net stop jpos-alt");
-                }
-                else {
-                    cmd.run("net start jpos-alt & net stop jpos-offline");
-                }
-            });
+        // cmd.get("npm i", (npmerr: any, npmdata: any) => {
+        //   if (npmerr) log.error(npmerr);
+        //   log.info(npmdata);
+        cmd.get("sc query  jpos-offline", function (err, data) {
+            if (err)
+                Log_1.ulog.error(err);
+            Log_1.ulog.warn(data);
+            if (data && data.includes("STOPPED")) {
+                cmd.run("net start jpos-offline & net stop jpos-alt");
+            }
+            else {
+                cmd.run("net start jpos-alt & net stop jpos-offline");
+            }
         });
+        // });
         // cmd.get("net stop jpos-offline", (err: any, data: any) => {
         //   log.log("warn", err, data);
         //   cmd.get("net start jpos-offline", (err: any, data: any) => {
