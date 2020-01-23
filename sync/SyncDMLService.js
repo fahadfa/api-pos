@@ -144,8 +144,8 @@ var SyncDMLService = /** @class */ (function () {
                                     case 4:
                                         metaDataTable = _a.sent();
                                         Log_1.slog.info("\n\n************* ***** *************");
-                                        Log_1.slog.debug("\t\tUpdate Records: " + rowsAvalible_1.length);
-                                        Log_1.slog.debug("\t\tInsert Records: " + rowsNotAvalible.length);
+                                        Log_1.slog.debug("\t\tUpdate Records: " + sync.map_table + " --> " + rowsAvalible_1.length);
+                                        Log_1.slog.debug("\t\tInsert Records: " + sync.map_table + " --> " + rowsNotAvalible.length);
                                         Log_1.slog.info("************* ***** *************");
                                         if (!(rowsAvalible_1 && rowsAvalible_1.length > 0)) return [3 /*break*/, 6];
                                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.PrepareQuery(sync.map_table, metaDataTable, soruceRes.rows, rowsAvalible_1, "UPDATE", sync.map_pk)];
@@ -169,11 +169,6 @@ var SyncDMLService = /** @class */ (function () {
                                     case 10:
                                         offset = offset + this_1.limitData;
                                         Log_1.slog.warn("Offset: " + offset);
-                                        /** check loop ends */
-                                        if (soruceRes.rows.length < this_1.limitData) {
-                                            Log_1.slog.debug("completed batch data ...");
-                                            isChunkEnd = true;
-                                        }
                                         return [3 /*break*/, 12];
                                     case 11:
                                         isTableUpdated = false;
@@ -228,7 +223,7 @@ var SyncDMLService = /** @class */ (function () {
         });
     };
     SyncDMLService.prototype.buildDDLQuery = function (sync, offset) {
-        var sql = "select * from " + sync.map_table + "\n                  where " + sync.cond + "  \n                  and " + sync.sync_column + " >= '" + new Date(sync.last_update).toISOString() + "'\n                 offset " + offset + " limit " + this.limitData;
+        var sql = "select * from " + sync.map_table + " where " + sync.cond + "  \n    and " + sync.sync_column + " >= '" + new Date(sync.last_update).toISOString() + "' \n    offset " + offset + " limit " + this.limitData;
         return sql;
     };
     return SyncDMLService;
