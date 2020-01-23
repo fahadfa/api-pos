@@ -133,19 +133,22 @@ var SyncServiceHelper = /** @class */ (function () {
     };
     SyncServiceHelper.ExecuteQuery = function (config, sql) {
         return __awaiter(this, void 0, void 0, function () {
-            var db, res, _a, e_3;
+            var showLog, db, res, _a, e_3;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        Log_1.slog.info("----------------- Query Starts----------------------------");
+                        showLog = !(sql.includes("DISTINCT") || sql.includes("sync_table") || sql.includes("sync_source"));
+                        if (showLog)
+                            Log_1.slog.info("----------------- Query Starts----------------------------");
                         db = null;
-                        Log_1.slog.info("\tHost Query: " + config.host);
-                        Log_1.slog.debug(sql);
+                        if (showLog)
+                            Log_1.slog.info("\tHost Query: " + config.host);
+                        if (showLog)
+                            Log_1.slog.debug(sql);
                         res = null;
                         _b.label = 1;
                     case 1:
                         _b.trys.push([1, 7, 8, 9]);
-                        console.log("*********************************************************************");
                         if (!(config.host.indexOf("localhost") != -1)) return [3 /*break*/, 3];
                         return [4 /*yield*/, SyncServiceHelper.LocalPool.connect()];
                     case 2:
@@ -167,10 +170,10 @@ var SyncServiceHelper = /** @class */ (function () {
                     case 8:
                         if (db)
                             db.release();
+                        if (showLog)
+                            Log_1.slog.info("----------------- Query Ends----------------------------");
                         return [7 /*endfinally*/];
-                    case 9:
-                        Log_1.slog.info("----------------- Query Ends----------------------------");
-                        return [2 /*return*/];
+                    case 9: return [2 /*return*/];
                 }
             });
         });
