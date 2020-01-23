@@ -342,13 +342,22 @@ var SyncServiceHelper = /** @class */ (function () {
             database: Config.stageDbOptions.database
         };
     };
+    // public static LocalDBOptions() {
+    //   return {
+    //     host: "localhost",
+    //     port: 5432,
+    //     user: "postgres",
+    //     password: "Test!234",
+    //     database: "jps_prod"
+    //   };
+    // }
     SyncServiceHelper.LocalDBOptions = function () {
         return {
-            host: "localhost",
-            port: 5432,
-            user: "postgres",
-            password: "Test!234",
-            database: "jps_prod"
+            host: Config.localDbOptions.host,
+            port: Config.localDbOptions.port,
+            user: Config.localDbOptions.username,
+            password: Config.localDbOptions.password,
+            database: Config.localDbOptions.database
         };
     };
     SyncServiceHelper.synTableColumns = "*";
