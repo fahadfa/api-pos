@@ -92,33 +92,41 @@ var SalesTableService = /** @class */ (function () {
     SalesTableService.prototype.entity = function (id, type) {
         if (type === void 0) { type = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var data, _a, _b, _c, salesLine, _i, salesLine_1, item, baseSizeBatchesList_1, error_1;
-            return __generator(this, function (_d) {
-                switch (_d.label) {
+            var data, _a, _b, _c, _d, salesLine, _i, salesLine_1, item, baseSizeBatchesList_1, error_1;
+            return __generator(this, function (_e) {
+                switch (_e.label) {
                     case 0:
-                        _d.trys.push([0, 14, , 15]);
+                        _e.trys.push([0, 16, , 17]);
                         return [4 /*yield*/, this.salestableDAO.entity(id.toUpperCase())];
                     case 1:
-                        data = _d.sent();
+                        data = _e.sent();
                         if (!data) {
                             throw { message: Props_1.Props.ORDER_NOT_FOUND };
                         }
                         return [4 /*yield*/, this.calData(data)];
                     case 2:
-                        _d.sent();
+                        _e.sent();
+                        data.custAccount = data.custAccount.trim();
                         _a = data;
                         return [4 /*yield*/, this.custtableDAO.entity(data.custAccount)];
                     case 3:
-                        _a.customer = _d.sent();
+                        _a.customer = _e.sent();
+                        data.customer = data.customer ? data.customer : {};
                         _b = data;
                         return [4 /*yield*/, this.inventlocationDAO.entity(data.custAccount)];
                     case 4:
-                        _b.toWarehouse = _d.sent();
+                        _b.toWarehouse = _e.sent();
                         _c = data;
+                        if (!data.painter) return [3 /*break*/, 6];
                         return [4 /*yield*/, this.custtableDAO.entity(data.painter)];
                     case 5:
-                        _c.painter = _d.sent();
-                        data.painter = data.painter ? data.painter : {};
+                        _d = _e.sent();
+                        return [3 /*break*/, 7];
+                    case 6:
+                        _d = {};
+                        _e.label = 7;
+                    case 7:
+                        _c.painter = _d;
                         data.instantDiscChecked = data.instantDiscChecked
                             ? data.instantDiscChecked
                             : false;
@@ -139,8 +147,8 @@ var SalesTableService = /** @class */ (function () {
                         data.movementType = data.movementType ? data.movementType : {};
                         salesLine = data.salesLine;
                         return [4 /*yield*/, this.allocateSalesLineData(salesLine)];
-                    case 6:
-                        _d.sent();
+                    case 8:
+                        _e.sent();
                         salesLine.sort(function (a, b) {
                             var lineA = a.lineNum, lineB = b.lineNum;
                             if (lineA < lineB)
@@ -151,32 +159,32 @@ var SalesTableService = /** @class */ (function () {
                             return 0; //default return value (no sorting)
                         });
                         _i = 0, salesLine_1 = salesLine;
-                        _d.label = 7;
-                    case 7:
-                        if (!(_i < salesLine_1.length)) return [3 /*break*/, 12];
+                        _e.label = 9;
+                    case 9:
+                        if (!(_i < salesLine_1.length)) return [3 /*break*/, 14];
                         item = salesLine_1[_i];
                         item.product = item.size.product;
                         delete item.size.product;
-                        if (!(data.transkind == "SALESORDER")) return [3 /*break*/, 9];
+                        if (!(data.transkind == "SALESORDER")) return [3 /*break*/, 11];
                         return [4 /*yield*/, this.inventoryOnHandCheck(item, data.transkind, null)];
-                    case 8:
-                        _d.sent();
-                        return [3 /*break*/, 11];
-                    case 9:
+                    case 10:
+                        _e.sent();
+                        return [3 /*break*/, 13];
+                    case 11:
                         if (!(data.transkind == "TRANSFERORDER" &&
-                            data.custAccount == this.sessionInfo.inventlocationid)) return [3 /*break*/, 11];
+                            data.custAccount == this.sessionInfo.inventlocationid)) return [3 /*break*/, 13];
                         //console.log("---------------------------------------------------------------------------------------", data.transkind, data.status);
                         return [4 /*yield*/, this.inventoryOnHandCheck(item, data.transkind, data.custAccount)];
-                    case 10:
+                    case 12:
                         //console.log("---------------------------------------------------------------------------------------", data.transkind, data.status);
-                        _d.sent();
-                        _d.label = 11;
-                    case 11:
-                        _i++;
-                        return [3 /*break*/, 7];
-                    case 12: return [4 /*yield*/, this.rawQuery.getBaseSizeBatchesList(id)];
+                        _e.sent();
+                        _e.label = 13;
                     case 13:
-                        baseSizeBatchesList_1 = _d.sent();
+                        _i++;
+                        return [3 /*break*/, 9];
+                    case 14: return [4 /*yield*/, this.rawQuery.getBaseSizeBatchesList(id)];
+                    case 15:
+                        baseSizeBatchesList_1 = _e.sent();
                         if (data.transkind == "SALESORDER" || data.transkind == "TRANSFERORDER") {
                             salesLine.map(function (item) {
                                 item.batches = baseSizeBatchesList_1.filter(function (v) {
@@ -215,10 +223,10 @@ var SalesTableService = /** @class */ (function () {
                         }
                         // //console.log(data);
                         return [2 /*return*/, data];
-                    case 14:
-                        error_1 = _d.sent();
+                    case 16:
+                        error_1 = _e.sent();
                         throw error_1;
-                    case 15: return [2 /*return*/];
+                    case 17: return [2 /*return*/];
                 }
             });
         });
@@ -1242,6 +1250,7 @@ var SalesTableService = /** @class */ (function () {
                             quantity: batch.quantity
                         });
                         batch.salesLineId = item.id;
+                        this.updateInventoryService.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batch, true)];
                     case 24:
                         _g.sent();
@@ -1297,6 +1306,7 @@ var SalesTableService = /** @class */ (function () {
                         v.qty = Math.abs(v.qty);
                         v.dataareaid = this.sessionInfo.dataareaid;
                         v.inventlocationid = condData.inventlocationid;
+                        this.updateInventoryService.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(v, true)];
                     case 36:
                         _g.sent();
@@ -1491,6 +1501,7 @@ var SalesTableService = /** @class */ (function () {
                             batchNo: batches.batchno,
                             quantity: batches.returnQuantity
                         });
+                        this.updateInventoryService.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches)];
                     case 8:
                         _c.sent();
@@ -1613,6 +1624,7 @@ var SalesTableService = /** @class */ (function () {
                             batchNo: batches.batchNo,
                             quantity: batches.quantity
                         });
+                        this.updateInventoryService.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches, true)];
                     case 8:
                         _c.sent();
@@ -1731,6 +1743,7 @@ var SalesTableService = /** @class */ (function () {
                             batchNo: batches_7.batchNo,
                             quantity: batches_7.quantity
                         });
+                        this.updateInventoryService.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches_7, true)];
                     case 11:
                         _e.sent();
@@ -1766,6 +1779,7 @@ var SalesTableService = /** @class */ (function () {
                             batchNo: batches_8.batchNo,
                             quantity: batches_8.quantity
                         });
+                        this.updateInventoryService.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches_8, true)];
                     case 16:
                         _e.sent();
@@ -1844,6 +1858,7 @@ var SalesTableService = /** @class */ (function () {
                         if (!(_i < batches_9.length)) return [3 /*break*/, 12];
                         batch = batches_9[_i];
                         if (!(batch.reserveStatus == "RESERVED")) return [3 /*break*/, 11];
+                        this.updateInventoryService.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.updateInventoryService.updateUnReserveQty(batch)];
                     case 10:
                         _e.sent();
@@ -1944,6 +1959,7 @@ var SalesTableService = /** @class */ (function () {
                             batchNo: batch.batchNo,
                             quantity: batch.quantity
                         });
+                        this.updateInventoryService.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batch)];
                     case 23:
                         _e.sent();

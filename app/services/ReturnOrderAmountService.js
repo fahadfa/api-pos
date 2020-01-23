@@ -664,6 +664,8 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                 }
                             }
                             // console.log(grossTotal);
+                            v.colorantprice = v.colorantprice ? v.colorantprice : 0;
+                            v.totalReturnedQuantity = v.totalReturnedQuantity ? v.totalReturnedQuantity : 0;
                             newGrossTotal += parseFloat(v.lineAmount) + parseFloat(v.colorantprice) * parseInt(v.salesQty) - (parseFloat(v.salesprice) + parseFloat(v.colorantprice)) * parseInt(v.totalReturnedQuantity) - (parseFloat(v.salesprice) + parseFloat(v.colorantprice)) * returnQuantity;
                         });
                         console.log(newGrossTotal);
@@ -675,6 +677,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         returnOrderData.salesLine = [];
                         _loop_6 = function (item) {
                             var qty = parseInt(item.returnQuantity);
+                            item.colorantprice = item.colorantprice ? item.colorantprice : 0;
                             var price = parseFloat(item.salesprice) + parseFloat(item.colorantprice);
                             var lineAmount = price * qty;
                             var netAmount = lineAmount;

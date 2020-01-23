@@ -145,6 +145,7 @@ var SyncServiceHelper = /** @class */ (function () {
                         _b.label = 1;
                     case 1:
                         _b.trys.push([1, 7, 8, 9]);
+                        console.log("*********************************************************************");
                         if (!(config.host.indexOf("localhost") != -1)) return [3 /*break*/, 3];
                         return [4 /*yield*/, SyncServiceHelper.LocalPool.connect()];
                     case 2:
@@ -343,11 +344,11 @@ var SyncServiceHelper = /** @class */ (function () {
     };
     SyncServiceHelper.LocalDBOptions = function () {
         return {
-            host: Config.localDbOptions.host,
-            port: Config.localDbOptions.port,
-            user: Config.localDbOptions.username,
-            password: Config.localDbOptions.password,
-            database: Config.localDbOptions.database
+            host: "localhost",
+            port: 5432,
+            user: "postgres",
+            password: "Test!234",
+            database: "jps_prod"
         };
     };
     SyncServiceHelper.synTableColumns = "*";

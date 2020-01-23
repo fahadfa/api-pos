@@ -34,133 +34,284 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __asyncValues = (this && this.__asyncValues) || function (o) {
-    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
-    var m = o[Symbol.asyncIterator], i;
-    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
-    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
-    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var pg_1 = require("pg");
-var sql = require("mssql");
-var fs = require("fs");
-var jsonString = fs.readFileSync(__dirname + "/data.json", "utf-8");
-var dateObj = JSON.parse(jsonString);
-console.log(dateObj);
-fs.unlinkSync(__dirname + "/data.json");
-// function LocalDBOptions() {
-//   return {
-//     host: Config.localDbOptions.host,
-//     port: Config.localDbOptions.port,
-//     user: Config.localDbOptions.username,
-//     password: Config.localDbOptions.password,
-//     database: Config.localDbOptions.database
-//   };
-// }
+var Config = __importStar(require("../../utils/Config"));
+var SyncServiceHelper_1 = require("../../sync/SyncServiceHelper");
+var sqlserver = require("mssql");
 function LocalDBOptions() {
     return {
-        host: 'localhost',
+        host: "localhost",
         port: 5432,
-        user: 'postgres',
-        password: 'Test!234',
-        database: 'jps_prod'
+        user: "postgres",
+        password: "Test!234",
+        database: "jps_prod"
     };
 }
-var LocalPool = new pg_1.Pool(LocalDBOptions());
-function mssqlTransactions() {
-    return __awaiter(this, void 0, void 0, function () {
-        var sqls, salesTableData;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    sqls = [];
-                    return [4 /*yield*/, sql.connect("mssql://SA:Jazeera123@3.80.2.102/mpos_db")];
-                case 1:
-                    _a.sent();
-                    return [4 /*yield*/, sql.query("\n  SELECT top 10 * FROM SALESTABLE\n  WHERE \n  SALESTYPE IN (3,4,5,6,7,10) AND \n  CREATEDDATETIME BETWEEN dateadd(day, -90, '" + dateObj.date + "') AND  '" + dateObj.date + "';\n  ")];
-                case 2:
-                    salesTableData = _a.sent();
-                    console.log(salesTableData);
-                    return [4 /*yield*/, sqls];
-                case 3: return [2 /*return*/, _a.sent()];
-            }
+var mssqlDbOptions = {
+    username: "SA",
+    password: "Jazeera123",
+    host: "3.80.2.102",
+    database: "jpos_dev",
+    port: 1433
+};
+var SyncPrevTransactionsService = /** @class */ (function () {
+    function SyncPrevTransactionsService() {
+        this.fs = require("fs");
+        this.jsonString = this.fs.readFileSync(__dirname + "/data.json", "utf-8");
+        this.dateObj = JSON.parse(this.jsonString);
+        this.fs.unlinkSync(__dirname + "/data.json");
+        this.mssqlDbOptions = Config.mssqlDbOptions;
+        // this.mssqlDbOptions = mssqlDbOptions;
+        this.localDbConfig = SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions();
+        // this.localDbConfig = LocalDBOptions();
+    }
+    SyncPrevTransactionsService.prototype.mssqlTransactions = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var cond, mssqlString, i, salesTableData, salesLineData, inventTransData, _a, err_1;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        cond = true;
+                        _b.label = 1;
+                    case 1:
+                        _b.trys.push([1, 25, , 27]);
+                        mssqlString = "mssql://" + this.mssqlDbOptions.username + ":" + this.mssqlDbOptions.password + "@" + this.mssqlDbOptions.host + "/" + this.mssqlDbOptions.database;
+                        return [4 /*yield*/, sqlserver.connect(mssqlString)];
+                    case 2:
+                        _b.sent();
+                        i = 0;
+                        _b.label = 3;
+                    case 3:
+                        if (!cond) return [3 /*break*/, 8];
+                        console.log(i);
+                        return [4 /*yield*/, sqlserver.query(salesTableQuery +
+                                (" CREATEDDATETIME BETWEEN dateadd(day, -90, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "' ORDER BY RECID ASC OFFSET " + i + " ROWS FETCH NEXT 5000 ROWS ONLY "))];
+                    case 4:
+                        salesTableData = _b.sent();
+                        salesTableData = salesTableData.recordset;
+                        if (!(salesTableData.length > 0)) return [3 /*break*/, 6];
+                        return [4 /*yield*/, this.sync_salesTableData(salesTableData)];
+                    case 5:
+                        _b.sent();
+                        i += 5000;
+                        return [3 /*break*/, 7];
+                    case 6:
+                        cond = false;
+                        _b.label = 7;
+                    case 7: return [3 /*break*/, 3];
+                    case 8:
+                        i = 0;
+                        cond = true;
+                        _b.label = 9;
+                    case 9:
+                        if (!cond) return [3 /*break*/, 14];
+                        console.log(i);
+                        return [4 /*yield*/, sqlserver.query(salesLineQuery +
+                                ("CREATEDDATETIME BETWEEN dateadd(day, -90, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "') ORDER BY RECID ASC OFFSET " + i + " ROWS FETCH NEXT 5000 ROWS ONLY"))];
+                    case 10:
+                        salesLineData = _b.sent();
+                        salesLineData = salesLineData.recordset;
+                        if (!(salesLineData.length > 0)) return [3 /*break*/, 12];
+                        return [4 /*yield*/, this.sync_salesLineData(salesLineData)];
+                    case 11:
+                        _b.sent();
+                        i += 5000;
+                        return [3 /*break*/, 13];
+                    case 12:
+                        cond = false;
+                        _b.label = 13;
+                    case 13: return [3 /*break*/, 9];
+                    case 14:
+                        i = 0;
+                        cond = true;
+                        _b.label = 15;
+                    case 15:
+                        if (!cond) return [3 /*break*/, 23];
+                        _b.label = 16;
+                    case 16:
+                        _b.trys.push([16, 21, , 22]);
+                        console.log(i);
+                        return [4 /*yield*/, sqlserver.query(inventTransQuery +
+                                (" DATEPHYSICAL BETWEEN dateadd(day, -90, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "' ORDER BY RECID ASC OFFSET " + i + " ROWS FETCH NEXT 5000 ROWS ONLY"))];
+                    case 17:
+                        inventTransData = _b.sent();
+                        inventTransData = inventTransData.recordset;
+                        if (!(inventTransData.length > 0)) return [3 /*break*/, 19];
+                        return [4 /*yield*/, this.syncInventTransData(inventTransData)];
+                    case 18:
+                        _b.sent();
+                        i += 5000;
+                        return [3 /*break*/, 20];
+                    case 19:
+                        cond = false;
+                        _b.label = 20;
+                    case 20: return [3 /*break*/, 22];
+                    case 21:
+                        _a = _b.sent();
+                        cond = false;
+                        return [3 /*break*/, 22];
+                    case 22: return [3 /*break*/, 15];
+                    case 23: return [4 /*yield*/, sqlserver.close()];
+                    case 24:
+                        _b.sent();
+                        return [3 /*break*/, 27];
+                    case 25:
+                        err_1 = _b.sent();
+                        console.log(err_1);
+                        cond = false;
+                        return [4 /*yield*/, sqlserver.close()];
+                    case 26:
+                        _b.sent();
+                        return [3 /*break*/, 27];
+                    case 27: return [2 /*return*/];
+                }
+            });
         });
-    });
-}
-function BatchQuery(sqls) {
-    var sqls_1, sqls_1_1;
-    return __awaiter(this, void 0, void 0, function () {
-        var e_1, _a, db, res, sql_1, e_1_1, e_2;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0:
-                    console.log("-------------- Batch Query Starts --------------");
-                    console.log(sqls);
-                    db = LocalPool;
-                    _b.label = 1;
-                case 1:
-                    _b.trys.push([1, 18, 20, 21]);
-                    return [4 /*yield*/, db.connect()];
-                case 2:
-                    _b.sent();
-                    res = null;
-                    return [4 /*yield*/, db.query("BEGIN")];
-                case 3:
-                    _b.sent();
-                    _b.label = 4;
-                case 4:
-                    _b.trys.push([4, 10, 11, 16]);
-                    sqls_1 = __asyncValues(sqls);
-                    _b.label = 5;
-                case 5: return [4 /*yield*/, sqls_1.next()];
-                case 6:
-                    if (!(sqls_1_1 = _b.sent(), !sqls_1_1.done)) return [3 /*break*/, 9];
-                    sql_1 = sqls_1_1.value;
-                    return [4 /*yield*/, db.query(sql_1)];
-                case 7:
-                    res = _b.sent();
-                    _b.label = 8;
-                case 8: return [3 /*break*/, 5];
-                case 9: return [3 /*break*/, 16];
-                case 10:
-                    e_1_1 = _b.sent();
-                    e_1 = { error: e_1_1 };
-                    return [3 /*break*/, 16];
-                case 11:
-                    _b.trys.push([11, , 14, 15]);
-                    if (!(sqls_1_1 && !sqls_1_1.done && (_a = sqls_1.return))) return [3 /*break*/, 13];
-                    return [4 /*yield*/, _a.call(sqls_1)];
-                case 12:
-                    _b.sent();
-                    _b.label = 13;
-                case 13: return [3 /*break*/, 15];
-                case 14:
-                    if (e_1) throw e_1.error;
-                    return [7 /*endfinally*/];
-                case 15: return [7 /*endfinally*/];
-                case 16:
-                    console.log("END");
-                    return [4 /*yield*/, db.query("COMMIT")];
-                case 17:
-                    _b.sent();
-                    return [3 /*break*/, 21];
-                case 18:
-                    e_2 = _b.sent();
-                    console.error(e_2);
-                    return [4 /*yield*/, db.query("ROLLBACK")];
-                case 19:
-                    _b.sent();
-                    throw e_2;
-                case 20:
-                    db.end();
-                    return [7 /*endfinally*/];
-                case 21:
-                    console.log("-------------- Batch Query Ends --------------");
-                    return [2 /*return*/];
-            }
+    };
+    SyncPrevTransactionsService.prototype.sync_salesTableData = function (salesTableData, queryData) {
+        if (queryData === void 0) { queryData = []; }
+        return __awaiter(this, void 0, void 0, function () {
+            var _i, salesTableData_1, item, query, err_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        for (_i = 0, salesTableData_1 = salesTableData; _i < salesTableData_1.length; _i++) {
+                            item = salesTableData_1[_i];
+                            item.createdby = "SYSTEM";
+                            item.syncstatus = 4;
+                            item.inventlocationid = this.dateObj.inventlocationid;
+                            item.invoicecreatedby = "SYSTEM";
+                            item.lastmodifiedby = "SYSTEM";
+                            item.originalprinted = true;
+                            item.iscash = item.payment == "CASH" ? true : false;
+                            item.deliverytype = "self";
+                            item.documentstatus = item.documentstatus == 0 ? false : true;
+                            query = "INSERT INTO public.salestable (salesid,salesname, reservation, custaccount, invoiceaccount, deliverydate,\n          deliveryaddress, documentstatus, currencycode, dataareaid, recversion,\n          recid, languageid, payment, custgroup, pricegroupid, shippingdaterequested,\n          deliverystreet, salestype, salesstatus, numbersequencegroup, cashdisc,\n           intercompanyoriginalsalesid, salesgroup, shippingdateconfirmed, deadline, fixedduedate, returndeadline, createddatetime, createdby, syncstatus, amount, disc, netamount,\n           citycode, districtcode, latitude, vehiclecode, vouchernum, painter, ajpenddisc, taxgroup, sumtax, inventlocationid, vatamount, invoicedate, invoicecreatedby, multilinediscountgroupid,\n           lastmodifiedby, lastmodifieddate, originalprinted, iscash,  transkind, status, redeempts, redeemptsamt, deliverytype, customerref) VALUES(\n          '" + item.salesid + "','" + item.salesname + "'," + item.reservation + ",'" + item.custaccount + "','" + item.invoiceaccount + "','" + item.deliverydate + "', '" + item.deliveryaddress + "'," + item.documentstatus + ",'" + item.currencycode + "','" + item.dataareaid + "',\n          " + item.recversion + "," + item.recid + ", '" + item.languageid + "', '" + item.payment + "', '" + item.custgroup + "','" + item.pricegroupid + "', '" + item.shippingdaterequested + "', '" + item.deliverystreet + "',\n          " + item.salestype + "," + item.salesstatus + ",'" + item.numbersequencegroup + "','" + item.cashdisc + "','" + (item.salestype == 4 ? item.customerref : item.intercompanyoriginalsalesid) + "','" + item.salesgroup + "','" + item.shippingdateconfirmed + "',\n          '" + item.deadline + "','" + item.fixedduedate + "','" + item.returndeadline + "',\n          '" + item.createddatetime + "','" + item.createdby + "'," + item.syncstatus + "," + item.amount + "," + item.disc + "," + item.netamount + ",'" + item.citycode + "','" + item.districtcode + "','" + item.latitude + "','" + item.vehiclecode + "','" + item.vouchernum + "',\n          '" + item.painter + "','" + item.ajpenddisc + "','" + item.taxgroup + "'," + item.sumtax + ",'" + item.inventlocationid + "',\n           " + item.vatamount + ",'" + item.createddatetime + "','" + item.invoicecreatedby + "','" + item.multilinediscountgroupid + "','" + item.lastmodifiedby + "',\n           '" + item.createddatetime + "'," + item.originalprinted + ",'" + item.iscash + "','" + item.transkind + "', '" + item.status + "', " + item.redeempts + "," + item.redeemptsamt + ",'" + item.deliverytype + "', '" + item.customerref + "');";
+                            queryData.push(query);
+                        }
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(this.localDbConfig, queryData)];
+                    case 1:
+                        _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_2 = _a.sent();
+                        console.log(err_2);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
         });
-    });
+    };
+    SyncPrevTransactionsService.prototype.sync_salesLineData = function (salesLineData, queryData) {
+        if (queryData === void 0) { queryData = []; }
+        return __awaiter(this, void 0, void 0, function () {
+            var _i, salesLineData_1, line, query, err_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        for (_i = 0, salesLineData_1 = salesLineData; _i < salesLineData_1.length; _i++) {
+                            line = salesLineData_1[_i];
+                            line.applied_discounts = [];
+                            line.applied_discounts = JSON.stringify(line.applied_discounts);
+                            line.batches = JSON.stringify([
+                                {
+                                    batchNo: line.BATCHNO,
+                                    quantity: line.SALESQTY
+                                }
+                            ]);
+                            query = "INSERT INTO public.salesline\n        (salesid, linenum, itemid, \"name\", salesprice, currencycode, salesqty, lineamount, salesunit, priceunit, qtyordered, remainsalesphysical, remainsalesfinancial,\n        salestype, dataareaid, custgroup, custaccount, inventsizeid, configid, numbersequencegroupid, inventlocationid, salesdelivernow, salesstatus, \"location\", batchno, instantdisc, voucherdisc,\n          redeemdisc, promotiondisc, linetotaldisc, linesalestax, netamttax, linesalestaxpercent, taxgroup, taxitemgroup, linediscamt, customdiscamt, supplmultipleqty, supplfreeqty, multilndisc, multilnpercent, enddisc,\n          createdby, createddatetime, lastmodifiedby, lastmodifieddate, \n            vatamount, vat, voucherdiscamt, sabic_customer_discount, is_item_free, link_id, batches, applied_discounts)\n        VALUES('" + line.SALESID + "', " + line.LINENUM + ", '" + line.ITEMID + "', '" + line.NAME + "', " + line.SALESPRICE + ", '" + line.CURRENCYCODE + "', " + line.SALESQTY + ", " + line.LINEAMOUNT + ", '" + line.SALESUNIT + "', " + line.PRICEUNIT + ", " + line.QTYORDERED + ", \n        " + line.REMAINSALESPHYSICAL + ", " + line.REMAINSALESFINANCIAL + ",  " + line.SALESTYPE + ", '" + (line.DATAAREAID ? line.DATAAREAID.toLowerCase() : null) + "', '" + line.CUSTGROUP + "', '" + line.CUSTACCOUNT + "', '" + line.INVENTSIZEID + "', '" + line.CONFIGID + "',\n         '" + line.NUMBERSEQUENCEGROUPID + "', '" + line.INVENTLOCATIONID + "', " + line.SALESDELIVERNOW + ", " + line.SALESSTATUS + ", '" + line.LOCATION + "', '" + line.BATCHNO + "', " + (line.InstantDisc ? line.InstantDisc : 0) + ", " + (line.VoucherDisc ? line.VoucherDisc : 0) + ", " + (line.RedeemDisc ? line.RedeemDisc : 0) + ", " + (line.PromotionDisc ? line.PromotionDisc : 0) + ", \n         " + (line.LineTotalDisc ? line.LineTotalDisc : 0) + ", " + (line.LineSalesTax ? line.LineSalesTax : 0) + ", " + (line.NetAmtTax ? line.NetAmtTax : 0) + ", " + (line.LineSalesTaxPercent ? line.LineSalesTaxPercent : 0) + ", '" + line.TAXGROUP + "', '" + line.TAXITEMGROUP + "', " + (line.LINEDISCAMT ? line.LINEDISCAMT : 0) + ", " + (line.CUSTOMDISCAMT ? line.CUSTOMDISCAMT : 0) + ", " + (line.SupplMultipleQty ? line.SupplMultipleQty : 0) + ", " + (line.SupplFreeQty ? line.SupplFreeQty : 0) + ",\n         " + (line.MulLnDisc ? line.MultiLineDisc : 0) + ", " + (line.MultiPercent ? line.MultiPercent : 0) + ", " + (line.CUSTOMDISCAMT ? line.CUSTOMDISCAMT : 0) + ", '" + line.createdby + "', now(), '" + line.createdby + "', now(),\n          " + (line.LineSalesTax ? line.LineSalesTax : 0) + ", " + (line.LineSalesTaxPercent ? line.LineSalesTaxPercent : 0) + ",\n           " + (line.VoucherDisc ? line.VoucherDisc : 0) + ", " + (line.InteriorExteriorAmount ? line.InteriorExteriorAmount : 0) + ", " + (line.isitemfree ? line.isitemfree : false) + ", NULL, '" + line.batches + "', '" + line.applied_discounts + "')\n        ";
+                            // console.log(query)
+                            queryData.push(query);
+                        }
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(this.localDbConfig, queryData)];
+                    case 1:
+                        _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_3 = _a.sent();
+                        console.log(err_3);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    SyncPrevTransactionsService.prototype.syncInventTransData = function (inventTransData, queryData) {
+        if (queryData === void 0) { queryData = []; }
+        return __awaiter(this, void 0, void 0, function () {
+            var _i, inventTransData_1, trans, text, salesOrderData, text, salesOrderData, saleslinequery, salesLineData, query, err_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 10, , 11]);
+                        _i = 0, inventTransData_1 = inventTransData;
+                        _a.label = 1;
+                    case 1:
+                        if (!(_i < inventTransData_1.length)) return [3 /*break*/, 8];
+                        trans = inventTransData_1[_i];
+                        if (!(trans.TRANSTYPE == 4)) return [3 /*break*/, 3];
+                        text = "select salesid from salestable where intercompanyoriginalsalesid = '" + trans.TRANSREFID + "' limit 1";
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(this.localDbConfig, text)];
+                    case 2:
+                        salesOrderData = _a.sent();
+                        trans.INVOICEID = salesOrderData.rows[0] ? salesOrderData.rows[0].salesid : trans.TRANSREFID;
+                        return [3 /*break*/, 5];
+                    case 3:
+                        text = "select intercompanyoriginalsalesid from salestable where salesid = '" + trans.TRANSREFID + "' limit 1";
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(this.localDbConfig, text)];
+                    case 4:
+                        salesOrderData = _a.sent();
+                        trans.INVOICEID = trans.TRANSREFID;
+                        trans.TRANSREFID = salesOrderData.rows[0]
+                            ? salesOrderData.rows[0].intercompanyoriginalsalesid
+                            : trans.TRANSREFID;
+                        trans.TRANSREFID = trans.TRANSREFID == "Nothing" ? trans.INVOICEID : trans.TRANSREFID;
+                        _a.label = 5;
+                    case 5:
+                        saleslinequery = "select id from salesline where salesid = '" + trans.INVOICEID + "' AND itemid = '" + trans.ITEMID + "' AND configid = '" + trans.ConfigId + "' AND inventsizeid = '" + trans.InventSizeId + "' AND batchno = '" + trans.BATCHNO + "' limit 1";
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(this.localDbConfig, saleslinequery)];
+                    case 6:
+                        salesLineData = _a.sent();
+                        // console.log(salesLineData);
+                        trans.saleslineid = salesLineData.rows[0] ? salesLineData.rows[0].id : '';
+                        query = "INSERT INTO public.inventtrans\n        (itemid, qty, datephysical, transtype, transrefid, invoiceid, dataareaid, recversion, recid, inventsizeid, configid, batchno, inventlocationid, transactionclosed, reserve_status, sales_line_id)\n        VALUES('" + trans.ITEMID + "', " + trans.QTY + ", '" + trans.DATEPHYSICAL + "'," + trans.TRANSTYPE + ", '" + trans.TRANSREFID + "', '" + trans.INVOICEID + "', '" + trans.DATAAREAID + "', " + trans.RECVERSION + ", " + trans.RECID + ", '" + trans.InventSizeId + "',\n         '" + trans.ConfigId + "', '" + trans.BATCHNO + "', '" + this.dateObj.inventlocationid + "', false, 'OLD_POS_DATA', '" + trans.saleslineid + "');\n        ";
+                        // console.log(query);
+                        queryData.push(query);
+                        _a.label = 7;
+                    case 7:
+                        _i++;
+                        return [3 /*break*/, 1];
+                    case 8: return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(this.localDbConfig, queryData)];
+                    case 9:
+                        _a.sent();
+                        return [3 /*break*/, 11];
+                    case 10:
+                        err_4 = _a.sent();
+                        throw err_4;
+                    case 11: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    return SyncPrevTransactionsService;
+}());
+exports.SyncPrevTransactionsService = SyncPrevTransactionsService;
+var sync = new SyncPrevTransactionsService();
+try {
+    sync.mssqlTransactions();
 }
-var sqls = mssqlTransactions();
-// BatchQuery(sqls)
+catch (err) {
+    console.log(err);
+}
+var salesTableQuery = "\nSELECT SALESID AS salesid,\nSALESTYPE as salestype,\nSALESSTATUS AS salesstatus,\nSALESGROUP as salesgroup,\nCAST(CASE SALESTYPE \n  WHEN 3 THEN 'SALESORDER' \n  WHEN 4 THEN 'RETURNORDER' \n  WHEN 5 THEN 'TRANSFERORDER'\n  WHEN 6 THEN 'ORDERSHIPMENT'\n  WHEN 7 THEN 'ORDERRECEIVE'\n  WHEN 10 THEN 'INVENTORYMOVEMENT'\n  ELSE CONCAT('',SALESTYPE) \nEND AS VARCHAR(20)) AS transkind,\nSALESGROUP as intercompanyoriginalsalesid,\nCUSTOMERREF AS customerref,\nCAST(CASE SALESSTATUS \n  WHEN 2 THEN 'POSTED' \n  WHEN 3 THEN 'POSTED'\n  ELSE CONCAT('',SALESSTATUS) \nEND AS VARCHAR(20)) AS status,\nSALESNAME as salesname,\nRESERVATION as reservation,\n    CUSTACCOUNT as custaccount,\n    INVOICEACCOUNT as invoiceaccount,\n    DELIVERYADDRESS as deliveryaddress,\n    CONVERT(VARCHAR(10), DELIVERYDATE, 120) as deliverydate,\n    DOCUMENTSTATUS as documentstatus,\n    CURRENCYCODE as currencycode,\n    lower(DATAAREAID) as dataareaid,\n    RECVERSION as recversion,\n    RECID as recid,\n    LANGUAGEID as languageid,\n    PAYMENT as payment,\n    CUSTGROUP as custgroup,\n    PRICEGROUPID as pricegroupid,\n    CONVERT(VARCHAR(10), SHIPPINGDATEREQUESTED, 120) as shippingdaterequested,\n    DELIVERYSTREET as deliverystreet,\n    NUMBERSEQUENCEGROUP as numbersequencegroup,\n    CASHDISC as cashdisc,\n    CONVERT(VARCHAR(10), SHIPPINGDATECONFIRMED, 120) as shippingdateconfirmed,\n    CONVERT(VARCHAR(10), DEADLINE, 120) AS deadline,\n    CONVERT(VARCHAR(10), FIXEDDUEDATE, 120) as fixedduedate,\n    CONVERT(VARCHAR(10), RETURNDEADLINE, 120) as returndeadline,\n    CONVERT(VARCHAR(10), CREATEDDATETIME, 120) as createddatetime,\n    AMOUNT AS amount,\n    DISC as disc,\n    NETAMOUNT as netamount,\n    CITYCODE as citycode,\n    DISTRICTCODE as districtcode,\n    LATITUDE AS latitude,\n    LONGITUDE as longitude,\n    VehicleCode as vehiclecode,\n    APPTYPE as apptype,\n    VOUCHERNUM as vouchernum,\n    Painter as painter,\n    AJPENDDISC as ajpenddisc,\n    TAXGROUP as taxgroup,\n    SUMTAX as sumtax,\n    SUMTAX as vatamount,\n    CardNo as cardno,\n    REDEEMPOINTS as redeempts,\n    REDEEMAMT as redeemptsamt,\n    MultiLineDisc as multilinediscountgroupid,\n    BANKCARDNO as bankcardno,\n    CARDHOLDERNAME as cardholdername,\n    CARDEXPIRY as cardexpiry\nFROM SALESTABLE\nWHERE \nSALESTYPE IN (3,4,5,6,7,10) AND  SALESSTATUS IN (2,3)\nAND ";
+var salesLineQuery = "SELECT * FROM SALESLINE WHERE SALESID IN (\n  SELECT SALESID\n  FROM SALESTABLE\n  WHERE \n  SALESTYPE IN (3,4,5,6,7,10) AND  SALESSTATUS IN (2,3)\n  AND ";
+var inventTransQuery = "\nSELECT \nITEMID,\nCONVERT(VARCHAR(10), DATEPHYSICAL, 120) as DATEPHYSICAL,\nQTY,\nTRANSTYPE,\nTRANSREFID,\nINVOICEID,\nRECVERSION,\nRECID,\nInventSizeId,\nConfigId,\nBATCHNO,\nlower(DATAAREAID) as DATAAREAID\nFROM INVENTTRANS where ";

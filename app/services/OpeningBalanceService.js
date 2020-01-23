@@ -34,13 +34,37 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var sql = require("mssql");
 var InventTrans_1 = require("../../entities/InventTrans");
 var InventTransDAO_1 = require("../repos/InventTransDAO");
 var InventoryOnhandDAO_1 = require("../repos/InventoryOnhandDAO");
 var RawQuery_1 = require("../common/RawQuery");
+var Config = __importStar(require("../../utils/Config"));
 var Props_1 = require("../../constants/Props");
+// let mssqlDbOptions = {
+//   username: 'sysoffline',
+//   password: 'binjzrpos',
+//   host: 'localhost',
+//   database: 'DAX',
+//   port: 1433
+// }
+// let mssqlDbOptions = {
+//   username: "SA",
+//   password: "Jazeera123",
+//   host: "3.80.2.102",
+//   database: "jpos_dev",
+//   port: 1433
+// };
+var mssqlDbOptions = Config.mssqlDbOptions;
+var mssqlString = "mssql://" + mssqlDbOptions.username + ":" + mssqlDbOptions.password + "@" + mssqlDbOptions.host + "/" + mssqlDbOptions.database;
 var OpeningBalanceService = /** @class */ (function () {
     function OpeningBalanceService() {
         this.inventtransDAO = new InventTransDAO_1.InventorytransDAO();
@@ -50,19 +74,25 @@ var OpeningBalanceService = /** @class */ (function () {
     }
     OpeningBalanceService.prototype.getOpeningBalance = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, fs, rawdata, syncDataDate, child_process, err_1;
+            var data, fs, rawdata, syncDataDate, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        return [4 /*yield*/, sql.connect("mssql://SA:Jazeera123@3.80.2.102/mpos_db")];
+                        return [4 /*yield*/, sql.connect(mssqlString)];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, sql.query("\n        SELECT \n        ITEMID as itemid, \n        ConfigId as configid, \n        InventSizeId as inventsizeid, \n        BatchNo as batchno, \n        SUM(qty) as qty,\n        LOWER(DATAAREAID) as dataareaid, \n        CUSTVENDAC as inventlocationid\n        FROM INVENTTRANS i\n        where i.ITEMID NOT LIKE 'HSN%' and i.DATEPHYSICAL < '" + reqData.date + "'\n        group by i.ITEMID, i.ConfigId, i.InventSizeId, i.BatchNo, i.DATAAREAID, i.CUSTVENDAC HAVING sum(QTY) >0 \n    ")];
+                        data = {};
+                        return [4 /*yield*/, sql.query("\n        SELECT\n        ITEMID as itemid, \n        ConfigId as configid, \n        InventSizeId as inventsizeid, \n        BatchNo as batchno, \n        SUM(qty) as qty\n        FROM INVENTTRANS i\n        where i.ITEMID NOT LIKE 'HSN%' and i.DATEPHYSICAL < '" + reqData.date + "'\n        group by i.ITEMID, i.ConfigId, i.InventSizeId, i.BatchNo HAVING sum(QTY) >0 \n    ")];
                     case 2:
                         data = _a.sent();
+                        sql.close();
                         fs = require("fs");
-                        rawdata = { date: reqData.date };
+                        rawdata = {
+                            date: reqData.date,
+                            inventlocationid: this.sessionInfo.inventlocationid,
+                            dataareaid: this.sessionInfo.dataareaid
+                        };
                         syncDataDate = JSON.stringify(rawdata);
                         console.log(syncDataDate);
                         fs.writeFile(__dirname + "/data.json", syncDataDate, function (err) {
@@ -73,8 +103,8 @@ var OpeningBalanceService = /** @class */ (function () {
                                 console.log("Successfully wrote file");
                             }
                         });
-                        child_process = require("child_process");
-                        child_process.fork(__dirname + "/SyncPrevTransactionsServices.ts");
+                        // const child_process = require("child_process");
+                        // child_process.fork(`${__dirname}/SyncPrevTransactionsServices.ts`);
                         return [2 /*return*/, data.recordset];
                     case 3:
                         err_1 = _a.sent();
@@ -86,56 +116,81 @@ var OpeningBalanceService = /** @class */ (function () {
     };
     OpeningBalanceService.prototype.save = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var inventtransData, onhandInventoryData, child_process, returnData, err_2;
+            var chunkData, _i, chunkData_1, item, inventtransData, onhandInventoryData, child_process, returnData, err_2;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 4, , 5]);
+                        _a.trys.push([0, 8, , 9]);
                         return [4 /*yield*/, this.rawQuery.deleteBalances()];
                     case 1:
                         _a.sent();
-                        reqData.map(function (v) {
+                        return [4 /*yield*/, this.chunkArray(reqData, 100)];
+                    case 2:
+                        chunkData = _a.sent();
+                        _i = 0, chunkData_1 = chunkData;
+                        _a.label = 3;
+                    case 3:
+                        if (!(_i < chunkData_1.length)) return [3 /*break*/, 7];
+                        item = chunkData_1[_i];
+                        item.map(function (v) {
+                            // v.id = v.recid ? v.recid.toString() : App.UniqueCode()
                             v.dateinvent = new Date();
                             v.datephysical = new Date();
                             v.transactionClosed = true;
                             v.invoiceid = "OPEN_BALANCE";
+                            v.inventlocationid = _this.sessionInfo.inventlocationid;
+                            v.dataareaid = 'ajp';
                         });
-                        return [4 /*yield*/, this.inventtransDAO.savearr(reqData)];
-                    case 2:
+                        return [4 /*yield*/, this.inventtransDAO.savearr(item)];
+                    case 4:
                         inventtransData = _a.sent();
-                        reqData.map(function (v) {
+                        item.map(function (v) {
+                            // v.id =v.recid ? v.recid.toString() : App.UniqueCode()
                             v.qtyIn = v.qty;
                             v.updatedOn = new Date();
                             v.updatedBy = _this.sessionInfo.userName;
                             v.name = "OPEN_BALANCE";
+                            v.inventlocationid = _this.sessionInfo.inventlocationid;
+                            v.dataareaid = 'ajp';
                         });
-                        return [4 /*yield*/, this.inventoryOnhandDAO.savearr(reqData)];
-                    case 3:
+                        return [4 /*yield*/, this.inventoryOnhandDAO.savearr(item)];
+                    case 5:
                         onhandInventoryData = _a.sent();
+                        _a.label = 6;
+                    case 6:
+                        _i++;
+                        return [3 /*break*/, 3];
+                    case 7:
                         child_process = require("child_process");
-                        child_process.fork(this.syncTransactions());
+                        child_process.fork(__dirname + "/SyncPrevTransactionsServices.ts");
                         returnData = { message: Props_1.Props.SAVED_SUCCESSFULLY };
                         return [2 /*return*/, returnData];
-                    case 4:
+                    case 8:
                         err_2 = _a.sent();
                         throw err_2;
-                    case 5: return [2 /*return*/];
+                    case 9: return [2 /*return*/];
                 }
             });
         });
     };
-    OpeningBalanceService.prototype.syncTransactions = function () {
+    OpeningBalanceService.prototype.chunkArray = function (myArray, chunk_size) {
         return __awaiter(this, void 0, void 0, function () {
+            var index, arrayLength, tempArray, myChunk;
             return __generator(this, function (_a) {
-                try {
-                    console.log("********************syncTransactions************************");
-                    return [2 /*return*/, Promise.resolve("")];
+                switch (_a.label) {
+                    case 0:
+                        index = 0;
+                        arrayLength = myArray.length;
+                        tempArray = [];
+                        for (index = 0; index < arrayLength; index += chunk_size) {
+                            myChunk = myArray.slice(index, index + chunk_size);
+                            // Do something if you want with the group
+                            tempArray.push(myChunk);
+                        }
+                        return [4 /*yield*/, tempArray];
+                    case 1: return [2 /*return*/, _a.sent()];
                 }
-                catch (err) {
-                    throw err;
-                }
-                return [2 /*return*/];
             });
         });
     };

@@ -125,7 +125,7 @@ var CusttableDAO = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.dao
                             .createQueryBuilder("custtable")
                             // .where({ accountnum: accountnum })
-                            .where("LOWER(custtable.accountnum) = LOWER('" + accountnum + "')")
+                            .where("LOWER(custtable.accountnum) like LOWER('" + accountnum + "')")
                             .leftJoinAndSelect("custtable.Custgroup", "Custgroup")
                             .getOne()];
                     case 1: 

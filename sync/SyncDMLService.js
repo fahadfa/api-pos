@@ -44,7 +44,7 @@ var STAGING_ID = "STAGING";
 var STORE_ID = process.env.ENV_STORE_ID || "LOCAL-TEST";
 var SyncDMLService = /** @class */ (function () {
     function SyncDMLService() {
-        this.limitData = 1000;
+        this.limitData = 500;
     }
     SyncDMLService.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -107,7 +107,7 @@ var SyncDMLService = /** @class */ (function () {
     };
     SyncDMLService.prototype.syncDb = function (sourceDb, targetDb, sync, currentTime) {
         return __awaiter(this, void 0, void 0, function () {
-            var updateSyncConfig, batchSql, sql, isChunkEnd, offset, isTableUpdated, _loop_1, this_1, updateQuery, err_1, updateQuery;
+            var updateSyncConfig, batchSql, sql, isChunkEnd, offset, isTableUpdated, lastUpdate, _loop_1, this_1, updateQuery, err_1, updateQuery;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -117,6 +117,7 @@ var SyncDMLService = /** @class */ (function () {
                         isChunkEnd = false;
                         offset = 0;
                         isTableUpdated = true;
+                        lastUpdate = new Date().toISOString();
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 6, , 8]);
@@ -194,7 +195,7 @@ var SyncDMLService = /** @class */ (function () {
                     case 4:
                         updateQuery = null;
                         if (isTableUpdated == true) {
-                            updateQuery = "update sync_table set last_update = '" + new Date().toDateString() + "', updated_on = '" + currentTime + "'  where id='" + sync.id + "'";
+                            updateQuery = "update sync_table set last_update = '" + lastUpdate + "', updated_on = '" + currentTime + "'  where id='" + sync.id + "'";
                         }
                         else {
                             updateQuery = "update sync_table set  updated_on = '" + currentTime + "'  where id='" + sync.id + "'";
@@ -211,7 +212,7 @@ var SyncDMLService = /** @class */ (function () {
                         Log_1.slog.info(err_1);
                         updateQuery = null;
                         if (err_1 == Props_1.Props.RECORD_NOT_FOUND) {
-                            updateQuery = "update sync_table set last_update = '" + new Date().toDateString() + "', updated_on = '" + currentTime + "'  where id='" + sync.id + "'";
+                            updateQuery = "update sync_table set last_update = '" + lastUpdate + "', updated_on = '" + currentTime + "'  where id='" + sync.id + "'";
                         }
                         else {
                             updateQuery = "update sync_table set updated_on = '" + currentTime + "'  where id='" + sync.id + "'";
