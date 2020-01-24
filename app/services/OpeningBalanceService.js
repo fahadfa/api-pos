@@ -34,21 +34,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var sql = require("mssql");
 var InventTrans_1 = require("../../entities/InventTrans");
 var InventTransDAO_1 = require("../repos/InventTransDAO");
 var InventoryOnhandDAO_1 = require("../repos/InventoryOnhandDAO");
 var RawQuery_1 = require("../common/RawQuery");
-var Config = __importStar(require("../../utils/Config"));
 var Props_1 = require("../../constants/Props");
+var mssqlClient = require("mssql/msnodesqlv8");
 // let mssqlDbOptions = {
 //   username: 'sysoffline',
 //   password: 'binjzrpos',
@@ -63,10 +55,21 @@ var Props_1 = require("../../constants/Props");
 //   database: "jpos_dev",
 //   port: 1433
 // };
-var mssqlDbOptions = Config.mssqlDbOptions;
-var mssqlString = "mssql://" + mssqlDbOptions.username + ":" + mssqlDbOptions.password + "@" + mssqlDbOptions.host + "/" + mssqlDbOptions.database;
+// let mssqlDbOptions = Config.mssqlDbOptions
+// let mssqlString = `mssql://${mssqlDbOptions.username}:${mssqlDbOptions.password}@${mssqlDbOptions.host}/${mssqlDbOptions.database}`;
+// const query = "SELECT name FROM sys.databases";
 var OpeningBalanceService = /** @class */ (function () {
     function OpeningBalanceService() {
+        var _this = this;
+        this.run = function () { return __awaiter(_this, void 0, void 0, function () {
+            var connectionString;
+            return __generator(this, function (_a) {
+                connectionString = "server=localhost;Database=DAX;Trusted_Connection=Yes;Driver={SQL Server Native Client 11.0}";
+                this.pool = new mssqlClient.ConnectionPool(connectionString);
+                return [2 /*return*/];
+            });
+        }); };
+        this.run();
         this.inventtransDAO = new InventTransDAO_1.InventorytransDAO();
         this.rawQuery = new RawQuery_1.RawQuery();
         this.inventoryTrans = new InventTrans_1.Inventorytrans();
@@ -74,19 +77,22 @@ var OpeningBalanceService = /** @class */ (function () {
     }
     OpeningBalanceService.prototype.getOpeningBalance = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, fs, rawdata, syncDataDate, err_1;
+            var query, rows, fs, rawdata, syncDataDate, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
-                        return [4 /*yield*/, sql.connect(mssqlString)];
+                        _a.trys.push([0, 4, , 5]);
+                        //await sql.connect();
+                        // const conn = new sql.connect(config);
+                        return [4 /*yield*/, this.pool.connect()];
                     case 1:
+                        //await sql.connect();
+                        // const conn = new sql.connect(config);
                         _a.sent();
-                        data = {};
-                        return [4 /*yield*/, sql.query("\n        SELECT\n        ITEMID as itemid, \n        ConfigId as configid, \n        InventSizeId as inventsizeid, \n        BatchNo as batchno, \n        SUM(qty) as qty\n        FROM INVENTTRANS i\n        where i.ITEMID NOT LIKE 'HSN%' and i.DATEPHYSICAL < '" + reqData.date + "'\n        group by i.ITEMID, i.ConfigId, i.InventSizeId, i.BatchNo HAVING sum(QTY) >0 \n    ")];
+                        query = "SELECT\n      ITEMID as itemid, \n      ConfigId as configid, \n      InventSizeId as inventsizeid, \n      BatchNo as batchno, \n      SUM(qty) as qty\n      FROM INVENTTRANS i\n      where i.ITEMID NOT LIKE 'HSN%' and i.DATEPHYSICAL < '" + reqData.date + "'\n      group by i.ITEMID, i.ConfigId, i.InventSizeId, i.BatchNo HAVING sum(QTY) >0 ";
+                        return [4 /*yield*/, this.pool.request().query(query)];
                     case 2:
-                        data = _a.sent();
-                        sql.close();
+                        rows = _a.sent();
                         fs = require("fs");
                         rawdata = {
                             date: reqData.date,
@@ -103,13 +109,14 @@ var OpeningBalanceService = /** @class */ (function () {
                                 console.log("Successfully wrote file");
                             }
                         });
-                        // const child_process = require("child_process");
-                        // child_process.fork(`${__dirname}/SyncPrevTransactionsServices.ts`);
-                        return [2 /*return*/, data.recordset];
+                        return [4 /*yield*/, this.pool.close()];
                     case 3:
+                        _a.sent();
+                        return [2 /*return*/, rows.recordset];
+                    case 4:
                         err_1 = _a.sent();
                         throw err_1;
-                    case 4: return [2 /*return*/];
+                    case 5: return [2 /*return*/];
                 }
             });
         });

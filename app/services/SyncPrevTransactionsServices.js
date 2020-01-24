@@ -44,25 +44,20 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Config = __importStar(require("../../utils/Config"));
 var SyncServiceHelper_1 = require("../../sync/SyncServiceHelper");
-var sqlserver = require("mssql");
-function LocalDBOptions() {
-    return {
-        host: "localhost",
-        port: 5432,
-        user: "postgres",
-        password: "Test!234",
-        database: "jps_prod"
-    };
-}
-var mssqlDbOptions = {
-    username: "SA",
-    password: "Jazeera123",
-    host: "3.80.2.102",
-    database: "jpos_dev",
-    port: 1433
-};
+var sql = require("msnodesqlv8");
+var mssqlClient = require("mssql/msnodesqlv8");
 var SyncPrevTransactionsService = /** @class */ (function () {
     function SyncPrevTransactionsService() {
+        var _this = this;
+        this.run = function () { return __awaiter(_this, void 0, void 0, function () {
+            var connectionString;
+            return __generator(this, function (_a) {
+                connectionString = "server=localhost;Database=DAX;Trusted_Connection=Yes;Driver={SQL Server Native Client 11.0}";
+                this.pool = new mssqlClient.ConnectionPool(connectionString);
+                return [2 /*return*/];
+            });
+        }); };
+        this.run();
         this.fs = require("fs");
         this.jsonString = this.fs.readFileSync(__dirname + "/data.json", "utf-8");
         this.dateObj = JSON.parse(this.jsonString);
@@ -74,103 +69,89 @@ var SyncPrevTransactionsService = /** @class */ (function () {
     }
     SyncPrevTransactionsService.prototype.mssqlTransactions = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var cond, mssqlString, i, salesTableData, salesLineData, inventTransData, _a, err_1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var cond, data, rows, query, _i, data_1, item, _a, data_2, item, _b, data_3, item, err_1;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
                         cond = true;
-                        _b.label = 1;
+                        _c.label = 1;
                     case 1:
-                        _b.trys.push([1, 25, , 27]);
-                        mssqlString = "mssql://" + this.mssqlDbOptions.username + ":" + this.mssqlDbOptions.password + "@" + this.mssqlDbOptions.host + "/" + this.mssqlDbOptions.database;
-                        return [4 /*yield*/, sqlserver.connect(mssqlString)];
+                        _c.trys.push([1, 21, 22, 23]);
+                        return [4 /*yield*/, this.pool.connect()];
                     case 2:
-                        _b.sent();
-                        i = 0;
-                        _b.label = 3;
+                        _c.sent();
+                        data = [];
+                        rows = void 0;
+                        query = void 0;
+                        query = salesTableQuery + (" CREATEDDATETIME BETWEEN dateadd(day, -90, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "' ORDER BY RECID ASC ");
+                        return [4 /*yield*/, this.pool.request().query(query)];
                     case 3:
-                        if (!cond) return [3 /*break*/, 8];
-                        console.log(i);
-                        return [4 /*yield*/, sqlserver.query(salesTableQuery +
-                                (" CREATEDDATETIME BETWEEN dateadd(day, -90, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "' ORDER BY RECID ASC OFFSET " + i + " ROWS FETCH NEXT 5000 ROWS ONLY "))];
+                        rows = _c.sent();
+                        return [4 /*yield*/, this.chunkArray(rows.recordset, 5000)];
                     case 4:
-                        salesTableData = _b.sent();
-                        salesTableData = salesTableData.recordset;
-                        if (!(salesTableData.length > 0)) return [3 /*break*/, 6];
-                        return [4 /*yield*/, this.sync_salesTableData(salesTableData)];
+                        data = _c.sent();
+                        _i = 0, data_1 = data;
+                        _c.label = 5;
                     case 5:
-                        _b.sent();
-                        i += 5000;
-                        return [3 /*break*/, 7];
+                        if (!(_i < data_1.length)) return [3 /*break*/, 8];
+                        item = data_1[_i];
+                        return [4 /*yield*/, this.sync_salesTableData(item)];
                     case 6:
-                        cond = false;
-                        _b.label = 7;
-                    case 7: return [3 /*break*/, 3];
+                        _c.sent();
+                        _c.label = 7;
+                    case 7:
+                        _i++;
+                        return [3 /*break*/, 5];
                     case 8:
-                        i = 0;
-                        cond = true;
-                        _b.label = 9;
+                        query = salesLineQuery + (" CREATEDDATETIME BETWEEN dateadd(day, -90, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "') ORDER BY RECID ASC ");
+                        return [4 /*yield*/, this.pool.request().query(query)];
                     case 9:
-                        if (!cond) return [3 /*break*/, 14];
-                        console.log(i);
-                        return [4 /*yield*/, sqlserver.query(salesLineQuery +
-                                ("CREATEDDATETIME BETWEEN dateadd(day, -90, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "') ORDER BY RECID ASC OFFSET " + i + " ROWS FETCH NEXT 5000 ROWS ONLY"))];
+                        rows = _c.sent();
+                        return [4 /*yield*/, this.chunkArray(rows.recordset, 5000)];
                     case 10:
-                        salesLineData = _b.sent();
-                        salesLineData = salesLineData.recordset;
-                        if (!(salesLineData.length > 0)) return [3 /*break*/, 12];
-                        return [4 /*yield*/, this.sync_salesLineData(salesLineData)];
+                        data = _c.sent();
+                        _a = 0, data_2 = data;
+                        _c.label = 11;
                     case 11:
-                        _b.sent();
-                        i += 5000;
-                        return [3 /*break*/, 13];
+                        if (!(_a < data_2.length)) return [3 /*break*/, 14];
+                        item = data_2[_a];
+                        return [4 /*yield*/, this.sync_salesLineData(item)];
                     case 12:
-                        cond = false;
-                        _b.label = 13;
-                    case 13: return [3 /*break*/, 9];
+                        _c.sent();
+                        _c.label = 13;
+                    case 13:
+                        _a++;
+                        return [3 /*break*/, 11];
                     case 14:
-                        i = 0;
-                        cond = true;
-                        _b.label = 15;
+                        query = inventTransQuery + (" DATEPHYSICAL BETWEEN dateadd(day, -90, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "' ORDER BY RECID ASC ");
+                        return [4 /*yield*/, this.pool.request().query(query)];
                     case 15:
-                        if (!cond) return [3 /*break*/, 23];
-                        _b.label = 16;
+                        rows = _c.sent();
+                        return [4 /*yield*/, this.chunkArray(rows.recordset, 5000)];
                     case 16:
-                        _b.trys.push([16, 21, , 22]);
-                        console.log(i);
-                        return [4 /*yield*/, sqlserver.query(inventTransQuery +
-                                (" DATEPHYSICAL BETWEEN dateadd(day, -90, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "' ORDER BY RECID ASC OFFSET " + i + " ROWS FETCH NEXT 5000 ROWS ONLY"))];
+                        data = _c.sent();
+                        _b = 0, data_3 = data;
+                        _c.label = 17;
                     case 17:
-                        inventTransData = _b.sent();
-                        inventTransData = inventTransData.recordset;
-                        if (!(inventTransData.length > 0)) return [3 /*break*/, 19];
-                        return [4 /*yield*/, this.syncInventTransData(inventTransData)];
+                        if (!(_b < data_3.length)) return [3 /*break*/, 20];
+                        item = data_3[_b];
+                        return [4 /*yield*/, this.syncInventTransData(item)];
                     case 18:
-                        _b.sent();
-                        i += 5000;
-                        return [3 /*break*/, 20];
+                        _c.sent();
+                        _c.label = 19;
                     case 19:
-                        cond = false;
-                        _b.label = 20;
-                    case 20: return [3 /*break*/, 22];
+                        _b++;
+                        return [3 /*break*/, 17];
+                    case 20: return [3 /*break*/, 23];
                     case 21:
-                        _a = _b.sent();
-                        cond = false;
-                        return [3 /*break*/, 22];
-                    case 22: return [3 /*break*/, 15];
-                    case 23: return [4 /*yield*/, sqlserver.close()];
-                    case 24:
-                        _b.sent();
-                        return [3 /*break*/, 27];
-                    case 25:
-                        err_1 = _b.sent();
+                        err_1 = _c.sent();
                         console.log(err_1);
                         cond = false;
-                        return [4 /*yield*/, sqlserver.close()];
-                    case 26:
-                        _b.sent();
-                        return [3 /*break*/, 27];
-                    case 27: return [2 /*return*/];
+                        return [3 /*break*/, 23];
+                    case 22:
+                        this.pool.close();
+                        return [7 /*endfinally*/];
+                    case 23: return [2 /*return*/];
                 }
             });
         });
@@ -302,6 +283,26 @@ var SyncPrevTransactionsService = /** @class */ (function () {
             });
         });
     };
+    SyncPrevTransactionsService.prototype.chunkArray = function (myArray, chunk_size) {
+        return __awaiter(this, void 0, void 0, function () {
+            var index, arrayLength, tempArray, myChunk;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        index = 0;
+                        arrayLength = myArray.length;
+                        tempArray = [];
+                        for (index = 0; index < arrayLength; index += chunk_size) {
+                            myChunk = myArray.slice(index, index + chunk_size);
+                            // Do something if you want with the group
+                            tempArray.push(myChunk);
+                        }
+                        return [4 /*yield*/, tempArray];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
     return SyncPrevTransactionsService;
 }());
 exports.SyncPrevTransactionsService = SyncPrevTransactionsService;
@@ -312,6 +313,6 @@ try {
 catch (err) {
     console.log(err);
 }
-var salesTableQuery = "\nSELECT SALESID AS salesid,\nSALESTYPE as salestype,\nSALESSTATUS AS salesstatus,\nSALESGROUP as salesgroup,\nCAST(CASE SALESTYPE \n  WHEN 3 THEN 'SALESORDER' \n  WHEN 4 THEN 'RETURNORDER' \n  WHEN 5 THEN 'TRANSFERORDER'\n  WHEN 6 THEN 'ORDERSHIPMENT'\n  WHEN 7 THEN 'ORDERRECEIVE'\n  WHEN 10 THEN 'INVENTORYMOVEMENT'\n  ELSE CONCAT('',SALESTYPE) \nEND AS VARCHAR(20)) AS transkind,\nSALESGROUP as intercompanyoriginalsalesid,\nCUSTOMERREF AS customerref,\nCAST(CASE SALESSTATUS \n  WHEN 2 THEN 'POSTED' \n  WHEN 3 THEN 'POSTED'\n  ELSE CONCAT('',SALESSTATUS) \nEND AS VARCHAR(20)) AS status,\nSALESNAME as salesname,\nRESERVATION as reservation,\n    CUSTACCOUNT as custaccount,\n    INVOICEACCOUNT as invoiceaccount,\n    DELIVERYADDRESS as deliveryaddress,\n    CONVERT(VARCHAR(10), DELIVERYDATE, 120) as deliverydate,\n    DOCUMENTSTATUS as documentstatus,\n    CURRENCYCODE as currencycode,\n    lower(DATAAREAID) as dataareaid,\n    RECVERSION as recversion,\n    RECID as recid,\n    LANGUAGEID as languageid,\n    PAYMENT as payment,\n    CUSTGROUP as custgroup,\n    PRICEGROUPID as pricegroupid,\n    CONVERT(VARCHAR(10), SHIPPINGDATEREQUESTED, 120) as shippingdaterequested,\n    DELIVERYSTREET as deliverystreet,\n    NUMBERSEQUENCEGROUP as numbersequencegroup,\n    CASHDISC as cashdisc,\n    CONVERT(VARCHAR(10), SHIPPINGDATECONFIRMED, 120) as shippingdateconfirmed,\n    CONVERT(VARCHAR(10), DEADLINE, 120) AS deadline,\n    CONVERT(VARCHAR(10), FIXEDDUEDATE, 120) as fixedduedate,\n    CONVERT(VARCHAR(10), RETURNDEADLINE, 120) as returndeadline,\n    CONVERT(VARCHAR(10), CREATEDDATETIME, 120) as createddatetime,\n    AMOUNT AS amount,\n    DISC as disc,\n    NETAMOUNT as netamount,\n    CITYCODE as citycode,\n    DISTRICTCODE as districtcode,\n    LATITUDE AS latitude,\n    LONGITUDE as longitude,\n    VehicleCode as vehiclecode,\n    APPTYPE as apptype,\n    VOUCHERNUM as vouchernum,\n    Painter as painter,\n    AJPENDDISC as ajpenddisc,\n    TAXGROUP as taxgroup,\n    SUMTAX as sumtax,\n    SUMTAX as vatamount,\n    CardNo as cardno,\n    REDEEMPOINTS as redeempts,\n    REDEEMAMT as redeemptsamt,\n    MultiLineDisc as multilinediscountgroupid,\n    BANKCARDNO as bankcardno,\n    CARDHOLDERNAME as cardholdername,\n    CARDEXPIRY as cardexpiry\nFROM SALESTABLE\nWHERE \nSALESTYPE IN (3,4,5,6,7,10) AND  SALESSTATUS IN (2,3)\nAND ";
+var salesTableQuery = "\nSELECT SALESID AS salesid,\nSALESTYPE as salestype,\nSALESSTATUS AS salesstatus,\nSALESGROUP as salesgroup,\nCAST(CASE SALESTYPE \n  WHEN 3 THEN 'SALESORDER' \n  WHEN 4 THEN 'RETURNORDER' \n  WHEN 5 THEN 'TRANSFERORDER'\n  WHEN 6 THEN 'ORDERSHIPMENT'\n  WHEN 7 THEN 'ORDERRECEIVE'\n  WHEN 10 THEN 'INVENTORYMOVEMENT'\n  ELSE ''\nEND AS VARCHAR(20)) AS transkind,\nSALESGROUP as intercompanyoriginalsalesid,\nCUSTOMERREF AS customerref,\nCAST(CASE SALESSTATUS \n  WHEN 2 THEN 'POSTED' \n  WHEN 3 THEN 'POSTED'\n  ELSE ''\nEND AS VARCHAR(20)) AS status,\nSALESNAME as salesname,\nRESERVATION as reservation,\n    CUSTACCOUNT as custaccount,\n    INVOICEACCOUNT as invoiceaccount,\n    DELIVERYADDRESS as deliveryaddress,\n    CONVERT(VARCHAR(10), DELIVERYDATE, 120) as deliverydate,\n    DOCUMENTSTATUS as documentstatus,\n    CURRENCYCODE as currencycode,\n    lower(DATAAREAID) as dataareaid,\n    RECVERSION as recversion,\n    RECID as recid,\n    LANGUAGEID as languageid,\n    PAYMENT as payment,\n    CUSTGROUP as custgroup,\n    PRICEGROUPID as pricegroupid,\n    CONVERT(VARCHAR(10), SHIPPINGDATEREQUESTED, 120) as shippingdaterequested,\n    DELIVERYSTREET as deliverystreet,\n    NUMBERSEQUENCEGROUP as numbersequencegroup,\n    CASHDISC as cashdisc,\n    CONVERT(VARCHAR(10), SHIPPINGDATECONFIRMED, 120) as shippingdateconfirmed,\n    CONVERT(VARCHAR(10), DEADLINE, 120) AS deadline,\n    CONVERT(VARCHAR(10), FIXEDDUEDATE, 120) as fixedduedate,\n    CONVERT(VARCHAR(10), RETURNDEADLINE, 120) as returndeadline,\n    CONVERT(VARCHAR(10), CREATEDDATETIME, 120) as createddatetime,\n    AMOUNT AS amount,\n    DISC as disc,\n    NETAMOUNT as netamount,\n    CITYCODE as citycode,\n    DISTRICTCODE as districtcode,\n    LATITUDE AS latitude,\n    LONGITUDE as longitude,\n    VehicleCode as vehiclecode,\n    APPTYPE as apptype,\n    VOUCHERNUM as vouchernum,\n    Painter as painter,\n    AJPENDDISC as ajpenddisc,\n    TAXGROUP as taxgroup,\n    SUMTAX as sumtax,\n    SUMTAX as vatamount,\n    CardNo as cardno,\n    REDEEMPOINTS as redeempts,\n    REDEEMAMT as redeemptsamt,\n    MultiLineDisc as multilinediscountgroupid,\n    BANKCARDNO as bankcardno,\n    CARDHOLDERNAME as cardholdername,\n    CARDEXPIRY as cardexpiry\nFROM SALESTABLE\nWHERE \nSALESTYPE IN (3,4,5,6,7,10) AND  SALESSTATUS IN (2,3)\nAND ";
 var salesLineQuery = "SELECT * FROM SALESLINE WHERE SALESID IN (\n  SELECT SALESID\n  FROM SALESTABLE\n  WHERE \n  SALESTYPE IN (3,4,5,6,7,10) AND  SALESSTATUS IN (2,3)\n  AND ";
 var inventTransQuery = "\nSELECT \nITEMID,\nCONVERT(VARCHAR(10), DATEPHYSICAL, 120) as DATEPHYSICAL,\nQTY,\nTRANSTYPE,\nTRANSREFID,\nINVOICEID,\nRECVERSION,\nRECID,\nInventSizeId,\nConfigId,\nBATCHNO,\nlower(DATAAREAID) as DATAAREAID\nFROM INVENTTRANS where ";

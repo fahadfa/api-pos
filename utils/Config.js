@@ -4,21 +4,21 @@ require("reflect-metadata");
 exports.dbOptions = {
     name: "default",
     type: "postgres",
-    host: "mposdb-preprod.cw34ebrphxxg.eu-central-1.rds.amazonaws.com",
+    host: "localhost",
     port: 5432,
-    username: "mposdb",
-    password: "mdbmpfpp",
-    database: "jpos_qa",
+    username: "postgres",
+    password: "Mpos1234",
+    database: "mpos_db",
     logging: true,
     synchronize: false,
     entities: [__dirname + "/../entities/**/*{.ts,.js}"]
 };
 // ============MS SQL CONNECTION=============
 exports.mssqlDbOptions = {
-    username: 'sysoffline',
-    password: 'binjzrpos',
-    host: 'localhost',
-    database: 'DAX',
+    username: "sysoffline",
+    password: "binjzrpos",
+    host: "localhost",
+    database: "DAX",
     port: 1433
 };
 //============== QA DATABASE ================
