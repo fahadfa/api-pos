@@ -44,16 +44,20 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Config = __importStar(require("../../utils/Config"));
 var SyncServiceHelper_1 = require("../../sync/SyncServiceHelper");
-var sql = require("msnodesqlv8");
-var mssqlClient = require("mssql/msnodesqlv8");
 var SyncPrevTransactionsService = /** @class */ (function () {
     function SyncPrevTransactionsService() {
         var _this = this;
         this.run = function () { return __awaiter(_this, void 0, void 0, function () {
-            var connectionString;
+            var mssqlClient, connectionString;
             return __generator(this, function (_a) {
-                connectionString = "server=localhost;Database=DAX;Trusted_Connection=Yes;Driver={SQL Server Native Client 11.0}";
-                this.pool = new mssqlClient.ConnectionPool(connectionString);
+                try {
+                    mssqlClient = require("mssql/msnodesqlv8");
+                    connectionString = "server=localhost;Database=DAX;Trusted_Connection=Yes;Driver={SQL Server Native Client 11.0}";
+                    this.pool = new mssqlClient.ConnectionPool(connectionString);
+                }
+                catch (err) {
+                    this.pool = null;
+                }
                 return [2 /*return*/];
             });
         }); };
@@ -83,7 +87,9 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         data = [];
                         rows = void 0;
                         query = void 0;
-                        query = salesTableQuery + (" CREATEDDATETIME BETWEEN dateadd(day, -90, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "' ORDER BY RECID ASC ");
+                        query =
+                            salesTableQuery +
+                                (" CREATEDDATETIME BETWEEN dateadd(day, -90, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "' ORDER BY RECID ASC ");
                         return [4 /*yield*/, this.pool.request().query(query)];
                     case 3:
                         rows = _c.sent();
@@ -103,7 +109,9 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         _i++;
                         return [3 /*break*/, 5];
                     case 8:
-                        query = salesLineQuery + (" CREATEDDATETIME BETWEEN dateadd(day, -90, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "') ORDER BY RECID ASC ");
+                        query =
+                            salesLineQuery +
+                                (" CREATEDDATETIME BETWEEN dateadd(day, -90, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "') ORDER BY RECID ASC ");
                         return [4 /*yield*/, this.pool.request().query(query)];
                     case 9:
                         rows = _c.sent();
@@ -123,7 +131,9 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         _a++;
                         return [3 /*break*/, 11];
                     case 14:
-                        query = inventTransQuery + (" DATEPHYSICAL BETWEEN dateadd(day, -90, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "' ORDER BY RECID ASC ");
+                        query =
+                            inventTransQuery +
+                                (" DATEPHYSICAL BETWEEN dateadd(day, -90, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "' ORDER BY RECID ASC ");
                         return [4 /*yield*/, this.pool.request().query(query)];
                     case 15:
                         rows = _c.sent();
@@ -263,7 +273,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                     case 6:
                         salesLineData = _a.sent();
                         // console.log(salesLineData);
-                        trans.saleslineid = salesLineData.rows[0] ? salesLineData.rows[0].id : '';
+                        trans.saleslineid = salesLineData.rows[0] ? salesLineData.rows[0].id : "";
                         query = "INSERT INTO public.inventtrans\n        (itemid, qty, datephysical, transtype, transrefid, invoiceid, dataareaid, recversion, recid, inventsizeid, configid, batchno, inventlocationid, transactionclosed, reserve_status, sales_line_id)\n        VALUES('" + trans.ITEMID + "', " + trans.QTY + ", '" + trans.DATEPHYSICAL + "'," + trans.TRANSTYPE + ", '" + trans.TRANSREFID + "', '" + trans.INVOICEID + "', '" + trans.DATAAREAID + "', " + trans.RECVERSION + ", " + trans.RECID + ", '" + trans.InventSizeId + "',\n         '" + trans.ConfigId + "', '" + trans.BATCHNO + "', '" + this.dateObj.inventlocationid + "', false, 'OLD_POS_DATA', '" + trans.saleslineid + "');\n        ";
                         // console.log(query);
                         queryData.push(query);

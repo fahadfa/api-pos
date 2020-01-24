@@ -40,7 +40,6 @@ var InventTransDAO_1 = require("../repos/InventTransDAO");
 var InventoryOnhandDAO_1 = require("../repos/InventoryOnhandDAO");
 var RawQuery_1 = require("../common/RawQuery");
 var Props_1 = require("../../constants/Props");
-var mssqlClient = require("mssql/msnodesqlv8");
 // let mssqlDbOptions = {
 //   username: 'sysoffline',
 //   password: 'binjzrpos',
@@ -62,10 +61,16 @@ var OpeningBalanceService = /** @class */ (function () {
     function OpeningBalanceService() {
         var _this = this;
         this.run = function () { return __awaiter(_this, void 0, void 0, function () {
-            var connectionString;
+            var mssqlClient, connectionString;
             return __generator(this, function (_a) {
-                connectionString = "server=localhost;Database=DAX;Trusted_Connection=Yes;Driver={SQL Server Native Client 11.0}";
-                this.pool = new mssqlClient.ConnectionPool(connectionString);
+                try {
+                    mssqlClient = require("mssql/msnodesqlv8");
+                    connectionString = "server=localhost;Database=DAX;Trusted_Connection=Yes;Driver={SQL Server Native Client 11.0}";
+                    this.pool = new mssqlClient.ConnectionPool(connectionString);
+                }
+                catch (err) {
+                    this.pool = null;
+                }
                 return [2 /*return*/];
             });
         }); };
@@ -147,7 +152,7 @@ var OpeningBalanceService = /** @class */ (function () {
                             v.transactionClosed = true;
                             v.invoiceid = "OPEN_BALANCE";
                             v.inventlocationid = _this.sessionInfo.inventlocationid;
-                            v.dataareaid = 'ajp';
+                            v.dataareaid = "ajp";
                         });
                         return [4 /*yield*/, this.inventtransDAO.savearr(item)];
                     case 4:
@@ -159,7 +164,7 @@ var OpeningBalanceService = /** @class */ (function () {
                             v.updatedBy = _this.sessionInfo.userName;
                             v.name = "OPEN_BALANCE";
                             v.inventlocationid = _this.sessionInfo.inventlocationid;
-                            v.dataareaid = 'ajp';
+                            v.dataareaid = "ajp";
                         });
                         return [4 /*yield*/, this.inventoryOnhandDAO.savearr(item)];
                     case 5:
