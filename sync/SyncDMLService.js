@@ -48,7 +48,7 @@ var SyncDMLService = /** @class */ (function () {
     }
     SyncDMLService.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var stageDbConfig, localDbConfig, sql, utcDate, utcDateTime, currentTime, syncResults, sourceDB, targetDB, startTime, error_1;
+            var stageDbConfig, localDbConfig, sql, utcDate, utcDateTime, currentTime, syncResults, sourceDB, targetDB, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -84,15 +84,16 @@ var SyncDMLService = /** @class */ (function () {
                         Log_1.slog.debug(JSON.stringify(syncResults));
                         if (!syncResults)
                             return [2 /*return*/, Promise.resolve("")];
+                        syncResults.last_update = new Date(syncResults.last_update).toISOString();
                         if (!(syncResults.source_id != syncResults.target_id)) return [3 /*break*/, 5];
                         sourceDB = syncResults.source_id == STAGING_ID ? stageDbConfig : localDbConfig;
                         targetDB = syncResults.target_id == STORE_ID ? localDbConfig : stageDbConfig;
                         if (syncResults.source_id != STAGING_ID) {
-                            startTime = new Date(syncResults.last_update);
-                            startTime = new Date(startTime.getTime() - startTime.getTimezoneOffset() * 60000);
-                            syncResults.last_update = startTime.toISOString();
+                            syncResults.last_update = moment(syncResults.last_update)
+                                .format()
+                                .split("+")[0];
                         }
-                        Log_1.slog.warn("\n\n(((((((((( " + syncResults.map_table + "::" + syncResults.last_update + " ))))))))))\n\n");
+                        Log_1.slog.warn("\n\n((((((<<<< " + syncResults.map_table + "::" + syncResults.last_update + " >>>>))))))\n\n");
                         return [4 /*yield*/, this.syncDb(sourceDB, targetDB, syncResults, currentTime)];
                     case 4:
                         _a.sent();
@@ -227,7 +228,7 @@ var SyncDMLService = /** @class */ (function () {
         });
     };
     SyncDMLService.prototype.buildDDLQuery = function (sync, offset) {
-        var sql = "select * from " + sync.map_table + " where " + sync.cond + "  \n    and " + sync.sync_column + " >= '" + new Date(sync.last_update).toISOString() + "' \n    offset " + offset + " limit " + this.limitData;
+        var sql = "select * from " + sync.map_table + " where " + sync.cond + "  \n    and " + sync.sync_column + " >= '" + sync.last_update + "' \n    offset " + offset + " limit " + this.limitData;
         return sql;
     };
     return SyncDMLService;
