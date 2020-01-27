@@ -181,6 +181,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                             item.inventlocationid = this.dateObj.inventlocationid;
                             item.invoicecreatedby = "SYSTEM";
                             item.lastmodifiedby = "SYSTEM";
+                            item.lastmodifieddate = new Date();
                             item.originalprinted = true;
                             item.iscash = item.payment == "CASH" ? true : false;
                             item.deliverytype = "self";
