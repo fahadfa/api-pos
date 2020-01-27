@@ -92,7 +92,7 @@ var SyncDMLService = /** @class */ (function () {
                             startTime = new Date(startTime.getTime() - startTime.getTimezoneOffset() * 60000);
                             syncResults.last_update = startTime.toISOString();
                         }
-                        Log_1.slog.log("\ninfo", "(((((((((( " + syncResults.map_table + "::" + syncResults.last_update + " ))))))))))\n");
+                        Log_1.slog.warn("\n\n(((((((((( " + syncResults.map_table + "::" + syncResults.last_update + " ))))))))))\n\n");
                         return [4 /*yield*/, this.syncDb(sourceDB, targetDB, syncResults, currentTime)];
                     case 4:
                         _a.sent();
