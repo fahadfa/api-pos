@@ -48,7 +48,7 @@ var SyncDMLService = /** @class */ (function () {
     }
     SyncDMLService.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var stageDbConfig, localDbConfig, sql, utcDate, utcDateTime, currentTime, syncResults, sourceDB, targetDB, error_1;
+            var stageDbConfig, localDbConfig, sql, utcDate, utcDateTime, currentTime, syncResults, sourceDB, targetDB, startTime, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -87,7 +87,12 @@ var SyncDMLService = /** @class */ (function () {
                         if (!(syncResults.source_id != syncResults.target_id)) return [3 /*break*/, 5];
                         sourceDB = syncResults.source_id == STAGING_ID ? stageDbConfig : localDbConfig;
                         targetDB = syncResults.target_id == STORE_ID ? localDbConfig : stageDbConfig;
-                        Log_1.slog.log("info", "(((((((((( " + syncResults.map_table + " ))))))))))");
+                        if (syncResults.source_id != STAGING_ID) {
+                            startTime = new Date(syncResults.last_update);
+                            startTime = new Date(startTime.getTime() - startTime.getTimezoneOffset() * 60000);
+                            syncResults.last_update = startTime.toISOString();
+                        }
+                        Log_1.slog.log("\ninfo", "(((((((((( " + syncResults.map_table + "::" + syncResults.last_update + " ))))))))))\n");
                         return [4 /*yield*/, this.syncDb(sourceDB, targetDB, syncResults, currentTime)];
                     case 4:
                         _a.sent();
