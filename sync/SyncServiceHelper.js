@@ -193,6 +193,11 @@ var SyncServiceHelper = /** @class */ (function () {
                         records_1 = [];
                         filterRows = rows.filter(function (ele) { return filterIds.indexOf(ele[pk]) > -1; });
                         filterRows.map(function (ele) {
+                            for (var key in ele) {
+                                if (Array.isArray(ele[key])) {
+                                    ele[key] = JSON.stringify(ele[key]);
+                                }
+                            }
                             records_1.push(Object.values(ele));
                         });
                         sql = format(sql, records_1);
@@ -238,11 +243,17 @@ var SyncServiceHelper = /** @class */ (function () {
                         records_2 = [];
                         filterRows = rows.filter(function (ele) { return filterIds.indexOf(ele[pk]) > -1; });
                         filterRows.map(function (ele) {
+                            for (var key in ele) {
+                                if (Array.isArray(ele[key])) {
+                                    ele[key] = JSON.stringify(ele[key]);
+                                }
+                            }
                             records_2.push(Object.values(ele));
                         });
                         sql_1 = format(sql_1, records_2);
                         //  sql = sql.replace(/'t'/g, "'TRUE'");
                         //  sql = sql.replace(/'f'/g, "'FALSE'");
+                        console.log(sql_1);
                         return [2 /*return*/, sql_1];
                     case 14: return [2 /*return*/];
                 }
