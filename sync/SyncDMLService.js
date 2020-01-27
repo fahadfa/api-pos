@@ -53,7 +53,6 @@ var SyncDMLService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         Log_1.slog.info("###########################################");
-                        Log_1.slog.info("###########################################");
                         // App.Sleep(2000);
                         Log_1.slog.info("!!!!!!!!!!!!!!!!!!!! " + STORE_ID + " - " + new Date().toISOString() + "!!!!!!!!!!!!!!!!!!!!");
                         stageDbConfig = SyncServiceHelper_1.SyncServiceHelper.StageDBOptions();
@@ -88,6 +87,7 @@ var SyncDMLService = /** @class */ (function () {
                         if (!(syncResults.source_id != syncResults.target_id)) return [3 /*break*/, 5];
                         sourceDB = syncResults.source_id == STAGING_ID ? stageDbConfig : localDbConfig;
                         targetDB = syncResults.target_id == STORE_ID ? localDbConfig : stageDbConfig;
+                        Log_1.slog.log("info", "(((((((((( " + syncResults.map_table + " ))))))))))");
                         return [4 /*yield*/, this.syncDb(sourceDB, targetDB, syncResults, currentTime)];
                     case 4:
                         _a.sent();
@@ -98,7 +98,6 @@ var SyncDMLService = /** @class */ (function () {
                         Log_1.slog.error(error_1);
                         return [3 /*break*/, 7];
                     case 7:
-                        Log_1.slog.info("###########################################");
                         Log_1.slog.info("###########################################");
                         return [2 /*return*/];
                 }

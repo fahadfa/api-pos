@@ -253,7 +253,6 @@ var SyncServiceHelper = /** @class */ (function () {
                         sql_1 = format(sql_1, records_2);
                         //  sql = sql.replace(/'t'/g, "'TRUE'");
                         //  sql = sql.replace(/'f'/g, "'FALSE'");
-                        console.log(sql_1);
                         return [2 /*return*/, sql_1];
                     case 14: return [2 /*return*/];
                 }

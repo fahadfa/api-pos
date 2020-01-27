@@ -34,12 +34,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var InventTrans_1 = require("../../entities/InventTrans");
 var InventTransDAO_1 = require("../repos/InventTransDAO");
 var InventoryOnhandDAO_1 = require("../repos/InventoryOnhandDAO");
 var RawQuery_1 = require("../common/RawQuery");
 var Props_1 = require("../../constants/Props");
+var fs = __importStar(require("fs"));
 // let mssqlDbOptions = {
 //   username: 'sysoffline',
 //   password: 'binjzrpos',
@@ -82,7 +90,7 @@ var OpeningBalanceService = /** @class */ (function () {
     }
     OpeningBalanceService.prototype.getOpeningBalance = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var query, rows, fs, rawdata, syncDataDate, err_1;
+            var query, rows, fs_1, rawdata, syncDataDate, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -98,7 +106,7 @@ var OpeningBalanceService = /** @class */ (function () {
                         return [4 /*yield*/, this.pool.request().query(query)];
                     case 2:
                         rows = _a.sent();
-                        fs = require("fs");
+                        fs_1 = require("fs");
                         rawdata = {
                             date: reqData.date,
                             inventlocationid: this.sessionInfo.inventlocationid,
@@ -106,7 +114,7 @@ var OpeningBalanceService = /** @class */ (function () {
                         };
                         syncDataDate = JSON.stringify(rawdata);
                         console.log(syncDataDate);
-                        fs.writeFile(__dirname + "/data.json", syncDataDate, function (err) {
+                        fs_1.writeFile(__dirname + "/data.json", syncDataDate, function (err) {
                             if (err) {
                                 console.log("Error writing file", err);
                             }
@@ -128,7 +136,7 @@ var OpeningBalanceService = /** @class */ (function () {
     };
     OpeningBalanceService.prototype.save = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var chunkData, _i, chunkData_1, item, inventtransData, onhandInventoryData, child_process, returnData, err_2;
+            var chunkData, _i, chunkData_1, item, inventtransData, onhandInventoryData, child_process, syncFile, returnData, err_2;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -175,7 +183,11 @@ var OpeningBalanceService = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 7:
                         child_process = require("child_process");
-                        child_process.fork(__dirname + "/SyncPrevTransactionsServices.ts");
+                        syncFile = __dirname + "/SyncPrevTransactionsServices.ts";
+                        syncFile = fs.existsSync(syncFile)
+                            ? __dirname + "/SyncPrevTransactionsServices.ts"
+                            : __dirname + "/SyncPrevTransactionsServices.js";
+                        child_process.fork(syncFile);
                         returnData = { message: Props_1.Props.SAVED_SUCCESSFULLY };
                         return [2 /*return*/, returnData];
                     case 8:

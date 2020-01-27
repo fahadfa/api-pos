@@ -58,7 +58,6 @@ var SyncDDLService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         Log_1.slog.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                        Log_1.slog.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
                         Log_1.slog.info("!!!!!!!!!!!!!!!!!!!! SYNC_DDL - " + new Date().toISOString() + "!!!!!!!!!!!!!!!!!!!!");
                         sync = null;
                         currentTime = new Date();
@@ -78,7 +77,6 @@ var SyncDDLService = /** @class */ (function () {
                         return [4 /*yield*/, this.syncDDL(syncResults, currentTime)];
                     case 3:
                         _a.sent();
-                        Log_1.slog.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
                         Log_1.slog.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
                         return [3 /*break*/, 5];
                     case 4:
