@@ -79,7 +79,7 @@ var DiscountService = /** @class */ (function () {
                         reqData.paymtermid = checkCustomer.paymtermid;
                         reqData.custtype = checkCustomer.custtype;
                         reqData.custgroup = checkCustomer.custgroup;
-                        return [4 /*yield*/, this.rawQuery.getDiscountBlockItems(checkCustomer.custgroup, this.sessionInfo.inventlocationid)];
+                        return [4 /*yield*/, this.rawQuery.getDiscountBlockItems(checkCustomer.custgroup, checkCustomer.accountnum, this.sessionInfo.inventlocationid)];
                     case 5:
                         discountBlockItems = _a.sent();
                         discountBlockItemsArray_1 = [];
@@ -207,12 +207,13 @@ var DiscountService = /** @class */ (function () {
                         instantDiscountRanges = [];
                         isInstantDiscount = false;
                         //console.log(reqData);
-                        console.log("======================", isTotalDiscount, totalPercentage);
+                        //  console.log("===================",discountBlockItemsArray)
+                        // console.log("======================", isTotalDiscount, totalPercentage);
                         if (reqData.paymtermid != "CASH" && reqData.isCash == true) {
                             isTotalDiscount = true;
                             totalPercentage = "5%";
                         }
-                        else if (reqData.paymtermid == "CASH" && reqData.isCash == true) {
+                        else if (reqData.paymtermid != "CASH" && reqData.isCash == false) {
                             isTotalDiscount = false;
                             totalPercentage = 0;
                         }
@@ -246,7 +247,7 @@ var DiscountService = /** @class */ (function () {
                         if (vouchers) {
                             console.log(vouchers, new Date(vouchers.expiry_date));
                             if (vouchers.is_enabled == 1 || vouchers.allowed_numbers <= vouchers.used_numbers || new Date(vouchers.expiry_date) < new Date()) {
-                                console.log("=========================");
+                                // console.log("=========================");
                                 if (vouchers.is_enabled == 1) {
                                     isValidVoucher = false;
                                     message = "VOUCHER NUMBER IS DISABLED";
@@ -475,7 +476,7 @@ var DiscountService = /** @class */ (function () {
                                                 // }
                                             }
                                         }
-                                        if (isInstantDiscount) {
+                                        if (isInstantDiscount && !isNoDiscount) {
                                             console.log(instantDiscountExcludeItems, item.itemid);
                                             if (instantDiscountExcludeItems.includes(item.itemid)) {
                                                 isInstantDiscount = false;
@@ -484,7 +485,7 @@ var DiscountService = /** @class */ (function () {
                                                 isInstantDiscount = true;
                                             }
                                         }
-                                        if (!isInstantDiscount) return [3 /*break*/, 7];
+                                        if (!(isInstantDiscount && !isNoDiscount)) return [3 /*break*/, 7];
                                         // //console.log("kd;hgigh;osihg;osihg;oishrg;oi");
                                         //console.log(instantDiscountPercent);
                                         return [4 /*yield*/, this_1.calInstantDiscount(reqData, item, instantDiscountPercent)];
@@ -543,7 +544,7 @@ var DiscountService = /** @class */ (function () {
                                         });
                                         _a.label = 13;
                                     case 13:
-                                        if (!isLineDiscount) return [3 /*break*/, 15];
+                                        if (!(isLineDiscount && !isNoDiscount)) return [3 /*break*/, 15];
                                         //console.log("======isLineDiscount============", grossTotal);
                                         return [4 /*yield*/, this_1.lineDiscount(item, reqData, checkDiscounts, linePercentage)];
                                     case 14:
@@ -557,7 +558,7 @@ var DiscountService = /** @class */ (function () {
                                         });
                                         _a.label = 15;
                                     case 15:
-                                        if (!isMultiLineDiscount) return [3 /*break*/, 18];
+                                        if (!(isMultiLineDiscount && !isNoDiscount)) return [3 /*break*/, 18];
                                         ////console.log("======isMultiLineDiscount============", grossTotal);
                                         return [4 /*yield*/, this_1.getMultiLinePercent(item, multilineDiscRanges, checkDiscounts, discounts[0].multilinedisc, multilineQuantity)];
                                     case 16:
@@ -576,7 +577,7 @@ var DiscountService = /** @class */ (function () {
                                         item.multilnPercent;
                                         _a.label = 18;
                                     case 18:
-                                        if (!isPromotionDiscount) return [3 /*break*/, 20];
+                                        if (!(isPromotionDiscount && !isNoDiscount)) return [3 /*break*/, 20];
                                         if (!(promotionalDiscountAmount > 0)) return [3 /*break*/, 20];
                                         console.log("======promotionalDiscount============", grossTotal);
                                         console.log(promotionalDiscountAmount);
@@ -598,7 +599,7 @@ var DiscountService = /** @class */ (function () {
                                         });
                                         _a.label = 20;
                                     case 20:
-                                        if (!isBuyOneGetOneDiscount) return [3 /*break*/, 22];
+                                        if (!(isBuyOneGetOneDiscount && !isNoDiscount)) return [3 /*break*/, 22];
                                         item.buyOneGetOneDiscount = buy_one_get_one;
                                         ////console.log(buy_one_get_one);
                                         return [4 /*yield*/, this_1.buyOneGetOneDiscount(item, reqData)];

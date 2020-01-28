@@ -834,13 +834,13 @@ var RawQuery = /** @class */ (function () {
             });
         });
     };
-    RawQuery.prototype.getDiscountBlockItems = function (custgroup, inventlocationid) {
+    RawQuery.prototype.getDiscountBlockItems = function (custgroup, accountnum, inventlocationid) {
         return __awaiter(this, void 0, void 0, function () {
             var query;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select itemid from ajp_block_discounts where \n        inventlocationid='" + inventlocationid + "' and \n        (price_disc_account_relation ='" + custgroup + "' or price_disc_account_relation='" + custgroup + "')";
+                        query = "select itemid from ajp_block_discounts where \n        inventlocationid='" + inventlocationid + "' and \n        (price_disc_account_relation ='" + custgroup + "' or price_disc_account_relation='" + accountnum + "')";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
