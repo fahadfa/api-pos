@@ -64,7 +64,7 @@ var SyncService = /** @class */ (function () {
                             case 0:
                                 if (!(isProceed == true)) return [3 /*break*/, 6];
                                 isProceed = false;
-                                Log_1.slog.log("info", "(((((((((( SYNC START ))))))))))");
+                                Log_1.slog.log("info", "(((((((((( SYNC START MASTER))))))))))");
                                 return [4 /*yield*/, this.checkInternet()];
                             case 1:
                                 if (!_a.sent()) return [3 /*break*/, 4];
@@ -73,7 +73,7 @@ var SyncService = /** @class */ (function () {
                             case 2:
                                 _a.sent();
                                 Log_1.slog.log("info", ">>>>>>>>>>>>>>>>> DML <<<<<<<<<<<<<<<<<<<<<<<");
-                                return [4 /*yield*/, this.syncDMLService.execute()];
+                                return [4 /*yield*/, this.syncDMLService.execute("M")];
                             case 3:
                                 _a.sent();
                                 return [3 /*break*/, 5];
@@ -81,13 +81,41 @@ var SyncService = /** @class */ (function () {
                                 Log_1.slog.log("debug", ">>>>>>>>>>>>>>>>> No Internet connection <<<<<<<<<<<<<<<<<<<<");
                                 _a.label = 5;
                             case 5:
-                                Log_1.slog.log("info", "(((((((((( SYNC CLOSE ))))))))))");
+                                Log_1.slog.log("info", "(((((((((( SYNC CLOSE MASTER ))))))))))");
                                 isProceed = true;
                                 return [3 /*break*/, 7];
                             case 6:
                                 Log_1.slog.warn("still processing ...................................");
                                 _a.label = 7;
                             case 7: return [2 /*return*/];
+                        }
+                    });
+                }); });
+                cron.schedule("*/5 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                if (!(isProceed == true)) return [3 /*break*/, 5];
+                                isProceed = false;
+                                Log_1.slog.log("info", "(((((((((( SYNC START TRANS ))))))))))");
+                                return [4 /*yield*/, this.checkInternet()];
+                            case 1:
+                                if (!_a.sent()) return [3 /*break*/, 3];
+                                return [4 /*yield*/, this.syncDMLService.execute("T")];
+                            case 2:
+                                _a.sent();
+                                return [3 /*break*/, 4];
+                            case 3:
+                                Log_1.slog.log("debug", ">>>>>>>>>>>>>>>>> No Internet connection <<<<<<<<<<<<<<<<<<<<");
+                                _a.label = 4;
+                            case 4:
+                                Log_1.slog.log("info", "(((((((((( SYNC CLOSE TRANS ))))))))))");
+                                isProceed = true;
+                                return [3 /*break*/, 6];
+                            case 5:
+                                Log_1.slog.warn("still processing ...................................");
+                                _a.label = 6;
+                            case 6: return [2 /*return*/];
                         }
                     });
                 }); });

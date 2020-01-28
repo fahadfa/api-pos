@@ -43,10 +43,11 @@ var Log_1 = require("../utils/Log");
 var STAGING_ID = "STAGING";
 var STORE_ID = process.env.ENV_STORE_ID || "LOCAL-TEST";
 var SyncDMLService = /** @class */ (function () {
+    //private db: any;
     function SyncDMLService() {
         this.limitData = 1000;
     }
-    SyncDMLService.prototype.execute = function () {
+    SyncDMLService.prototype.execute = function (type) {
         return __awaiter(this, void 0, void 0, function () {
             var stageDbConfig, localDbConfig, sql, utcDate, utcDateTime, currentTime, syncResults, sourceDB, targetDB, error_1;
             return __generator(this, function (_a) {
@@ -75,7 +76,12 @@ var SyncDMLService = /** @class */ (function () {
                         _a.trys.push([2, 6, , 7]);
                         if (stageDbConfig.host == localDbConfig.host)
                             throw { message: "Invalid DB config Data" };
-                        sql = " select * from sync_table \n                    where (source_id = '" + STORE_ID + "' or target_id = '" + STORE_ID + "' ) \n                    and active = true \n                    order by updated_on  ASC \n                    limit 1";
+                        if (type == "M") {
+                            sql = " select * from sync_table \n        where (source_id = '" + STORE_ID + "' ) \n        and active = true \n        order by updated_on  ASC \n        limit 1";
+                        }
+                        else {
+                            sql = " select * from sync_table \n        where (target_id = '" + STORE_ID + "' ) \n        and active = true \n        order by updated_on  ASC \n        limit 1";
+                        }
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(stageDbConfig, sql)];
                     case 3:
                         syncResults = _a.sent();

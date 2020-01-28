@@ -1473,6 +1473,7 @@ var SalesTableService = /** @class */ (function () {
                         item.createddatetime = new Date(App_1.App.dateNow());
                         item.createdBy = this.sessionInfo.userName;
                         item.numberSequenceGroupId = this.seqNum;
+                        item.lastModifiedDate = new Date(App_1.App.dateNow());
                         if (!(item.batches && item.batches.length > 0)) return [3 /*break*/, 10];
                         _a = 0, _b = item.batches;
                         _c.label = 7;
