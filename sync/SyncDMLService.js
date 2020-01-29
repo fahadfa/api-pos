@@ -77,10 +77,10 @@ var SyncDMLService = /** @class */ (function () {
                         if (stageDbConfig.host == localDbConfig.host)
                             throw { message: "Invalid DB config Data" };
                         if (type == "M") {
-                            sql = " select * from sync_table \n        where (source_id = '" + STORE_ID + "' ) \n        and active = true \n        order by updated_on  ASC \n        limit 1";
+                            sql = " select * from sync_table where (source_id = '" + STORE_ID + "' ) and active = true order by updated_on  ASC limit 1";
                         }
                         else {
-                            sql = " select * from sync_table \n        where (target_id = '" + STORE_ID + "' ) \n        and active = true \n        order by updated_on  ASC \n        limit 1";
+                            sql = " select * from sync_table where (target_id = '" + STORE_ID + "' ) and active = true order by updated_on  ASC limit 1";
                         }
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(stageDbConfig, sql)];
                     case 3:
