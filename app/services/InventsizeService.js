@@ -63,7 +63,7 @@ var InventsizeService = /** @class */ (function () {
     };
     InventsizeService.prototype.search = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, items, error_2;
+            var data, items_1, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -73,9 +73,12 @@ var InventsizeService = /** @class */ (function () {
                         if (!(reqData.itemid || reqData.configid)) return [3 /*break*/, 6];
                         return [4 /*yield*/, this.rawQuery.getSizeCodes(reqData)];
                     case 1:
-                        items = _a.sent();
-                        if (!(items.length > 0)) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.inventsizeDAO.search(reqData, items)];
+                        items_1 = _a.sent();
+                        if (!(items_1.length > 0)) return [3 /*break*/, 3];
+                        items_1.map(function (v) {
+                            items_1.push(v.toLowerCase());
+                        });
+                        return [4 /*yield*/, this.inventsizeDAO.search(reqData, items_1)];
                     case 2:
                         data = _a.sent();
                         return [3 /*break*/, 4];
@@ -98,7 +101,7 @@ var InventsizeService = /** @class */ (function () {
     };
     InventsizeService.prototype.searchSalesOrderSizes = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var t0, Items, data, t1, error_3;
+            var t0, items_2, data, t1, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -109,8 +112,12 @@ var InventsizeService = /** @class */ (function () {
                         params.inventlocationid = this.sessionInfo.inventlocationid;
                         return [4 /*yield*/, this.rawQuery.getSizeCodesInStock(params)];
                     case 1:
-                        Items = _a.sent();
-                        return [4 /*yield*/, this.inventsizeDAO.search(params, Items)];
+                        items_2 = _a.sent();
+                        // console.log(Items);
+                        items_2.map(function (v) {
+                            items_2.push(v.toLowerCase());
+                        });
+                        return [4 /*yield*/, this.inventsizeDAO.search(params, items_2)];
                     case 2:
                         data = _a.sent();
                         console.log(data.length);

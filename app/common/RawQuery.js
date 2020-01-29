@@ -223,7 +223,7 @@ var RawQuery = /** @class */ (function () {
                                 query = query + (" and i.configid='" + reqData.configid + "'");
                             }
                             if (reqData.inventsizeid) {
-                                query = query + (" and i.inventsizeid='" + reqData.inventsizeid + "'");
+                                query = query + (" and LOWER(i.inventsizeid)=LOWER('" + reqData.inventsizeid + "')");
                             }
                         }
                         return [4 /*yield*/, this.db.query(query)];
