@@ -796,11 +796,7 @@ var RawQuery = /** @class */ (function () {
                     case 1:
                         result = _a.sent();
                         console.log(result);
-                        return [2 /*return*/, result.length > 0
-                                ? result[0].availabilty < 0
-                                    ? 0
-                                    : result[0].availabilty
-                                : 0];
+                        return [2 /*return*/, result.length > 0 ? (result[0].availabilty < 0 ? 0 : result[0].availabilty) : 0];
                 }
             });
         });
@@ -821,13 +817,13 @@ var RawQuery = /** @class */ (function () {
             });
         });
     };
-    RawQuery.prototype.getDesignerServiceList = function (customerid) {
+    RawQuery.prototype.getDesignerServiceList = function (customerid, mobileno) {
         return __awaiter(this, void 0, void 0, function () {
             var query;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "\n                    select distinct d.invoiceid, d.customerid, \n                    cast(coalesce(d.balanceamount, 0) as Decimal(10,2)) as \"balanceAmount\", \n                    cast(coalesce(d.usedamount, 0) as Decimal(10,2)) as \"usedAmount\", \n                    cast((coalesce(d.balanceamount, 0)+ coalesce(d.usedamount, 0)) as Decimal(10,2)) as \"designerserviceAmount\" from (select \n                    a.invoiceid, \n                    a.customerid,\n                    (select ABS(sum(b.amount)) from designerservice b where b.invoiceid=a.invoiceid and b.customerid = a.customerid group by b.invoiceid, b.customerid) as balanceamount,\n                    (select ABS(sum(c.amount)) from designerservice c where c.amount < 0 and c.invoiceid=a.invoiceid and c.customerid = a.customerid group by c.invoiceid, c.customerid) as usedamount\n                    from designerservice a where a.customerid = '" + customerid + "') as d where d.balanceamount > 0\n                    ";
+                        query = "\n                    select distinct d.invoiceid, d.customerid, \n                    cast(coalesce(d.balanceamount, 0) as Decimal(10,2)) as \"balanceAmount\", \n                    cast(coalesce(d.usedamount, 0) as Decimal(10,2)) as \"usedAmount\", \n                    cast((coalesce(d.balanceamount, 0)+ coalesce(d.usedamount, 0)) as Decimal(10,2)) as \"designerserviceAmount\" from (select \n                    a.invoiceid, \n                    a.customerid,\n                    a.custphone,\n                    (select ABS(sum(b.amount)) from designerservice b where b.invoiceid=a.invoiceid and b.customerid = a.customerid and b.custphone= a.custphone group by b.invoiceid, b.customerid, b.custphone ) as balanceamount,\n                    (select ABS(sum(c.amount)) from designerservice c where c.amount < 0 and c.invoiceid=a.invoiceid and c.customerid = a.customerid and c.custphone = a.custphone group by c.invoiceid, c.customerid, c.custphone) as usedamount\n                    from designerservice a where a.customerid = '" + customerid + "' and a.custphone = '" + mobileno + "')  as d where d.balanceamount > 0\n                    ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
@@ -993,8 +989,7 @@ var RawQuery = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.db
-                            .query("select SUM(amount) as amount from designerservice \n        where invoiceid = '" + invoiceid + " group by invoiceid")];
+                    case 0: return [4 /*yield*/, this.db.query("select SUM(amount) as amount from designerservice \n        where invoiceid = '" + invoiceid + " group by invoiceid")];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
