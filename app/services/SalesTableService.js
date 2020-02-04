@@ -1350,7 +1350,7 @@ var SalesTableService = /** @class */ (function () {
                             lastmodifiedby: this.sessionInfo.userName,
                             lastmodifieddate: new Date(),
                             customer: {
-                                accountnum: reqData.custAccount
+                                accountnum: reqData.designerServiceCustAccount
                             }
                         };
                         return [4 /*yield*/, this.designerServiceDAO.save(designerServiceData)];
