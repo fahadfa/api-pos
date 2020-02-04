@@ -106,7 +106,7 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.calData(data)];
                     case 2:
                         _e.sent();
-                        data.custAccount = data.custAccount.trim();
+                        data.custAccount = data.custAccount ? data.custAccount.trim() : null;
                         _a = data;
                         return [4 /*yield*/, this.custtableDAO.entity(data.custAccount)];
                     case 3:
@@ -127,19 +127,11 @@ var SalesTableService = /** @class */ (function () {
                         _e.label = 7;
                     case 7:
                         _c.painter = _d;
-                        data.instantDiscChecked = data.instantDiscChecked
-                            ? data.instantDiscChecked
-                            : false;
-                        data.voucherDiscChecked = data.voucherDiscChecked
-                            ? data.voucherDiscChecked
-                            : false;
-                        data.originalPrinted = data.originalPrinted
-                            ? data.originalPrinted
-                            : false;
+                        data.instantDiscChecked = data.instantDiscChecked ? data.instantDiscChecked : false;
+                        data.voucherDiscChecked = data.voucherDiscChecked ? data.voucherDiscChecked : false;
+                        data.originalPrinted = data.originalPrinted ? data.originalPrinted : false;
                         data.deleted = data.deleted ? data.deleted : false;
-                        data.designServiceRedeemAmount = data.designServiceRedeemAmount
-                            ? parseFloat(data.designServiceRedeemAmount)
-                            : 0;
+                        data.designServiceRedeemAmount = data.designServiceRedeemAmount ? parseFloat(data.designServiceRedeemAmount) : 0;
                         data.isMovementIn = data.isMovementIn ? data.isMovementIn : false;
                         data.deleted = data.deleted ? data.deleted : false;
                         data.isCash = data.isCash ? data.isCash : false;
@@ -171,8 +163,7 @@ var SalesTableService = /** @class */ (function () {
                         _e.sent();
                         return [3 /*break*/, 13];
                     case 11:
-                        if (!(data.transkind == "TRANSFERORDER" &&
-                            data.custAccount == this.sessionInfo.inventlocationid)) return [3 /*break*/, 13];
+                        if (!(data.transkind == "TRANSFERORDER" && data.custAccount == this.sessionInfo.inventlocationid)) return [3 /*break*/, 13];
                         //console.log("---------------------------------------------------------------------------------------", data.transkind, data.status);
                         return [4 /*yield*/, this.inventoryOnHandCheck(item, data.transkind, data.custAccount)];
                     case 12:
@@ -240,40 +231,26 @@ var SalesTableService = /** @class */ (function () {
             v.salesUnit = v.salesUnit ? parseFloat(v.salesUnit) : 0;
             v.netAmount = v.netAmount ? parseFloat(v.netAmount) : 0;
             v.qtyOrdered = v.qtyOrdered ? parseFloat(v.qtyOrdered) : 0;
-            v.remainSalesPhysical = v.remainSalesPhysical
-                ? parseFloat(v.remainSalesPhysical)
-                : 0;
-            v.remainSalesFinancial = v.remainSalesFinancial
-                ? parseFloat(v.remainSalesFinancial)
-                : 0;
+            v.remainSalesPhysical = v.remainSalesPhysical ? parseFloat(v.remainSalesPhysical) : 0;
+            v.remainSalesFinancial = v.remainSalesFinancial ? parseFloat(v.remainSalesFinancial) : 0;
             v.lineTotalDisc = v.lineTotalDisc ? parseFloat(v.lineTotalDisc) : 0;
-            v.supplMultipleQty = v.supplMultipleQty
-                ? parseFloat(v.supplMultipleQty)
-                : 0;
+            v.supplMultipleQty = v.supplMultipleQty ? parseFloat(v.supplMultipleQty) : 0;
             v.supplFreeQty = v.supplFreeQty ? parseFloat(v.supplFreeQty) : 0;
             v.multilndisc = v.multilndisc ? parseFloat(v.multilndisc) : 0;
             v.multilnPercent = v.multilnPercent ? parseFloat(v.multilnPercent) : 0;
             v.endDisc = v.endDisc ? parseFloat(v.endDisc) : 0;
             v.enddiscamt = v.enddiscamt ? parseFloat(v.enddiscamt) : 0;
             v.colorantprice = v.colorantprice ? parseFloat(v.colorantprice) : 0;
-            v.totalReturnedQuantity = v.totalReturnedQuantity
-                ? parseFloat(v.totalReturnedQuantity)
-                : 0;
-            v.totalSettledAmount = v.totalSettledAmount
-                ? parseFloat(v.totalSettledAmount)
-                : 0;
+            v.totalReturnedQuantity = v.totalReturnedQuantity ? parseFloat(v.totalReturnedQuantity) : 0;
+            v.totalSettledAmount = v.totalSettledAmount ? parseFloat(v.totalSettledAmount) : 0;
             v.vatamount = v.vatamount ? parseFloat(v.vatamount) : 0;
             v.vat = v.vat ? parseFloat(v.vat) : 0;
             v.voucherdiscamt = v.voucherdiscamt ? parseFloat(v.voucherdiscamt) : 0;
-            v.voucherdiscpercent = v.voucherdiscpercent
-                ? parseFloat(v.voucherdiscpercent)
-                : 0;
+            v.voucherdiscpercent = v.voucherdiscpercent ? parseFloat(v.voucherdiscpercent) : 0;
             v.appliedDiscounts = v.appliedDiscounts ? v.appliedDiscounts : [];
             v.appliedDiscounts.map(function (value) {
                 value.percentage = value.percentage ? parseFloat(value.percentage) : 0;
-                value.discountAmount = value.discountAmount
-                    ? parseFloat(value.discountAmount)
-                    : 0;
+                value.discountAmount = value.discountAmount ? parseFloat(value.discountAmount) : 0;
             });
         });
     };
@@ -303,9 +280,7 @@ var SalesTableService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.rawQuery.inventoryOnHand({
-                            inventlocationid: custAccount == this.sessionInfo.inventlocationid
-                                ? custAccount
-                                : this.sessionInfo.inventlocationid,
+                            inventlocationid: custAccount == this.sessionInfo.inventlocationid ? custAccount : this.sessionInfo.inventlocationid,
                             itemId: item.itemid,
                             configid: item.color ? item.color.code : null,
                             inventsizeid: item.size.code
@@ -324,8 +299,7 @@ var SalesTableService = /** @class */ (function () {
                                 item.availablequatity = availabilty;
                                 item.adjustedquantity = item.salesQty - availabilty;
                             }
-                            else if (parseInt(item.salesQty) > availabilty &&
-                                transkind == "TRANSFERORDER") {
+                            else if (parseInt(item.salesQty) > availabilty && transkind == "TRANSFERORDER") {
                                 if (item.status == "REQUESTED") {
                                     item.requestedQuantity = item.salesQty;
                                     item.availableQuantity = availabilty;
@@ -350,8 +324,7 @@ var SalesTableService = /** @class */ (function () {
                                 }
                             }
                             else {
-                                if (transkind == "TRANSFERORDER" &&
-                                    (item.status == "REQUESTED" || item.status == null)) {
+                                if (transkind == "TRANSFERORDER" && (item.status == "REQUESTED" || item.status == null)) {
                                     item.requestedQuantity = item.salesQty;
                                     item.availableQuantity = availabilty;
                                 }
@@ -450,8 +423,7 @@ var SalesTableService = /** @class */ (function () {
                         data = _a;
                         newData_1 = [];
                         data.forEach(function (item) {
-                            if (item.custAccount == _this.sessionInfo.inventlocationid &&
-                                item.status != "CREATED") {
+                            if (item.custAccount == _this.sessionInfo.inventlocationid && item.status != "CREATED") {
                                 newData_1.push(item);
                             }
                             else if (item.inventLocationId == _this.sessionInfo.inventlocationid) {
@@ -555,15 +527,13 @@ var SalesTableService = /** @class */ (function () {
                     case 13: return [4 /*yield*/, this.saveQuotation(reqData)];
                     case 14: return [2 /*return*/, _b.sent()];
                     case 15:
-                        if (!(reqData.interCompanyOriginalSalesId &&
-                            reqData.interCompanyOriginalSalesId != "")) return [3 /*break*/, 17];
+                        if (!(reqData.interCompanyOriginalSalesId && reqData.interCompanyOriginalSalesId != "")) return [3 /*break*/, 17];
                         return [4 /*yield*/, this.saveOrderShipment(reqData)];
                     case 16: return [2 /*return*/, _b.sent()];
                     case 17: throw { message: Props_1.Props.SALES_ID_REQUIRED };
                     case 18: return [3 /*break*/, 34];
                     case 19:
-                        if (!(reqData.interCompanyOriginalSalesId &&
-                            reqData.interCompanyOriginalSalesId != "")) return [3 /*break*/, 21];
+                        if (!(reqData.interCompanyOriginalSalesId && reqData.interCompanyOriginalSalesId != "")) return [3 /*break*/, 21];
                         return [4 /*yield*/, this.saveOrderReceive(reqData)];
                     case 20: return [2 /*return*/, _b.sent()];
                     case 21: throw { message: Props_1.Props.SALES_ID_REQUIRED };
@@ -824,8 +794,7 @@ var SalesTableService = /** @class */ (function () {
                         reqData.message = "CONVERTED";
                         reqData.status = "CREATED";
                         _a = reqData.warehouse;
-                        return [4 /*yield*/, this.sessionInfo
-                                .inventlocationid];
+                        return [4 /*yield*/, this.sessionInfo.inventlocationid];
                     case 3:
                         _a.inventLocationId = _b.sent();
                         delete reqData.warehouse;
@@ -906,8 +875,7 @@ var SalesTableService = /** @class */ (function () {
                     case 3:
                         purchaseOrderData = _b.sent();
                         //console.log(purchaseOrderData);
-                        purchaseOrderData =
-                            purchaseOrderData.length > 0 ? purchaseOrderData[0] : {};
+                        purchaseOrderData = purchaseOrderData.length > 0 ? purchaseOrderData[0] : {};
                         if (!(purchaseOrderData == {})) return [3 /*break*/, 4];
                         throw { message: Props_1.Props.TECHNICAL_ISSUE };
                     case 4: return [4 /*yield*/, this.rawQuery.salesTableInterCompanyOriginalData(purchaseOrderData.salesid, "SALESORDER")];
@@ -934,11 +902,7 @@ var SalesTableService = /** @class */ (function () {
                         salesLine = purchaseReturnData.salesLine;
                         _loop_1 = function (item) {
                             //console.log(item);
-                            var batch = batches.filter(function (v) {
-                                return v.itemid == item.itemid &&
-                                    v.inventsizeid == item.inventsizeid &&
-                                    v.configid == item.configId;
-                            });
+                            var batch = batches.filter(function (v) { return v.itemid == item.itemid && v.inventsizeid == item.inventsizeid && v.configid == item.configId; });
                             //console.log(batch);
                             item.batches = batch;
                         };
@@ -948,8 +912,7 @@ var SalesTableService = /** @class */ (function () {
                             _loop_1(item);
                         }
                         reqData.inventLocationId = purchaseReturnData.jazeeraWarehouse;
-                        reqData.warehouse.inventLocationId =
-                            purchaseReturnData.jazeeraWarehouse;
+                        reqData.warehouse.inventLocationId = purchaseReturnData.jazeeraWarehouse;
                         return [4 /*yield*/, this.rawQuery.get_vedor_related_custaccount(purchaseReturnData.custAccount)];
                     case 7:
                         custAccount = _b.sent();
@@ -1120,9 +1083,7 @@ var SalesTableService = /** @class */ (function () {
                     case 1:
                         cond = _g.sent();
                         if (!(cond == true)) return [3 /*break*/, 55];
-                        !reqData.warehouse
-                            ? (reqData.warehouse = {})
-                            : (reqData.warehouse = reqData.warehouse);
+                        !reqData.warehouse ? (reqData.warehouse = {}) : (reqData.warehouse = reqData.warehouse);
                         reqData.warehouse.inventLocationId = this.sessionInfo.inventlocationid;
                         return [4 /*yield*/, this.salestableDAO.save(reqData)];
                     case 2:
@@ -1223,10 +1184,7 @@ var SalesTableService = /** @class */ (function () {
                         batch.qty = -batch.quantity;
                         batch.reserveStatus = reqData.status;
                         batch.dataareaid = this.sessionInfo.dataareaid;
-                        batch.transactionClosed =
-                            reqData.status == "PAID" || reqData.status == "RESERVED"
-                                ? true
-                                : false;
+                        batch.transactionClosed = reqData.status == "PAID" || reqData.status == "RESERVED" ? true : false;
                         batch.dateinvent = new Date(App_1.App.dateNow());
                         batches.push(batch);
                         _g.label = 18;
@@ -1339,8 +1297,7 @@ var SalesTableService = /** @class */ (function () {
                         visitorData.purchased = "Yes";
                         visitorData.visitorMobileNumber = customerDetails.phone;
                         visitorData.visitorType =
-                            Props_1.Props.RCUSTTYPE[customerDetails.rcusttype] &&
-                                Props_1.Props.RCUSTTYPE[customerDetails.rcusttype][1]
+                            Props_1.Props.RCUSTTYPE[customerDetails.rcusttype] && Props_1.Props.RCUSTTYPE[customerDetails.rcusttype][1]
                                 ? Props_1.Props.RCUSTTYPE[customerDetails.rcusttype][1]
                                 : "Individual";
                         return [4 /*yield*/, this.visitCustomerService.save(visitorData)];
@@ -1484,10 +1441,7 @@ var SalesTableService = /** @class */ (function () {
                         batches.itemid = item.itemid;
                         batches.transrefid = reqData.interCompanyOriginalSalesId;
                         batches.invoiceid = item.salesId;
-                        batches.qty =
-                            reqData.transkind == "PURCHASERETURN"
-                                ? -batches.returnQuantity
-                                : batches.returnQuantity;
+                        batches.qty = reqData.transkind == "PURCHASERETURN" ? -batches.returnQuantity : batches.returnQuantity;
                         batches.batchno = batches.batchno;
                         batches.configid = item.configId;
                         batches.inventsizeid = item.inventsizeid;
@@ -1702,11 +1656,7 @@ var SalesTableService = /** @class */ (function () {
                         batches_6 = _e.sent();
                         if (batches_6.length > 0) {
                             salesLine.map(function (v) {
-                                v.batches = batches_6.filter(function (b) {
-                                    return b.configid == v.configId &&
-                                        b.itemid == v.itemid &&
-                                        b.inventsizeid == v.inventsizeid;
-                                });
+                                v.batches = batches_6.filter(function (b) { return b.configid == v.configId && b.itemid == v.itemid && b.inventsizeid == v.inventsizeid; });
                             });
                         }
                         _i = 0, salesLine_7 = salesLine;
@@ -1892,9 +1842,7 @@ var SalesTableService = /** @class */ (function () {
                             ? reqData.interCompanyOriginalSalesId
                             : reqData.salesId;
                         batches_11.invoiceid = reqData.salesId;
-                        batches_11.qty = reqData.isMovementIn
-                            ? parseInt(batches_11.quantity)
-                            : -parseInt(batches_11.quantity);
+                        batches_11.qty = reqData.isMovementIn ? parseInt(batches_11.quantity) : -parseInt(batches_11.quantity);
                         batches_11.batchno = batches_11.batchNo;
                         batches_11.configid = item.configId;
                         batches_11.inventsizeid = item.inventsizeid;
@@ -1951,9 +1899,7 @@ var SalesTableService = /** @class */ (function () {
                         batch.reserveStatus = reqData.transkind;
                         batch.transactionClosed = transactionClosed;
                         batch.inventlocationid = this.sessionInfo.inventlocationid;
-                        batch.qty = reqData.isMovementIn
-                            ? Math.abs(batch.qty)
-                            : -Math.abs(batch.qty);
+                        batch.qty = reqData.isMovementIn ? Math.abs(batch.qty) : -Math.abs(batch.qty);
                         batch.dateinvent = new Date();
                         // this.inventTransDAO.save(batch);
                         item.batch.push({
@@ -2080,8 +2026,7 @@ var SalesTableService = /** @class */ (function () {
                                 batch.invoiceid = item.salesId;
                                 batch.dataareaid = this.sessionInfo.dataareaid;
                                 batch.inventlocationid = this.sessionInfo.inventlocationid;
-                                batch.transactionClosed =
-                                    status == "PAID" || status == "RESERVED" ? true : false;
+                                batch.transactionClosed = status == "PAID" || status == "RESERVED" ? true : false;
                                 batch.qty = -batch.quantity;
                                 batch.reserveStatus = status;
                                 batch.dateinvent = moment().format();
@@ -2175,16 +2120,13 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.calItem = function (item) {
         item.salesprice = item.salesprice
-            ? Math.round(parseFloat((item.salesprice * Math.pow(10, 2)).toFixed(2))) /
-                Math.pow(10, 2)
+            ? Math.round(parseFloat((item.salesprice * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
             : 0;
         item.salesQty = item.salesQty
-            ? Math.round(parseFloat((item.salesQty * Math.pow(10, 2)).toFixed(2))) /
-                Math.pow(10, 2)
+            ? Math.round(parseFloat((item.salesQty * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
             : 0;
         item.lineAmount = item.lineAmount
-            ? Math.round(parseFloat((item.lineAmount * Math.pow(10, 2)).toFixed(2))) /
-                Math.pow(10, 2)
+            ? Math.round(parseFloat((item.lineAmount * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
             : 0;
         item.remainSalesPhysical = item.remainSalesPhysical
             ? Math.round(parseFloat((item.remainSalesPhysical * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
@@ -2196,12 +2138,10 @@ var SalesTableService = /** @class */ (function () {
             ? Math.round(parseFloat((item.colorantprice * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
             : 0;
         item.vatamount = item.vatamount
-            ? Math.round(parseFloat((item.vatamount * Math.pow(10, 2)).toFixed(2))) /
-                Math.pow(10, 2)
+            ? Math.round(parseFloat((item.vatamount * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
             : 0;
         item.qtyOrdered = item.qtyOrdered
-            ? Math.round(parseFloat((item.qtyOrdered * Math.pow(10, 2)).toFixed(2))) /
-                Math.pow(10, 2)
+            ? Math.round(parseFloat((item.qtyOrdered * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
             : 0;
         item.voucherdiscpercent = item.voucherdiscpercent
             ? Math.round(parseFloat((item.voucherdiscpercent * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
@@ -2210,12 +2150,10 @@ var SalesTableService = /** @class */ (function () {
             ? Math.round(parseFloat((item.voucherdiscamt * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
             : 0;
         item.enddiscamt = item.enddiscamt
-            ? Math.round(parseFloat((item.enddiscamt * Math.pow(10, 2)).toFixed(2))) /
-                Math.pow(10, 2)
+            ? Math.round(parseFloat((item.enddiscamt * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
             : 0;
         item.endDisc = item.endDisc
-            ? Math.round(parseFloat((item.endDisc * Math.pow(10, 2)).toFixed(2))) /
-                Math.pow(10, 2)
+            ? Math.round(parseFloat((item.endDisc * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
             : 0;
         item.multilnPercent = item.multilnPercent
             ? Math.round(parseFloat((item.multilnPercent * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
@@ -2241,21 +2179,13 @@ var SalesTableService = /** @class */ (function () {
         item.instantDisc = item.instantDisc
             ? Math.round(parseFloat((item.instantDisc * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
             : 0;
-        item.vat = item.vat
-            ? Math.round(parseFloat((item.vat * Math.pow(10, 2)).toFixed(2))) /
-                Math.pow(10, 2)
-            : 0;
+        item.vat = item.vat ? Math.round(parseFloat((item.vat * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
     };
     SalesTableService.prototype.calData = function (data) {
-        data.sumTax =
-            Math.round(parseFloat((data.sumTax * Math.pow(10, 2)).toFixed(2))) /
-                Math.pow(10, 2);
-        data.vatamount =
-            Math.round(parseFloat((data.vatamount * Math.pow(10, 2)).toFixed(2))) /
-                Math.pow(10, 2);
+        data.sumTax = Math.round(parseFloat((data.sumTax * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2);
+        data.vatamount = Math.round(parseFloat((data.vatamount * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2);
         data.voucherdiscpercent = data.voucherdiscpercent
-            ? Math.round(parseFloat((data.vatamount * Math.pow(10, 2)).toFixed(2))) /
-                Math.pow(10, 2)
+            ? Math.round(parseFloat((data.vatamount * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
             : 0;
         data.redeemptsamt = data.redeemptsamt
             ? Math.round(parseFloat((data.redeemptsamt * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
@@ -2264,8 +2194,7 @@ var SalesTableService = /** @class */ (function () {
             ? Math.round(parseFloat((data.voucherdiscamt * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
             : 0;
         data.redeempts = data.redeempts
-            ? Math.round(parseFloat((data.redeempts * Math.pow(10, 2)).toFixed(2))) /
-                Math.pow(10, 2)
+            ? Math.round(parseFloat((data.redeempts * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
             : 0;
     };
     return SalesTableService;

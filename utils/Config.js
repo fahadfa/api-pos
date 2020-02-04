@@ -4,11 +4,11 @@ require("reflect-metadata");
 exports.dbOptions = {
     name: "default",
     type: "postgres",
-    host: "localhost",
+    host: "mposdb-preprod.cw34ebrphxxg.eu-central-1.rds.amazonaws.com",
     port: 5432,
-    username: "postgres",
-    password: "Mpos1234",
-    database: "mpos_db",
+    username: "mposdb",
+    password: "mdbmpfpp",
+    database: "jpos_qa",
     logging: true,
     synchronize: false,
     entities: [__dirname + "/../entities/**/*{.ts,.js}"]
