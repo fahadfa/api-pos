@@ -493,8 +493,8 @@ var SalesTableService = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _b.trys.push([0, 37, , 38]);
-                        if (!(reqData.salesLine && reqData.salesLine.length > 0)) return [3 /*break*/, 35];
+                        _b.trys.push([0, 38, , 39]);
+                        if (!(reqData.salesLine && reqData.salesLine.length > 0)) return [3 /*break*/, 36];
                         _a = reqData.transkind;
                         switch (_a) {
                             case "SALESQUOTATION": return [3 /*break*/, 1];
@@ -511,7 +511,7 @@ var SalesTableService = /** @class */ (function () {
                             case "PURCHASERETURN": return [3 /*break*/, 29];
                             case "DESIGNERSERVICE": return [3 /*break*/, 31];
                         }
-                        return [3 /*break*/, 33];
+                        return [3 /*break*/, 34];
                     case 1: return [4 /*yield*/, this.saveQuotation(reqData)];
                     case 2: return [2 /*return*/, _b.sent()];
                     case 3: return [4 /*yield*/, this.saveSalesOrder(reqData)];
@@ -531,13 +531,13 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.saveOrderShipment(reqData)];
                     case 16: return [2 /*return*/, _b.sent()];
                     case 17: throw { message: Props_1.Props.SALES_ID_REQUIRED };
-                    case 18: return [3 /*break*/, 34];
+                    case 18: return [3 /*break*/, 35];
                     case 19:
                         if (!(reqData.interCompanyOriginalSalesId && reqData.interCompanyOriginalSalesId != "")) return [3 /*break*/, 21];
                         return [4 /*yield*/, this.saveOrderReceive(reqData)];
                     case 20: return [2 /*return*/, _b.sent()];
                     case 21: throw { message: Props_1.Props.SALES_ID_REQUIRED };
-                    case 22: return [3 /*break*/, 34];
+                    case 22: return [3 /*break*/, 35];
                     case 23: return [4 /*yield*/, this.saveQuotation(reqData)];
                     case 24: return [2 /*return*/, _b.sent()];
                     case 25: return [4 /*yield*/, this.rawQuery.get_vedor_related_custaccount(reqData.custAccount)];
@@ -549,16 +549,19 @@ var SalesTableService = /** @class */ (function () {
                     case 28: throw { message: Props_1.Props.NO_VENDOR_FOR_CUSTOMER };
                     case 29: return [4 /*yield*/, this.saveReturnOrder(reqData)];
                     case 30: return [2 /*return*/, _b.sent()];
-                    case 31: return [4 /*yield*/, this.saveQuotation(reqData)];
+                    case 31:
+                        if (!reqData.mobileNo) return [3 /*break*/, 33];
+                        return [4 /*yield*/, this.saveQuotation(reqData)];
                     case 32: return [2 /*return*/, _b.sent()];
-                    case 33: throw { message: Props_1.Props.TRANSKIND_REQUIRED };
-                    case 34: return [3 /*break*/, 36];
-                    case 35: throw Props_1.Props.INVALID_SALESLINE_DATA;
-                    case 36: return [3 /*break*/, 38];
-                    case 37:
+                    case 33: throw { message: "Mobile Required" };
+                    case 34: throw { message: Props_1.Props.TRANSKIND_REQUIRED };
+                    case 35: return [3 /*break*/, 37];
+                    case 36: throw Props_1.Props.INVALID_SALESLINE_DATA;
+                    case 37: return [3 /*break*/, 39];
+                    case 38:
                         error_4 = _b.sent();
                         throw error_4;
-                    case 38: return [2 /*return*/];
+                    case 39: return [2 /*return*/];
                 }
             });
         });
