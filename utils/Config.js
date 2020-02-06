@@ -4,11 +4,11 @@ require("reflect-metadata");
 exports.dbOptions = {
     name: "default",
     type: "postgres",
-    host: "localhost",
+    host: "mposdb-preprod.cw34ebrphxxg.eu-central-1.rds.amazonaws.com",
     port: 5432,
-    username: "postgres",
-    password: "Mpos1234",
-    database: "mpos_db",
+    username: "mposdb",
+    password: "mdbmpfpp",
+    database: "jpos_qa",
     logging: true,
     synchronize: false,
     entities: [__dirname + "/../entities/**/*{.ts,.js}"]
@@ -100,59 +100,9 @@ exports.localDbOptions = {
 // };
 exports.mailOptions = {
     host: "smtp.gmail.com",
-    // port: 587,
     port: 465,
-    // port: 25,
     user: "jazsales1@gmail.com",
     pass: "Admin@1234"
-};
-exports.logOptions = {
-    file: {
-        level: "debug",
-        filename: __dirname + "/../../logs/jpos.log",
-        handleExceptions: true,
-        json: false,
-        maxsize: 10485760,
-        maxfiles: 5000
-    },
-    console: {
-        level: "debug",
-        handleExceptions: true,
-        json: false,
-        colorize: true
-    }
-};
-exports.logSyncOptions = {
-    file: {
-        level: "debug",
-        filename: __dirname + "/../../logs/sync.log",
-        handleExceptions: true,
-        json: false,
-        maxsize: 10485760,
-        maxfiles: 5000
-    },
-    console: {
-        level: "debug",
-        handleExceptions: true,
-        json: false,
-        colorize: true
-    }
-};
-exports.logUpdateOptions = {
-    file: {
-        level: "debug",
-        filename: __dirname + "/../../logs/update.log",
-        handleExceptions: true,
-        json: false,
-        maxsize: 10485760,
-        maxfiles: 5000
-    },
-    console: {
-        level: "debug",
-        handleExceptions: true,
-        json: false,
-        colorize: true
-    }
 };
 exports.setEnvConfig = function () {
     var envData = process.env.ENV_JPOS;

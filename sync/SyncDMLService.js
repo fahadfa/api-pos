@@ -55,7 +55,7 @@ var SyncDMLService = /** @class */ (function () {
                     case 0:
                         Log_1.slog.info("###########################################");
                         // App.Sleep(2000);
-                        Log_1.slog.info("!!!!!!!!!!!!!!!!!!!! " + STORE_ID + " - " + new Date().toISOString() + "!!!!!!!!!!!!!!!!!!!!");
+                        Log_1.slog.debug("!!!!!!!!!!!!!!!!!!!! " + STORE_ID + " - " + new Date().toISOString() + "!!!!!!!!!!!!!!!!!!!!");
                         stageDbConfig = SyncServiceHelper_1.SyncServiceHelper.StageDBOptions();
                         localDbConfig = SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions();
                         sql = "SELECT to_char (now(), 'YYYY-MM-DD\"T\"HH24:MI:SS') as utc_date";
@@ -131,7 +131,7 @@ var SyncDMLService = /** @class */ (function () {
                         lastUpdate = currentTime;
                         _a.label = 1;
                     case 1:
-                        _a.trys.push([1, 17, 19, 20]);
+                        _a.trys.push([1, 17, 20, 21]);
                         rowsAvalible_1 = null;
                         rowsNotAvalible = null;
                         _a.label = 2;
@@ -198,7 +198,7 @@ var SyncDMLService = /** @class */ (function () {
                         Log_1.slog.info("************* ***** *************");
                         return [3 /*break*/, 2];
                     case 15:
-                        Log_1.slog.info(":::::::::::::::::::UPDATE " + sync.id + " START ::::::::::::::::::::::");
+                        Log_1.slog.debug(":::::::::::::::::::UPDATE " + sync.id + " START ::::::::::::::::::::::");
                         updateQuery = null;
                         if (isTableUpdated == true) {
                             updateQuery = "update sync_table set last_update = '" + lastUpdate + "', updated_on = '" + currentTime + "'  where id='" + sync.id + "'";
@@ -209,12 +209,12 @@ var SyncDMLService = /** @class */ (function () {
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(updateSyncConfig, [updateQuery])];
                     case 16:
                         _a.sent();
-                        Log_1.slog.info(":::::::::::::::::::UPDATE " + sync.id + " END ::::::::::::::::::::::\n\n");
-                        return [3 /*break*/, 20];
+                        Log_1.slog.debug(":::::::::::::::::::UPDATE " + sync.id + " END ::::::::::::::::::::::\n\n");
+                        return [3 /*break*/, 21];
                     case 17:
                         err_1 = _a.sent();
-                        Log_1.slog.info(":::::::::::::::::::CATCH BLOCK START ::::::::::::::::::::::");
-                        Log_1.slog.info(err_1);
+                        Log_1.slog.warn(":::::::::::::::::::CATCH BLOCK START ::::::::::::::::::::::");
+                        Log_1.slog.error(err_1);
                         updateQuery = null;
                         if (err_1 == Props_1.Props.RECORD_NOT_FOUND) {
                             updateQuery = "update sync_table set last_update = '" + lastUpdate + "', updated_on = '" + currentTime + "'  where id='" + sync.id + "'";
@@ -225,10 +225,13 @@ var SyncDMLService = /** @class */ (function () {
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(updateSyncConfig, [updateQuery])];
                     case 18:
                         _a.sent();
-                        Log_1.slog.info(":::::::::::::::::::CATCH BLOCK ENDS ::::::::::::::::::::::");
-                        return [3 /*break*/, 20];
-                    case 19: return [7 /*endfinally*/];
-                    case 20: return [2 /*return*/];
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ErrorMessage("DML", err_1)];
+                    case 19:
+                        _a.sent();
+                        Log_1.slog.warn(":::::::::::::::::::CATCH BLOCK ENDS ::::::::::::::::::::::");
+                        return [3 /*break*/, 21];
+                    case 20: return [7 /*endfinally*/];
+                    case 21: return [2 /*return*/];
                 }
             });
         });

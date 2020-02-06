@@ -64,7 +64,7 @@ var SyncService = /** @class */ (function () {
                             case 0:
                                 if (!(isProceed == true)) return [3 /*break*/, 6];
                                 isProceed = false;
-                                Log_1.slog.log("info", "(((((((((( SYNC START MASTER))))))))))");
+                                Log_1.slog.debug("(((((((((( SYNC START MASTER))))))))))");
                                 return [4 /*yield*/, this.checkInternet()];
                             case 1:
                                 if (!_a.sent()) return [3 /*break*/, 4];
@@ -78,10 +78,10 @@ var SyncService = /** @class */ (function () {
                                 _a.sent();
                                 return [3 /*break*/, 5];
                             case 4:
-                                Log_1.slog.log("debug", ">>>>>>>>>>>>>>>>> No Internet connection <<<<<<<<<<<<<<<<<<<<");
+                                Log_1.slog.warn(">>>>>>>>>>>>>>>>> No Internet connection <<<<<<<<<<<<<<<<<<<<");
                                 _a.label = 5;
                             case 5:
-                                Log_1.slog.log("info", "(((((((((( SYNC CLOSE MASTER ))))))))))");
+                                Log_1.slog.debug("(((((((((( SYNC CLOSE MASTER ))))))))))");
                                 isProceed = true;
                                 return [3 /*break*/, 7];
                             case 6:
@@ -97,7 +97,7 @@ var SyncService = /** @class */ (function () {
                             case 0:
                                 if (!(isProceed == true)) return [3 /*break*/, 5];
                                 isProceed = false;
-                                Log_1.slog.log("info", "(((((((((( SYNC START TRANS ))))))))))");
+                                Log_1.slog.debug("(((((((((( SYNC START TRANS ))))))))))");
                                 return [4 /*yield*/, this.checkInternet()];
                             case 1:
                                 if (!_a.sent()) return [3 /*break*/, 3];
@@ -106,10 +106,10 @@ var SyncService = /** @class */ (function () {
                                 _a.sent();
                                 return [3 /*break*/, 4];
                             case 3:
-                                Log_1.slog.log("debug", ">>>>>>>>>>>>>>>>> No Internet connection <<<<<<<<<<<<<<<<<<<<");
+                                Log_1.slog.warn(">>>>>>>>>>>>>>>>> No Internet connection <<<<<<<<<<<<<<<<<<<<");
                                 _a.label = 4;
                             case 4:
-                                Log_1.slog.log("info", "(((((((((( SYNC CLOSE TRANS ))))))))))");
+                                Log_1.slog.debug("(((((((((( SYNC CLOSE TRANS ))))))))))");
                                 isProceed = true;
                                 return [3 /*break*/, 6];
                             case 5:

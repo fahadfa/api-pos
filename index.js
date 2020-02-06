@@ -73,7 +73,7 @@ var run = function () { return __awaiter(_this, void 0, void 0, function () {
                             if (err) {
                                 return [2 /*return*/, Log_1.log.error(err)];
                             }
-                            return [2 /*return*/, Log_1.log.log("info", "\n                    ***********************************************\n                            server is listening on " + port + "\n                    ***********************************************\n                ")];
+                            return [2 /*return*/, Log_1.log.log("info", "\n                    ***********************************************\n                            server is listening on " + port + "\n                    ***********************************************\n          ")];
                         });
                     }); });
                 }
@@ -83,7 +83,7 @@ var run = function () { return __awaiter(_this, void 0, void 0, function () {
                 setTimeout(function () {
                     if (count <= 5) {
                         count += 1;
-                        console.log("================", count);
+                        Log_1.log.error("================ " + count);
                         run();
                     }
                     else {
@@ -98,9 +98,7 @@ var run = function () { return __awaiter(_this, void 0, void 0, function () {
 run();
 var fs = require("fs");
 var syncFile = __dirname + "/sync.ts";
-syncFile = fs.existsSync(syncFile)
-    ? __dirname + "/sync.ts"
-    : __dirname + "/sync.js";
+syncFile = fs.existsSync(syncFile) ? __dirname + "/sync.ts" : __dirname + "/sync.js";
 var child_process = require("child_process");
 child_process.fork(syncFile);
 process.on("uncaughtException", function (err) {

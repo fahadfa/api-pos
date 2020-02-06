@@ -51,8 +51,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var pg_1 = require("pg");
 var Config = __importStar(require("../utils/Config"));
+var App_1 = require("../utils/App");
 var format = require("pg-format");
 var Log_1 = require("../utils/Log");
+var STORE_ID = process.env.ENV_STORE_ID || "LOCAL";
 var SyncServiceHelper = /** @class */ (function () {
     function SyncServiceHelper() {
     }
@@ -64,7 +66,7 @@ var SyncServiceHelper = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         Log_1.slog.info("-------------- Batch Query Starts --------------");
-                        Log_1.slog.info("\tHost Query: " + config.host);
+                        Log_1.slog.debug("\tHost Query: " + config.host);
                         Log_1.slog.debug("\t\tBatch length: " + sqls.length);
                         db = new pg_1.Client(config);
                         _b.label = 1;
@@ -116,7 +118,7 @@ var SyncServiceHelper = /** @class */ (function () {
                         return [3 /*break*/, 21];
                     case 18:
                         e_2 = _b.sent();
-                        console.error(e_2);
+                        Log_1.slog.error(e_2);
                         return [4 /*yield*/, db.query("ROLLBACK")];
                     case 19:
                         _b.sent();
@@ -166,6 +168,7 @@ var SyncServiceHelper = /** @class */ (function () {
                         return [2 /*return*/, { metaData: res.fields, rows: res.rows }];
                     case 7:
                         e_3 = _b.sent();
+                        Log_1.slog.error(e_3);
                         throw e_3;
                     case 8:
                         if (db)
@@ -335,6 +338,21 @@ var SyncServiceHelper = /** @class */ (function () {
                     case 3:
                         _a.sent();
                         return [2 /*return*/, rows];
+                }
+            });
+        });
+    };
+    SyncServiceHelper.ErrorMessage = function (type, err) {
+        return __awaiter(this, void 0, void 0, function () {
+            var sql;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        sql = "\n    INSERT INTO sync_error \n    (id, store_id, \"type\", error_msg, error_desc) \n    VALUES(\n      '" + App_1.App.UniqueNumber() + "', '" + STORE_ID + "', '" + type + "', '" + JSON.stringify(err) + "', '" + (err.message ? err.message : "") + "'\n    )\n  ";
+                        return [4 /*yield*/, SyncServiceHelper.BatchQuery(SyncServiceHelper.StageDBOptions(), [sql])];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
                 }
             });
         });

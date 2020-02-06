@@ -44,9 +44,8 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Props_1 = require("../constants/Props");
 var SyncServiceHelper_1 = require("../sync/SyncServiceHelper");
-var App_1 = require("../utils/App");
 var STAGING_ID = "STAGING";
-var STORE_ID = process.env.ENV_STORE_ID || "LOCAL-TEST";
+var STORE_ID = process.env.ENV_STORE_ID || "LOCAL";
 var Log_1 = require("../utils/Log");
 var SyncDDLService = /** @class */ (function () {
     function SyncDDLService() {
@@ -58,7 +57,6 @@ var SyncDDLService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         Log_1.slog.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                        Log_1.slog.info("!!!!!!!!!!!!!!!!!!!! SYNC_DDL - " + new Date().toISOString() + "!!!!!!!!!!!!!!!!!!!!");
                         sync = null;
                         currentTime = new Date();
                         _a.label = 1;
@@ -81,7 +79,7 @@ var SyncDDLService = /** @class */ (function () {
                         return [3 /*break*/, 5];
                     case 4:
                         error_1 = _a.sent();
-                        console.error(error_1);
+                        Log_1.slog.error(error_1);
                         return [3 /*break*/, 5];
                     case 5: return [2 /*return*/];
                 }
@@ -90,7 +88,7 @@ var SyncDDLService = /** @class */ (function () {
     };
     SyncDDLService.prototype.syncDDL = function (sync, currentTime) {
         return __awaiter(this, void 0, void 0, function () {
-            var e_1, _a, params, sql, stageDb, localDb, syncResults, syncResults_1, syncResults_1_1, res, syncDDLval, index, err_1, summary, e_1_1, err_2;
+            var e_1, _a, params, sql, stageDb, localDb, syncResults, syncResults_1, syncResults_1_1, res, syncDDLval, index, err_1, e_1_1, err_2;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -145,9 +143,8 @@ var SyncDDLService = /** @class */ (function () {
                         return [3 /*break*/, 11];
                     case 9:
                         err_1 = _b.sent();
-                        summary = res.summary.replace(/'/g, "''");
-                        sql = "\n                    INSERT INTO sync_error \n                    (id, store_id, \"type\", error_id, error_msg, error_desc) \n                    VALUES(\n                      '" + App_1.App.UniqueNumber() + "', '" + STORE_ID + "', 'DDL', '" + res.id + "', '" + summary + "', '" + (err_1.message ? err_1.message : JSON.stringify(err_1)) + "'\n                    )\n                  ";
-                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(stageDb, [sql])];
+                        Log_1.slog.error(err_1);
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ErrorMessage("DDL", err_1)];
                     case 10:
                         _b.sent();
                         return [3 /*break*/, 11];
@@ -172,7 +169,7 @@ var SyncDDLService = /** @class */ (function () {
                     case 19: return [3 /*break*/, 21];
                     case 20:
                         err_2 = _b.sent();
-                        console.error(err_2);
+                        Log_1.slog.error(err_2);
                         return [3 /*break*/, 21];
                     case 21: return [2 /*return*/];
                 }

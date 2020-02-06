@@ -1,28 +1,37 @@
 "use strict";
+// import { createLogger, format, transports } from "winston";
 Object.defineProperty(exports, "__esModule", { value: true });
-var winston_1 = require("winston");
-var Config_1 = require("./Config");
-exports.log = winston_1.createLogger({
-    exitOnError: false,
-    format: winston_1.format.combine(winston_1.format.timestamp({
-        format: "YYYY-MM-DDTHH:mm:ss"
-    }), winston_1.format.simple()),
-    transports: [new winston_1.transports.File(Config_1.logOptions.file), new winston_1.transports.Console(Config_1.logOptions.console)]
-});
-exports.slog = winston_1.createLogger({
-    exitOnError: false,
-    format: winston_1.format.combine(winston_1.format.timestamp({
-        format: "YYYY-MM-DDTHH:mm:ss"
-    }), winston_1.format.simple()),
-    transports: [new winston_1.transports.File(Config_1.logSyncOptions.file), new winston_1.transports.Console(Config_1.logSyncOptions.console)]
-});
-exports.ulog = winston_1.createLogger({
-    exitOnError: false,
-    format: winston_1.format.combine(winston_1.format.timestamp({
-        format: "YYYY-MM-DDTHH:mm:ss"
-    }), winston_1.format.simple()),
-    transports: [new winston_1.transports.File(Config_1.logUpdateOptions.file), new winston_1.transports.Console(Config_1.logUpdateOptions.console)]
-});
+// import { logOptions, logSyncOptions, logUpdateOptions } from "./Config";
+// export const log = createLogger({
+//   exitOnError: false,
+//   format: format.combine(
+//     format.timestamp({
+//       format: "YYYY-MM-DDTHH:mm:ss"
+//     }),
+//     format.simple()
+//   ),
+//   transports: [new transports.File(logOptions.file), new transports.Console(logOptions.console)]
+// });
+// export const slog = createLogger({
+//   exitOnError: false,
+//   format: format.combine(
+//     format.timestamp({
+//       format: "YYYY-MM-DDTHH:mm:ss"
+//     }),
+//     format.simple()
+//   ),
+//   transports: [new transports.File(logSyncOptions.file), new transports.Console(logSyncOptions.console)]
+// });
+// export const ulog = createLogger({
+//   exitOnError: false,
+//   format: format.combine(
+//     format.timestamp({
+//       format: "YYYY-MM-DDTHH:mm:ss"
+//     }),
+//     format.simple()
+//   ),
+//   transports: [new transports.File(logUpdateOptions.file), new transports.Console(logUpdateOptions.console)]
+// });
 // export const log = require("log4js");
 // export const slog = require("log4js");
 // export const ulog = require("log4js");
@@ -43,19 +52,42 @@ exports.ulog = winston_1.createLogger({
 // export const log = log4js.getLogger("log");
 // export const slog = log4js.getLogger("slog");
 // export const ulog = log4js.getLogger("ulog");
-// import { configure, getLogger } from "log4js";
-// configure({
-//   appenders: {
-//     app: {
-//       type: "file",
-//       filename: __dirname + "/../../logs/jpos.log",
-//       maxLogSize: 10485760,
-//       backups: 100
-//     },
-//     out: { type: "stdout", layout: { type: "coloured" } }
-//   },
-//   categories: { default: { appenders: ["app", "out"], level: "all" } }
-// });
-// export const log = getLogger("app");
-// export const slog = getLogger("sync");
-// export const ulog = getLogger("update");
+var log4js_1 = require("log4js");
+log4js_1.configure({
+    appenders: {
+        app: {
+            type: "multiFile",
+            base: __dirname + "/../../logs/",
+            property: "type",
+            extension: ".log",
+            maxLogSize: 10485760,
+            backups: 100,
+            keepFileExt: true
+        },
+        out: { type: "stdout", layout: { type: "dummy" } },
+        emergencies: {
+            type: "file",
+            filename: __dirname + "/../../logs/jpos_error.log",
+            maxLogSize: 10485760,
+            backups: 100,
+            keepFileExt: true
+        },
+        error: {
+            type: "logLevelFilter",
+            appender: "emergencies",
+            level: "error"
+        }
+    },
+    categories: {
+        default: { appenders: ["app", "out", "error"], level: "debug" }
+    }
+});
+exports.log = log4js_1.getLogger("app");
+exports.log.addContext("type", "jpos-app");
+exports.slog = log4js_1.getLogger("sync");
+exports.slog.addContext("type", "jpos-sync");
+exports.ulog = log4js_1.getLogger("update");
+exports.ulog.addContext("type", "jpos-update");
+// export const log = getLogger();
+// export const slog = getLogger();
+// export const ulog = getLogger();
