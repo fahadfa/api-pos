@@ -64,7 +64,7 @@ var OpeningBalanceService = /** @class */ (function () {
             var mssqlClient, connectionString;
             return __generator(this, function (_a) {
                 try {
-                    mssqlClient = require("mssql");
+                    mssqlClient = require("mssql/msnodesqlv8");
                     connectionString = "server=localhost;Database=DAX;Trusted_Connection=Yes;Driver={SQL Server Native Client 10.0.1600}";
                     // const connectionString = mssqlString;
                     this.pool = new mssqlClient.ConnectionPool(connectionString);
