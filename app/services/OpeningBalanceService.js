@@ -34,20 +34,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var InventTrans_1 = require("../../entities/InventTrans");
 var InventTransDAO_1 = require("../repos/InventTransDAO");
 var InventoryOnhandDAO_1 = require("../repos/InventoryOnhandDAO");
 var RawQuery_1 = require("../common/RawQuery");
 var Props_1 = require("../../constants/Props");
-var fs = __importStar(require("fs"));
 // let mssqlDbOptions = {
 //   username: 'sysoffline',
 //   password: 'binjzrpos',
@@ -55,15 +47,15 @@ var fs = __importStar(require("fs"));
 //   database: 'DAX',
 //   port: 1433
 // }
-// let mssqlDbOptions = {
-//   username: "SA",
-//   password: "Jazeera123",
-//   host: "3.80.2.102",
-//   database: "jpos_dev",
-//   port: 1433
-// };
+var mssqlDbOptions = {
+    username: "SA",
+    password: "Jazeera123",
+    host: "3.80.2.102",
+    database: "jpos_dev",
+    port: 1433
+};
 // let mssqlDbOptions = Config.mssqlDbOptions
-// let mssqlString = `mssql://${mssqlDbOptions.username}:${mssqlDbOptions.password}@${mssqlDbOptions.host}/${mssqlDbOptions.database}`;
+var mssqlString = "mssql://" + mssqlDbOptions.username + ":" + mssqlDbOptions.password + "@" + mssqlDbOptions.host + "/" + mssqlDbOptions.database;
 // const query = "SELECT name FROM sys.databases";
 var OpeningBalanceService = /** @class */ (function () {
     function OpeningBalanceService() {
@@ -72,8 +64,9 @@ var OpeningBalanceService = /** @class */ (function () {
             var mssqlClient, connectionString;
             return __generator(this, function (_a) {
                 try {
-                    mssqlClient = require("mssql/msnodesqlv8");
+                    mssqlClient = require("mssql");
                     connectionString = "server=localhost;Database=DAX;Trusted_Connection=Yes;Driver={SQL Server Native Client 10.0.1600}";
+                    // const connectionString = mssqlString;
                     this.pool = new mssqlClient.ConnectionPool(connectionString);
                 }
                 catch (err) {
@@ -90,27 +83,20 @@ var OpeningBalanceService = /** @class */ (function () {
     }
     OpeningBalanceService.prototype.getOpeningBalance = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var query, rows, fs_1, rawdata, syncDataDate, err_1;
+            var fs_1, rawdata, syncDataDate, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 4, , 5]);
-                        //await sql.connect();
-                        // const conn = new sql.connect(config);
-                        return [4 /*yield*/, this.pool.connect()];
-                    case 1:
-                        //await sql.connect();
-                        // const conn = new sql.connect(config);
-                        _a.sent();
-                        query = "SELECT\n      ITEMID as itemid, \n      ConfigId as configid, \n      InventSizeId as inventsizeid, \n      BatchNo as batchno, \n      SUM(qty) as qty\n      FROM INVENTTRANS i\n      where i.ITEMID NOT LIKE 'HSN%' and i.DATEPHYSICAL < '" + reqData.date + "'\n      group by i.ITEMID, i.ConfigId, i.InventSizeId, i.BatchNo HAVING sum(QTY) >0 ";
-                        return [4 /*yield*/, this.pool.request().query(query)];
-                    case 2:
-                        rows = _a.sent();
+                        _a.trys.push([0, 2, , 3]);
                         fs_1 = require("fs");
                         rawdata = {
                             date: reqData.date,
                             inventlocationid: this.sessionInfo.inventlocationid,
-                            dataareaid: this.sessionInfo.dataareaid
+                            dataareaid: this.sessionInfo.dataareaid,
+                            host: reqData.server,
+                            username: reqData.username,
+                            password: reqData.password,
+                            database: reqData.database
                         };
                         syncDataDate = JSON.stringify(rawdata);
                         console.log(syncDataDate);
@@ -122,36 +108,34 @@ var OpeningBalanceService = /** @class */ (function () {
                                 console.log("Successfully wrote file");
                             }
                         });
-                        return [4 /*yield*/, this.pool.close()];
-                    case 3:
-                        _a.sent();
-                        return [2 /*return*/, rows.recordset];
-                    case 4:
+                        return [4 /*yield*/, this.get_open_bal_data_for_onhand(reqData)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                    case 2:
                         err_1 = _a.sent();
                         throw err_1;
-                    case 5: return [2 /*return*/];
+                    case 3: return [2 /*return*/];
                 }
             });
         });
     };
     OpeningBalanceService.prototype.save = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var chunkData, _i, chunkData_1, item, inventtransData, onhandInventoryData, child_process, syncFile, returnData, err_2;
+            var chunkData, _i, chunkData_1, item, inventtransData, fs_2, jsonString, dateObj, onhandData, _a, chunkData_2, item, onhandInventoryData, child_process, syncFile, returnData, err_2;
             var _this = this;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _a.trys.push([0, 8, , 9]);
+                        _b.trys.push([0, 13, , 14]);
                         return [4 /*yield*/, this.rawQuery.deleteBalances()];
                     case 1:
-                        _a.sent();
+                        _b.sent();
                         return [4 /*yield*/, this.chunkArray(reqData, 100)];
                     case 2:
-                        chunkData = _a.sent();
+                        chunkData = _b.sent();
                         _i = 0, chunkData_1 = chunkData;
-                        _a.label = 3;
+                        _b.label = 3;
                     case 3:
-                        if (!(_i < chunkData_1.length)) return [3 /*break*/, 7];
+                        if (!(_i < chunkData_1.length)) return [3 /*break*/, 6];
                         item = chunkData_1[_i];
                         item.map(function (v) {
                             // v.id = v.recid ? v.recid.toString() : App.UniqueCode()
@@ -164,7 +148,27 @@ var OpeningBalanceService = /** @class */ (function () {
                         });
                         return [4 /*yield*/, this.inventtransDAO.savearr(item)];
                     case 4:
-                        inventtransData = _a.sent();
+                        inventtransData = _b.sent();
+                        _b.label = 5;
+                    case 5:
+                        _i++;
+                        return [3 /*break*/, 3];
+                    case 6:
+                        fs_2 = require("fs");
+                        jsonString = fs_2.readFileSync(__dirname + "/data.json", "utf-8");
+                        dateObj = JSON.parse(jsonString);
+                        dateObj.date = new Date().toISOString().slice(0, 10);
+                        return [4 /*yield*/, this.get_open_bal_data_for_onhand(dateObj)];
+                    case 7:
+                        onhandData = _b.sent();
+                        return [4 /*yield*/, this.chunkArray(onhandData, 100)];
+                    case 8:
+                        chunkData = _b.sent();
+                        _a = 0, chunkData_2 = chunkData;
+                        _b.label = 9;
+                    case 9:
+                        if (!(_a < chunkData_2.length)) return [3 /*break*/, 12];
+                        item = chunkData_2[_a];
                         item.map(function (v) {
                             // v.id =v.recid ? v.recid.toString() : App.UniqueCode()
                             v.qtyIn = v.qty;
@@ -175,25 +179,25 @@ var OpeningBalanceService = /** @class */ (function () {
                             v.dataareaid = "ajp";
                         });
                         return [4 /*yield*/, this.inventoryOnhandDAO.savearr(item)];
-                    case 5:
-                        onhandInventoryData = _a.sent();
-                        _a.label = 6;
-                    case 6:
-                        _i++;
-                        return [3 /*break*/, 3];
-                    case 7:
+                    case 10:
+                        onhandInventoryData = _b.sent();
+                        _b.label = 11;
+                    case 11:
+                        _a++;
+                        return [3 /*break*/, 9];
+                    case 12:
                         child_process = require("child_process");
                         syncFile = __dirname + "/SyncPrevTransactionsServices.ts";
-                        syncFile = fs.existsSync(syncFile)
+                        syncFile = fs_2.existsSync(syncFile)
                             ? __dirname + "/SyncPrevTransactionsServices.ts"
                             : __dirname + "/SyncPrevTransactionsServices.js";
                         child_process.fork(syncFile);
                         returnData = { message: Props_1.Props.SAVED_SUCCESSFULLY };
                         return [2 /*return*/, returnData];
-                    case 8:
-                        err_2 = _a.sent();
+                    case 13:
+                        err_2 = _b.sent();
                         throw err_2;
-                    case 9: return [2 /*return*/];
+                    case 14: return [2 /*return*/];
                 }
             });
         });
@@ -214,6 +218,26 @@ var OpeningBalanceService = /** @class */ (function () {
                         }
                         return [4 /*yield*/, tempArray];
                     case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    OpeningBalanceService.prototype.get_open_bal_data_for_onhand = function (reqData) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, rows;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.pool.connect()];
+                    case 1:
+                        _a.sent();
+                        query = "SELECT\n    ITEMID as itemid, \n    ConfigId as configid, \n    InventSizeId as inventsizeid, \n    BatchNo as batchno, \n    SUM(qty) as qty\n    FROM INVENTTRANS i\n    where i.ITEMID NOT LIKE 'HSN%' and i.DATEPHYSICAL < '" + reqData.date + "'\n    group by i.ITEMID, i.ConfigId, i.InventSizeId, i.BatchNo HAVING sum(QTY) >0 ";
+                        return [4 /*yield*/, this.pool.request().query(query)];
+                    case 2:
+                        rows = _a.sent();
+                        return [4 /*yield*/, this.pool.close()];
+                    case 3:
+                        _a.sent();
+                        return [2 /*return*/, rows.recordset];
                 }
             });
         });

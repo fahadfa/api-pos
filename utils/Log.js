@@ -54,33 +54,33 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // export const ulog = log4js.getLogger("ulog");
 var log4js_1 = require("log4js");
 log4js_1.configure({
-  appenders: {
-    app: {
-      type: "multiFile",
-      base: __dirname + "/../../logs/",
-      property: "type",
-      extension: ".log",
-      maxLogSize: 10485760,
-      backups: 100,
-      keepFileExt: true
+    appenders: {
+        app: {
+            type: "multiFile",
+            base: __dirname + "/../../logs/",
+            property: "type",
+            extension: ".log",
+            maxLogSize: 10485760,
+            backups: 100,
+            keepFileExt: true
+        },
+        out: { type: "stdout", layout: { type: "dummy" } },
+        emergencies: {
+            type: "file",
+            filename: __dirname + "/../../logs/jpos-error.log",
+            maxLogSize: 10485760,
+            backups: 100,
+            keepFileExt: true
+        },
+        error: {
+            type: "logLevelFilter",
+            appender: "emergencies",
+            level: "error"
+        }
     },
-    out: { type: "stdout", layout: { type: "dummy" } },
-    emergencies: {
-      type: "file",
-      filename: __dirname + "/../../logs/jpos-error.log",
-      maxLogSize: 10485760,
-      backups: 100,
-      keepFileExt: true
-    },
-    error: {
-      type: "logLevelFilter",
-      appender: "emergencies",
-      level: "error"
+    categories: {
+        default: { appenders: ["app", "out", "error"], level: "debug" }
     }
-  },
-  categories: {
-    default: { appenders: ["app", "out", "error"], level: "debug" }
-  }
 });
 exports.log = log4js_1.getLogger("app");
 exports.log.addContext("type", "jpos-app");

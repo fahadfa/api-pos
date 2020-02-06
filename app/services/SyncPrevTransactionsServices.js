@@ -44,6 +44,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Config = __importStar(require("../../utils/Config"));
 var SyncServiceHelper_1 = require("../../sync/SyncServiceHelper");
+var mssqlDbOptions = {
+    username: "SA",
+    password: "Jazeera123",
+    host: "3.80.2.102",
+    database: "jpos_dev",
+    port: 1433
+};
+// let mssqlDbOptions = Config.mssqlDbOptions
+var mssqlString = "mssql://" + mssqlDbOptions.username + ":" + mssqlDbOptions.password + "@" + mssqlDbOptions.host + "/" + mssqlDbOptions.database;
 var SyncPrevTransactionsService = /** @class */ (function () {
     function SyncPrevTransactionsService() {
         var _this = this;
@@ -51,8 +60,9 @@ var SyncPrevTransactionsService = /** @class */ (function () {
             var mssqlClient, connectionString;
             return __generator(this, function (_a) {
                 try {
-                    mssqlClient = require("mssql/msnodesqlv8");
+                    mssqlClient = require("mssql");
                     connectionString = "server=localhost;Database=DAX;Trusted_Connection=Yes;Driver={SQL Server Native Client 11.0}";
+                    // const connectionString = mssqlString;
                     this.pool = new mssqlClient.ConnectionPool(connectionString);
                 }
                 catch (err) {
@@ -73,23 +83,40 @@ var SyncPrevTransactionsService = /** @class */ (function () {
     }
     SyncPrevTransactionsService.prototype.mssqlTransactions = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var cond, data, rows, query, _i, data_1, item, _a, data_2, item, _b, data_3, item, err_1;
+            var cond, data, rows, query, sCond, slCond, tCond, optDate, current_date, transactionclosed, _i, data_1, item, err_1, _a, data_2, item, err_2, _b, data_3, item, err_3, err_4;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
                         cond = true;
                         _c.label = 1;
                     case 1:
-                        _c.trys.push([1, 21, 22, 23]);
+                        _c.trys.push([1, 27, 28, 29]);
                         return [4 /*yield*/, this.pool.connect()];
                     case 2:
                         _c.sent();
                         data = [];
                         rows = void 0;
                         query = void 0;
-                        query =
-                            salesTableQuery +
-                                (" CREATEDDATETIME BETWEEN dateadd(day, -90, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "' ORDER BY RECID ASC ");
+                        sCond = void 0;
+                        slCond = void 0;
+                        tCond = void 0;
+                        optDate = this.dateObj.date;
+                        current_date = new Date().toISOString().slice(0, 10);
+                        transactionclosed = false;
+                        console.log(optDate, current_date);
+                        if (optDate === current_date) {
+                            sCond = " CREATEDDATETIME BETWEEN dateadd(day, -120, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "' ORDER BY RECID ASC ";
+                            slCond = " CREATEDDATETIME BETWEEN dateadd(day, -120, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "') ORDER BY RECID ASC ";
+                            tCond = " DATEPHYSICAL BETWEEN dateadd(day, -120, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "' ORDER BY RECID ASC ";
+                        }
+                        else {
+                            sCond = " CREATEDDATETIME BETWEEN '" + this.dateObj.date + "' AND  getdate() ORDER BY RECID ASC ";
+                            tCond = " DATEPHYSICAL BETWEEN '" + this.dateObj.date + "' AND  getdate() ORDER BY RECID ASC ";
+                            slCond = " CREATEDDATETIME BETWEEN  '" + this.dateObj.date + "' AND  getdate()) ORDER BY RECID ASC ";
+                            transactionclosed = true;
+                        }
+                        console.log(tCond, sCond);
+                        query = salesTableQuery + sCond;
                         return [4 /*yield*/, this.pool.request().query(query)];
                     case 3:
                         rows = _c.sent();
@@ -99,69 +126,87 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         _i = 0, data_1 = data;
                         _c.label = 5;
                     case 5:
-                        if (!(_i < data_1.length)) return [3 /*break*/, 8];
+                        if (!(_i < data_1.length)) return [3 /*break*/, 10];
                         item = data_1[_i];
-                        return [4 /*yield*/, this.sync_salesTableData(item)];
+                        _c.label = 6;
                     case 6:
-                        _c.sent();
-                        _c.label = 7;
+                        _c.trys.push([6, 8, , 9]);
+                        return [4 /*yield*/, this.sync_salesTableData(item)];
                     case 7:
-                        _i++;
-                        return [3 /*break*/, 5];
+                        _c.sent();
+                        return [3 /*break*/, 9];
                     case 8:
-                        query =
-                            salesLineQuery +
-                                (" CREATEDDATETIME BETWEEN dateadd(day, -90, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "') ORDER BY RECID ASC ");
-                        return [4 /*yield*/, this.pool.request().query(query)];
-                    case 9:
-                        rows = _c.sent();
-                        return [4 /*yield*/, this.chunkArray(rows.recordset, 5000)];
-                    case 10:
-                        data = _c.sent();
-                        _a = 0, data_2 = data;
-                        _c.label = 11;
-                    case 11:
-                        if (!(_a < data_2.length)) return [3 /*break*/, 14];
-                        item = data_2[_a];
-                        return [4 /*yield*/, this.sync_salesLineData(item)];
-                    case 12:
-                        _c.sent();
-                        _c.label = 13;
-                    case 13:
-                        _a++;
-                        return [3 /*break*/, 11];
-                    case 14:
-                        query =
-                            inventTransQuery +
-                                (" DATEPHYSICAL BETWEEN dateadd(day, -90, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "' ORDER BY RECID ASC ");
-                        return [4 /*yield*/, this.pool.request().query(query)];
-                    case 15:
-                        rows = _c.sent();
-                        return [4 /*yield*/, this.chunkArray(rows.recordset, 5000)];
-                    case 16:
-                        data = _c.sent();
-                        _b = 0, data_3 = data;
-                        _c.label = 17;
-                    case 17:
-                        if (!(_b < data_3.length)) return [3 /*break*/, 20];
-                        item = data_3[_b];
-                        return [4 /*yield*/, this.syncInventTransData(item)];
-                    case 18:
-                        _c.sent();
-                        _c.label = 19;
-                    case 19:
-                        _b++;
-                        return [3 /*break*/, 17];
-                    case 20: return [3 /*break*/, 23];
-                    case 21:
                         err_1 = _c.sent();
                         console.log(err_1);
-                        cond = false;
-                        return [3 /*break*/, 23];
+                        return [3 /*break*/, 9];
+                    case 9:
+                        _i++;
+                        return [3 /*break*/, 5];
+                    case 10:
+                        query = salesLineQuery + slCond;
+                        return [4 /*yield*/, this.pool.request().query(query)];
+                    case 11:
+                        // console.log(cond);
+                        rows = _c.sent();
+                        return [4 /*yield*/, this.chunkArray(rows.recordset, 5000)];
+                    case 12:
+                        data = _c.sent();
+                        _a = 0, data_2 = data;
+                        _c.label = 13;
+                    case 13:
+                        if (!(_a < data_2.length)) return [3 /*break*/, 18];
+                        item = data_2[_a];
+                        _c.label = 14;
+                    case 14:
+                        _c.trys.push([14, 16, , 17]);
+                        return [4 /*yield*/, this.sync_salesLineData(item)];
+                    case 15:
+                        _c.sent();
+                        return [3 /*break*/, 17];
+                    case 16:
+                        err_2 = _c.sent();
+                        console.log(err_2);
+                        return [3 /*break*/, 17];
+                    case 17:
+                        _a++;
+                        return [3 /*break*/, 13];
+                    case 18:
+                        query = inventTransQuery + tCond;
+                        return [4 /*yield*/, this.pool.request().query(query)];
+                    case 19:
+                        rows = _c.sent();
+                        return [4 /*yield*/, this.chunkArray(rows.recordset, 5000)];
+                    case 20:
+                        data = _c.sent();
+                        _b = 0, data_3 = data;
+                        _c.label = 21;
+                    case 21:
+                        if (!(_b < data_3.length)) return [3 /*break*/, 26];
+                        item = data_3[_b];
+                        _c.label = 22;
                     case 22:
+                        _c.trys.push([22, 24, , 25]);
+                        return [4 /*yield*/, this.syncInventTransData(item, [], transactionclosed)];
+                    case 23:
+                        _c.sent();
+                        return [3 /*break*/, 25];
+                    case 24:
+                        err_3 = _c.sent();
+                        console.log(err_3);
+                        return [3 /*break*/, 25];
+                    case 25:
+                        _b++;
+                        return [3 /*break*/, 21];
+                    case 26: return [3 /*break*/, 29];
+                    case 27:
+                        err_4 = _c.sent();
+                        console.log(err_4);
+                        cond = false;
+                        return [3 /*break*/, 29];
+                    case 28:
                         this.pool.close();
                         return [7 /*endfinally*/];
-                    case 23: return [2 /*return*/];
+                    case 29: return [2 /*return*/];
                 }
             });
         });
@@ -169,7 +214,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
     SyncPrevTransactionsService.prototype.sync_salesTableData = function (salesTableData, queryData) {
         if (queryData === void 0) { queryData = []; }
         return __awaiter(this, void 0, void 0, function () {
-            var _i, salesTableData_1, item, query, err_2;
+            var _i, salesTableData_1, item, query, err_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -194,8 +239,8 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         _a.sent();
                         return [3 /*break*/, 3];
                     case 2:
-                        err_2 = _a.sent();
-                        console.log(err_2);
+                        err_5 = _a.sent();
+                        console.log(err_5);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
@@ -205,7 +250,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
     SyncPrevTransactionsService.prototype.sync_salesLineData = function (salesLineData, queryData) {
         if (queryData === void 0) { queryData = []; }
         return __awaiter(this, void 0, void 0, function () {
-            var _i, salesLineData_1, line, query, err_3;
+            var _i, salesLineData_1, line, query, err_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -229,18 +274,18 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         _a.sent();
                         return [3 /*break*/, 3];
                     case 2:
-                        err_3 = _a.sent();
-                        console.log(err_3);
+                        err_6 = _a.sent();
+                        console.log(err_6);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
             });
         });
     };
-    SyncPrevTransactionsService.prototype.syncInventTransData = function (inventTransData, queryData) {
+    SyncPrevTransactionsService.prototype.syncInventTransData = function (inventTransData, queryData, transactionclosed) {
         if (queryData === void 0) { queryData = []; }
         return __awaiter(this, void 0, void 0, function () {
-            var _i, inventTransData_1, trans, text, salesOrderData, text, salesOrderData, saleslinequery, salesLineData, query, err_4;
+            var _i, inventTransData_1, trans, text, salesOrderData, text, salesOrderData, saleslinequery, salesLineData, query, err_7;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -275,7 +320,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         salesLineData = _a.sent();
                         // console.log(salesLineData);
                         trans.saleslineid = salesLineData.rows[0] ? salesLineData.rows[0].id : "";
-                        query = "INSERT INTO public.inventtrans\n        (itemid, qty, datephysical, transtype, transrefid, invoiceid, dataareaid, recversion, recid, inventsizeid, configid, batchno, inventlocationid, transactionclosed, reserve_status, sales_line_id)\n        VALUES('" + trans.ITEMID + "', " + trans.QTY + ", '" + trans.DATEPHYSICAL + "'," + trans.TRANSTYPE + ", '" + trans.TRANSREFID + "', '" + trans.INVOICEID + "', '" + trans.DATAAREAID + "', " + trans.RECVERSION + ", " + trans.RECID + ", '" + trans.InventSizeId + "',\n         '" + trans.ConfigId + "', '" + trans.BATCHNO + "', '" + this.dateObj.inventlocationid + "', false, 'OLD_POS_DATA', '" + trans.saleslineid + "');\n        ";
+                        query = "INSERT INTO public.inventtrans\n        (itemid, qty, datephysical, transtype, transrefid, invoiceid, dataareaid, recversion, recid, inventsizeid, configid, batchno, inventlocationid, transactionclosed, reserve_status, sales_line_id)\n        VALUES('" + trans.ITEMID + "', " + trans.QTY + ", '" + trans.DATEPHYSICAL + "'," + trans.TRANSTYPE + ", '" + trans.TRANSREFID + "', '" + trans.INVOICEID + "', '" + trans.DATAAREAID + "', " + trans.RECVERSION + ", " + trans.RECID + ", '" + trans.InventSizeId + "',\n         '" + trans.ConfigId + "', '" + trans.BATCHNO + "', '" + this.dateObj.inventlocationid + "', " + transactionclosed + ", 'OLD_POS_DATA', '" + trans.saleslineid + "');\n        ";
                         // console.log(query);
                         queryData.push(query);
                         _a.label = 7;
@@ -287,8 +332,8 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         _a.sent();
                         return [3 /*break*/, 11];
                     case 10:
-                        err_4 = _a.sent();
-                        throw err_4;
+                        err_7 = _a.sent();
+                        throw err_7;
                     case 11: return [2 /*return*/];
                 }
             });
