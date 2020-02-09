@@ -211,6 +211,7 @@ var UsergroupConfigService = /** @class */ (function () {
                                 }
                             }
                         }
+                        item.lastmodifieddate = new Date();
                         return [2 /*return*/, true];
                 }
             });

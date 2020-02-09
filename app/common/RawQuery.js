@@ -60,7 +60,7 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "SELECT paymterm.numofdays FROM \"paymterm\" WHERE paymterm.paymtermid = '" + paymTermId + "'";
+                        query = "SELECT paymterm.numofdays FROM \"paymterm\" WHERE paymterm.paymtermid like '%" + paymTermId + "%'";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
