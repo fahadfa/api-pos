@@ -57,20 +57,18 @@ log4js_1.configure({
     appenders: {
         app: {
             type: "multiFile",
-            base: __dirname + "/../../logs/",
+            base: __dirname + "/../../logs/jpos/",
             property: "type",
             extension: ".log",
             maxLogSize: 10485760,
-            backups: 100,
-            keepFileExt: true
+            backups: 100
         },
         out: { type: "stdout", layout: { type: "dummy" } },
         emergencies: {
             type: "file",
-            filename: __dirname + "/../../logs/jpos-error.log",
+            filename: __dirname + "/../../logs/jpos/jpos-error.log",
             maxLogSize: 10485760,
-            backups: 100,
-            keepFileExt: true
+            backups: 100
         },
         error: {
             type: "logLevelFilter",
@@ -83,11 +81,11 @@ log4js_1.configure({
     }
 });
 exports.log = log4js_1.getLogger("app");
-exports.log.addContext("type", "jpos-app");
+exports.log.addContext("type", "app");
 exports.slog = log4js_1.getLogger("sync");
-exports.slog.addContext("type", "jpos-sync");
+exports.slog.addContext("type", "sync");
 exports.ulog = log4js_1.getLogger("update");
-exports.ulog.addContext("type", "jpos-update");
+exports.ulog.addContext("type", "update");
 // export const log = getLogger();
 // export const slog = getLogger();
 // export const ulog = getLogger();

@@ -44,6 +44,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Config = __importStar(require("../../utils/Config"));
 var SyncServiceHelper_1 = require("../../sync/SyncServiceHelper");
+var Log_1 = require("../../utils/Log");
 // let mssqlDbOptions = {
 //   username: "SA",
 //   password: "Jazeera123",
@@ -57,10 +58,9 @@ var SyncPrevTransactionsService = /** @class */ (function () {
     function SyncPrevTransactionsService() {
         var _this = this;
         this.run = function () { return __awaiter(_this, void 0, void 0, function () {
-            var mssqlClient;
             return __generator(this, function (_a) {
                 try {
-                    mssqlClient = require("mssql/msnodesqlv8");
+                    //const mssqlClient = require("mssql/msnodesqlv8");
                     // const connectionString =
                     //   "server=localhost;Database=DAX;Trusted_Connection=Yes;Driver={SQL Server Native Client 11.0}";
                     // let mssqlString = `mssql://${mssqlDbOptions.username}:${mssqlDbOptions.password}@${mssqlDbOptions.host}/${mssqlDbOptions.database}`;
@@ -68,6 +68,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                     // this.pool = new mssqlClient.ConnectionPool(connectionString);
                 }
                 catch (err) {
+                    Log_1.log.error(err);
                     this.pool = null;
                 }
                 return [2 /*return*/];
@@ -109,7 +110,8 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         optDate = this.dateObj.date;
                         current_date = new Date().toISOString().slice(0, 10);
                         transactionclosed = false;
-                        console.log(optDate, current_date);
+                        Log_1.log.info(optDate);
+                        Log_1.log.info(current_date);
                         if (optDate === current_date) {
                             sCond = " CREATEDDATETIME BETWEEN dateadd(day, -120, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "' ORDER BY RECID ASC ";
                             slCond = " CREATEDDATETIME BETWEEN dateadd(day, -120, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "') ORDER BY RECID ASC ";
@@ -121,7 +123,8 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                             slCond = " CREATEDDATETIME BETWEEN  '" + this.dateObj.date + "' AND  getdate()) ORDER BY RECID ASC ";
                             transactionclosed = true;
                         }
-                        console.log(tCond, sCond);
+                        Log_1.log.info(tCond);
+                        Log_1.log.info(sCond);
                         query = salesTableQuery + sCond;
                         return [4 /*yield*/, this.pool.request().query(query)];
                     case 3:
@@ -143,7 +146,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         return [3 /*break*/, 9];
                     case 8:
                         err_1 = _c.sent();
-                        console.log(err_1);
+                        Log_1.log.error(err_1);
                         return [3 /*break*/, 9];
                     case 9:
                         _i++;
@@ -152,7 +155,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         query = salesLineQuery + slCond;
                         return [4 /*yield*/, this.pool.request().query(query)];
                     case 11:
-                        // console.log(cond);
+                        // log.info(cond);
                         rows = _c.sent();
                         return [4 /*yield*/, this.chunkArray(rows.recordset, 5000)];
                     case 12:
@@ -171,7 +174,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         return [3 /*break*/, 17];
                     case 16:
                         err_2 = _c.sent();
-                        console.log(err_2);
+                        Log_1.log.error(err_2);
                         return [3 /*break*/, 17];
                     case 17:
                         _a++;
@@ -201,7 +204,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                     case 24: return [3 /*break*/, 27];
                     case 25:
                         err_3 = _c.sent();
-                        console.log(err_3);
+                        Log_1.log.error(err_3);
                         cond = false;
                         return [3 /*break*/, 27];
                     case 26:
@@ -242,7 +245,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         err_4 = _a.sent();
-                        console.log(err_4);
+                        Log_1.log.error(err_4);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
@@ -268,7 +271,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                                 }
                             ]);
                             query = "INSERT INTO public.salesline\n        (salesid, linenum, itemid, \"name\", salesprice, currencycode, salesqty, lineamount, salesunit, priceunit, qtyordered, remainsalesphysical, remainsalesfinancial,\n        salestype, dataareaid, custgroup, custaccount, inventsizeid, configid, numbersequencegroupid, inventlocationid, salesdelivernow, salesstatus, \"location\", batchno, instantdisc, voucherdisc,\n          redeemdisc, promotiondisc, linetotaldisc, linesalestax, netamttax, linesalestaxpercent, taxgroup, taxitemgroup, linediscamt, customdiscamt, supplmultipleqty, supplfreeqty, multilndisc, multilnpercent, enddisc,\n          createdby, createddatetime, lastmodifiedby, lastmodifieddate, \n            vatamount, vat, voucherdiscamt, sabic_customer_discount, is_item_free, link_id, batches, applied_discounts)\n        VALUES('" + line.SALESID + "', " + line.LINENUM + ", '" + line.ITEMID + "', '" + line.NAME + "', " + line.SALESPRICE + ", '" + line.CURRENCYCODE + "', " + line.SALESQTY + ", " + line.LINEAMOUNT + ", '" + line.SALESUNIT + "', " + line.PRICEUNIT + ", " + line.QTYORDERED + ", \n        " + line.REMAINSALESPHYSICAL + ", " + line.REMAINSALESFINANCIAL + ",  " + line.SALESTYPE + ", '" + (line.DATAAREAID ? line.DATAAREAID.toLowerCase() : null) + "', '" + line.CUSTGROUP + "', '" + line.CUSTACCOUNT + "', '" + line.INVENTSIZEID + "', '" + line.CONFIGID + "',\n         '" + line.NUMBERSEQUENCEGROUPID + "', '" + line.INVENTLOCATIONID + "', " + line.SALESDELIVERNOW + ", " + line.SALESSTATUS + ", '" + line.LOCATION + "', '" + line.BATCHNO + "', " + (line.InstantDisc ? line.InstantDisc : 0) + ", " + (line.VoucherDisc ? line.VoucherDisc : 0) + ", " + (line.RedeemDisc ? line.RedeemDisc : 0) + ", " + (line.PromotionDisc ? line.PromotionDisc : 0) + ", \n         " + (line.LineTotalDisc ? line.LineTotalDisc : 0) + ", " + (line.LineSalesTax ? line.LineSalesTax : 0) + ", " + (line.NetAmtTax ? line.NetAmtTax : 0) + ", " + (line.LineSalesTaxPercent ? line.LineSalesTaxPercent : 0) + ", '" + line.TAXGROUP + "', '" + line.TAXITEMGROUP + "', " + (line.LINEDISCAMT ? line.LINEDISCAMT : 0) + ", " + (line.CUSTOMDISCAMT ? line.CUSTOMDISCAMT : 0) + ", " + (line.SupplMultipleQty ? line.SupplMultipleQty : 0) + ", " + (line.SupplFreeQty ? line.SupplFreeQty : 0) + ",\n         " + (line.MulLnDisc ? line.MultiLineDisc : 0) + ", " + (line.MultiPercent ? line.MultiPercent : 0) + ", " + (line.CUSTOMDISCAMT ? line.CUSTOMDISCAMT : 0) + ", '" + line.createdby + "', now(), '" + line.createdby + "', now(),\n          " + (line.LineSalesTax ? line.LineSalesTax : 0) + ", " + (line.LineSalesTaxPercent ? line.LineSalesTaxPercent : 0) + ",\n           " + (line.VoucherDisc ? line.VoucherDisc : 0) + ", " + (line.InteriorExteriorAmount ? line.InteriorExteriorAmount : 0) + ", " + (line.isitemfree ? line.isitemfree : false) + ", NULL, '" + line.batches + "', '" + line.applied_discounts + "')\n        ";
-                            // console.log(query)
+                            // log.info(query)
                             queryData.push(query);
                         }
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(this.localDbConfig, queryData)];
@@ -277,7 +280,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         err_5 = _a.sent();
-                        console.log(err_5);
+                        Log_1.log.error(err_5);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
@@ -320,18 +323,24 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(this.localDbConfig, saleslinequery)];
                     case 6:
                         salesLineData = _a.sent();
-                        // console.log(salesLineData);
+                        // log.info(salesLineData);
                         trans.saleslineid = salesLineData.rows[0] ? salesLineData.rows[0].id : "";
                         query = "INSERT INTO public.inventtrans\n        (itemid, qty, datephysical, transtype, transrefid, invoiceid, dataareaid, recversion, recid, inventsizeid, configid, batchno, inventlocationid, transactionclosed, reserve_status, sales_line_id)\n        VALUES('" + trans.ITEMID + "', " + trans.QTY + ", '" + trans.DATEPHYSICAL + "'," + trans.TRANSTYPE + ", '" + trans.TRANSREFID + "', '" + trans.INVOICEID + "', '" + trans.DATAAREAID + "', " + trans.RECVERSION + ", " + trans.RECID + ", '" + trans.InventSizeId + "',\n         '" + trans.ConfigId + "', '" + trans.BATCHNO + "', '" + this.dateObj.inventlocationid + "', " + transactionclosed + ", 'OLD_POS_DATA', '" + trans.saleslineid + "');\n        ";
-                        if (!(transactionclosed == true && trans.ITEMID != 'HSN-00001')) return [3 /*break*/, 8];
+                        if (!(transactionclosed == true && trans.ITEMID != "HSN-00001")) return [3 /*break*/, 8];
                         text = "select * from inventory_onhand where itemid = '" + trans.ITEMID + "' AND configid = '" + trans.ConfigId + "' and inventsizeid = '" + trans.InventSizeId + "' and batchno = '" + trans.BATCHNO + "' and inventlocationid = '" + this.dateObj.inventlocationid + "'";
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(this.localDbConfig, text)];
                     case 7:
                         onhanddata = _a.sent();
-                        console.log(onhanddata);
+                        Log_1.log.info(onhanddata);
                         if (onhanddata && onhanddata.rows.length > 0) {
-                            trans.qty_in = parseInt(trans.QTY) > 0 ? parseInt(onhanddata.rows[0].qty_in) + Math.abs(parseInt(trans.QTY)) : parseInt(onhanddata.rows[0].qty_in) + 0;
-                            trans.qty_out = parseInt(trans.QTY) <= 0 ? parseInt(onhanddata.rows[0].qty_out) + Math.abs(parseInt(trans.QTY)) : parseInt(onhanddata.rows[0].qty_out) + 0;
+                            trans.qty_in =
+                                parseInt(trans.QTY) > 0
+                                    ? parseInt(onhanddata.rows[0].qty_in) + Math.abs(parseInt(trans.QTY))
+                                    : parseInt(onhanddata.rows[0].qty_in) + 0;
+                            trans.qty_out =
+                                parseInt(trans.QTY) <= 0
+                                    ? parseInt(onhanddata.rows[0].qty_out) + Math.abs(parseInt(trans.QTY))
+                                    : parseInt(onhanddata.rows[0].qty_out) + 0;
                             onhandquery = "UPDATE public.inventory_onhand SET  qty_in='" + trans.qty_in + "', qty_out= '" + trans.qty_out + "', updated_on=now() WHERE id='" + onhanddata.rows[0].id + "'";
                             inventoryOnHandQuery.push(onhandquery);
                         }
@@ -349,7 +358,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         _i++;
                         return [3 /*break*/, 1];
                     case 10:
-                        console.log(inventoryOnHandQuery);
+                        Log_1.log.info(inventoryOnHandQuery);
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(this.localDbConfig, queryData)];
                     case 11:
                         _a.sent();
@@ -389,7 +398,7 @@ try {
     sync.mssqlTransactions();
 }
 catch (err) {
-    console.log(err);
+    Log_1.log.error(err);
 }
 var salesTableQuery = "\nSELECT SALESID AS salesid,\nSALESTYPE as salestype,\nSALESSTATUS AS salesstatus,\nSALESGROUP as salesgroup,\nCAST(CASE SALESTYPE \n  WHEN 3 THEN 'SALESORDER' \n  WHEN 4 THEN 'RETURNORDER' \n  WHEN 5 THEN 'TRANSFERORDER'\n  WHEN 6 THEN 'ORDERSHIPMENT'\n  WHEN 7 THEN 'ORDERRECEIVE'\n  WHEN 10 THEN 'INVENTORYMOVEMENT'\n  ELSE ''\nEND AS VARCHAR(20)) AS transkind,\nSALESGROUP as intercompanyoriginalsalesid,\nCUSTOMERREF AS customerref,\nCAST(CASE SALESSTATUS \n  WHEN 2 THEN 'POSTED' \n  WHEN 3 THEN 'POSTED'\n  ELSE ''\nEND AS VARCHAR(20)) AS status,\nSALESNAME as salesname,\nRESERVATION as reservation,\n    CUSTACCOUNT as custaccount,\n    INVOICEACCOUNT as invoiceaccount,\n    DELIVERYADDRESS as deliveryaddress,\n    CONVERT(VARCHAR(10), DELIVERYDATE, 120) as deliverydate,\n    DOCUMENTSTATUS as documentstatus,\n    CURRENCYCODE as currencycode,\n    lower(DATAAREAID) as dataareaid,\n    RECVERSION as recversion,\n    RECID as recid,\n    LANGUAGEID as languageid,\n    PAYMENT as payment,\n    CUSTGROUP as custgroup,\n    PRICEGROUPID as pricegroupid,\n    CONVERT(VARCHAR(10), SHIPPINGDATEREQUESTED, 120) as shippingdaterequested,\n    DELIVERYSTREET as deliverystreet,\n    NUMBERSEQUENCEGROUP as numbersequencegroup,\n    CASHDISC as cashdisc,\n    CONVERT(VARCHAR(10), SHIPPINGDATECONFIRMED, 120) as shippingdateconfirmed,\n    CONVERT(VARCHAR(10), DEADLINE, 120) AS deadline,\n    CONVERT(VARCHAR(10), FIXEDDUEDATE, 120) as fixedduedate,\n    CONVERT(VARCHAR(10), RETURNDEADLINE, 120) as returndeadline,\n    CONVERT(VARCHAR(10), CREATEDDATETIME, 120) as createddatetime,\n    AMOUNT AS amount,\n    DISC as disc,\n    NETAMOUNT as netamount,\n    CITYCODE as citycode,\n    DISTRICTCODE as districtcode,\n    LATITUDE AS latitude,\n    LONGITUDE as longitude,\n    VehicleCode as vehiclecode,\n    APPTYPE as apptype,\n    VOUCHERNUM as vouchernum,\n    Painter as painter,\n    AJPENDDISC as ajpenddisc,\n    TAXGROUP as taxgroup,\n    SUMTAX as sumtax,\n    SUMTAX as vatamount,\n    CardNo as cardno,\n    REDEEMPOINTS as redeempts,\n    REDEEMAMT as redeemptsamt,\n    MultiLineDisc as multilinediscountgroupid,\n    BANKCARDNO as bankcardno,\n    CARDHOLDERNAME as cardholdername,\n    CARDEXPIRY as cardexpiry\nFROM SALESTABLE\nWHERE \nSALESTYPE IN (3,4,5,6,7,10) AND  SALESSTATUS IN (2,3)\nAND ";
 var salesLineQuery = "SELECT * FROM SALESLINE WHERE SALESID IN (\n  SELECT SALESID\n  FROM SALESTABLE\n  WHERE \n  SALESTYPE IN (3,4,5,6,7,10) AND  SALESSTATUS IN (2,3)\n  AND ";

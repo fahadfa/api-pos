@@ -48,6 +48,7 @@ var InventoryOnhandDAO_1 = require("../repos/InventoryOnhandDAO");
 var RawQuery_1 = require("../common/RawQuery");
 var Props_1 = require("../../constants/Props");
 var fs = __importStar(require("fs"));
+var Log_1 = require("../../utils/Log");
 // let mssqlDbOptions = {
 //   username: 'sysoffline',
 //   password: 'binjzrpos',
@@ -78,6 +79,7 @@ var OpeningBalanceService = /** @class */ (function () {
                     this.pool = new mssqlClient.ConnectionPool(connectionString);
                 }
                 catch (err) {
+                    Log_1.log.error(err);
                     this.pool = null;
                 }
                 return [2 /*return*/];
@@ -98,7 +100,7 @@ var OpeningBalanceService = /** @class */ (function () {
                         _a.trys.push([0, 2, , 3]);
                         //await sql.connect();
                         // const conn = new sql.connect(config);
-                        console.log(reqData);
+                        Log_1.log.info(reqData);
                         fs_1 = require("fs");
                         rawdata = {
                             date: reqData.date,
@@ -110,19 +112,20 @@ var OpeningBalanceService = /** @class */ (function () {
                             database: reqData.database
                         };
                         syncDataDate = JSON.stringify(rawdata);
-                        console.log(syncDataDate);
+                        Log_1.log.info(syncDataDate);
                         fs_1.writeFile(__dirname + "/data.json", syncDataDate, function (err) {
                             if (err) {
-                                console.log("Error writing file", err);
+                                Log_1.log.error(err);
                             }
                             else {
-                                console.log("Successfully wrote file");
+                                Log_1.log.info("Successfully wrote file");
                             }
                         });
                         return [4 /*yield*/, this.get_open_bal_data_for_onhand(rawdata)];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2:
                         err_1 = _a.sent();
+                        Log_1.log.error(err_1);
                         throw err_1;
                     case 3: return [2 /*return*/];
                 }
@@ -195,6 +198,7 @@ var OpeningBalanceService = /** @class */ (function () {
                         return [2 /*return*/, returnData];
                     case 8:
                         err_2 = _a.sent();
+                        Log_1.log.error(err_2);
                         throw err_2;
                     case 9: return [2 /*return*/];
                 }
@@ -245,6 +249,7 @@ var OpeningBalanceService = /** @class */ (function () {
                         return [2 /*return*/, rows.recordset];
                     case 4:
                         err_3 = _a.sent();
+                        Log_1.log.error(err_3);
                         throw { message: "INVALID CREDENTIALS" };
                     case 5: return [2 /*return*/];
                 }
@@ -256,9 +261,9 @@ var OpeningBalanceService = /** @class */ (function () {
             var fs;
             return __generator(this, function (_a) {
                 fs = require("fs");
-                console.log('88888888888888888888888888888888888888888888888888888888888888888888888');
+                Log_1.log.info("88888888888888888888888888888888888888888888888888888888888888888888888");
                 try {
-                    console.log(fs.existsSync(__dirname + "/data.json"));
+                    Log_1.log.info(fs.existsSync(__dirname + "/data.json"));
                     if (fs.existsSync(__dirname + "/data.json")) {
                         return [2 /*return*/, false];
                     }
@@ -267,6 +272,7 @@ var OpeningBalanceService = /** @class */ (function () {
                     }
                 }
                 catch (err) {
+                    Log_1.log.error(err);
                     throw err;
                 }
                 return [2 /*return*/];
