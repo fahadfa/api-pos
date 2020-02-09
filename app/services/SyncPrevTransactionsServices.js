@@ -86,14 +86,14 @@ var SyncPrevTransactionsService = /** @class */ (function () {
     }
     SyncPrevTransactionsService.prototype.mssqlTransactions = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var cond, mssqlClient, mssqlString, connectionString, data, rows, query, sCond, slCond, tCond, optDate, current_date, transactionclosed, _i, data_1, item, err_1, _a, data_2, item, err_2, _b, data_3, item, err_3;
+            var cond, mssqlClient, mssqlString, connectionString, data, rows, query, sCond, slCond, tCond, optDate, current_date, transactionclosed, _i, data_1, item, err_1, _a, data_2, item, err_2, _b, data_3, item, err_3, err_4;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
                         cond = true;
                         _c.label = 1;
                     case 1:
-                        _c.trys.push([1, 25, 26, 27]);
+                        _c.trys.push([1, 28, 29, 30]);
                         mssqlClient = require("mssql");
                         mssqlString = "mssql://" + this.dateObj.username + ":" + this.dateObj.password + "@" + this.dateObj.host + "/" + this.dateObj.database;
                         connectionString = mssqlString;
@@ -190,28 +190,36 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         _b = 0, data_3 = data;
                         _c.label = 21;
                     case 21:
-                        if (!(_b < data_3.length)) return [3 /*break*/, 24];
+                        if (!(_b < data_3.length)) return [3 /*break*/, 27];
                         item = data_3[_b];
-                        // try {
-                        return [4 /*yield*/, this.syncInventTransData(item, [], transactionclosed)];
+                        _c.label = 22;
                     case 22:
-                        // try {
-                        _c.sent();
-                        _c.label = 23;
+                        _c.trys.push([22, 24, , 25]);
+                        return [4 /*yield*/, this.syncInventTransData(item, [], transactionclosed)];
                     case 23:
+                        _c.sent();
+                        return [3 /*break*/, 25];
+                    case 24:
+                        err_3 = _c.sent();
+                        Log_1.log.info(err_3);
+                        return [3 /*break*/, 25];
+                    case 25: return [3 /*break*/, 27];
+                    case 26:
                         _b++;
                         return [3 /*break*/, 21];
-                    case 24: return [3 /*break*/, 27];
-                    case 25:
-                        err_3 = _c.sent();
-                        Log_1.log.error(err_3);
+                    case 27:
+                        Log_1.log.info('%%%%%%%%%%%%%%%%%%%%%%COMPLETED%%%%%%%%%%%%%%%%%%%');
+                        return [3 /*break*/, 30];
+                    case 28:
+                        err_4 = _c.sent();
+                        Log_1.log.error(err_4);
                         cond = false;
-                        return [3 /*break*/, 27];
-                    case 26:
+                        return [3 /*break*/, 30];
+                    case 29:
                         this.pool.close();
                         this.fs.unlinkSync(__dirname + "/data.json");
                         return [7 /*endfinally*/];
-                    case 27: return [2 /*return*/];
+                    case 30: return [2 /*return*/];
                 }
             });
         });
@@ -219,7 +227,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
     SyncPrevTransactionsService.prototype.sync_salesTableData = function (salesTableData, queryData) {
         if (queryData === void 0) { queryData = []; }
         return __awaiter(this, void 0, void 0, function () {
-            var _i, salesTableData_1, item, query, err_4;
+            var _i, salesTableData_1, item, query, err_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -244,8 +252,8 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         _a.sent();
                         return [3 /*break*/, 3];
                     case 2:
-                        err_4 = _a.sent();
-                        Log_1.log.error(err_4);
+                        err_5 = _a.sent();
+                        Log_1.log.error(err_5);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
@@ -255,7 +263,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
     SyncPrevTransactionsService.prototype.sync_salesLineData = function (salesLineData, queryData) {
         if (queryData === void 0) { queryData = []; }
         return __awaiter(this, void 0, void 0, function () {
-            var _i, salesLineData_1, line, query, err_5;
+            var _i, salesLineData_1, line, query, err_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -279,8 +287,8 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         _a.sent();
                         return [3 /*break*/, 3];
                     case 2:
-                        err_5 = _a.sent();
-                        Log_1.log.error(err_5);
+                        err_6 = _a.sent();
+                        Log_1.log.error(err_6);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }

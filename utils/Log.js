@@ -66,7 +66,7 @@ log4js_1.configure({
         out: { type: "stdout", layout: { type: "dummy" } },
         emergencies: {
             type: "file",
-            filename: __dirname + "/../../logs/jpos/jpos-error.log",
+            filename: __dirname + "/../../logs/jpos/error.log",
             maxLogSize: 10485760,
             backups: 100
         },

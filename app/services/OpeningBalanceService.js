@@ -227,7 +227,7 @@ var OpeningBalanceService = /** @class */ (function () {
     };
     OpeningBalanceService.prototype.get_open_bal_data_for_onhand = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var mssqlClient, mssqlString, connectionString, query, rows, err_3;
+            var mssqlClient, mssqlString, connectionString, query, rows, result, err_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -246,7 +246,13 @@ var OpeningBalanceService = /** @class */ (function () {
                         return [4 /*yield*/, this.pool.close()];
                     case 3:
                         _a.sent();
-                        return [2 /*return*/, rows.recordset];
+                        result = rows.recordset;
+                        result.map(function (v) {
+                            if (v.qty > 0 && v.qty < 1) {
+                                v.qty = 1;
+                            }
+                        });
+                        return [2 /*return*/, result];
                     case 4:
                         err_3 = _a.sent();
                         Log_1.log.error(err_3);
