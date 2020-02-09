@@ -110,8 +110,8 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         optDate = this.dateObj.date;
                         current_date = new Date().toISOString().slice(0, 10);
                         transactionclosed = false;
-                        Log_1.log.info(optDate);
-                        Log_1.log.info(current_date);
+                        // log.info(optDate);
+                        // log.info(current_date);
                         if (optDate === current_date) {
                             sCond = " CREATEDDATETIME BETWEEN dateadd(day, -120, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "' ORDER BY RECID ASC ";
                             slCond = " CREATEDDATETIME BETWEEN dateadd(day, -120, '" + this.dateObj.date + "') AND  '" + this.dateObj.date + "') ORDER BY RECID ASC ";
@@ -298,11 +298,13 @@ var SyncPrevTransactionsService = /** @class */ (function () {
     SyncPrevTransactionsService.prototype.syncInventTransData = function (inventTransData, queryData, transactionclosed) {
         if (queryData === void 0) { queryData = []; }
         return __awaiter(this, void 0, void 0, function () {
-            var inventoryOnHandQuery, text, _i, inventTransData_1, trans, salesOrderData, salesOrderData, saleslinequery, salesLineData, query, onhanddata, onhandquery, onhandquery;
+            var inventoryOnHandQuery, text, _i, inventTransData_1, trans, salesOrderData, salesOrderData, saleslinequery, salesLineData, query, onhanddata, onhandquery, onhandquery, err_7;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        _a.trys.push([0, 13, , 14]);
                         inventoryOnHandQuery = [];
+                        text = void 0;
                         _i = 0, inventTransData_1 = inventTransData;
                         _a.label = 1;
                     case 1:
@@ -373,7 +375,12 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(this.localDbConfig, inventoryOnHandQuery)];
                     case 12:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [3 /*break*/, 14];
+                    case 13:
+                        err_7 = _a.sent();
+                        Log_1.log.error(err_7);
+                        throw err_7;
+                    case 14: return [2 /*return*/];
                 }
             });
         });
