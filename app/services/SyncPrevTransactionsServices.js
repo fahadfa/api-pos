@@ -44,26 +44,28 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Config = __importStar(require("../../utils/Config"));
 var SyncServiceHelper_1 = require("../../sync/SyncServiceHelper");
-var mssqlDbOptions = {
-    username: "SA",
-    password: "Jazeera123",
-    host: "3.80.2.102",
-    database: "jpos_dev",
-    port: 1433
-};
+// let mssqlDbOptions = {
+//   username: "SA",
+//   password: "Jazeera123",
+//   host: "3.80.2.102",
+//   database: "jpos_dev",
+//   port: 1433
+// };
 // let mssqlDbOptions = Config.mssqlDbOptions
 // let mssqlString = `mssql://${mssqlDbOptions.username}:${mssqlDbOptions.password}@${mssqlDbOptions.host}/${mssqlDbOptions.database}`;
 var SyncPrevTransactionsService = /** @class */ (function () {
     function SyncPrevTransactionsService() {
         var _this = this;
         this.run = function () { return __awaiter(_this, void 0, void 0, function () {
-            var mssqlClient, mssqlString, connectionString;
+            var mssqlClient;
             return __generator(this, function (_a) {
                 try {
                     mssqlClient = require("mssql/msnodesqlv8");
-                    mssqlString = "mssql://" + mssqlDbOptions.username + ":" + mssqlDbOptions.password + "@" + mssqlDbOptions.host + "/" + mssqlDbOptions.database;
-                    connectionString = mssqlString;
-                    this.pool = new mssqlClient.ConnectionPool(connectionString);
+                    // const connectionString =
+                    //   "server=localhost;Database=DAX;Trusted_Connection=Yes;Driver={SQL Server Native Client 11.0}";
+                    // let mssqlString = `mssql://${mssqlDbOptions.username}:${mssqlDbOptions.password}@${mssqlDbOptions.host}/${mssqlDbOptions.database}`;
+                    // const connectionString = mssqlString;
+                    // this.pool = new mssqlClient.ConnectionPool(connectionString);
                 }
                 catch (err) {
                     this.pool = null;

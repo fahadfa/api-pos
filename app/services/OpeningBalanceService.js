@@ -55,15 +55,15 @@ var fs = __importStar(require("fs"));
 //   database: 'DAX',
 //   port: 1433
 // }
-var mssqlDbOptions = {
-    username: "SA",
-    password: "Jazeera123",
-    host: "3.80.2.102",
-    database: "jpos_dev",
-    port: 1433
-};
+// let mssqlDbOptions = {
+//   username: "SA",
+//   password: "Jazeera123",
+//   host: "3.80.2.102",
+//   database: "jpos_dev",
+//   port: 1433
+// };
 // let mssqlDbOptions = Config.mssqlDbOptions
-var mssqlString = "mssql://" + mssqlDbOptions.username + ":" + mssqlDbOptions.password + "@" + mssqlDbOptions.host + "/" + mssqlDbOptions.database;
+// let mssqlString = `mssql://${mssqlDbOptions.username}:${mssqlDbOptions.password}@${mssqlDbOptions.host}/${mssqlDbOptions.database}`;
 // const query = "SELECT name FROM sys.databases";
 var OpeningBalanceService = /** @class */ (function () {
     function OpeningBalanceService() {
@@ -223,16 +223,13 @@ var OpeningBalanceService = /** @class */ (function () {
     };
     OpeningBalanceService.prototype.get_open_bal_data_for_onhand = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var mssqlClient, connectionString, query, rows, err_3;
+            var mssqlClient, mssqlString, connectionString, query, rows, err_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 4, , 5]);
                         mssqlClient = require("mssql");
-                        // const connectionString =
-                        //   "server=localhost;Database=DAX;Trusted_Connection=Yes;Driver={SQL Server Native Client 10.0.1600}";
-                        // const mssqlString = `mssql://${reqData.username}:${reqData.password}@${reqData.host}/${reqData.database}`;
-                        console.log(mssqlString);
+                        mssqlString = "mssql://" + reqData.username + ":" + reqData.password + "@" + reqData.host + "/" + reqData.database;
                         connectionString = mssqlString;
                         this.pool = new mssqlClient.ConnectionPool(connectionString);
                         return [4 /*yield*/, this.pool.connect()];
