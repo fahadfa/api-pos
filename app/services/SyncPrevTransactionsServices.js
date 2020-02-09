@@ -93,7 +93,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         cond = true;
                         _c.label = 1;
                     case 1:
-                        _c.trys.push([1, 28, 29, 30]);
+                        _c.trys.push([1, 27, 28, 29]);
                         mssqlClient = require("mssql");
                         mssqlString = "mssql://" + this.dateObj.username + ":" + this.dateObj.password + "@" + this.dateObj.host + "/" + this.dateObj.database;
                         connectionString = mssqlString;
@@ -190,7 +190,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         _b = 0, data_3 = data;
                         _c.label = 21;
                     case 21:
-                        if (!(_b < data_3.length)) return [3 /*break*/, 27];
+                        if (!(_b < data_3.length)) return [3 /*break*/, 26];
                         item = data_3[_b];
                         _c.label = 22;
                     case 22:
@@ -201,25 +201,24 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         return [3 /*break*/, 25];
                     case 24:
                         err_3 = _c.sent();
-                        Log_1.log.info(err_3);
+                        Log_1.log.error(err_3);
                         return [3 /*break*/, 25];
-                    case 25: return [3 /*break*/, 27];
-                    case 26:
+                    case 25:
                         _b++;
                         return [3 /*break*/, 21];
-                    case 27:
+                    case 26:
                         Log_1.log.info('%%%%%%%%%%%%%%%%%%%%%%COMPLETED%%%%%%%%%%%%%%%%%%%');
-                        return [3 /*break*/, 30];
-                    case 28:
+                        return [3 /*break*/, 29];
+                    case 27:
                         err_4 = _c.sent();
                         Log_1.log.error(err_4);
                         cond = false;
-                        return [3 /*break*/, 30];
-                    case 29:
+                        return [3 /*break*/, 29];
+                    case 28:
                         this.pool.close();
                         this.fs.unlinkSync(__dirname + "/data.json");
                         return [7 /*endfinally*/];
-                    case 30: return [2 /*return*/];
+                    case 29: return [2 /*return*/];
                 }
             });
         });
@@ -379,7 +378,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                     case 13:
                         err_7 = _a.sent();
                         Log_1.log.error(err_7);
-                        throw err_7;
+                        return [3 /*break*/, 14];
                     case 14: return [2 /*return*/];
                 }
             });

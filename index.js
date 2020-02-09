@@ -71,7 +71,8 @@ var run = function () { return __awaiter(_this, void 0, void 0, function () {
                     express.listen(port, function (err) { return __awaiter(_this, void 0, void 0, function () {
                         return __generator(this, function (_a) {
                             if (err) {
-                                return [2 /*return*/, Log_1.log.error(err)];
+                                Log_1.log.error(err);
+                                throw err;
                             }
                             return [2 /*return*/, Log_1.log.log("info", "\n                    ***********************************************\n                            server is listening on " + port + "\n                    ***********************************************\n          ")];
                         });
@@ -80,6 +81,7 @@ var run = function () { return __awaiter(_this, void 0, void 0, function () {
                 return [3 /*break*/, 3];
             case 2:
                 error_1 = _a.sent();
+                Log_1.log.error(error_1);
                 setTimeout(function () {
                     if (count <= 5) {
                         count += 1;
