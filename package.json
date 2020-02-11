@@ -1,6 +1,6 @@
 {
   "name": "jpos-api",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "main": "index.js",
   "scripts": {
     "start": "npm run build:live",
@@ -44,8 +44,6 @@
     "ono": "5.1.0",
     "pg": "7.10.0",
     "pg-format": "1.0.4",
-    "phantom-html-to-pdf": "0.6.0",
-    "phantomjs-prebuilt": "2.1.16",
     "puppeteer": "1.15.0",
     "randomstring": "1.1.5",
     "swagger-jsdoc": "3.2.6",
