@@ -100,10 +100,20 @@ try {
                 Log_1.ulog.error(err);
             Log_1.ulog.warn(data);
             if (data && data.includes("STOPPED")) {
-                cmd.run("net start jpos-offline & net stop jpos-alt");
+                Log_1.ulog.warn("net start jpos-offline");
+                cmd.run("net start jpos-offline");
+                setTimeout(function () {
+                    Log_1.ulog.warn("net stop jpos-alt");
+                    cmd.run("net stop jpos-alt");
+                }, 1000);
             }
             else {
-                cmd.run("net start jpos-alt & net stop jpos-offline");
+                Log_1.ulog.warn("net start jpos-alt");
+                cmd.run("net start jpos-alt");
+                setTimeout(function () {
+                    Log_1.ulog.warn("net stop jpos-offline");
+                    cmd.run("net stop jpos-offline");
+                }, 1000);
             }
         });
         // });
