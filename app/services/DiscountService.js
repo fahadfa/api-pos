@@ -56,6 +56,10 @@ var DiscountService = /** @class */ (function () {
                         result = void 0;
                         checkCustomer = void 0;
                         discountBlockItems = void 0;
+                        reqData.grossTotal = 0;
+                        reqData.selectedItems.map(function (v) {
+                            reqData.grossTotal = parseFloat(v.price) * parseFloat(v.quantity);
+                        });
                         if (!!reqData.custaccount) return [3 /*break*/, 2];
                         return [4 /*yield*/, this.custtableDAO.entity(this.sessionInfo.defaultcustomerid)];
                     case 1:

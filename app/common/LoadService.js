@@ -236,12 +236,14 @@ var LoadService = /** @class */ (function () {
     };
     LoadService.prototype.search_pendingTransferOrder = function (param) {
         return __awaiter(this, void 0, void 0, function () {
+            var query;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         param.transkind = "TRANSFERORDER";
                         param.status = "REQUESTED";
-                        return [4 /*yield*/, this.search_salesTable(param)];
+                        query = "Select salestable.salesid as salesid, salestable.salesname as salesname, inventlocationid as inventlocationid\n                 from salestable where  salestable.custaccount='" + this.sessionInfo.inventlocationid + "' and status = 'REQUESTED' and salesid ILike '%" + param.key + "%' ";
+                        return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
