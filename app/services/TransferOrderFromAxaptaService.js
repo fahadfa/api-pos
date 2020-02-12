@@ -43,6 +43,7 @@ var BaseSizesDAO_1 = require("../repos/BaseSizesDAO");
 var ColorsDAO_1 = require("../repos/ColorsDAO");
 var SalesTableDAO_1 = require("../repos/SalesTableDAO");
 var SalesLineDAO_1 = require("../repos/SalesLineDAO");
+var uuid = require("uuid");
 var TransferOrderFromAxaptaService = /** @class */ (function () {
     function TransferOrderFromAxaptaService() {
         this.axios = require("axios");
@@ -183,7 +184,15 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                     case 6:
                         if (!(_i < salesLines_1.length)) return [3 /*break*/, 10];
                         item = salesLines_1[_i];
+                        item.id = uuid();
+                        item.batch = [
+                            {
+                                batchNo: item.batches.batchno,
+                                quantity: item.batches.qty
+                            }
+                        ];
                         batches = item.batches;
+                        batches.salesLineId = item.id;
                         return [4 /*yield*/, this.salesLineDAO.save(item)];
                     case 7:
                         _a.sent();

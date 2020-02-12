@@ -2187,8 +2187,8 @@ var SalesTableService = /** @class */ (function () {
         item.vat = item.vat ? Math.round(parseFloat((item.vat * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2) : 0;
     };
     SalesTableService.prototype.calData = function (data) {
-        data.sumTax = Math.round(parseFloat((data.sumTax * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2);
-        data.vatamount = Math.round(parseFloat((data.vatamount * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2);
+        data.sumTax = parseFloat(data.sumTax);
+        data.vatamount = parseFloat(data.vatamount);
         data.voucherdiscpercent = data.voucherdiscpercent
             ? Math.round(parseFloat((data.vatamount * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
             : 0;
