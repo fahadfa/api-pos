@@ -54,16 +54,18 @@ var SyncService = /** @class */ (function () {
     }
     SyncService.prototype.init = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var isProceed;
+            var isMasterProceed, isTranscationProceed;
             var _this = this;
             return __generator(this, function (_a) {
-                isProceed = true;
-                cron.schedule("*/5 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
+                isMasterProceed = true;
+                cron.schedule("*/10 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
+                    var error_1;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                if (!(isProceed == true)) return [3 /*break*/, 6];
-                                isProceed = false;
+                                _a.trys.push([0, 8, , 9]);
+                                if (!(isMasterProceed == true)) return [3 /*break*/, 6];
+                                isMasterProceed = false;
                                 Log_1.slog.debug("(((((((((( SYNC START MASTER))))))))))");
                                 return [4 /*yield*/, this.checkInternet()];
                             case 1:
@@ -82,21 +84,31 @@ var SyncService = /** @class */ (function () {
                                 _a.label = 5;
                             case 5:
                                 Log_1.slog.debug("(((((((((( SYNC CLOSE MASTER ))))))))))");
-                                isProceed = true;
+                                isMasterProceed = true;
                                 return [3 /*break*/, 7];
                             case 6:
                                 Log_1.slog.warn("still processing ...................................");
                                 _a.label = 7;
-                            case 7: return [2 /*return*/];
+                            case 7: return [3 /*break*/, 9];
+                            case 8:
+                                error_1 = _a.sent();
+                                Log_1.slog.error("--------- CRON MASTER ERROR ---------");
+                                Log_1.slog.error(error_1);
+                                Log_1.slog.error("--------- CRON MASTER ERROR ---------");
+                                return [3 /*break*/, 9];
+                            case 9: return [2 /*return*/];
                         }
                     });
                 }); });
-                cron.schedule("*/5 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
+                isTranscationProceed = true;
+                cron.schedule("*/10 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
+                    var error_2;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                if (!(isProceed == true)) return [3 /*break*/, 5];
-                                isProceed = false;
+                                _a.trys.push([0, 7, , 8]);
+                                if (!(isTranscationProceed == true)) return [3 /*break*/, 5];
+                                isTranscationProceed = false;
                                 Log_1.slog.debug("(((((((((( SYNC START TRANS ))))))))))");
                                 return [4 /*yield*/, this.checkInternet()];
                             case 1:
@@ -110,12 +122,19 @@ var SyncService = /** @class */ (function () {
                                 _a.label = 4;
                             case 4:
                                 Log_1.slog.debug("(((((((((( SYNC CLOSE TRANS ))))))))))");
-                                isProceed = true;
+                                isTranscationProceed = true;
                                 return [3 /*break*/, 6];
                             case 5:
                                 Log_1.slog.warn("still processing ...................................");
                                 _a.label = 6;
-                            case 6: return [2 /*return*/];
+                            case 6: return [3 /*break*/, 8];
+                            case 7:
+                                error_2 = _a.sent();
+                                Log_1.slog.error("--------- CRON TRANSACTION ERROR ---------");
+                                Log_1.slog.error(error_2);
+                                Log_1.slog.error("--------- CRON TRANSACTION ERROR ---------");
+                                return [3 /*break*/, 8];
+                            case 8: return [2 /*return*/];
                         }
                     });
                 }); });
