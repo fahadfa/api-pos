@@ -207,7 +207,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         _b++;
                         return [3 /*break*/, 21];
                     case 26:
-                        Log_1.log.info('%%%%%%%%%%%%%%%%%%%%%%COMPLETED%%%%%%%%%%%%%%%%%%%');
+                        Log_1.log.info("%%%%%%%%%%%%%%%%%%%%%%COMPLETED%%%%%%%%%%%%%%%%%%%");
                         return [3 /*break*/, 29];
                     case 27:
                         err_4 = _c.sent();
@@ -262,34 +262,139 @@ var SyncPrevTransactionsService = /** @class */ (function () {
     SyncPrevTransactionsService.prototype.sync_salesLineData = function (salesLineData, queryData) {
         if (queryData === void 0) { queryData = []; }
         return __awaiter(this, void 0, void 0, function () {
-            var _i, salesLineData_1, line, query, err_6;
+            var _i, salesLineData_1, line, MultiLineDiscRangesQuery, MultiLineDiscRanges, InstantDiscRangesQuery, InstantDiscRanges, PromotionalDiscountCondQuery, PromotionalDiscountRanges, query, err_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        for (_i = 0, salesLineData_1 = salesLineData; _i < salesLineData_1.length; _i++) {
-                            line = salesLineData_1[_i];
-                            line.applied_discounts = [];
-                            line.applied_discounts = JSON.stringify(line.applied_discounts);
-                            line.batches = JSON.stringify([
-                                {
-                                    batchNo: line.BATCHNO,
-                                    quantity: line.SALESQTY
-                                }
-                            ]);
-                            query = "INSERT INTO public.salesline\n        (salesid, linenum, itemid, \"name\", salesprice, currencycode, salesqty, lineamount, salesunit, priceunit, qtyordered, remainsalesphysical, remainsalesfinancial,\n        salestype, dataareaid, custgroup, custaccount, inventsizeid, configid, numbersequencegroupid, inventlocationid, salesdelivernow, salesstatus, \"location\", batchno, instantdisc, voucherdisc,\n          redeemdisc, promotiondisc, linetotaldisc, linesalestax, netamttax, linesalestaxpercent, taxgroup, taxitemgroup, linediscamt, customdiscamt, supplmultipleqty, supplfreeqty, multilndisc, multilnpercent, enddisc,\n          createdby, createddatetime, lastmodifiedby, lastmodifieddate, \n            vatamount, vat, voucherdiscamt, sabic_customer_discount, is_item_free, link_id, batches, applied_discounts)\n        VALUES('" + line.SALESID + "', " + line.LINENUM + ", '" + line.ITEMID + "', '" + line.NAME + "', " + line.SALESPRICE + ", '" + line.CURRENCYCODE + "', " + line.SALESQTY + ", " + line.LINEAMOUNT + ", '" + line.SALESUNIT + "', " + line.PRICEUNIT + ", " + line.QTYORDERED + ", \n        " + line.REMAINSALESPHYSICAL + ", " + line.REMAINSALESFINANCIAL + ",  " + line.SALESTYPE + ", '" + (line.DATAAREAID ? line.DATAAREAID.toLowerCase() : null) + "', '" + line.CUSTGROUP + "', '" + line.CUSTACCOUNT + "', '" + line.INVENTSIZEID + "', '" + line.CONFIGID + "',\n         '" + line.NUMBERSEQUENCEGROUPID + "', '" + line.INVENTLOCATIONID + "', " + line.SALESDELIVERNOW + ", " + line.SALESSTATUS + ", '" + line.LOCATION + "', '" + line.BATCHNO + "', " + (line.InstantDisc ? line.InstantDisc : 0) + ", " + (line.VoucherDisc ? line.VoucherDisc : 0) + ", " + (line.RedeemDisc ? line.RedeemDisc : 0) + ", " + (line.PromotionDisc ? line.PromotionDisc : 0) + ", \n         " + (line.LineTotalDisc ? line.LineTotalDisc : 0) + ", " + (line.LineSalesTax ? line.LineSalesTax : 0) + ", " + (line.NetAmtTax ? line.NetAmtTax : 0) + ", " + (line.LineSalesTaxPercent ? line.LineSalesTaxPercent : 0) + ", '" + line.TAXGROUP + "', '" + line.TAXITEMGROUP + "', " + (line.LINEDISCAMT ? line.LINEDISCAMT : 0) + ", " + (line.CUSTOMDISCAMT ? line.CUSTOMDISCAMT : 0) + ", " + (line.SupplMultipleQty ? line.SupplMultipleQty : 0) + ", " + (line.SupplFreeQty ? line.SupplFreeQty : 0) + ",\n         " + (line.MulLnDisc ? line.MultiLineDisc : 0) + ", " + (line.MultiPercent ? line.MultiPercent : 0) + ", " + (line.CUSTOMDISCAMT ? line.CUSTOMDISCAMT : 0) + ", '" + line.createdby + "', now(), '" + line.createdby + "', now(),\n          " + (line.LineSalesTax ? line.LineSalesTax : 0) + ", " + (line.LineSalesTaxPercent ? line.LineSalesTaxPercent : 0) + ",\n           " + (line.VoucherDisc ? line.VoucherDisc : 0) + ", " + (line.InteriorExteriorAmount ? line.InteriorExteriorAmount : 0) + ", " + (line.isitemfree ? line.isitemfree : false) + ", NULL, '" + line.batches + "', '" + line.applied_discounts + "')\n        ";
-                            // log.info(query)
-                            queryData.push(query);
-                        }
-                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(this.localDbConfig, queryData)];
+                        _a.trys.push([0, 11, , 12]);
+                        _i = 0, salesLineData_1 = salesLineData;
+                        _a.label = 1;
                     case 1:
-                        _a.sent();
-                        return [3 /*break*/, 3];
+                        if (!(_i < salesLineData_1.length)) return [3 /*break*/, 9];
+                        line = salesLineData_1[_i];
+                        // console.log("instant discount", line.InstantDisc);
+                        // console.log("RedeemDisc", line.RedeemDisc);
+                        // console.log("VoucherDisc", line.VoucherDisc);
+                        // console.log("PromotionDisc", line.PromotionDisc);
+                        // console.log("LINEDISCAMT", line.LINEDISCAMT);
+                        // console.log("CUSTOMDISCAMT", line.CUSTOMDISCAMT);
+                        // console.log("MultiLnPercent", line.MultiLnPercent);
+                        // console.log("MultiLnDisc", line.MultiLnDisc);
+                        // console.log("InteriorExteriorAmount", line.InteriorExteriorAmount);
+                        // console.log("InteriorExteriorPer", line.InteriorExteriorPer);
+                        // console.log("PromotionDiscEqual", line.PromotionDiscEqual);
+                        // console.log("PromotionDiscEqualRecId", line.PromotionDiscEqualRecId);
+                        line.applied_discounts = [];
+                        if (line.InteriorExteriorAmount && line.InteriorExteriorAmount > 0) {
+                            line.applied_discounts.push({
+                                discountType: "ARAMKO_TAHAKOM_DISOUNT",
+                                percentage: parseFloat(line.InteriorExteriorPer),
+                                discountAmount: parseFloat(line.InteriorExteriorAmount)
+                            });
+                        }
+                        if (line.VoucherDisc && line.VoucherDisc > 0) {
+                            line.applied_discounts.push({
+                                discountType: "VOUCHER_DISCOUNT",
+                                percentage: (parseFloat(line.VoucherDisc) * 100) / parseFloat(line.LINEAMOUNT),
+                                discountAmount: parseFloat(line.InteriorExteriorAmount)
+                            });
+                        }
+                        if (line.CUSTOMDISCAMT && line.CUSTOMDISCAMT > 0) {
+                            line.applied_discounts.push({
+                                discountType: "TOTAL_DISCOUNT",
+                                percentage: (parseFloat(line.CUSTOMDISCAMT) * 100) / parseFloat(line.LINEAMOUNT),
+                                discountAmount: parseFloat(line.CUSTOMDISCAMT),
+                                cond: []
+                            });
+                        }
+                        if (line.LINEDISCAMT && line.LINEDISCAMT > 0) {
+                            line.applied_discounts.push({
+                                discountType: "LINE_DISCOUNT",
+                                percentage: (parseFloat(line.LINEDISCAMT) * 100) / parseFloat(line.LINEAMOUNT),
+                                discountAmount: parseFloat(line.LINEDISCAMT),
+                                cond: []
+                            });
+                        }
+                        if (!(line.MultiLnDisc && line.MultiLnDisc > 0)) return [3 /*break*/, 3];
+                        MultiLineDiscRangesQuery = "SELECT itemrelation, ACCOUNTRELATION,QUANTITYAMOUNT,\n                                          CURRENCY,PERCENT1 FROM \n                                          PRICEDISCTABLE WHERE MODULE = 1 AND \n                                          ITEMCODE = 1 AND ACCOUNTCODE = 1 AND \n                                          ACCOUNTRELATION = '" + line.CUSTACCOUNT + "' AND LOWER(DATAAREAID) = LOWER('" + line.DATAAREAID + "') AND CURRENCY='" + line.CURRENCYCODE + "'";
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(this.localDbConfig, MultiLineDiscRangesQuery)];
                     case 2:
+                        MultiLineDiscRanges = _a.sent();
+                        line.applied_discounts.push({
+                            discountType: "MULTI_LINE_DISCOUNT",
+                            percentage: parseFloat(line.MultiLnPercent),
+                            discountAmount: parseFloat(line.MultiLnDisc),
+                            cond: MultiLineDiscRanges.rows
+                        });
+                        _a.label = 3;
+                    case 3:
+                        if (!(line.InstantDisc && line.InstantDisc > 0)) return [3 /*break*/, 5];
+                        InstantDiscRangesQuery = "select \n          * from custtotaldiscount where dataareaid ='ajp' and custaccount = '" + line.CUSTACCOUNT + "' order by minamount";
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(this.localDbConfig, InstantDiscRangesQuery)];
+                    case 4:
+                        InstantDiscRanges = _a.sent();
+                        line.applied_discounts.push({
+                            discountType: "MULTI_LINE_DISCOUNT",
+                            percentage: (parseFloat(line.InstantDisc) * 100) / parseFloat(line.LINEAMOUNT),
+                            discountAmount: parseFloat(line.MultiLnDisc),
+                            cond: InstantDiscRanges.rows
+                        });
+                        _a.label = 5;
+                    case 5:
+                        if (!(line.PromotionDisc && line.PromotionDisc > 0)) return [3 /*break*/, 7];
+                        PromotionalDiscountCondQuery = "select\n          dataareaid, \n          inventlocationid, \n          itemid,\n          inventsizeid,\n          configid,\n          multiple_qty as \"multipleQty\", \n          free_qty as \"freeQty\"\n          from sales_promotion_items where \n          inventlocationid = '" + line.INVENTLOCATIONID + "' and itemid = '" + line.ITEMID + "' limit 1";
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(this.localDbConfig, PromotionalDiscountCondQuery)];
+                    case 6:
+                        PromotionalDiscountRanges = _a.sent();
+                        line.applied_discounts.push({
+                            discountType: "PROMOTIONAL_DISCOUNT",
+                            discountAmount: parseFloat(line.PromotionDisc),
+                            cond: [
+                                {
+                                    multipleQty: PromotionalDiscountRanges.rows.length > 0 ? PromotionalDiscountRanges.rows[0].multipleQty : 10,
+                                    freeQty: PromotionalDiscountRanges.rows.length > 0 ? PromotionalDiscountRanges.rows[0].freeQty : 1
+                                }
+                            ]
+                        });
+                        _a.label = 7;
+                    case 7:
+                        if (line.PromotionDiscEqual && line.PromotionDiscEqual > 0) {
+                            line.link_id = line.PromotionDiscEqualRecId ? line.PromotionDiscEqualRecId.split(",")[0] : line.RECID;
+                            line.isitemfree = line.PromotionDiscEqualRecId ? true : false;
+                            line.applied_discounts.push({
+                                discountType: "BUY_ONE_GET_ONE_DISCOUNT",
+                                discountAmount: parseFloat(line.PromotionDiscEqual),
+                                cond: [
+                                    {
+                                        multipleQty: 1,
+                                        freeQty: 1
+                                    }
+                                ]
+                            });
+                        }
+                        line.applied_discounts = JSON.stringify(line.applied_discounts);
+                        line.batches = JSON.stringify([
+                            {
+                                batchNo: line.BATCHNO,
+                                quantity: line.SALESQTY
+                            }
+                        ]);
+                        query = "INSERT INTO public.salesline\n        (salesid, linenum, itemid, \"name\", salesprice, currencycode, salesqty, lineamount, salesunit, priceunit, qtyordered, remainsalesphysical, remainsalesfinancial,\n        salestype, dataareaid, custgroup, custaccount, inventsizeid, configid, numbersequencegroupid, inventlocationid, salesdelivernow, salesstatus, \"location\", batchno, instantdisc, voucherdisc,\n          redeemdisc, promotiondisc, linetotaldisc, linesalestax, netamttax, linesalestaxpercent, taxgroup, taxitemgroup, linediscamt, customdiscamt, supplmultipleqty, supplfreeqty, multilndisc, multilnpercent, enddisc,\n          createdby, createddatetime, lastmodifiedby, lastmodifieddate, \n            vatamount, vat, voucherdiscamt, sabic_customer_discount, is_item_free, link_id, batches, applied_discounts)\n        VALUES('" + line.SALESID + "', " + line.LINENUM + ", '" + line.ITEMID + "', '" + line.NAME + "', " + line.SALESPRICE + ", '" + line.CURRENCYCODE + "', " + line.SALESQTY + ", " + line.LINEAMOUNT + ", '" + line.SALESUNIT + "', " + line.PRICEUNIT + ", " + line.QTYORDERED + ", \n        " + line.REMAINSALESPHYSICAL + ", " + line.REMAINSALESFINANCIAL + ",  " + line.SALESTYPE + ", '" + (line.DATAAREAID ? line.DATAAREAID.toLowerCase() : null) + "', '" + line.CUSTGROUP + "', '" + line.CUSTACCOUNT + "', '" + line.INVENTSIZEID + "', '" + line.CONFIGID + "',\n         '" + line.NUMBERSEQUENCEGROUPID + "', '" + line.INVENTLOCATIONID + "', " + line.SALESDELIVERNOW + ", " + line.SALESSTATUS + ", '" + line.LOCATION + "', '" + line.BATCHNO + "', " + (line.InstantDisc ? line.InstantDisc : 0) + ", " + (line.VoucherDisc ? line.VoucherDisc : 0) + ", " + (line.RedeemDisc ? line.RedeemDisc : 0) + ", " + (line.PromotionDisc ? line.PromotionDisc : 0) + ", \n         " + (line.LineTotalDisc ? line.LineTotalDisc : 0) + ", " + (line.LineSalesTax ? line.LineSalesTax : 0) + ", " + (line.NetAmtTax ? line.NetAmtTax : 0) + ", " + (line.LineSalesTaxPercent ? line.LineSalesTaxPercent : 0) + ", '" + line.TAXGROUP + "', '" + line.TAXITEMGROUP + "', " + (line.LINEDISCAMT ? line.LINEDISCAMT : 0) + ", " + (line.CUSTOMDISCAMT ? line.CUSTOMDISCAMT : 0) + ", " + (line.SupplMultipleQty ? line.SupplMultipleQty : 0) + ", " + (line.SupplFreeQty ? line.SupplFreeQty : 0) + ",\n         " + (line.MulLnDisc ? line.MultiLineDisc : 0) + ", " + (line.MultiPercent ? line.MultiPercent : 0) + ", " + (line.CUSTOMDISCAMT ? line.CUSTOMDISCAMT : 0) + ", '" + line.createdby + "', now(), '" + line.createdby + "', now(),\n          " + (line.LineSalesTax ? line.LineSalesTax : 0) + ", " + (line.LineSalesTaxPercent ? line.LineSalesTaxPercent : 0) + ",\n           " + (line.VoucherDisc ? line.VoucherDisc : 0) + ", " + (line.InteriorExteriorAmount ? line.InteriorExteriorAmount : 0) + ", " + (line.isitemfree ? line.isitemfree : false) + ", '" + line.link_id + "', '" + line.batches + "', '" + line.applied_discounts + "')\n        ";
+                        // log.info(query)
+                        queryData.push(query);
+                        _a.label = 8;
+                    case 8:
+                        _i++;
+                        return [3 /*break*/, 1];
+                    case 9: return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(this.localDbConfig, queryData)];
+                    case 10:
+                        _a.sent();
+                        return [3 /*break*/, 12];
+                    case 11:
                         err_6 = _a.sent();
                         Log_1.log.error(err_6);
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
+                        return [3 /*break*/, 12];
+                    case 12: return [2 /*return*/];
                 }
             });
         });

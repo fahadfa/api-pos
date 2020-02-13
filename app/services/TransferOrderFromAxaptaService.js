@@ -64,7 +64,8 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                     case 1:
                         axaptaData = _a.sent();
                         console.log(axaptaData);
-                        if (!(axaptaData.invent_location_id_to == this.sessionInfo.inventlocationid)) return [3 /*break*/, 3];
+                        axaptaData.invent_location_id_to.trim();
+                        if (!(axaptaData.invent_location_id_to.trim() == this.sessionInfo.inventlocationid)) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.mapSalesData(axaptaData)];
                     case 2: return [2 /*return*/, _a.sent()];
                     case 3: throw { message: Props_1.Props.INVALID_DATA };
@@ -87,6 +88,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         return [4 /*yield*/, this.salesTableDAO.findOne({ salesId: data.transfer_id })];
                     case 1:
                         salesData = _b.sent();
+                        console.log(data.invent_location_id_to, this.sessionInfo.inventlocationid);
                         if (data.invent_location_id_to == this.sessionInfo.inventlocationid) {
                             salesData = new SalesTable_1.SalesTable();
                             salesData.salesId = data.transfer_id;
@@ -203,7 +205,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                     case 9:
                         _i++;
                         return [3 /*break*/, 6];
-                    case 10: return [2 /*return*/, { id: salesData.salesId, message: Props_1.Props.RECORD_EXISTS }];
+                    case 10: return [2 /*return*/, { id: salesData.salesId, message: Props_1.Props.SAVED_SUCCESSFULLY }];
                     case 11: return [3 /*break*/, 13];
                     case 12: throw "Can't save this data";
                     case 13: return [3 /*break*/, 15];

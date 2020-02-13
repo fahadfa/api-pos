@@ -267,9 +267,9 @@ var OpeningBalanceService = /** @class */ (function () {
             var fs;
             return __generator(this, function (_a) {
                 fs = require("fs");
-                Log_1.log.info("88888888888888888888888888888888888888888888888888888888888888888888888");
+                // log.info("88888888888888888888888888888888888888888888888888888888888888888888888");
                 try {
-                    Log_1.log.info(fs.existsSync(__dirname + "/data.json"));
+                    // log.info(fs.existsSync(`${__dirname}/data.json`));
                     if (fs.existsSync(__dirname + "/data.json")) {
                         return [2 /*return*/, false];
                     }

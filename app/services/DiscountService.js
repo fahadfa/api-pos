@@ -58,7 +58,7 @@ var DiscountService = /** @class */ (function () {
                         discountBlockItems = void 0;
                         reqData.grossTotal = 0;
                         reqData.selectedItems.map(function (v) {
-                            reqData.grossTotal = parseFloat(v.price) * parseFloat(v.quantity);
+                            reqData.grossTotal += parseFloat(v.price) * parseFloat(v.quantity);
                         });
                         if (!!reqData.custaccount) return [3 /*break*/, 2];
                         return [4 /*yield*/, this.custtableDAO.entity(this.sessionInfo.defaultcustomerid)];
@@ -285,18 +285,19 @@ var DiscountService = /** @class */ (function () {
                                         return [4 /*yield*/, this_1.rawQuery.instantDiscountExcludeItems(this_1.sessionInfo.usergroupconfigid)];
                                     case 1:
                                         instantDiscountExcludeItems = _a.sent();
-                                        //console.log(instantDiscountExcludeItems);
+                                        console.log(instantDiscountExcludeItems);
                                         instantDiscountExcludeItems = instantDiscountExcludeItems[0].istantdiscountexclude
                                             ? instantDiscountExcludeItems[0].istantdiscountexclude.split(",")
                                             : [];
                                         for (_i = 0, instantDiscountRanges_1 = instantDiscountRanges; _i < instantDiscountRanges_1.length; _i++) {
                                             item_1 = instantDiscountRanges_1[_i];
+                                            console.log(item_1, reqData.grossTotal);
                                             // istantDiscountPercentage += parseFloat(item.discpercent);
                                             // istantDiscountPercentage = item.discpercent;
-                                            if (reqData.grossTotal && reqData.grossTotal >= item_1.minamount && reqData.grossTotal <= item_1.maxamount) {
+                                            if (reqData.grossTotal && reqData.grossTotal >= parseFloat(item_1.minamount) && reqData.grossTotal <= parseFloat(item_1.maxamount)) {
                                                 // discount = istantDiscountPercentage;
                                                 instantDiscountPercent = item_1.discpercent;
-                                                // //console.log(discount);
+                                                console.log(instantDiscountPercent);
                                                 break;
                                             }
                                         }
