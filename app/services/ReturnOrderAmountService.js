@@ -664,8 +664,6 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                 }
                             }
                             // console.log(grossTotal);
-                            v.colorantprice = v.colorantprice ? v.colorantprice : 0;
-                            v.totalReturnedQuantity = v.totalReturnedQuantity ? v.totalReturnedQuantity : 0;
                             newGrossTotal += parseFloat(v.lineAmount) + parseFloat(v.colorantprice) * parseInt(v.salesQty) - (parseFloat(v.salesprice) + parseFloat(v.colorantprice)) * parseInt(v.totalReturnedQuantity) - (parseFloat(v.salesprice) + parseFloat(v.colorantprice)) * returnQuantity;
                         });
                         console.log(newGrossTotal);
@@ -677,7 +675,6 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         returnOrderData.salesLine = [];
                         _loop_6 = function (item) {
                             var qty = parseInt(item.returnQuantity);
-                            item.colorantprice = item.colorantprice ? item.colorantprice : 0;
                             var price = parseFloat(item.salesprice) + parseFloat(item.colorantprice);
                             var lineAmount = price * qty;
                             var netAmount = lineAmount;
@@ -780,19 +777,18 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                             }
                                         }
                                         if (discount.discountType == "PROMOTIONAL_DISCOUNT") {
-                                            var promotionalDiscountItems = salesOrderData.salesLine.filter(function (v) { return v.itemid == item.itemid && v.inventsizeid == item.inventsizeid; });
-                                            var selectedQuantity_1 = 0;
-                                            promotionalDiscountItems.map(function (v) {
-                                                selectedQuantity_1 += parseInt(v.salesQty) - parseInt(item.totalReturnedQuantity);
+                                            var freeItems = salesOrderData.salesLine.filter(function (v) { return v.linkId == item.linkId && v.isItemFree == true; });
+                                            var gotFreeQty_3 = 0;
+                                            freeItems.map(function (v) {
+                                                gotFreeQty_3 += parseInt(v.salesQty);
                                             });
-                                            console.log("selectedQuantity", selectedQuantity_1);
-                                            var eligibleFreeQty = Math.floor((selectedQuantity_1) / parseInt(discount.cond[0].multipleQty)) * parseInt(discount.cond[0].freeQty);
+                                            console.log("gotFreeQty", gotFreeQty_3);
+                                            var eligibleFreeQty = Math.floor((parseInt(item.salesQty) - parseInt(item.totalReturnedQuantity) - parseInt(item.returnQuantity)) / parseInt(discount.cond[0].multipleQty)) *
+                                                parseInt(discount.cond[0].freeQty);
                                             console.log("eligibleFreeQty", eligibleFreeQty);
-                                            // let freeQty = gotFreeQty - eligibleFreeQty;
-                                            // console.log("freeQty", freeQty);
-                                            var discountAmount = 0;
-                                            // let promotionalDiscountAmount:number = (parseFloat(item.salesprice) / selectedQuantity) * eligibleFreeQty
-                                            discountAmount = (parseFloat(discount.discountAmount) / parseInt(item.salesQty)) * item.returnQuantity;
+                                            var freeQty = gotFreeQty_3 - eligibleFreeQty;
+                                            console.log("freeQty", freeQty);
+                                            var discountAmount = parseFloat(discount.discountAmount) - eligibleFreeQty * item.salesprice;
                                             console.log(discountAmount);
                                             lineTotalDisc += discountAmount;
                                             netAmount -= lineTotalDisc;

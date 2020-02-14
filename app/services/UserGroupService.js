@@ -124,7 +124,6 @@ var UserGroupService = /** @class */ (function () {
                         console.log(cond);
                         reqData.permissiondata = JSON.stringify(reqData.permissiondata);
                         if (!(cond == true)) return [3 /*break*/, 3];
-                        reqData.lastmodifieddate = new Date();
                         return [4 /*yield*/, this.usergroupDAO.save(reqData)];
                     case 2:
                         user = _a.sent();

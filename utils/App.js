@@ -91,7 +91,7 @@ var App = /** @class */ (function () {
         });
     };
     App.HtmlRender = function (fileName, data) {
-        var source = path.join(__dirname, "/../assets/templates/" + fileName + ".html");
+        var source = path.join(__dirname, "/../../assets/templates/" + fileName + ".html");
         // log.info("Html Source: " + source);
         source = fs.readFileSync(source, "utf8");
         var template = Handlebars.compile(source);
@@ -187,9 +187,7 @@ var App = /** @class */ (function () {
                     case 0:
                         Log_1.log.info(data);
                         if (!data) return [3 /*break*/, 7];
-                        if (!(data.name &&
-                            data.message &&
-                            data.name.lowercase().indexOf("error") > -1)) return [3 /*break*/, 1];
+                        if (!(data.name && data.message && data.name.lowercase().indexOf("error") > -1)) return [3 /*break*/, 1];
                         return [2 /*return*/, false];
                     case 1:
                         isValid = false;

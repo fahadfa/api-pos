@@ -91,10 +91,6 @@ var Inventorytrans = /** @class */ (function () {
         __metadata("design:type", Date)
     ], Inventorytrans.prototype, "dateinvent", void 0);
     __decorate([
-        typeorm_1.Column({ name: "custvendac" }),
-        __metadata("design:type", String)
-    ], Inventorytrans.prototype, "custvendac", void 0);
-    __decorate([
         typeorm_1.Column({ name: "dateclosed" }),
         __metadata("design:type", Date)
     ], Inventorytrans.prototype, "dateclosed", void 0);

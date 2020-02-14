@@ -125,7 +125,7 @@ var CusttableDAO = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.dao
                             .createQueryBuilder("custtable")
                             // .where({ accountnum: accountnum })
-                            .where("LOWER(custtable.accountnum) like LOWER('" + accountnum + "')")
+                            .where("LOWER(custtable.accountnum) = LOWER('" + accountnum + "')")
                             .leftJoinAndSelect("custtable.Custgroup", "Custgroup")
                             .getOne()];
                     case 1: 
@@ -410,25 +410,26 @@ var CusttableDAO = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select \n        accountnum, \n        name, \n        namealias,\n        phone,\n        pricegroup,\n        inventlocation,\n        dataareaid,\n        walkincustomer,\n        custgroup,\n        cashdisc,\n        salesgroup,\n        currency,\n        paymtermid,\n        dimension as regionid,\n        dimension2_ as departmentid,\n        dimension3_ as costcenterid,\n        dimension4_ as employeeid,\n        dimension5_ as projectid,\n        dimension6_ as salesmanid,\n        dimension7_ as brandid,\n        dimension8_ as productlineid,\n        rcusttype from custtable where deleted = false ";
-                        query += " and (";
+                        query = "select \n        accountnum, \n        name, \n        namealias,\n        phone,\n        pricegroup,\n        inventlocation,\n        dataareaid,\n        walkincustomer,\n        custgroup,\n        cashdisc,\n        salesgroup,\n        currency,\n        paymtermid,\n        dimension as regionid,\n        dimension2_ as departmentid,\n        dimension3_ as costcenterid,\n        dimension4_ as employeeid,\n        dimension5_ as projectid,\n        dimension6_ as salesmanid,\n        dimension7_ as brandid,\n        dimension8_ as productlineid,\n        rcusttype from custtable ";
+                        if (data.filter) {
+                            query += "where (accountnum ILike '%" + data.filter + "%' or \n            name ILike '%" + data.filter + "%' or \n            namealias ILike '%" + data.filter + "%' or \n            accountnum ILike '%" + data.filter + "%') and \n            dataareaid='" + data.dataareaid + "'";
+                        }
+                        else {
+                            query += "where dataareaid='" + data.dataareaid + "' ";
+                        }
                         if (data.customergroup.length > 0) {
-                            query += "(custgroup in (" + data.customergroup + ") or walkincustomer = true) ";
+                            query += "and custgroup in (" + data.customergroup + ")";
                         }
                         if (data.additionalcustomer.length > 0) {
-                            query += "OR (accountnum in (" + data.additionalcustomer + ") or walkincustomer = true) ";
+                            query += "OR accountnum in (" + data.additionalcustomer + ")";
                         }
                         if (data.sabiccustomers.length > 0) {
-                            query += "OR (accountnum in (" + data.sabiccustomers + ") or walkincustomer = true) ";
+                            query += "OR accountnum in (" + data.sabiccustomers + ")";
                         }
                         if (data.defaultcustomerid) {
-                            query += " or (accountnum='" + data.defaultcustomerid + " or walkincustomer = true') ";
+                            query += " or accountnum='" + data.defaultcustomerid + "'";
                         }
-                        query += ")";
-                        if (data.filter) {
-                            query += " and (accountnum ILike '%" + data.filter + "%' or \n            name ILike '%" + data.filter + "%' or \n            namealias ILike '%" + data.filter + "%')";
-                        }
-                        query += " ORDER BY \n        createddatetime DESC offset " + (data.page - 1) * data.pageCount + " limit " + data.pageCount;
+                        query += "  or\n         walkincustomer = true  and deleted = false  ORDER BY \n        createddatetime DESC offset " + (data.page - 1) * data.pageCount + " limit " + data.pageCount;
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }

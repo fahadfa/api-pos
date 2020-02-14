@@ -54,17 +54,15 @@ var LoadService = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        additionalcustomer = this.sessionInfo.additionalcustomer
-                            ? this.sessionInfo.additionalcustomer.split(",")
-                            : [];
+                        additionalcustomer = this.sessionInfo.additionalcustomer ? this.sessionInfo.additionalcustomer.split(",") : [];
                         customergroup = this.sessionInfo.customergroup ? this.sessionInfo.customergroup.split(",") : [];
                         sabicCustomers = this.sessionInfo.sabiccustomers ? this.sessionInfo.sabiccustomers.trim().split(",") : [];
                         //   param.additionalcustomer = "";
                         //   param.customergroup = "";
                         //   param.sabiccustomers = "";
-                        param.additionalcustomer = additionalcustomer.map(function (d) { return "'" + d + "'"; }).join(",");
-                        param.customergroup = customergroup.map(function (d) { return "'" + d + "'"; }).join(",");
-                        param.sabiccustomers = sabicCustomers.map(function (d) { return "'" + d + "'"; }).join(",");
+                        param.additionalcustomer = additionalcustomer.map(function (d) { return "'" + d + "'"; }).join(',');
+                        param.customergroup = customergroup.map(function (d) { return "'" + d + "'"; }).join(',');
+                        param.sabiccustomers = sabicCustomers.map(function (d) { return "'" + d + "'"; }).join(',');
                         //   additionalcustomer.forEach((element: any) => {
                         //     param.additionalcustomer += additionalcustomer.indexOf(element) == additionalcustomer.length - 1 ? "'" + element + "'" : "'" + element + "' ,";
                         //   });
@@ -91,9 +89,13 @@ var LoadService = /** @class */ (function () {
                             //     query += `where dataareaid='${this.sessionInfo.dataareaid}' `;
                         }
                         if (param.type == "DESIGNERSERVICE") {
-                            query += " and paymtermid = 'CASH' ";
+                            query += " and paymtermid = 'CASH'";
                         }
-                        query += " and (" + (param.customergroup.length > 0 ? "custgroup in (" + param.customergroup + ")" : "") + " " + (param.customergroup.length > 0 ? "OR" : "") + "  " + (param.additionalcustomer.length > 0 ? "accountnum in (" + param.additionalcustomer + ")" : "") + " " + (param.additionalcustomer.length > 0 ? "OR" : "") + " " + (param.sabiccustomers.length > 0 ? "accountnum in (" + param.sabiccustomers + ")" : "") + " " + (param.sabiccustomers.length > 0 ? "OR" : "") + " " + ("accountnum='" + this.sessionInfo.defaultcustomerid + "'") + " or walkincustomer = true) and deleted = false and dataareaid='" + this.sessionInfo.dataareaid + "' " + (param.type == "DESIGNERSERVICE" ? " and accountnum!='" + this.sessionInfo.defaultcustomerid + "'" : "") + " limit 15";
+                        query += " and (" + (param.customergroup.length > 0 ? "custgroup in (" + param.customergroup + ")" : "") + " " + (param.customergroup.length > 0 ? "OR" : "") + "  " + (param.additionalcustomer.length > 0 ? "accountnum in (" + param.additionalcustomer + ")" : "") + " " + (param.additionalcustomer.length > 0 ? "OR" : "") + " " + (param.sabiccustomers.length > 0 ? "accountnum in (" + param.sabiccustomers + ")" : "") + " " + (param.sabiccustomers.length > 0 ? "OR" : "") + " " + (this.sessionInfo.defaultcustomerid
+                            ? param.type == "DESIGNERSERVICE"
+                                ? "accountnum!='" + this.sessionInfo.defaultcustomerid + "'"
+                                : "accountnum='" + this.sessionInfo.defaultcustomerid + "'"
+                            : "") + " or walkincustomer = true) and deleted = false and dataareaid='" + this.sessionInfo.dataareaid + "' limit 15";
                         return [4 /*yield*/, this.db.query(query)];
                     case 2:
                         data = _a.sent();
@@ -236,14 +238,12 @@ var LoadService = /** @class */ (function () {
     };
     LoadService.prototype.search_pendingTransferOrder = function (param) {
         return __awaiter(this, void 0, void 0, function () {
-            var query;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         param.transkind = "TRANSFERORDER";
                         param.status = "REQUESTED";
-                        query = "Select salestable.salesid as salesid, salestable.salesname as salesname, inventlocationid as inventlocationid\n                 from salestable where  salestable.custaccount='" + this.sessionInfo.inventlocationid + "' and status = 'REQUESTED' and salesid ILike '%" + param.key + "%' ";
-                        return [4 /*yield*/, this.db.query(query)];
+                        return [4 /*yield*/, this.search_salesTable(param)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -335,11 +335,7 @@ var LoadService = /** @class */ (function () {
                             ? " vendortable.name as name, vendortable.namealias as namealias"
                             : " custtable.name as name, custtable.namealias as namealias") + "\n                        from salestable \n                        " + (param.transkind == "PURCHASEORDER" || param.transkind == "PURCHASERETURN"
                             ? "  left join vendortable on vendortable.accountnum = salestable.custaccount"
-                            : "  left join custtable on custtable.accountnum = salestable.custaccount") + "\n                       \n                        where salestable.dataareaid='" + this.sessionInfo.dataareaid + "' and (salestable.inventlocationid='" + this.sessionInfo.inventlocationid + "' or\n                        salestable.custaccount='" + this.sessionInfo.inventlocationid + "' " + (!param.cond == true ? "or salestable.jazeerawarehouse='" + this.sessionInfo.inventlocationid + "'" : "") + ")\n                        and (salestable.salesid  ILike '%" + param.key + "%' or salestable.salesname  ILike '%" + param.key + "%' or\n                         " + (param.transkind == "PURCHASEORDER" || param.transkind == "PURCHASERETURN"
-                            ? "vendortable.name"
-                            : "custtable.name") + " ILike '%" + param.key + "%' or  " + (param.transkind == "PURCHASEORDER" || param.transkind == "PURCHASERETURN"
-                            ? "vendortable.namealias"
-                            : "custtable.namealias") + "  ILike '%" + param.key + "%') ";
+                            : "  left join custtable on custtable.accountnum = salestable.custaccount") + "\n                       \n                        where salestable.dataareaid='" + this.sessionInfo.dataareaid + "' and (salestable.inventlocationid='" + this.sessionInfo.inventlocationid + "' or\n                        salestable.custaccount='" + this.sessionInfo.inventlocationid + "' " + (!param.cond == true ? "or salestable.jazeerawarehouse='" + this.sessionInfo.inventlocationid + "'" : "") + ")\n                        and (salestable.salesid  ILike '%" + param.key + "%' or salestable.salesname  ILike '%" + param.key + "%' or\n                         " + (param.transkind == "PURCHASEORDER" || param.transkind == "PURCHASERETURN" ? "vendortable.name" : "custtable.name") + " ILike '%" + param.key + "%' or  " + (param.transkind == "PURCHASEORDER" || param.transkind == "PURCHASERETURN" ? "vendortable.namealias" : "custtable.namealias") + "  ILike '%" + param.key + "%') ";
                         if (param.transkind1 && param.transkind2) {
                             query += "and (salestable.transkind='" + param.transkind1 + "' or salestable.transkind='" + param.transkind2 + "')  ";
                         }
@@ -1240,20 +1236,13 @@ var LoadService = /** @class */ (function () {
     };
     LoadService.prototype.batcheslist = function (param) {
         return __awaiter(this, void 0, void 0, function () {
-            var query, data;
+            var query;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         query = "select distinct inventbatchid as batchno, itemid as itemid, configid as configid from inventbatch where inventbatchid ILIKE '%" + param.batchno + "%' and configid = '" + param.configid + "' and itemid = '" + param.itemid + "' limit 10";
                         return [4 /*yield*/, this.db.query(query)];
-                    case 1:
-                        data = _a.sent();
-                        data.push({
-                            batchno: "-",
-                            itemid: "-",
-                            configid: "-"
-                        });
-                        return [2 /*return*/, data];
+                    case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
@@ -1268,7 +1257,7 @@ var LoadService = /** @class */ (function () {
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
-                        return [2 /*return*/, data.length > 0 || param.batchno == "-" ? true : false];
+                        return [2 /*return*/, data.length > 0 ? true : false];
                 }
             });
         });

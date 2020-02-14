@@ -54,69 +54,53 @@ var Log_1 = require("./utils/Log");
 var port = 5000;
 var count = 0;
 Config.setEnvConfig();
-var conn = null;
 var run = function () { return __awaiter(_this, void 0, void 0, function () {
-    var express, error_1;
+    var conn, express, error_1;
     var _this = this;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
+                _a.trys.push([0, 2, , 3]);
                 Log_1.log.log(Config.dbOptions);
-                if (!(!conn || !conn.isConnected)) return [3 /*break*/, 2];
                 return [4 /*yield*/, typeorm_1.createConnection(Config.dbOptions)];
             case 1:
                 conn = _a.sent();
-                _a.label = 2;
-            case 2:
                 Log_1.log.debug(" ************************************** " + conn.isConnected);
-                if (conn && conn.isConnected) {
+                if (conn.isConnected) {
                     express = new AppExpress_1.default().express;
                     express.listen(port, function (err) { return __awaiter(_this, void 0, void 0, function () {
                         return __generator(this, function (_a) {
                             if (err) {
-                                Log_1.log.error(err);
-                                throw err;
+                                return [2 /*return*/, Log_1.log.error(err)];
                             }
-                            return [2 /*return*/, Log_1.log.log("info", "\n                    ***********************************************\n                            server is listening on " + port + "\n                    ***********************************************\n          ")];
+                            return [2 /*return*/, Log_1.log.log("info", "\n                    ***********************************************\n                            server is listening on " + port + "\n                    ***********************************************\n                ")];
                         });
                     }); });
                 }
-                return [3 /*break*/, 4];
-            case 3:
+                return [3 /*break*/, 3];
+            case 2:
                 error_1 = _a.sent();
-                Log_1.log.error(error_1);
                 setTimeout(function () {
                     if (count <= 5) {
                         count += 1;
-                        Log_1.log.error("================ " + count);
+                        console.log("================", count);
                         run();
                     }
                     else {
                         Log_1.log.error(error_1);
                     }
                 }, 5000);
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
 run();
-var fs = require("fs");
+var fs = require('fs');
 var syncFile = __dirname + "/sync.ts";
 syncFile = fs.existsSync(syncFile) ? __dirname + "/sync.ts" : __dirname + "/sync.js";
-var child_process = require("child_process");
+var child_process = require('child_process');
 child_process.fork(syncFile);
 process.on("uncaughtException", function (err) {
     Log_1.log.error("Caught exception: " + err);
-    setTimeout(function () {
-        if (count <= 5) {
-            count += 1;
-            Log_1.log.error("================ " + count);
-            run();
-        }
-        else {
-            Log_1.log.error(err);
-        }
-    }, 5000);
 });

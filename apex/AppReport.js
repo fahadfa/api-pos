@@ -49,6 +49,7 @@ var jsreport_core_1 = __importDefault(require("jsreport-core"));
 var express_1 = require("express");
 var fs = __importStar(require("fs"));
 var Log_1 = require("../utils/Log");
+var conversion = require("phantom-html-to-pdf")();
 var AppReport = /** @class */ (function () {
     function AppReport() {
         this.router = express_1.Router();
@@ -109,6 +110,46 @@ var AppReport = /** @class */ (function () {
                         if (dataFound == true) {
                             if (type == "data") {
                                 response.send({ status: 1, data: resData_1 });
+                            }
+                            else if (type == "pdf") {
+                                conversion({
+                                    html: resData_1,
+                                }, function (err, pdf) {
+                                    var output = fs.createWriteStream('output.pdf');
+                                    console.log(output.path);
+                                    console.log(pdf.numberOfPages);
+                                    // since pdf.stream is a node.js stream you can use it
+                                    // to save the pdf to a file (like in this example) or to
+                                    // respond an http request.
+                                    pdf.stream.pipe(output);
+                                    fs.readFile('output.pdf', function (err, data) {
+                                        // console.log(data);
+                                        response.contentType("application/pdf");
+                                        response.send(data);
+                                    });
+                                });
+                                // this.report
+                                //     .then(() => {
+                                //         return this.jsreport
+                                //             .render({
+                                //                 template: {
+                                //                     content: resData,
+                                //                     engine: "none",
+                                //                     recipe: "chrome-pdf"
+                                //                 }
+                                //             })
+                                //             .then(out => {
+                                //                 out.stream.pipe(response);
+                                //             })
+                                //             .catch(err => {
+                                //                 log.error(err);
+                                //                 throw err;
+                                //             });
+                                //     })
+                                //     .catch(err => {
+                                //         log.error(err);
+                                //         throw err;
+                                //     });
                             }
                             else if (type == "html") {
                                 this.report

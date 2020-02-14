@@ -64,7 +64,7 @@ var AuthService = /** @class */ (function () {
                         return [4 /*yield*/, this.unflatten(menuList)];
                     case 2:
                         menuList = _a.sent();
-                        if (!(accountObj.userGroupConfig && accountObj.userGroupConfig.inventlocationid)) return [3 /*break*/, 4];
+                        if (!accountObj.userGroupConfig.inventlocationid) return [3 /*break*/, 4];
                         return [4 /*yield*/, this.rawQuery.getWareHouseDetails(accountObj.userGroupConfig.inventlocationid)];
                     case 3:
                         wareHouse = _a.sent();
@@ -84,10 +84,10 @@ var AuthService = /** @class */ (function () {
                             responseData.user.phone = accountObj.phone;
                             responseData.user.groupid = accountObj.groupid;
                             responseData.menuList = menuList;
-                            responseData.user.role = accountObj.userGroup ? accountObj.userGroup.role : null;
+                            responseData.user.role = accountObj.userGroup.role;
                             responseData.usergroupconfigid = accountObj.userGroupConfig.id;
                             responseData.user.usergroupconfigid = accountObj.userGroupConfig.id;
-                            responseData.user.wareHouseName = accountObj.userGroup ? accountObj.userGroup.groupname : null;
+                            responseData.user.wareHouseName = accountObj.userGroup.groupname;
                             responseData.user.wareHouseNameEn = wareHouseNameEn;
                             responseData.user.wareHouseNameAr = wareHouseNamear;
                             responseData.warehouse = accountObj.userGroupConfig.inventlocationid;
@@ -100,6 +100,7 @@ var AuthService = /** @class */ (function () {
                             responseData.user.customergroup = accountObj.userGroupConfig.customergroup;
                             responseData.user.workflowcustomers = accountObj.userGroupConfig.workflowcustomers;
                             responseData.user.salesmanid = accountObj.userGroupConfig.salesmanid && accountObj.userGroupConfig.salesmanid !== "" ? accountObj.userGroupConfig.salesmanid.split(",") : [];
+                            responseData.user.role = accountObj.userGroup.role;
                             responseData.identity = {};
                             responseData.identity = responseData.user;
                             delete responseData.user;

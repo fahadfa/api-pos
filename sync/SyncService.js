@@ -37,118 +37,50 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var SyncDMLService_1 = require("./SyncDMLService");
 var SyncDDLService_1 = require("./SyncDDLService");
-var Log_1 = require("../utils/Log");
-var dns = require("dns").promises;
-var cron = require("node-cron");
+var App_1 = require("../utils/App");
+var checkInternetConnected = require("check-internet-connected");
 var stagingId = "STAGING";
 var storeId = process.env.ENV_STORE_ID || "LOCAL-TEST";
 var SyncService = /** @class */ (function () {
     function SyncService() {
         this.syncDMLService = new SyncDMLService_1.SyncDMLService();
         this.syncDDLService = new SyncDDLService_1.SyncDDLService();
-        Log_1.slog.log("debug", "&&&&&&&&&&&&&&&&&&&&&& ENV_STORE_ID : " + process.env.ENV_STORE_ID + " &&&&&&&&&&&&&&&&&&&&&&");
+        console.log("&&&&&&&&&&&&&&&&&&&&&& ENV_STORE_ID : " + process.env.ENV_STORE_ID + " &&&&&&&&&&&&&&&&&&&&&&");
         if (process.env.ENV_STORE_ID) {
-            Log_1.slog.log("info", ">>>>>>>>>>>>>>>>> INIT <<<<<<<<<<<<<<<<<<<");
             this.init();
         }
     }
     SyncService.prototype.init = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var isMasterProceed, isTranscationProceed;
             var _this = this;
             return __generator(this, function (_a) {
-                isMasterProceed = true;
-                cron.schedule("*/10 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
-                    var error_1;
+                App_1.App.Sleep(2000);
+                checkInternetConnected()
+                    .then(function (result) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                _a.trys.push([0, 8, , 9]);
-                                if (!(isMasterProceed == true)) return [3 /*break*/, 6];
-                                isMasterProceed = false;
-                                Log_1.slog.debug("(((((((((( SYNC START MASTER))))))))))");
-                                return [4 /*yield*/, this.checkInternet()];
-                            case 1:
-                                if (!_a.sent()) return [3 /*break*/, 4];
-                                Log_1.slog.log("info", ">>>>>>>>>>>>>>>> DDL <<<<<<<<<<<<<<<<<<<<<<<");
+                                App_1.App.Sleep(2000);
+                                console.log("\n\n(((((((((( SYNC START ))))))))))\n\n");
                                 return [4 /*yield*/, this.syncDDLService.execute()];
-                            case 2:
-                                _a.sent();
-                                Log_1.slog.log("info", ">>>>>>>>>>>>>>>>> DML <<<<<<<<<<<<<<<<<<<<<<<");
-                                return [4 /*yield*/, this.syncDMLService.execute("M")];
-                            case 3:
-                                _a.sent();
-                                return [3 /*break*/, 5];
-                            case 4:
-                                Log_1.slog.warn(">>>>>>>>>>>>>>>>> No Internet connection <<<<<<<<<<<<<<<<<<<<");
-                                _a.label = 5;
-                            case 5:
-                                Log_1.slog.debug("(((((((((( SYNC CLOSE MASTER ))))))))))");
-                                isMasterProceed = true;
-                                return [3 /*break*/, 7];
-                            case 6:
-                                Log_1.slog.warn("still processing ...................................");
-                                _a.label = 7;
-                            case 7: return [3 /*break*/, 9];
-                            case 8:
-                                error_1 = _a.sent();
-                                Log_1.slog.error("--------- CRON MASTER ERROR ---------");
-                                Log_1.slog.error(error_1);
-                                Log_1.slog.error("--------- CRON MASTER ERROR ---------");
-                                return [3 /*break*/, 9];
-                            case 9: return [2 /*return*/];
-                        }
-                    });
-                }); });
-                isTranscationProceed = true;
-                cron.schedule("*/10 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
-                    var error_2;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0:
-                                _a.trys.push([0, 7, , 8]);
-                                if (!(isTranscationProceed == true)) return [3 /*break*/, 5];
-                                isTranscationProceed = false;
-                                Log_1.slog.debug("(((((((((( SYNC START TRANS ))))))))))");
-                                return [4 /*yield*/, this.checkInternet()];
                             case 1:
-                                if (!_a.sent()) return [3 /*break*/, 3];
-                                return [4 /*yield*/, this.syncDMLService.execute("T")];
+                                _a.sent();
+                                return [4 /*yield*/, this.syncDMLService.execute()];
                             case 2:
                                 _a.sent();
-                                return [3 /*break*/, 4];
-                            case 3:
-                                Log_1.slog.warn(">>>>>>>>>>>>>>>>> No Internet connection <<<<<<<<<<<<<<<<<<<<");
-                                _a.label = 4;
-                            case 4:
-                                Log_1.slog.debug("(((((((((( SYNC CLOSE TRANS ))))))))))");
-                                isTranscationProceed = true;
-                                return [3 /*break*/, 6];
-                            case 5:
-                                Log_1.slog.warn("still processing ...................................");
-                                _a.label = 6;
-                            case 6: return [3 /*break*/, 8];
-                            case 7:
-                                error_2 = _a.sent();
-                                Log_1.slog.error("--------- CRON TRANSACTION ERROR ---------");
-                                Log_1.slog.error(error_2);
-                                Log_1.slog.error("--------- CRON TRANSACTION ERROR ---------");
-                                return [3 /*break*/, 8];
-                            case 8: return [2 /*return*/];
+                                console.log("\n\n(((((((((( SYNC CLOSE ))))))))))\n\n");
+                                App_1.App.Sleep(2000);
+                                return [2 /*return*/];
                         }
                     });
-                }); });
+                }); })
+                    .catch(function (ex) {
+                    App_1.App.Sleep(2000);
+                    console.log("\n\n(((((((((( No Internet connection ))))))))))"); // cannot connect to a server or error occurred.
+                });
+                App_1.App.Sleep(2000);
+                this.init();
                 return [2 /*return*/];
-            });
-        });
-    };
-    SyncService.prototype.checkInternet = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/, dns
-                        .lookup("google.com")
-                        .then(function () { return true; })
-                        .catch(function () { return false; })];
             });
         });
     };

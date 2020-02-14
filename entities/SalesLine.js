@@ -11,9 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var SalesTable_1 = require("../entities/SalesTable");
-var Inventtable_1 = require("./Inventtable");
-var Configtable_1 = require("./Configtable");
-var InventSize_1 = require("./InventSize");
+var Colors_1 = require("../entities/Colors");
+var BaseSizes_1 = require("../entities/BaseSizes");
 var SalesLine = /** @class */ (function () {
     function SalesLine() {
     }
@@ -326,20 +325,15 @@ var SalesLine = /** @class */ (function () {
         __metadata("design:type", Object)
     ], SalesLine.prototype, "appliedDiscounts", void 0);
     __decorate([
-        typeorm_1.JoinColumn({ name: "itemid" }),
-        typeorm_1.ManyToOne(function (type) { return Inventtable_1.Inventtable; }),
-        __metadata("design:type", Inventtable_1.Inventtable)
-    ], SalesLine.prototype, "product", void 0);
+        typeorm_1.JoinColumn({ name: "colorid" }),
+        typeorm_1.ManyToOne(function (type) { return Colors_1.Colors; }),
+        __metadata("design:type", Colors_1.Colors)
+    ], SalesLine.prototype, "colors", void 0);
     __decorate([
-        typeorm_1.JoinColumn([{ name: "configid", referencedColumnName: "code" }, { name: "itemid", referencedColumnName: "itemid" }]),
-        typeorm_1.ManyToOne(function (type) { return Configtable_1.Configtable; }),
-        __metadata("design:type", Configtable_1.Configtable)
-    ], SalesLine.prototype, "color", void 0);
-    __decorate([
-        typeorm_1.JoinColumn([{ name: "inventsizeid", referencedColumnName: "code" }, { name: "itemid", referencedColumnName: "itemid" }]),
-        typeorm_1.ManyToOne(function (type) { return InventSize_1.Inventsize; }),
-        __metadata("design:type", InventSize_1.Inventsize)
-    ], SalesLine.prototype, "size", void 0);
+        typeorm_1.JoinColumn({ name: "base_size_id" }),
+        typeorm_1.ManyToOne(function (type) { return BaseSizes_1.BaseSizes; }),
+        __metadata("design:type", BaseSizes_1.BaseSizes)
+    ], SalesLine.prototype, "baseSizes", void 0);
     __decorate([
         typeorm_1.JoinColumn({ name: "salesid" }),
         typeorm_1.ManyToOne(function (type) { return SalesTable_1.SalesTable; }),
