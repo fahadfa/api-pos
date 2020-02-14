@@ -89,7 +89,7 @@ var DesignerserviceService = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 4, , 5]);
                         if (!item.accountnum) return [3 /*break*/, 2];
-                        return [4 /*yield*/, this.rawQuery.getDesignerServiceList(item.accountnum)];
+                        return [4 /*yield*/, this.rawQuery.getDesignerServiceList(item.accountnum, item.mobileNo)];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2: throw { message: Props_1.Props.PROVIDE_ID };
                     case 3: return [3 /*break*/, 5];

@@ -60,7 +60,7 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "SELECT paymterm.numofdays FROM \"paymterm\" WHERE paymterm.paymtermid = '" + paymTermId + "'";
+                        query = "SELECT paymterm.numofdays FROM \"paymterm\" WHERE paymterm.paymtermid like '%" + paymTermId + "%'";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
@@ -216,14 +216,14 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select\n        i.itemid as itemid,\n        bs.name_en as nameEn,\n        bs.name_ar as nameAr,\n        (i.qty_in-i.qty_out-i.qty_reserved) as availabilty,\n        i.configid as configid,\n        i.inventsizeid as inventsizeid,\n        i.batchno as batchno,\n        to_char(b.expdate, 'yyyy-MM-dd') as batchexpdate,\n        sz.name_en as \"sizeNameEn\",\n        sz.name_ar as \"sizeNameAr\",\n        i.qty_reserved as \"reservedQuantity\",\n        (i.qty_in-i.qty_out) as \"totalAvailable\"\n        from inventory_onhand as i\n        left join inventbatch b on i.batchno = b.inventbatchid\n        left join bases bs on i.itemid = bs.code\n        left join sizes sz on sz.code = i.inventsizeid\n        where i.inventlocationid='" + reqData.inventlocationid + "' and (i.qty_in-i.qty_out)>0 \n        ";
+                        query = "select distinct\n        i.itemid as itemid,\n        bs.namealias as nameEn,\n        bs.itemname as nameAr,\n        (i.qty_in-i.qty_out-i.qty_reserved) as availabilty,\n        i.configid as configid,\n        i.inventsizeid as inventsizeid,\n        i.batchno as batchno,\n        to_char(b.expdate, 'yyyy-MM-dd') as batchexpdate,\n        sz.description as \"sizeNameEn\",\n        sz.\"name\" as \"sizeNameAr\",\n        i.qty_reserved as \"reservedQuantity\",\n        (i.qty_in-i.qty_out) as \"totalAvailable\"\n        from inventory_onhand as i\n        left join inventbatch b on i.batchno = b.inventbatchid\n        left join inventtable bs on i.itemid = bs.itemid\n        left join inventsize sz on sz.inventsizeid = i.inventsizeid and sz.itemid = i.itemid\n        where i.inventlocationid='" + reqData.inventlocationid + "' and (i.qty_in-i.qty_out)>0 \n        ";
                         if (reqData.itemId) {
                             query = query + (" and i.itemid = '" + reqData.itemId + "'");
                             if (reqData.configid) {
                                 query = query + (" and i.configid='" + reqData.configid + "'");
                             }
                             if (reqData.inventsizeid) {
-                                query = query + (" and i.inventsizeid='" + reqData.inventsizeid + "'");
+                                query = query + (" and LOWER(i.inventsizeid)=LOWER('" + reqData.inventsizeid + "')");
                             }
                         }
                         return [4 /*yield*/, this.db.query(query)];
@@ -272,9 +272,11 @@ var RawQuery = /** @class */ (function () {
                             query = "\n                select \n                sl.itemid as itemid,\n                sl.salesid as invoiceid,\n                sl.salesqty as qty,\n                sl.configid as configid,\n                sl.inventsizeid as inventsizeid,\n                dp.name_en as nameEn,\n                dp.name_ar as nameAr\n                from salesline sl \n                left join designer_products dp on dp.code = sl.itemid\n                where salesid= '" + reqData.salesid + "'\n                ";
                         }
                         else {
-                            query = "\n                select \n                distinct\n                i.itemid as itemid,\n                bs.name_en as nameEn,\n                bs.name_ar as nameAr,\n                i.qty as qty,\n                i.configid as configid,\n                i.inventsizeid as inventsizeid,\n                i.invoiceid as invoiceid,\n                i.transrefid as transrefid,\n                s.name_en as sizenameen,\n                s.name_ar as sizenamear,\n                i.batchno as batchno,\n                b.expdate as batchExpDate,\n                i.sales_line_id as \"salesLineId\",\n                (select is_item_free from salesline sl where sl.id = i.sales_line_id) as \"isItemFree\", \n                (\n                    select c.hex from salesline sl left join colors c on c.id=sl.colorid\n                    where sl.salesid=i.invoiceid and sl.itemid = i.itemid and sl.configid = i.configid\n                    and sl.inventsizeid = i.inventsizeid limit 1 \n                ) as hexcode\n            from inventtrans  i\n            left join inventbatch b on i.batchno = b.inventbatchid\n            left join bases bs on i.itemid = bs.code\n            left join sizes s on s.code = i.inventsizeid\n             ";
+                            query = "\n                select \n                distinct\n                i.itemid as itemid,\n                bs.namealias as nameEn,\n                bs.itemname as nameAr,\n                i.qty as qty,\n                i.configid as configid,\n                i.inventsizeid as inventsizeid,\n                i.invoiceid as invoiceid,\n                i.transrefid as transrefid,\n                s.\"name\" as sizenameen,\n                s.description as sizenamear,\n                i.batchno as batchno,\n                b.expdate as batchExpDate,\n                i.sales_line_id as \"salesLineId\",\n                (select is_item_free from salesline sl where sl.id = i.sales_line_id) as \"isItemFree\", \n                c.hexcode as hexcode\n            from inventtrans  i\n            left join inventbatch b on i.batchno = b.inventbatchid\n            left join inventtable bs on i.itemid = bs.itemid\n            left join inventsize s on s.inventsizeid = i.inventsizeid and s.itemid = i.itemid\n            left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n             ";
                             if (reqData.salesid) {
-                                if (reqData.type == "RETURNORDER" || reqData.type == "INVENTORYMOVEMENT" || reqData.type == "PURCHASERETURN") {
+                                if (reqData.type == "RETURNORDER" ||
+                                    reqData.type == "INVENTORYMOVEMENT" ||
+                                    reqData.type == "PURCHASERETURN") {
                                     query += "where i.invoiceid = '" + reqData.salesid + "'";
                                     // if (reqData.type == "PURCHASERETURN"){
                                     //     query+= ` and i.inventlocationid = '${reqData.inventlocationid}' `
@@ -357,6 +359,122 @@ var RawQuery = /** @class */ (function () {
                         data.forEach(function (element) {
                             new_data.push(element.id);
                         });
+                        return [2 /*return*/, new_data];
+                }
+            });
+        });
+    };
+    RawQuery.prototype.getIitemIds = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data, new_data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "select distinct i.itemid from inventtable i\n               inner join configtable c on c.itemid = i.itemid\n               inner join inventsize sz on sz.itemid = i.itemid";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        new_data = [];
+                        new_data = data.map(function (element) {
+                            return element.itemid;
+                        });
+                        return [2 /*return*/, new_data];
+                }
+            });
+        });
+    };
+    RawQuery.prototype.getItemsInStock = function (inventlocationid) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data, new_data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "select distinct itemid from\n              (\n              select i.itemid from inventtable i\n               inner join configtable c on c.itemid = i.itemid\n               inner join inventsize sz on sz.itemid = i.itemid\n               inner join inventory_onhand ioh on ioh.itemid = i.itemid\n               where ioh.inventlocationid='" + inventlocationid + "' GROUP BY\n               i.itemid\n               having SUM(ioh.qty_in-ioh.qty_out-ioh.qty_reserved)>0\n               ) as i";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        new_data = [];
+                        new_data = data.map(function (element) {
+                            return element.itemid;
+                        });
+                        return [2 /*return*/, new_data];
+                }
+            });
+        });
+    };
+    RawQuery.prototype.getColorCodes = function (param) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data, new_data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "select distinct c.configid from configtable c\n               inner join inventtable i on i.itemid = c.itemid where c.itemid = '" + param.itemid + "'";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        new_data = [];
+                        new_data = data.map(function (element) {
+                            return element.configid;
+                        });
+                        return [2 /*return*/, new_data];
+                }
+            });
+        });
+    };
+    RawQuery.prototype.getColorCodesInStock = function (param) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data, new_data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "select configid from \n                  (select c.configid from configtable c\n                  inner join inventory_onhand ioh on ioh.itemid = c.itemid and c.configid = ioh.configid\n                  where ioh.inventlocationid='" + param.inventlocationid + "' and ioh.itemid = '" + param.itemid + "' GROUP BY\n                  c.configid \n                  having SUM(ioh.qty_in-ioh.qty_out-ioh.qty_reserved)>0)  as i \n               ";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        new_data = [];
+                        new_data = data.map(function (element) {
+                            return element.configid;
+                        });
+                        return [2 /*return*/, new_data];
+                }
+            });
+        });
+    };
+    RawQuery.prototype.getSizeCodes = function (param) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data, new_data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "select distinct sz.inventsizeid from inventsize sz\n               inner join inventtable i on i.itemid = sz.itemid\n               inner join configtable c on c.itemid = sz.itemid\n                where sz.itemid = '" + param.itemid + "' and c.configid = '" + param.configid + "'";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        new_data = [];
+                        new_data = data.map(function (element) {
+                            return element.inventsizeid;
+                        });
+                        return [2 /*return*/, new_data];
+                }
+            });
+        });
+    };
+    RawQuery.prototype.getSizeCodesInStock = function (param) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data, new_data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = " select distinct io.inventsizeid from inventory_onhand io\n                  where io.inventlocationid='" + param.inventlocationid + "' and io.itemid = '" + param.itemid + "' and io.configid = '" + param.configid + "'\n                  group by  io.inventsizeid having SUM(io.qty_in-io.qty_out-io.qty_reserved)>0 \n               ";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        console.log(data);
+                        new_data = [];
+                        new_data = data.map(function (element) {
+                            return element.inventsizeid;
+                        });
+                        console.log(new_data);
                         return [2 /*return*/, new_data];
                 }
             });
@@ -699,26 +817,26 @@ var RawQuery = /** @class */ (function () {
             });
         });
     };
-    RawQuery.prototype.getDesignerServiceList = function (customerid) {
+    RawQuery.prototype.getDesignerServiceList = function (customerid, mobileno) {
         return __awaiter(this, void 0, void 0, function () {
             var query;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "\n                    select distinct d.invoiceid, d.customerid, \n                    cast(coalesce(d.balanceamount, 0) as Decimal(10,2)) as \"balanceAmount\", \n                    cast(coalesce(d.usedamount, 0) as Decimal(10,2)) as \"usedAmount\", \n                    cast((coalesce(d.balanceamount, 0)+ coalesce(d.usedamount, 0)) as Decimal(10,2)) as \"designerserviceAmount\" from (select \n                    a.invoiceid, \n                    a.customerid,\n                    (select ABS(sum(b.amount)) from designerservice b where b.invoiceid=a.invoiceid and b.customerid = a.customerid group by b.invoiceid, b.customerid) as balanceamount,\n                    (select ABS(sum(c.amount)) from designerservice c where c.amount < 0 and c.invoiceid=a.invoiceid and c.customerid = a.customerid group by c.invoiceid, c.customerid) as usedamount\n                    from designerservice a where a.customerid = '" + customerid + "') as d where d.balanceamount > 0\n                    ";
+                        query = "\n                    select distinct d.invoiceid, d.customerid, \n                    cast(coalesce(d.balanceamount, 0) as Decimal(10,2)) as \"balanceAmount\", \n                    cast(coalesce(d.usedamount, 0) as Decimal(10,2)) as \"usedAmount\", \n                    cast((coalesce(d.balanceamount, 0)+ coalesce(d.usedamount, 0)) as Decimal(10,2)) as \"designerserviceAmount\" from (select \n                    a.invoiceid, \n                    a.customerid,\n                    a.custphone,\n                    (select ABS(sum(b.amount)) from designerservice b where b.invoiceid=a.invoiceid and b.customerid = a.customerid and b.custphone= a.custphone group by b.invoiceid, b.customerid, b.custphone ) as balanceamount,\n                    (select ABS(sum(c.amount)) from designerservice c where c.amount < 0 and c.invoiceid=a.invoiceid and c.customerid = a.customerid and c.custphone = a.custphone group by c.invoiceid, c.customerid, c.custphone) as usedamount\n                    from designerservice a where a.customerid = '" + customerid + "' and a.custphone = '" + mobileno + "')  as d where d.balanceamount > 0\n                    ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
     };
-    RawQuery.prototype.getDiscountBlockItems = function (custgroup, inventlocationid) {
+    RawQuery.prototype.getDiscountBlockItems = function (custgroup, accountnum, inventlocationid) {
         return __awaiter(this, void 0, void 0, function () {
             var query;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select itemid from ajp_block_discounts where \n        inventlocationid='" + inventlocationid + "' and \n        (price_disc_account_relation ='" + custgroup + "' or price_disc_account_relation='" + custgroup + "')";
+                        query = "select itemid from ajp_block_discounts where \n        inventlocationid='" + inventlocationid + "' and \n        (price_disc_account_relation ='" + custgroup + "' or price_disc_account_relation='" + accountnum + "')";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
@@ -839,7 +957,7 @@ var RawQuery = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.db.query("\n        select itemid,batchno as \"batchNo\", configid, inventsizeid, ABS(qty) as quantity from inventtrans where invoiceid = '" + invoiceid + "'\n    ")];
+                    case 0: return [4 /*yield*/, this.db.query("\n        select itemid,batchno as \"batchNo\", configid, inventsizeid, ABS(qty) as quantity, sales_line_id as saleslineid from inventtrans where invoiceid = '" + invoiceid + "'\n    ")];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -961,6 +1079,21 @@ var RawQuery = /** @class */ (function () {
                         }
                         _a.label = 2;
                     case 2: return [2 /*return*/, true];
+                }
+            });
+        });
+    };
+    RawQuery.prototype.deleteBalances = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.db.query("delete from inventory_onhand")];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, this.db.query("delete from inventtrans")];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/];
                 }
             });
         });

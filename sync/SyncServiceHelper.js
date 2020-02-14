@@ -51,7 +51,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var pg_1 = require("pg");
 var Config = __importStar(require("../utils/Config"));
+var App_1 = require("../utils/App");
 var format = require("pg-format");
+var Log_1 = require("../utils/Log");
+var STORE_ID = process.env.ENV_STORE_ID || "LOCAL";
 var SyncServiceHelper = /** @class */ (function () {
     function SyncServiceHelper() {
     }
@@ -62,9 +65,9 @@ var SyncServiceHelper = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        console.log("-------------- Batch Query Starts --------------");
-                        console.log("\tHost Query: " + config.host);
-                        console.log(sqls);
+                        Log_1.slog.info("-------------- Batch Query Starts --------------");
+                        Log_1.slog.debug("\tHost Query: " + config.host);
+                        Log_1.slog.debug("\t\tBatch length: " + sqls.length);
                         db = new pg_1.Client(config);
                         _b.label = 1;
                     case 1:
@@ -108,14 +111,14 @@ var SyncServiceHelper = /** @class */ (function () {
                         return [7 /*endfinally*/];
                     case 15: return [7 /*endfinally*/];
                     case 16:
-                        console.log("END");
+                        Log_1.slog.info("END");
                         return [4 /*yield*/, db.query("COMMIT")];
                     case 17:
                         _b.sent();
                         return [3 /*break*/, 21];
                     case 18:
                         e_2 = _b.sent();
-                        console.error(e_2);
+                        Log_1.slog.error(e_2);
                         return [4 /*yield*/, db.query("ROLLBACK")];
                     case 19:
                         _b.sent();
@@ -124,7 +127,7 @@ var SyncServiceHelper = /** @class */ (function () {
                         db.end();
                         return [7 /*endfinally*/];
                     case 21:
-                        console.log("-------------- Batch Query Ends --------------");
+                        Log_1.slog.info("-------------- Batch Query Ends --------------");
                         return [2 /*return*/];
                 }
             });
@@ -132,39 +135,53 @@ var SyncServiceHelper = /** @class */ (function () {
     };
     SyncServiceHelper.ExecuteQuery = function (config, sql) {
         return __awaiter(this, void 0, void 0, function () {
-            var db, res, e_3;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var showLog, db, res, _a, e_3;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        console.log("----------------- Query Starts----------------------------");
-                        db = new pg_1.Client(config);
-                        console.log("\tHost Query: " + config.host);
-                        console.log(sql);
+                        showLog = !(sql.includes("DISTINCT") || sql.includes("sync_table") || sql.includes("sync_source"));
+                        if (showLog)
+                            Log_1.slog.info("----------------- Query Starts----------------------------");
+                        db = null;
+                        if (showLog)
+                            Log_1.slog.info("\tHost Query: " + config.host);
+                        if (showLog)
+                            Log_1.slog.debug(sql);
                         res = null;
-                        _a.label = 1;
+                        _b.label = 1;
                     case 1:
-                        _a.trys.push([1, 4, 5, 6]);
-                        return [4 /*yield*/, db.connect()];
+                        _b.trys.push([1, 7, 8, 9]);
+                        if (!(config.host.indexOf("localhost") != -1)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, SyncServiceHelper.LocalPool.connect()];
                     case 2:
-                        _a.sent();
-                        return [4 /*yield*/, db.query(sql)];
-                    case 3:
-                        res = _a.sent();
-                        return [2 /*return*/, { metaData: res.fields, rows: res.rows }];
+                        _a = _b.sent();
+                        return [3 /*break*/, 5];
+                    case 3: return [4 /*yield*/, SyncServiceHelper.StagePool.connect()];
                     case 4:
-                        e_3 = _a.sent();
-                        throw e_3;
+                        _a = _b.sent();
+                        _b.label = 5;
                     case 5:
-                        db.end();
-                        return [7 /*endfinally*/];
+                        db = _a;
+                        return [4 /*yield*/, db.query(sql)];
                     case 6:
-                        console.log("----------------- Query Ends----------------------------");
-                        return [2 /*return*/];
+                        res = _b.sent();
+                        return [2 /*return*/, { metaData: res.fields, rows: res.rows }];
+                    case 7:
+                        e_3 = _b.sent();
+                        Log_1.slog.error(e_3);
+                        throw e_3;
+                    case 8:
+                        if (db)
+                            db.release();
+                        if (showLog)
+                            Log_1.slog.info("----------------- Query Ends----------------------------");
+                        return [7 /*endfinally*/];
+                    case 9: return [2 /*return*/];
                 }
             });
         });
     };
-    SyncServiceHelper.PrepareQuery = function (table, metaData, rows, filterIds, type, sourcePk, targetPk) {
+    SyncServiceHelper.PrepareQuery = function (table, metaData, rows, filterIds, type, pk) {
         var metaData_1, metaData_1_1;
         return __awaiter(this, void 0, void 0, function () {
             var e_4, _a, columns, sql, records_1, filterRows, sql_1, ele, e_4_1, records_2, filterRows;
@@ -177,8 +194,13 @@ var SyncServiceHelper = /** @class */ (function () {
                         sql += " ( " + columns.join(",");
                         sql += " ) VALUES %L";
                         records_1 = [];
-                        filterRows = rows.filter(function (ele) { return filterIds.indexOf(ele[targetPk]) > -1; });
+                        filterRows = rows.filter(function (ele) { return filterIds.indexOf(ele[pk]) > -1; });
                         filterRows.map(function (ele) {
+                            for (var key in ele) {
+                                if (Array.isArray(ele[key])) {
+                                    ele[key] = JSON.stringify(ele[key]);
+                                }
+                            }
                             records_1.push(Object.values(ele));
                         });
                         sql = format(sql, records_1);
@@ -195,7 +217,8 @@ var SyncServiceHelper = /** @class */ (function () {
                     case 4:
                         if (!(metaData_1_1 = _b.sent(), !metaData_1_1.done)) return [3 /*break*/, 6];
                         ele = metaData_1_1.value;
-                        sql_1 += " " + ele.name + " = cast(c." + ele.name + " as " + SyncServiceHelper.TypeConvertion(ele.data_type) + " ), ";
+                        sql_1 +=
+                            " " + ele.name + " = cast(c." + ele.name + " as " + SyncServiceHelper.TypeConvertion(ele.data_type) + " ), ";
                         _b.label = 5;
                     case 5: return [3 /*break*/, 3];
                     case 6: return [3 /*break*/, 13];
@@ -219,10 +242,15 @@ var SyncServiceHelper = /** @class */ (function () {
                         sql_1 = sql_1.substr(0, sql_1.length - 2) + " ";
                         sql_1 += " from ( values %L)";
                         sql_1 += " as c (" + columns.join(",") + ") where ";
-                        sql_1 += "  cast(t." + targetPk + " as text ) =  cast(c." + sourcePk + " as text )";
+                        sql_1 += "  cast(t." + pk + " as text ) =  cast(c." + pk + " as text )";
                         records_2 = [];
-                        filterRows = rows.filter(function (ele) { return filterIds.indexOf(ele[targetPk]) > -1; });
+                        filterRows = rows.filter(function (ele) { return filterIds.indexOf(ele[pk]) > -1; });
                         filterRows.map(function (ele) {
+                            for (var key in ele) {
+                                if (Array.isArray(ele[key])) {
+                                    ele[key] = JSON.stringify(ele[key]);
+                                }
+                            }
                             records_2.push(Object.values(ele));
                         });
                         sql_1 = format(sql_1, records_2);
@@ -256,15 +284,15 @@ var SyncServiceHelper = /** @class */ (function () {
                 return type;
         }
     };
-    SyncServiceHelper.ChackAvalibleQuery = function (table, metaData, primaryKeys, targetPk) {
+    SyncServiceHelper.ChackAvalibleQuery = function (table, metaData, primaryKeys, pk) {
         return __awaiter(this, void 0, void 0, function () {
             var columns, sql;
             return __generator(this, function (_a) {
                 columns = metaData.map(function (ele) { return ele.name; });
-                sql = "select " + targetPk + " from " + table;
-                sql += " where " + targetPk + " in  (%L)";
+                sql = "select DISTINCT " + pk + " from " + table;
+                sql += " where " + pk + " in  (%L)";
                 sql = format(sql, primaryKeys);
-                return [2 /*return*/, sql];
+                return [2 /*return*/, Promise.resolve(sql)];
             });
         });
     };
@@ -314,6 +342,21 @@ var SyncServiceHelper = /** @class */ (function () {
             });
         });
     };
+    SyncServiceHelper.ErrorMessage = function (type, err) {
+        return __awaiter(this, void 0, void 0, function () {
+            var sql;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        sql = "\n    INSERT INTO sync_error \n    (id, store_id, \"type\", error_msg, error_desc) \n    VALUES(\n      '" + App_1.App.UniqueNumber() + "', '" + STORE_ID + "', '" + type + "', '" + JSON.stringify(err) + "', '" + (err.message ? err.message : "") + "'\n    )\n  ";
+                        return [4 /*yield*/, SyncServiceHelper.BatchQuery(SyncServiceHelper.StageDBOptions(), [sql])];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     // static async parallelQuery(query: string[]){
     //     let functionList: any[] = [];
     //
@@ -330,6 +373,15 @@ var SyncServiceHelper = /** @class */ (function () {
             database: Config.stageDbOptions.database
         };
     };
+    // public static LocalDBOptions() {
+    //   return {
+    //     host: "localhost",
+    //     port: 5432,
+    //     user: "postgres",
+    //     password: "Test!234",
+    //     database: "jps_prod"
+    //   };
+    // }
     SyncServiceHelper.LocalDBOptions = function () {
         return {
             host: Config.localDbOptions.host,
@@ -344,6 +396,8 @@ var SyncServiceHelper = /** @class */ (function () {
     SyncServiceHelper.syncSourceTableName = "sync_source";
     //public static syncTargetTableName: string = "";
     SyncServiceHelper.syncSourceDDLTableName = "sync_ddl";
+    SyncServiceHelper.LocalPool = new pg_1.Pool(SyncServiceHelper.LocalDBOptions());
+    SyncServiceHelper.StagePool = new pg_1.Pool(SyncServiceHelper.StageDBOptions());
     return SyncServiceHelper;
 }());
 exports.SyncServiceHelper = SyncServiceHelper;

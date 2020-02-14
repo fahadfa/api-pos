@@ -48,7 +48,7 @@ var ItemBalanceReport = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 5, , 6]);
-                        query = "\n            select\n            i.itemid as itemid,\n            bs.name_en as nameEn,\n            bs.name_ar as nameAr,\n            to_char(SUM(i.qty), 'FM999999990.00') as availability,\n            i.configid as configid,\n            i.inventsizeid as inventsizeid,\n            i.batchno as batchno,\n            i.inventlocationid as inventlocationid,\n            w.name as \"WareHouseNameAr\", \n            w.namealias as \"WareHouseNameEn\",\n            to_char(b.expdate, 'yyyy-MM-dd') as batchexpdate,\n            sz.name_en as \"sizeNameEn\",\n            sz.name_ar as \"sizeNameAr\"\n        from inventtrans  i\n        inner join inventlocation w on w.inventlocationid=i.inventlocationid\n        left join inventbatch b on i.batchno = b.inventbatchid\n        left join bases bs on i.itemid = bs.code\n        left join sizes sz on sz.code = i.inventsizeid \n        where i.dateinvent >= '" + params.fromDate + "' ::date\n        AND  i.dateinvent < ('" + params.toDate + "' ::date + '1 day'::interval)";
+                        query = "\n            select\n            i.itemid as itemid,\n            bs.namealias as nameEn,\n            bs.itemname as nameAr,\n            to_char(SUM(i.qty), 'FM999999990.00') as availability,\n            i.configid as configid,\n            i.inventsizeid as inventsizeid,\n            i.batchno as batchno,\n            i.inventlocationid as inventlocationid,\n            w.name as \"WareHouseNameAr\", \n            w.namealias as \"WareHouseNameEn\",\n            to_char(b.expdate, 'yyyy-MM-dd') as batchexpdate,\n            sz.description as \"sizeNameEn\",\n            sz.name as \"sizeNameAr\"\n        from inventtrans  i\n        inner join inventlocation w on w.inventlocationid=i.inventlocationid\n        left join inventbatch b on i.batchno = b.inventbatchid\n        left join inventtable bs on i.itemid = bs.itemid\n        left join inventsize sz on sz.inventsizeid = i.inventsizeid and sz.itemid = i.itemid\n        where i.dateinvent >= '" + params.fromDate + "' ::date\n        AND  i.dateinvent < ('" + params.toDate + "' ::date + '1 day'::interval)";
                         if (!(params.key == "ALL")) return [3 /*break*/, 2];
                         warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.inventlocationid + "' limit 1";
                         return [4 /*yield*/, this.db.query(warehouseQuery)];
@@ -79,7 +79,7 @@ var ItemBalanceReport = /** @class */ (function () {
                         }
                         query =
                             query +
-                                " GROUP BY\n        i.itemid,  i.configid, i.inventsizeid, i.batchno, b.expdate, bs.name_en, bs.name_ar, sz.name_en, sz.name_ar, i.inventlocationid, w.name, w.namealias";
+                                " GROUP BY\n        i.itemid,  i.configid, i.inventsizeid, i.batchno, b.expdate, bs.namealias, bs.itemname, sz.name, sz.description, i.inventlocationid, w.name, w.namealias";
                         return [4 /*yield*/, this.db.query(query)];
                     case 4:
                         data = _a.sent();

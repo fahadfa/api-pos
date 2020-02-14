@@ -63,6 +63,12 @@ var App = /** @class */ (function () {
         this.uniqueId = time;
         return time.toString(36).toUpperCase();
     };
+    App.uuidv4 = function () {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    };
     App.UniqueID = function (name, type) {
         var str = "";
         if (type) {
@@ -74,6 +80,9 @@ var App = /** @class */ (function () {
         str = str.replace(App.NON_ALPHA_NUMARIC, "_");
         str = str.substr(0, 128);
         return str.toUpperCase();
+    };
+    App.DateNow = function () {
+        return new Date().toISOString();
     };
     App.Send = function (req, res, promise) {
         var respObj = {};
@@ -91,7 +100,7 @@ var App = /** @class */ (function () {
         });
     };
     App.HtmlRender = function (fileName, data) {
-        var source = path.join(__dirname, "/../../assets/templates/" + fileName + ".html");
+        var source = path.join(__dirname, "/../assets/templates/" + fileName + ".html");
         // log.info("Html Source: " + source);
         source = fs.readFileSync(source, "utf8");
         var template = Handlebars.compile(source);
@@ -187,7 +196,9 @@ var App = /** @class */ (function () {
                     case 0:
                         Log_1.log.info(data);
                         if (!data) return [3 /*break*/, 7];
-                        if (!(data.name && data.message && data.name.lowercase().indexOf("error") > -1)) return [3 /*break*/, 1];
+                        if (!(data.name &&
+                            data.message &&
+                            data.name.lowercase().indexOf("error") > -1)) return [3 /*break*/, 1];
                         return [2 /*return*/, false];
                     case 1:
                         isValid = false;

@@ -48,9 +48,9 @@ var InventoryOnHandReport = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 5, , 6]);
-                        query = "select\n                        i.itemid as itemid,\n                        bs.name_en as nameEn,\n                        bs.name_ar as nameAr,\n                        (sum(i.qty_in)-sum(i.qty_out)-sum(i.qty_reserved)) as \"physicalAvailable\",\n                        i.configid as configid,\n                        i.inventsizeid as inventsizeid,\n                        " + (params.batchCheck
+                        query = "select\n                        i.itemid as itemid,\n                        bs.namealias as nameEn,\n                        bs.itemname as nameAr,\n                        (sum(i.qty_in)-sum(i.qty_out)-sum(i.qty_reserved)) as \"physicalAvailable\",\n                        i.configid as configid,\n                        i.inventsizeid as inventsizeid,\n                        " + (params.batchCheck
                             ? "i.batchno as batchno,\n                        to_char(b.expdate, 'yyyy-MM-dd') as batchexpdate,"
-                            : "") + "\n                        sz.name_en as \"sizeNameEn\",\n                        sz.name_ar as \"sizeNameAr\",\n                        sum(i.qty_reserved) as \"reservedQuantity\",\n                        (sum(i.qty_in)-sum(i.qty_out)) as \"totalAvailable\",\n                        w.name as WareHouseNameAr, \n                        w.namealias as WareHouseNameEn\n                        from inventory_onhand as i\n                        left join inventbatch b on i.batchno = b.inventbatchid\n                        left join bases bs on i.itemid = bs.code\n                        left join sizes sz on sz.code = i.inventsizeid\n                        inner join inventlocation w on w.inventlocationid=i.inventlocationid\n        ";
+                            : "") + "\n                        sz.description as \"sizeNameEn\",\n                        sz.name as \"sizeNameAr\",\n                        sum(i.qty_reserved) as \"reservedQuantity\",\n                        (sum(i.qty_in)-sum(i.qty_out)) as \"totalAvailable\",\n                        w.name as WareHouseNameAr, \n                        w.namealias as WareHouseNameEn\n                        from inventory_onhand as i\n                        left join inventbatch b on i.batchno = b.inventbatchid\n                        left join inventtable bs on i.itemid = bs.itemid\n                        left join inventsize sz on sz.inventsizeid = i.inventsizeid and sz.inventsizeid = i.itemid\n                        inner join inventlocation w on w.inventlocationid=i.inventlocationid\n        ";
                         if (!(params.key == "ALL")) return [3 /*break*/, 2];
                         warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.inventlocationid + "' limit 1";
                         return [4 /*yield*/, this.db.query(warehouseQuery)];
@@ -79,7 +79,7 @@ var InventoryOnHandReport = /** @class */ (function () {
                         if (params.batchno && params.batchCheck) {
                             query = query + (" and i.batchno='" + params.batchno + "'");
                         }
-                        query += " and (i.qty_in-i.qty_out)>0  GROUP BY bs.name_en, bs.name_ar, sz.name_en, sz.name_ar, w.name, w.namealias,\n              i.itemid, i.configid, i.inventsizeid " + (params.batchCheck ? ", i.batchno, b.expdate" : "") + " ";
+                        query += " and (i.qty_in-i.qty_out)>0  GROUP BY bs.itemname, bs.namealias, sz.name, sz.description, w.name, w.namealias,\n              i.itemid, i.configid, i.inventsizeid " + (params.batchCheck ? ", i.batchno, b.expdate" : "") + " ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 4:
                         data = _a.sent();
