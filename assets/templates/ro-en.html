@@ -4,440 +4,303 @@
 <head>
     <meta http-equiv="content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="Content-Language" content="ar-sy" />
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+    <meta name="description" content="بيسب" />
     <style>
-        @page {
-            size: A4;
-            margin: 10px;
-        }
-
         body {
-        display: block;
-        font-family: 'Open Sans', sans-serif;
-        font-size:14px !important;
-        margin: auto;
- 
-        }
-        .color {
-            color: #000;
+            font-family: ' Courier New', Courier, monospace !important;
+            font-size: 11px;
+            width: 100%;
+            background: #fff;
+            padding: 0px;
+            font-weight: normal !important;
+            width: 98%;
         }
 
-        .top {
+        thead {
+            display: table-header-group;
+        }
+
+        #invoiceDetails td,
+        #invoiceDetails th {
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid #c1c1c1;
+            border-style: dotted;
+            padding: 10px;
+        }
+
+        .inline-table {
+            border-bottom: 1px solid black;
+            padding: 0px !important;
+            margin: 0px !important;
+        }
+
+        .copy-text {
+            color: #000;
+            font-size: 20px;
             border: 1px solid #000;
-            text-align: center;
+            font-weight: 600;
+            padding: 10px;
+            margin: 20px;
         }
 
-        span {
-            color: #000;
+        @page {
+            margin: 20mm;
         }
 
-        .back {
-            text-align: center;
-            padding: 2px 6px;
-            background: #11a297;
-            color: #fff;
-        }
+        @media print {
+            thead {
+                display: table-header-group;
+            }
 
-        th,
-        td {
-            padding: 5px 5px;
-        }
-
-        td {
-            color: #000;
-        }
-
-        .bottom {
-            border: none;
-            border-bottom: 1px dotted #000;
-            padding: 12px;
-            margin-left: 20px;
-        }
-
-        .label {
-            position: relative;
-            top: 14px;
-        }
-
-        .form-text {
-            display: flex;
-            padding-top: 8px;
-        }
-
-        .two {
-            padding-top: 0px;
-        }
-        input {
-            outline: none;
-        }
-
-        .table-border {
-            margin: auto;
-            width: 93%;
-        }
-
-        .address td {
-            color: white !important;
-            padding: 4px 5px !important;
-        }
-
-        .th {
-            border-collapse: collapse !important;
-            font-size: 14px;
-
-        }
-
-        .td {
-            border-collapse: collapse !important;
-        }
-
-        .table {
-            border: 1px solid #000 !important;
-            border-collapse: collapse !important;
-        }
-
-        .background {
-            border-bottom: 1px dotted #000 !important;
-            border-top: 1px dotted #000 !important;
-
-        }
-
-        .background th {
-            border: none !important;
-            padding: 8px;
-            font-weight: normal;
-        }
-
-        .tab-data td {
-            border-right: none !important;
-            border-bottom: dotted 1px #8a8989;
-            font-size: 13px;
-            padding: 3px;
-            text-align: center;
-        }
-        .billing td {
-            font-size: 14px;
-        }
-        .desc-font td {
-            font-size: 13px;
-            text-align: left;
-            border: none;
-        }
-
-        .description-data td {
-            border: none;
-        }
-
-        .qty-border {
-            border-bottom: 1px solid #000;
-            width: 40px;
-            margin: auto;
-        }
-        .page-header,
-        .page-header-space {
-            height: 80px;
-        }
-
-
-        .page-footer-space {
-            height: 80px;
-
-        }
-
-        .page-footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            height: 80px;
-
-        }
-
-        .page-header {
-            position: fixed;
-            top: 0mm;
-            width: 100%;
-
-        }
-
-
-        .footer-details h5 {
-            margin: 2px;
-        }
-        @media print {  
             tfoot {
                 display: table-footer-group;
             }
 
-            @page {
-                margin: 2cm 0.5cm 1cm 0.5cm;
+            button {
+                display: none;
+            }
+
+            body {
+                margin: 0;
             }
         }
-
-        .copy-box {
-            border: 2px solid #000;
-            padding: 10px;
-            text-align: center;
-            font-size: 18px;
-        }
-
-        #background {
-            position: absolute;
-            z-index: 0;
-            display: block;
-            color: yellow;
-            left: 50%;
-            top: 18%;
-            transform: translate(-50%, -50%);
-        }
-        #bg-text {
-            color: #000;
-            font-size: 20px;
-            transform: rotate(300deg);
-            -webkit-transform: rotate(300deg);
-            border: 1px solid #000;
-            padding: 10px;
-        }
     </style>
-
 </head>
 
 <body>
-        {{#if originalPrinted}}
-        <div id="background">
-            <p id="bg-text">Copy</p>
-        </div>
-        {{/if}}
-    <div id="">
-        <table align="center" style="width:94%">
-            <tr class="">
-                <td style="width:30%">
-                    <div class="tax top">
-                        <p class="tax color" style="color:#000;">Return Order Id</p>
-                        <p class="tax color" style="color:#000;">{{salesId}}</p>
-                    </div>
-                </td>
-                <td style="width:70%;text-align:center"></td>
-
-                <td></td>
-            </tr>
-        </table>
-        <table style="width:100%">
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="">
-                            <div >
-                                <h1 style="text-align:center;border-bottom: 1px dotted #262a41;width: 93%;margin:auto">
-                                </h1>
-                                <table align="center" width="98%">
-                                    <tr class="header">
-                                        <td style="width:50%">
-                                            <table align="left">
-                                                <tr class="billing">
-                                                    <td>From</td>
-                                                    <td>:</td>
-                                                    <td>
-                                                        {{wareHouseNameEn}}
-                                                    </td>
-                                                </tr>
-                                                <tr class="billing">
-                                                    <td>Phone</td>
-                                                    <td>:</td>
-
-                                                    <td>
-                                                        {{phone}}
-                                                    </td>
-                                                </tr>
-                                                <tr class="billing">
-                                                    <td>Fax</td>
-                                                    <td>:</td>
-                                                    <td>
-                                                        03 8501800
-                                                    </td>
-                                                </tr>
-                                                <tr class="billing">
-                                                    <td>Customer</td>
-                                                    <td>:</td>
-                                                    <td>
-                                                        {{nameAlias}} 
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td align="left" style="width:50%">
-                                            <table align="right">
-                                                <tr class="billing">
-                                                    <td>User</td>
-                                                    <td>:</td>
-                                                    <td>
-                                                        {{createdBy}}
-                                                    </td>
-                                                </tr>
-                                                <tr class="billing">
-                                                    <td>Page</td>
-                                                    <td>:</td>
-                                                    <td> 1/1</td>
-                                                </tr>
-                                                <tr class="billing">
-                                                    <td class="quotation-date">Return Date</td>
-                                                    <td>:</td>
-                                                    <td class="quotation-date">
-                                                        {{ReturnDate}}
-                                                    </td>
-                                                </tr>
-                                                <tr class="billing">
-                                                    <td>Sales Order Id</td>
-                                                    <td>:</td>
-                                                    <td>{{salesOrderId}}</td>
-                                                </tr>
-
-
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </table>
-
-
-                            </div>
-
-                            <div class="table-border">
-                                <table class="" style="width:100%;margin:auto;border-collapse: collapse !important;">
-                                    <tr class="background" style="font-size:12px">
-                                        <th class="th">S.No</th>
-                                        <th class="th">Description</th>
-                                        <th class="th">Batch No</th>
-                                        <th class="th">Return Qty</th>
-                                        <th class="th">Price</th>
-                                        <th class="th">Vat</th>
-                                        <th class="th">Total</th>
-                                    </tr>
-                                    {{#each batches}} 
-
-                                    <tr class="tab-data">
-                                        <td class="td">{{this.sNo}}</td>
-                                        <td class="td description-data">
-                                            <table style="border-collapse: collapse !important;">
-                                                <tr>
-
-                                                    <td class="td" style="text-align: left" align="left">
-                                                        <span style="font-size:13px">
-                                                            {{nameen}}
-                                                        </span>
-                                                        <span>
-                                                         
-                                                        </span>
-
-
-                                                    </td>
-                                                </tr>
-                                                <tr class="desc-font">
-                                                    <td>
-                                                    <span class="td">Color Name | Size</span>
-                                                    <span>:</span>
-                                                    <span>
-                                                        {{configid}}| {{sizenameen}}
-                                                    </span>
-                                                </td>
-
-                                                </tr>
-
-                                            </table>
-                                        </td>
-                                        <td class="td">
-                                            {{batchno}}
-                                        </td>
-                                        <td class="td">
-
-                                            {{this.qty}}
-                                        </td>
-                                        <td class="td">
-
-                                            {{this.price}} SAR
-                                        </td>
-                                        <td class="td">
-                                            {{this.vatAmount}} SAR
-
-                                        </td>
-                                        <td class="td">
-                                            {{this.lineAmount}} SAR
-                                        </td>
-
-                                    </tr>
-                                    {{/each}}
-
-                </tr>
-
-
-                </tr>
-
-                </tr>
-        </table>
-        <div >
-            <table align="center" width="100%" style="border-bottom:1px dotted #8a8989;margin-top: 8px">
-                <tr class="header">
-                    <td style="width:50%;">
-                        <table align="left">
-
-                        </table>
-                    </td>
-                    <td align="right" style="width:50%;">
-                        <table align="middle">
-                            <tr class="billing">
-                                <td>Gross Total</td>
-                                <td>:</td>
-                                <td>
-                                    {{grossAmount }} SAR
-                                </td>
-                            </tr>
-                            <tr class="billing">
-                                <td>VAT (5%)</td>
-                                <td>:</td>
-                                <td>
-                                    {{vatAmount}} SAR
-                                </td>
-                            </tr>
-                            <tr class="billing">
-                                <td>Net Amount</td>
-                                <td>:</td>
-                                <td>
-                                    {{netAmount}} SAR
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div>
-            <table style="background: #fff;width: 100%;">
-                <tr>
-                    <td style="width:33%;font-size:14px" align="left">
-                        Recipient
-                    </td>
-                    <td style="width:33%;font-size:14px;" align="middle">
-                        Seller
-                    </td>
-                    <td style="width:33%;font-size:14px;" align="right">
-                        Company
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-    </td>
-    </tr>
-    </tbody>
-
-    <tfoot>
+    <table width="98%" style="margin-top: 100px;" cellpadding="0" cellspacing="0">
         <tr>
-            <td>
-                <div class="page-footer-space"></div>
+            <td width="40%">
+                <table style="text-align:left;">
+                    <tr class="billing">
+                        <td valign="top">From</td>
+                        <td valign="top">:</td>
+                        <td>
+                            {{wareHouseNameEn}}
+                        </td>
+                    </tr>
+                    <tr class="billing">
+                        <td valign="top">Phone</td>
+                        <td valign="top">:</td>
+
+                        <td>
+                            {{phone}}
+                        </td>
+                    </tr>
+                    <tr class="billing">
+                        <td valign="top">Fax</td>
+                        <td valign="top">:</td>
+                        <td>
+                            03 8501800
+                        </td>
+                    </tr>
+                    <tr class="billing">
+                        <td valign="top">Customer</td>
+                        <td valign="top">:</td>
+                        <td>
+                            {{nameAlias}}
+                        </td>
+                    </tr>
+                    <tr class="billing">
+                        <td>Receiving Vat No</td>
+                        <td>:</td>
+                        <td>
+                            {{cvatNum}}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td width="20%" style="text-align:center">
+
+                <table style="text-align:center">
+                    {{#if originalPrinted}}
+                    <tr>
+                        <td class="copy-text">COPY</td>
+                    </tr>
+                    {{/if}}
+                    <tr>
+                        <td>Return Order Id</td>
+                    </tr><br>
+                    <tr>
+                        <span style="font-weight:600">
+                            <td> <span style="font-size:9.75px !important"> {{salesId}} </span></td>
+                        </span>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: left" width="40%">
+                <table align="right">
+                    <tr class="billing">
+                        <td>User</td>
+                        <td>:</td>
+                        <td>
+                            {{createdBy}}
+                        </td>
+                    </tr>
+                    <tr class="billing">
+                        <td class="quotation-date">Return Date</td>
+                        <td>:</td>
+                        <td class="quotation-date">
+                            {{ReturnDate}}
+                        </td>
+                    </tr>
+                    <tr class="billing">
+                        <td>Sales Order Id</td>
+                        <td>:</td>
+                        <td>{{salesOrderId}}</td>
+                    </tr>
+
+                </table>
             </td>
         </tr>
-    </tfoot>
 
+
+        <tr>
+            <td colspan="3">
+                <table id="invoiceDetails" style="margin-top: 40px;" width="100%" class="item-table" cellpadding="0"
+                    cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th class="th">S.No</th>
+                            <th class="th">Item No</th>
+                            <th class="th">Description</th>
+                            <th class="th">Qty</th>
+                            <th class="th">Price</th>
+                            <th class="th">Colarant Price</th>
+                            <th class="th">Discount</th>
+                            <th class="th">Net Amnt Before VAT</th>
+                            <th class="th">
+                                <table style="border-collapse: collapse !important;border:none !important;width:100%">
+                                    <tr class="td">
+                                        <td class="inline-table"
+                                            style="border-collapse: collapse !important;border-top:none;border-left:none;border-right:none">
+                                            Vat %</td>
+                                    </tr>
+                                    <tr class="">
+                                        <td class="td"
+                                            style="border-collapse: collapse !important;border:none !important">
+                                            Amount</td>
+                                    </tr>
+                                </table>
+                            </th>
+                            <th class="th">Net Amnt after VAT</th>
+                        </tr>
+                    </thead>
+                    {{#each salesLine}}
+                    <tr class="tab-data">
+                        <td class="td">{{this.sNo}}</td>
+                        <td class="td">
+                            <div style="font-size:13px">
+                                {{this.itemid}}
+                            </div>
+                        </td>
+                        <td class="td description-data">
+                            <span style="font-size:13px">
+                                {{this.prodNameEn}},
+                                {{# if this.colorant}}
+                                {{this.colorant}},
+                                {{else}}
+                                {{this.configid}},
+                                {{/if}}
+                                {{this.inventsizeid}},
+                                {{this.batchno}}
+                            </span>
+                        </td>
+                        <td class="td">
+                            {{this.salesQty}}
+                        </td>
+                        <td class="td">
+                            {{this.salesprice}}
+                        </td>
+                        <td class="td">
+                            {{this.colorantprice}}
+                        </td>
+                        <td class="td">
+                            {{this.lineTotalDisc}}
+                        </td>
+                        <td class="td">{{this.lineAmountBeforeVat}}</td>
+                        <td class="td">
+                            <table style="border-collapse: collapse;border:none !important;width:100%">
+                                <tr class="td inline-table">
+                                    <td class="inline-table" style="border:none;">5%</td>
+                                </tr>
+                                <tr>
+                                    <td class="td" style="border:none !important;"> {{this.vatAmount}} </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td class="td">
+                            {{this.lineAmount}}
+                        </td>
+                    </tr>
+                    {{/each}}
+
+                </table>
+
+
+                <table width="100%" style="text-align:right; border-bottom:1px dotted #8a8989;margin-top: 8px;">
+                    <tr class="header">
+                        <td style="width:100%; text-align: right;">
+                            <table width="100%" style="font-size:15px; text-align: right;">
+                                <tr class="billing" style="border-top: 1px solid black">
+                                    <td width="80%" style="font-size:15px;font-weight:600">Gross Total</td>
+                                    <td width="2%">:</td>
+                                    <td width="18%" style="font-size:12px;font-weight:600">
+                                        {{grossAmount}} SAR
+                                    </td>
+                                </tr>
+                                <tr class="billing">
+                                    <td>Total Quantity</td>
+                                    <td>:</td>
+                                    <td style="font-size:12px;font-weight:600">
+                                        {{quantity}}
+                                    </td>
+                                </tr>
+                                <tr class="billing">
+                                    <td>Discount</td>
+                                    <td>:</td>
+                                    <td style="font-size:12px;font-weight:600">
+                                        {{discount}} SAR
+                                    </td>
+                                </tr>
+                                <tr class="billing">
+                                    <td>VAT (5%)</td>
+                                    <td>:</td>
+                                    <td style="font-size:12px;font-weight:600">
+                                        {{vatAmount}} SAR
+                                    </td>
+                                </tr>
+                                <tr class="billing">
+                                    <td>Net Amount</td>
+                                    <td>:</td>
+                                    <td style="font-size:12px;font-weight:600">
+                                        {{netAmount}} SAR
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+
+
+                <table width="100%" style="background: #fff;">
+                    <tr>
+                        <td style="width:33%;font-size:15px; text-align: left;">
+                            Recipient
+                        </td>
+                        <td style="width:33%;font-size:15px; text-align: center;">
+                            Seller
+                        </td>
+                        <td style="width:33%;font-size:15px;text-align: right;">
+                            Company
+                        </td>
+                    </tr>
+                </table>
+
+            </td>
+        </tr>
     </table>
-    </div>
 </body>
 
 </html>

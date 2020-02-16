@@ -51,7 +51,7 @@ var QuotationReport = /** @class */ (function () {
     }
     QuotationReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, status_1, query, data, salesQuery, salesLine, error_1;
+            var id, status_1, query, data_1, salesQuery, salesLine, i_1, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -60,48 +60,55 @@ var QuotationReport = /** @class */ (function () {
                         query = "\n            select \n            st.salesid as \"salesId\",\n            st.custaccount as \"custAccount\",\n            st.status as status,\n            st.transkind as transkind,\n            cast(st.vatamount as decimal(10,2)) as vatamount,\n            cast(st.netamount as decimal(10,2)) as \"netAmount\",\n            cast(st.disc as decimal(10,2)) as disc,\n            cast(st.amount as decimal(10,2)) as amount,\n            st.createdby as \"createdBy\",\n            c.name as cname,\n            c.namealias as \"cnamealias\",\n            c.phone as \"cphone\",\n            st.createddatetime as createddatetime,\n            st.originalprinted as \"originalPrinted\",\n            st.inventlocationid as \"inventLocationId\",\n            w.namealias as wnamealias,\n            w.name as wname\n            from salestable st \n            left join inventlocation w on w.inventlocationid = st.inventlocationid\n            left join custtable c on c.accountnum = st.custaccount\n            where salesid='" + id + "'\n            ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
-                        data = _a.sent();
-                        data = data.length >= 1 ? data[0] : {};
-                        data.originalPrinted = data.originalPrinted ? data.originalPrinted : false;
-                        if (!(data.originalPrinted && data.status == "CONVERTED")) return [3 /*break*/, 3];
+                        data_1 = _a.sent();
+                        data_1 = data_1.length >= 1 ? data_1[0] : {};
+                        data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
+                        if (!(data_1.originalPrinted && data_1.status == "CONVERTED")) return [3 /*break*/, 3];
                         status_1 = "CONVERTED";
                         return [4 /*yield*/, this.rawQuery.updateSalesTable(id.toUpperCase(), status_1)];
                     case 2:
                         _a.sent();
-                        data.isCopy = true;
+                        data_1.isCopy = true;
                         return [3 /*break*/, 9];
                     case 3:
-                        if (!(data.originalPrinted && data.status == "CREATED")) return [3 /*break*/, 5];
+                        if (!(data_1.originalPrinted && data_1.status == "CREATED")) return [3 /*break*/, 5];
                         status_1 = "POSTED";
                         return [4 /*yield*/, this.rawQuery.updateSalesTable(id.toUpperCase(), status_1)];
                     case 4:
                         _a.sent();
-                        data.isCopy = true;
+                        data_1.isCopy = true;
                         return [3 /*break*/, 9];
                     case 5:
-                        if (!(data.originalPrinted == false && data.status == "CONVERTED")) return [3 /*break*/, 7];
+                        if (!(data_1.originalPrinted == false && data_1.status == "CONVERTED")) return [3 /*break*/, 7];
                         status_1 = "CONVERTED";
                         return [4 /*yield*/, this.rawQuery.updateSalesTable(id.toUpperCase(), status_1)];
                     case 6:
                         _a.sent();
-                        data.isCopy = false;
+                        data_1.isCopy = false;
                         return [3 /*break*/, 9];
                     case 7:
-                        if (!(data.originalPrinted == false && data.status == "CREATED")) return [3 /*break*/, 9];
+                        if (!(data_1.originalPrinted == false && data_1.status == "CREATED")) return [3 /*break*/, 9];
                         status_1 = "POSTED";
                         return [4 /*yield*/, this.rawQuery.updateSalesTable(id.toUpperCase(), status_1)];
                     case 8:
                         _a.sent();
-                        data.isCopy = true;
+                        data_1.isCopy = true;
                         _a.label = 9;
                     case 9:
-                        salesQuery = "\n            select\n            ROW_NUMBER()  OVER (ORDER BY  ln.salesid) As \"sNo\",\n            ln.itemid as itemid,\n            ln.inventsizeid as inventsizeid,\n            ln.configid as configid,\n            cast(ln.salesqty as decimal(10,2)) as \"salesQty\",\n            cast(ln.salesprice as decimal(10,2)) as salesprice,\n            cast(ln.vatamount as decimal(10,2)) as \"vatAmount\",\n            cast(ln.linetotaldisc as decimal(10,2)) as \"lineTotalDisc\",\n            cast(ln.colorantprice as decimal(10,2)) as colorantprice,\n            cast(((ln.salesqty * (ln.salesprice + ln.colorantprice)) \n            + (ln.salesqty * ln.vatamount) - (ln.salesqty * ln.linetotaldisc)) \n            as decimal(10,2)) as \"lineAmount\",\n            b.itemname as \"prodNameAr\",\n            b.namealiaas as \"prodNameEn\",\n            c.\"name\" as \"colNameAr\",\n            c.\"name\" as \"colNameEn\",\n            s.description as \"sizeNameEn\",\n            s.\"name\" as \"sizeNameAr\"\n            from salesline ln\n            inner join inventtable b on b.itemid = ln.itemid\n            inner join configtable c on c.configid = ln.configid and c.itemid = ln.itemid\n            inner join inventsize s on s.invensizeid=ln.inventsizeid and s.itemid = ln.itemid \n            where ln.salesid = '" + id + "'\n            ";
+                        salesQuery = "\n            select\n            ROW_NUMBER()  OVER (ORDER BY  ln.salesid) As \"sNo\",\n            ln.itemid as itemid,\n            ln.inventsizeid as inventsizeid,\n            ln.configid as configid,\n            cast(ln.salesqty as decimal(10,2)) as \"salesQty\",\n            cast(ln.salesprice as decimal(10,2)) as salesprice,\n            cast(ln.vatamount as decimal(10,2)) as \"vatAmount\",\n            cast(ln.linetotaldisc as decimal(10,2)) as \"lineTotalDisc\",\n            cast(ln.colorantprice as decimal(10,2)) as colorantprice,\n            cast(((ln.salesqty * (ln.salesprice + ln.colorantprice)) \n            + (ln.salesqty * ln.vatamount) - (ln.salesqty * ln.linetotaldisc)) \n            as decimal(10,2)) as \"lineAmount\",\n            b.itemname as \"prodNameAr\",\n            b.namealias as \"prodNameEn\",\n            c.\"name\" as \"colNameAr\",\n            c.\"name\" as \"colNameEn\",\n            s.description as \"sizeNameEn\",\n            s.\"name\" as \"sizeNameAr\"\n            from salesline ln\n            inner join inventtable b on b.itemid = ln.itemid\n            inner join configtable c on c.configid = ln.configid and c.itemid = ln.itemid\n            inner join inventsize s on s.inventsizeid=ln.inventsizeid and s.itemid = ln.itemid \n            where ln.salesid = '" + id + "'\n            ";
                         return [4 /*yield*/, this.db.query(salesQuery)];
                     case 10:
                         salesLine = _a.sent();
                         // salesLine = salesLine.length > 0 ? salesLine : [];
-                        data.salesLine = salesLine;
-                        return [2 /*return*/, data];
+                        data_1.salesLine = salesLine;
+                        data_1.quantity = 0;
+                        i_1 = 1;
+                        data_1.salesLine.map(function (v) {
+                            v.sNo = i_1;
+                            i_1 += 1;
+                            data_1.quantity += parseInt(v.salesQty);
+                        });
+                        return [2 /*return*/, data_1];
                     case 11:
                         error_1 = _a.sent();
                         throw error_1;
@@ -117,7 +124,7 @@ var QuotationReport = /** @class */ (function () {
                 // console.log(result.salesLine[0].product.nameEnglish);
                 renderData = result;
                 console.log(params.lang);
-                file = params.lang == "en" ? "sq-en" : "sq-ar";
+                file = params.lang == "en" ? "sq-en1" : "sq-ar1";
                 try {
                     return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];
                 }
