@@ -51,12 +51,13 @@ var AppExpress_1 = __importDefault(require("./apex/AppExpress"));
 var typeorm_1 = require("typeorm");
 var Config = __importStar(require("./utils/Config"));
 var Log_1 = require("./utils/Log");
+var http = require("http");
 var port = 5000;
 var count = 0;
 Config.setEnvConfig();
 var conn = null;
 var run = function () { return __awaiter(_this, void 0, void 0, function () {
-    var express, error_1;
+    var appExpress, express, httpServer, error_1;
     var _this = this;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -71,8 +72,18 @@ var run = function () { return __awaiter(_this, void 0, void 0, function () {
             case 2:
                 Log_1.log.debug(" ************************************** " + conn.isConnected);
                 if (conn && conn.isConnected) {
-                    express = new AppExpress_1.default().express;
-                    express.listen(port, function (err) { return __awaiter(_this, void 0, void 0, function () {
+                    appExpress = new AppExpress_1.default();
+                    express = appExpress.express;
+                    httpServer = http.Server(express);
+                    // const io = require("socket.io")(httpServer);
+                    // io.on("connection", function(socket: any) {
+                    //   console.log("Client connected!");
+                    //   socket.on("message", function(data: any) {
+                    //     console.log("Sending update!");
+                    //     socket.emit("update", "Working!");
+                    //   });
+                    // });
+                    httpServer.listen(port, function (err) { return __awaiter(_this, void 0, void 0, function () {
                         return __generator(this, function (_a) {
                             if (err) {
                                 Log_1.log.error(err);

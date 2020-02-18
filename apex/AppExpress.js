@@ -139,6 +139,9 @@ var AppExpress = /** @class */ (function () {
             });
         });
     };
+    AppExpress.prototype.getServer = function () {
+        return require('http').Server(this.express);
+    };
     return AppExpress;
 }());
 exports.default = AppExpress;

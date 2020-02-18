@@ -123,8 +123,8 @@ var SalestargetService = /** @class */ (function () {
                         return [4 /*yield*/, this.getCurrentMonthTargetAmount(data.inventlocationid, prevoiusDateYear, previusDateMonth)];
                     case 2:
                         previousMonthTaget = _a.sent();
-                        currentDayTarget = this.getTargetAmont(currentMonthTaget, currentDateMonthWorkingDays);
-                        previousDayTarget = this.getTargetAmont(previousMonthTaget, previousDateMonthWorkingDays);
+                        currentDayTarget = this.calender.isBusinessDay(currentDate) ? this.getTargetAmont(currentMonthTaget, currentDateMonthWorkingDays) : 0;
+                        previousDayTarget = this.calender.isBusinessDay(previousDate) ? this.getTargetAmont(previousMonthTaget, previousDateMonthWorkingDays) : 0;
                         return [4 /*yield*/, this.getCurrentDaySales(data, { lastmodifieddate: currentDate })];
                     case 3:
                         todaySales = _a.sent();

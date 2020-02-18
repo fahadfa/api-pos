@@ -305,7 +305,7 @@ var DiscountService = /** @class */ (function () {
                                     case 2:
                                         isMultiLineDiscount = multilineDiscRanges.length > 0 ? true : false;
                                         if (isMultiLineDiscount) {
-                                            multilinefilter = checkDiscounts.filter(function (v) { return v.multilinedisc == multilineDiscRanges[0].itemrelation && v.itemid == item.product.products.code; });
+                                            multilinefilter = checkDiscounts.filter(function (v) { return v.multilinedisc == multilineDiscRanges[0].itemrelation && v.itemid == item.itemid; });
                                             isMultiLineDiscount = multilinefilter.length > 0 ? true : false;
                                         }
                                         if (reqData.discountType == "voucherDiscount" && isValidVoucher) {
@@ -775,7 +775,7 @@ var DiscountService = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var linedisc, dummyData;
             return __generator(this, function (_a) {
-                linedisc = checkDiscounts.filter(function (v) { return v.itemid == item.product.products.code; });
+                linedisc = checkDiscounts.filter(function (v) { return v.itemid == item.itemid; });
                 dummyData = {};
                 dummyData.linedisc = "";
                 linedisc = linedisc.length > 0 ? linedisc[0] : dummyData;
@@ -1012,7 +1012,7 @@ var DiscountService = /** @class */ (function () {
                     case 1:
                         if (!(_i < _a.length)) return [3 /*break*/, 6];
                         item = _a[_i];
-                        if (!discountBlockItemsArray.includes(item.product.products.code)) return [3 /*break*/, 3];
+                        if (!discountBlockItemsArray.includes(item.itemid)) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.noDiscount(item, reqData)];
                     case 2:
                         _b.sent();

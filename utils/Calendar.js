@@ -42,6 +42,9 @@ var Calender = /** @class */ (function () {
     Calender.prototype.getFormateDate = function (date) {
         return moment(date).format("YYYY-MM-DD");
     };
+    Calender.prototype.isBusinessDay = function (date) {
+        return moment(date, 'DD-MM-YYYY').isBusinessDay();
+    };
     Calender.prototype.getPreviousDate = function (date) {
         console.log(moment(new Date()).month());
         return moment(date)
