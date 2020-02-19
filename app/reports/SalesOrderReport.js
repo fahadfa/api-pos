@@ -51,13 +51,13 @@ var SalesOrderReport = /** @class */ (function () {
     }
     SalesOrderReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, status_1, query, data_1, salesQuery, salesLine, i_1, error_1;
+            var id, status_1, query, data_1, salesQuery, salesLine, list, j, chunkArray, newSalesline_1, sNo_1, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
+                        _a.trys.push([0, 4, , 5]);
                         id = params.salesId;
-                        query = "\n            select \n            st.salesid as \"salesId\",\n            st.custaccount as \"custAccount\",\n            st.status as status,\n            st.transkind as transkind,\n            st.salesname as customername,\n            st.mobileno as custmobilenumber,\n            to_char(st.vatamount, 'FM999,999,999,990.000')  as vatamount,\n            to_char(st.netamount, 'FM999,999,999,990.000')  as \"netAmount\",\n            to_char(st.disc, 'FM999,999,999,990.000')  as disc,\n            to_char(st.amount , 'FM999,999,999,990.000') as amount,\n            st.salesname as cname,\n            st.salesname as \"cnamealias\",\n            c.phone as \"cphone\",\n            to_char(st.createddatetime, 'DD-MM-YYYY') as createddatetime,\n            st.originalprinted as \"originalPrinted\",\n            st.inventlocationid as \"inventLocationId\",\n            w.namealias as wnamealias,\n            w.name as wname,\n            coalesce(st.deliveryaddress, ' ') || (' ') || coalesce(st.citycode, ' ') || (' ') || coalesce(st.districtcode, ' ') || (' ') || coalesce(st.country_code, ' ') as deliveryaddress,\n            d.description as salesman,\n            to_char(st.deliverydate, 'DD-MM-YYYY') as \"deliveryDate\"\n            from salestable st \n            left join inventlocation w on w.inventlocationid = st.inventlocationid\n            left join custtable c on c.accountnum = st.custaccount\n            left join dimensions d on d.num = st.dimension6_\n            where salesid='" + id + "'\n            ";
+                        query = "\n            select \n            st.salesid as \"salesId\",\n            st.custaccount as \"custAccount\",\n            st.status as status,\n            st.transkind as transkind,\n            st.salesname as customername,\n            st.mobileno as custmobilenumber,\n            to_char(st.vatamount, 'FM999,999,999,990.000')  as vatamount,\n            to_char(st.netamount, 'FM999,999,999,990.000')  as \"netAmount\",\n            to_char(st.disc, 'FM999,999,999,990.000')  as disc,\n            to_char(st.amount , 'FM999,999,999,990.000') as amount,\n            st.salesname as cname,\n            st.salesname as \"cnamealias\",\n            c.phone as \"cphone\",\n            to_char(st.createddatetime, 'DD-MM-YYYY') as createddatetime,\n            st.originalprinted as \"originalPrinted\",\n            st.inventlocationid as \"inventLocationId\",\n            w.namealias as wnamealias,\n            w.name as wname,\n            st.createdby,\n            coalesce(st.deliveryaddress, ' ') || (' ') || coalesce(st.citycode, ' ') || (' ') || coalesce(st.districtcode, ' ') || (' ') || coalesce(st.country_code, ' ') as deliveryaddress,\n            d.description as salesman,\n            to_char(st.deliverydate, 'DD-MM-YYYY') as \"deliveryDate\"\n            from salestable st \n            left join inventlocation w on w.inventlocationid = st.inventlocationid\n            left join custtable c on c.accountnum = st.custaccount\n            left join dimensions d on d.num = st.dimension6_\n            where salesid='" + id + "'\n            ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data_1 = _a.sent();
@@ -71,20 +71,53 @@ var SalesOrderReport = /** @class */ (function () {
                         return [4 /*yield*/, this.db.query(salesQuery)];
                     case 2:
                         salesLine = _a.sent();
-                        // salesLine = salesLine.length > 0 ? salesLine : [];
-                        data_1.salesLine = salesLine;
+                        list = [];
+                        j = 0;
+                        list.push(salesLine.slice(0, 4));
+                        return [4 /*yield*/, this.chunkArray(salesLine.slice(4), 7)];
+                    case 3:
+                        chunkArray = _a.sent();
+                        // console.log(chunkArray)
+                        list = list.concat(chunkArray);
+                        console.log(list);
+                        newSalesline_1 = [];
+                        sNo_1 = 1;
+                        list.map(function (val) {
+                            var lines = {
+                                amount: 0,
+                                quantity: 0,
+                                netAmount: 0,
+                                disc: 0,
+                                vatamount: 0,
+                                lines: []
+                            };
+                            data_1.isbreak = val.length > 5 ? true : false;
+                            val.map(function (v) {
+                                lines.netAmount += parseFloat(v.lineAmount);
+                                lines.amount += parseFloat(v.salesprice);
+                                lines.disc += parseFloat(v.lineTotalDisc);
+                                lines.vatamount += parseFloat(v.vatAmount);
+                                lines.quantity += parseInt(v.salesQty);
+                                v.sNo = sNo_1;
+                                lines.lines.push(v);
+                                sNo_1 += 1;
+                            });
+                            lines.vatamount = lines.vatamount.toFixed(3);
+                            lines.netAmount = lines.netAmount.toFixed(3);
+                            lines.amount = lines.amount.toFixed(3);
+                            lines.disc = lines.disc.toFixed(3);
+                            newSalesline_1.push(lines);
+                        });
+                        data_1.salesLine = newSalesline_1;
                         data_1.quantity = 0;
-                        i_1 = 1;
                         data_1.salesLine.map(function (v) {
-                            v.sNo = i_1;
-                            i_1 += 1;
-                            data_1.quantity += parseInt(v.salesQty);
+                            data_1.quantity += parseInt(v.quantity);
                         });
                         return [2 /*return*/, data_1];
-                    case 3:
+                    case 4:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 4: return [2 /*return*/];
+                    case 5: return [2 /*return*/];
                 }
             });
         });
@@ -102,6 +135,26 @@ var SalesOrderReport = /** @class */ (function () {
                     throw error;
                 }
                 return [2 /*return*/];
+            });
+        });
+    };
+    SalesOrderReport.prototype.chunkArray = function (myArray, chunk_size) {
+        return __awaiter(this, void 0, void 0, function () {
+            var index, arrayLength, tempArray, myChunk;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        index = 0;
+                        arrayLength = myArray.length;
+                        tempArray = [];
+                        for (index = 0; index < arrayLength; index += chunk_size) {
+                            myChunk = myArray.slice(index, index + chunk_size);
+                            // Do something if you want with the group
+                            tempArray.push(myChunk);
+                        }
+                        return [4 /*yield*/, tempArray];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
             });
         });
     };

@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var Inventlocation_1 = require("./Inventlocation");
+var SalesTable_1 = require("./SalesTable");
 var Workflow = /** @class */ (function () {
     function Workflow() {
     }
@@ -103,6 +104,11 @@ var Workflow = /** @class */ (function () {
         typeorm_1.ManyToOne(function (type) { return Inventlocation_1.Inventlocation; }),
         __metadata("design:type", Inventlocation_1.Inventlocation)
     ], Workflow.prototype, "Inventlocation", void 0);
+    __decorate([
+        typeorm_1.JoinColumn({ name: "orderid" }),
+        typeorm_1.ManyToOne(function (type) { return SalesTable_1.SalesTable; }),
+        __metadata("design:type", SalesTable_1.SalesTable)
+    ], Workflow.prototype, "SalesTable", void 0);
     Workflow = __decorate([
         typeorm_1.Entity("workflow")
     ], Workflow);

@@ -53,222 +53,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
         this.salesTableDAO = new SalesTableDAO_1.SalesTableDAO();
         this.rawQuery = new RawQuery_1.RawQuery();
     }
-    ReturnOrderAmountService.prototype.getReturnOrderAmount = function (reqData, type) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _a, t0, total, grossTotal, discount, vatPrice, newTotal, newGrossTotal, newDiscount, newVatPrice, salesOrderData, returnItems, returnFreeItems, nonCondDiscounts, condDiscounts, totalGrossAmount, returnItemsGrossAmount, totalGrossAmountAfterReturnItems, returnOrderData, _loop_1, this_1, _i, returnItems_1, item, t1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        t0 = new Date().getTime();
-                        total = 0;
-                        grossTotal = 0;
-                        discount = 0;
-                        vatPrice = 0;
-                        newTotal = 0;
-                        newGrossTotal = 0;
-                        newDiscount = 0;
-                        newVatPrice = 0;
-                        return [4 /*yield*/, this.salesTableDAO.entity(reqData.salesid.toUpperCase())];
-                    case 1:
-                        salesOrderData = _b.sent();
-                        returnItems = [];
-                        returnFreeItems = [];
-                        nonCondDiscounts = ["TOTAL_DISCOUNT", "LINE_DISCOUNT", "ARAMKO_TAHAKOM_DISOUNT", "SABIC_CUSTOMER_DISCOUNT", "VOUCHER_DISCOUNT"];
-                        condDiscounts = ["BUY_ONE_GET_ONE_DISCOUNT", "PROMOTIONAL_DISCOUNT", "INSTANT_DISCOUNT", "MULTI_LINE_DISCOUNT"];
-                        totalGrossAmount = 0;
-                        returnItemsGrossAmount = 0;
-                        salesOrderData.salesLine.forEach(function (v) {
-                            totalGrossAmount += parseFloat(v.lineAmount) - v.totalSettledAmount;
-                            var returnBatches = reqData.selectedBatches.filter(function (item) { return v.itemid == item.itemid && v.configId == item.configid && v.inventsizeid == item.inventsizeid; });
-                            // console.log(returnBatches);
-                            var returnQuantity = 0;
-                            returnBatches.map(function (b) {
-                                returnQuantity += b.returnQuantity;
-                            });
-                            if (returnQuantity > 0) {
-                                v.returnQuantity = returnQuantity;
-                                if (!v.isItemFree) {
-                                    returnItems.push(v);
-                                }
-                                else if (v.isItemFree) {
-                                    returnFreeItems.push(v);
-                                }
-                            }
-                            returnItemsGrossAmount += parseFloat(v.salesprice) * returnQuantity;
-                        });
-                        returnFreeItems.map(function (v) {
-                            var index = returnItems.findIndex(function (pv) { return pv.linkId == v.linkId; });
-                            if (index == -1) {
-                                index = salesOrderData.salesLine.findIndex(function (pv) { return pv.linkId == v.linkId; });
-                                if (index != -1) {
-                                    salesOrderData.salesLine[index].returnQuantity = 0;
-                                    returnItems.push(salesOrderData.salesLine[index]);
-                                }
-                            }
-                        });
-                        totalGrossAmountAfterReturnItems = totalGrossAmount - returnItemsGrossAmount;
-                        returnOrderData = this.allocateReturnOrderData(salesOrderData, type);
-                        returnOrderData.salesLine = [];
-                        _loop_1 = function (item) {
-                            var returnItem = {};
-                            this_1.allocateReturnItem(returnItem, item);
-                            item.totalReturnedQuantity = item.totalReturnedQuantity ? parseInt(item.totalReturnedQuantity) : 0;
-                            item.lineTotalDisc = item.lineTotalDisc ? parseInt(item.lineTotalDisc) : 0;
-                            item.salesQty = item.salesQty ? parseInt(item.salesQty) : 0;
-                            var itemGrossAmount = parseFloat(item.lineAmount) - item.totalSettledAmount;
-                            var itemNetAmount = parseFloat(item.lineAmount) - parseFloat(item.lineTotalDisc) + parseFloat(item.vatamount) * parseInt(item.salesQty);
-                            var itemVatAmount = parseFloat(item.vatamount) * (parseInt(item.salesQty) - item.totalReturnedQuantity);
-                            var itemDiscountAmount = parseFloat(item.lineTotalDisc);
-                            // console.log(itemDiscountAmount);
-                            grossTotal += itemGrossAmount;
-                            console.log(itemVatAmount, vatPrice, "===================================", item.vatamount, item.salesQty, item.totalReturnedQuantity, itemDiscountAmount);
-                            total += itemNetAmount;
-                            discount += itemDiscountAmount;
-                            vatPrice += itemVatAmount;
-                            console.log(itemGrossAmount);
-                            var _loop_2 = function (itemDiscount) {
-                                // console.log(itemDiscount)
-                                if (nonCondDiscounts.includes(itemDiscount.discountType)) {
-                                    if (item.returnQuantity > 0) {
-                                        itemDiscountAmount -= parseFloat(itemDiscount.discountAmount) * (item.returnQuantity + parseInt(item.totalReturnedQuantity));
-                                        // console.log("1============", itemDiscountAmount)
-                                    }
-                                }
-                                else if (condDiscounts.includes(itemDiscount.discountType)) {
-                                    itemDiscountAmount -= parseFloat(itemDiscount.discountAmount) * (item.returnQuantity + parseInt(item.totalReturnedQuantity));
-                                    if (itemDiscount.discountType == "INSTANT_DISCOUNT" && itemDiscount.percentage > 0) {
-                                        var instantDiscPercentage = 0;
-                                        for (var _i = 0, _a = itemDiscount.cond; _i < _a.length; _i++) {
-                                            var range = _a[_i];
-                                            if (totalGrossAmountAfterReturnItems && totalGrossAmountAfterReturnItems >= range.minamount && totalGrossAmountAfterReturnItems <= range.maxamount) {
-                                                instantDiscPercentage = parseInt(range.discpercent);
-                                                break;
-                                            }
-                                        }
-                                        if (item.returnQuantity > 0) {
-                                            // console.log("2============", itemDiscountAmount, instantDiscPercentage)
-                                            var newDiscountAmount = parseFloat(item.salesprice) * (instantDiscPercentage / 100);
-                                            itemDiscountAmount -= newDiscountAmount * (item.returnQuantity + parseInt(item.totalReturnedQuantity));
-                                            var returnItemDiscount = __assign({}, itemDiscount);
-                                            returnItemDiscount.percentage = instantDiscPercentage;
-                                            returnItemDiscount.discountAmount = newDiscountAmount;
-                                            returnItem.appliedDiscounts.push(returnItemDiscount);
-                                        }
-                                    }
-                                    // console.log("2============", itemDiscountAmount)
-                                    if (itemDiscount.discountType == "MULTI_LINE_DISOCUNT" && itemDiscount.percentage > 0) {
-                                        var multiLineDiscPercentage = 0;
-                                        for (var _b = 0, _c = itemDiscount.cond; _b < _c.length; _b++) {
-                                            var element = _c[_b];
-                                            multiLineDiscPercentage += parseFloat(element.percent1);
-                                            // console.log(line.baseSizes.quantity, element.quantityamount);
-                                            if (item.salesQty - item.totalReturnedQuantity - item.returnQuantity <= parseFloat(element.quantityamount)) {
-                                                multiLineDiscPercentage = multiLineDiscPercentage;
-                                                // line.multilineDiscRanges = multilineDiscRanges;
-                                                // console.log(percent);
-                                                break;
-                                            }
-                                        }
-                                        if (item.returnQuantity > 0) {
-                                            var newDiscountAmount = parseFloat(item.salesprice) * (multiLineDiscPercentage / 100);
-                                            itemDiscountAmount -= newDiscountAmount * (item.returnQuantity + parseInt(item.totalReturnedQuantity));
-                                            var returnItemDiscount = __assign({}, itemDiscount);
-                                            returnItemDiscount.percentage = multiLineDiscPercentage;
-                                            returnItemDiscount.discountAmount = newDiscountAmount;
-                                            returnItem.appliedDiscounts.push(returnItemDiscount);
-                                        }
-                                    }
-                                    // console.log("3============", itemDiscountAmount)
-                                    if (itemDiscount.discountType == "BUY_ONE_GET_ONE_DISCOUNT" && itemDiscount.percentage > 0) {
-                                        var freeItems = returnFreeItems.filter(function (v) { return v.linkId == item.linkId; });
-                                        var returningFreeQty_1 = 0;
-                                        var totalDiscountOnItems_1 = 0;
-                                        freeItems.map(function (v) {
-                                            totalDiscountOnItems_1 += v.salesprice;
-                                            returningFreeQty_1 += v.returnQuantity;
-                                        });
-                                        if (item.returnQuantity != returningFreeQty_1) {
-                                            throw { message: "Please Return Free Item" };
-                                        }
-                                        else {
-                                            itemDiscountAmount == totalDiscountOnItems_1;
-                                            var returnItemDiscount = __assign({}, itemDiscount);
-                                            returnItemDiscount.percentage = 0;
-                                            returnItemDiscount.discountAmount = itemDiscountAmount;
-                                            returnItem.appliedDiscounts.push(returnItemDiscount);
-                                        }
-                                    }
-                                    // console.log("4============", itemDiscountAmount)
-                                    if (itemDiscount.discountType == "PROMOTIONAL_DISCOUNT" && itemDiscount.percentage > 0) {
-                                        var totalReturningQty_1 = item.returnQuantity;
-                                        var returningFreeItems = returnFreeItems.filter(function (v) { return v.linkId == item.linkId; });
-                                        var freeItems = salesOrderData.salesLine.filter(function (v) { return v.linkId == item.linkId; });
-                                        var gotFreeQty_1 = 0;
-                                        returningFreeItems.map(function (v) {
-                                            totalReturningQty_1 += v.returnQuantity;
-                                        });
-                                        freeItems.map(function (v) {
-                                            gotFreeQty_1 += v.salesQty;
-                                        });
-                                        var eligibleFreeQty = Math.floor((parseInt(item.salesQty) - parseInt(item.totalReturnedQuantity) - item.returnQuantity) / parseInt(itemDiscount.cond[0].multipleQty)) *
-                                            parseInt(itemDiscount.cond[0].freeQty);
-                                        var freeQty = gotFreeQty_1 - eligibleFreeQty;
-                                        var newDiscountAmount = itemDiscount.discountAmount / gotFreeQty_1;
-                                        itemDiscountAmount -= newDiscountAmount * freeQty;
-                                        item.returnQuantity = totalReturningQty_1;
-                                        var returnItemDiscount = __assign({}, itemDiscount);
-                                        returnItemDiscount.percentage = 0;
-                                        returnItemDiscount.discountAmount = itemDiscountAmount;
-                                        returnItem.appliedDiscounts.push(returnItemDiscount);
-                                    }
-                                    // console.log("5============", itemDiscountAmount)
-                                }
-                            };
-                            for (var _i = 0, _a = item.appliedDiscounts; _i < _a.length; _i++) {
-                                var itemDiscount = _a[_i];
-                                _loop_2(itemDiscount);
-                            }
-                            returnItem.batches = reqData.selectedBatches.filter(function (v) { return v.itemid == item.itemid && v.configid == item.configId && v.inventsizeid == item.inventsizeid; });
-                            itemGrossAmount -= parseFloat(item.salesprice) * item.returnQuantity;
-                            console.log(parseFloat(item.salesprice) * item.returnQuantity);
-                            console.log("=========itemDiscount========", item.itemid, itemDiscountAmount, itemGrossAmount, item.vatamount, item.returnQuantity, vatPrice);
-                            newGrossTotal += itemGrossAmount;
-                            newTotal += itemGrossAmount - itemDiscountAmount + (itemGrossAmount - itemDiscountAmount) * (item.vat / 100);
-                            newVatPrice += (itemGrossAmount - itemDiscountAmount) * (item.vat / 100);
-                            newDiscount += itemDiscountAmount;
-                            returnItem.lineTotalDisc = itemDiscountAmount;
-                            returnItem.lineAmount = itemGrossAmount - itemDiscountAmount + (itemGrossAmount - itemDiscountAmount) * (item.vat / 100);
-                            returnItem.vatamount = (itemGrossAmount - itemDiscountAmount) * (item.vat / 100);
-                            returnOrderData.salesLine.push(returnItem);
-                        };
-                        this_1 = this;
-                        for (_i = 0, returnItems_1 = returnItems; _i < returnItems_1.length; _i++) {
-                            item = returnItems_1[_i];
-                            _loop_1(item);
-                        }
-                        returnFreeItems.map(function (v) {
-                            v.salesQty = v.returnQuantity;
-                        });
-                        (_a = returnOrderData.salesLine).push.apply(_a, returnFreeItems);
-                        t1 = new Date().getTime();
-                        console.log("took " + (t1 - t0) / 1000 + " milliseconds.");
-                        total -= newTotal;
-                        grossTotal -= newGrossTotal;
-                        discount -= newDiscount;
-                        vatPrice -= newVatPrice;
-                        returnOrderData.amount = grossTotal;
-                        returnOrderData.netAmount = total;
-                        returnOrderData.disc = discount;
-                        returnOrderData.vatamount = vatPrice;
-                        returnOrderData.sumTax = vatPrice;
-                        return [2 /*return*/, { total: total, grossTotal: grossTotal, discount: discount, vatPrice: vatPrice, returnOrderData: returnOrderData }];
-                }
-            });
-        });
-    };
     ReturnOrderAmountService.prototype.getReturnOrderAmount1 = function (reqData, type) {
         return __awaiter(this, void 0, void 0, function () {
-            var t0, total, grossTotal, discount, vatPrice, newTotal, newGrossTotal, newDiscount, newVatPrice, salesOrderData, returnItems, returnFreeItems, nonCondDiscounts, condDiscounts, totalGrossAmount, returnItemsGrossAmount, totalGrossAmountAfterReturnItems, salesLineBatches, returnOrderData, _loop_3, this_2, _i, returnItems_2, item, _loop_4, this_3, _a, returnFreeItems_1, item, t1;
+            var t0, total, grossTotal, discount, vatPrice, newTotal, newGrossTotal, newDiscount, newVatPrice, salesOrderData, returnItems, returnFreeItems, nonCondDiscounts, condDiscounts, totalGrossAmount, returnItemsGrossAmount, totalGrossAmountAfterReturnItems, salesLineBatches, returnOrderData, _loop_1, this_1, _i, returnItems_1, item, _loop_2, this_2, _a, returnFreeItems_1, item, t1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -329,9 +116,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         totalGrossAmountAfterReturnItems = totalGrossAmount - returnItemsGrossAmount;
                         returnOrderData = this.allocateReturnOrderData(salesOrderData, type);
                         returnOrderData.salesLine = [];
-                        _loop_3 = function (item) {
+                        _loop_1 = function (item) {
                             var returnItem = {};
-                            this_2.allocateReturnItem(returnItem, item);
+                            this_1.allocateReturnItem(returnItem, item);
                             item.totalReturnedQuantity = item.totalReturnedQuantity ? parseInt(item.totalReturnedQuantity) : 0;
                             item.lineTotalDisc = item.lineTotalDisc ? parseInt(item.lineTotalDisc) : 0;
                             item.salesQty = item.salesQty ? parseInt(item.salesQty) : 0;
@@ -352,7 +139,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             total += itemNetAmount;
                             discount += itemDiscountAmount;
                             vatPrice += itemVatAmount;
-                            var _loop_5 = function (itemDiscount) {
+                            var _loop_3 = function (itemDiscount) {
                                 // console.log(itemDiscount)
                                 if (nonCondDiscounts.includes(itemDiscount.discountType)) {
                                     if (item.returnQuantity > 0) {
@@ -413,14 +200,14 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         console.log("BUY_ONE_GET_ONE_DISCOUNT");
                                         var freeItems = returnFreeItems.filter(function (v) { return v.linkId == item.linkId && v.isItemFree == true; });
                                         //   console.log(freeItems)
-                                        var returningFreeQty_2 = 0;
-                                        var totalDiscountOnItems_2 = 0;
+                                        var returningFreeQty_1 = 0;
+                                        var totalDiscountOnItems_1 = 0;
                                         freeItems.map(function (v) {
-                                            totalDiscountOnItems_2 += parseFloat(v.salesprice);
-                                            returningFreeQty_2 += v.returnQuantity;
+                                            totalDiscountOnItems_1 += parseFloat(v.salesprice);
+                                            returningFreeQty_1 += v.returnQuantity;
                                         });
                                         // console.log(returningFreeQty);
-                                        if (item.returnQuantity != returningFreeQty_2) {
+                                        if (item.returnQuantity != returningFreeQty_1) {
                                             throw { message: "Please Return Free Item" };
                                         }
                                         else {
@@ -437,21 +224,21 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         var totalReturningQty = item.returnQuantity;
                                         var returningFreeItems = returnFreeItems.filter(function (v) { return v.linkId == item.linkId && v.isItemFree == true; });
                                         var freeItems = salesOrderData.salesLine.filter(function (v) { return v.linkId == item.linkId && v.isItemFree == true; });
-                                        var gotFreeQty_2 = 0;
+                                        var gotFreeQty_1 = 0;
                                         // returningFreeItems.map((v: any) => {
                                         //   totalReturningQty += v.returnQuantity;
                                         // });
                                         freeItems.map(function (v) {
-                                            gotFreeQty_2 += parseInt(v.salesQty);
+                                            gotFreeQty_1 += parseInt(v.salesQty);
                                         });
-                                        console.log("gotFreeQty", gotFreeQty_2);
+                                        console.log("gotFreeQty", gotFreeQty_1);
                                         var eligibleFreeQty = Math.floor((parseInt(item.salesQty) - parseInt(item.totalReturnedQuantity) - parseInt(item.returnQuantity)) / parseInt(itemDiscount.cond[0].multipleQty)) *
                                             parseInt(itemDiscount.cond[0].freeQty);
                                         console.log("eligibleFreeQty", eligibleFreeQty);
-                                        var freeQty = gotFreeQty_2 - eligibleFreeQty;
+                                        var freeQty = gotFreeQty_1 - eligibleFreeQty;
                                         console.log("freeQty", freeQty);
                                         itemDiscountAmount += parseFloat(itemDiscount.discountAmount);
-                                        var discountAmount = parseFloat(itemDiscount.discountAmount) / gotFreeQty_2;
+                                        var discountAmount = parseFloat(itemDiscount.discountAmount) / gotFreeQty_1;
                                         itemNewDiscountAmount += eligibleFreeQty * parseInt(item.salesprice);
                                         console.log(itemNewDiscountAmount);
                                         item.returnQuantity = totalReturningQty;
@@ -465,7 +252,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             // console.log(itemGrossAmount);
                             for (var _i = 0, _a = item.appliedDiscounts; _i < _a.length; _i++) {
                                 var itemDiscount = _a[_i];
-                                _loop_5(itemDiscount);
+                                _loop_3(itemDiscount);
                             }
                             itemNewGrossAmount = parseFloat(item.salesprice + parseFloat(item.colorantprice)) * item.returnQuantity;
                             itemNewVatAmount = (itemNewGrossAmount - itemNewDiscountAmount) * (item.vat / 100);
@@ -493,14 +280,14 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             returnItem.vatamount = Math.abs(itemNewVatAmount - nonReturnableVatAmount);
                             returnOrderData.salesLine.push(returnItem);
                         };
-                        this_2 = this;
-                        for (_i = 0, returnItems_2 = returnItems; _i < returnItems_2.length; _i++) {
-                            item = returnItems_2[_i];
-                            _loop_3(item);
+                        this_1 = this;
+                        for (_i = 0, returnItems_1 = returnItems; _i < returnItems_1.length; _i++) {
+                            item = returnItems_1[_i];
+                            _loop_1(item);
                         }
-                        _loop_4 = function (item) {
+                        _loop_2 = function (item) {
                             var returnItem = {};
-                            this_3.allocateReturnItem(returnItem, item);
+                            this_2.allocateReturnItem(returnItem, item);
                             item.totalReturnedQuantity = item.totalReturnedQuantity ? parseInt(item.totalReturnedQuantity) : 0;
                             item.lineTotalDisc = item.lineTotalDisc ? parseInt(item.lineTotalDisc) : 0;
                             item.salesQty = item.salesQty ? parseInt(item.salesQty) : 0;
@@ -574,11 +361,11 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             returnItem.vatamount = itemNewVatAmount - nonReturnableVatAmount;
                             returnOrderData.salesLine.push(returnItem);
                         };
-                        this_3 = this;
+                        this_2 = this;
                         // console.log(returnFreeItems);
                         for (_a = 0, returnFreeItems_1 = returnFreeItems; _a < returnFreeItems_1.length; _a++) {
                             item = returnFreeItems_1[_a];
-                            _loop_4(item);
+                            _loop_2(item);
                         }
                         t1 = new Date().getTime();
                         console.log("took " + (t1 - t0) / 1000 + " milliseconds.");
@@ -594,7 +381,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
     };
     ReturnOrderAmountService.prototype.returnOrderAmount = function (reqData, type) {
         return __awaiter(this, void 0, void 0, function () {
-            var nonCondDiscounts, condDiscounts, returnItems, returnFreeItems, salesLineBatches, grossTotal, newGrossTotal, multilineDiscQuantity, salesOrderData, inQueryStr, multiLineItemCode, _i, _a, item, _b, _c, discount, checkDiscounts, multlineDiscItems, returnItemsGrossAmount, returnNetAmount, reutrnVat, returnDiscount, returnOrderData, _loop_6, _d, returnItems_3, item, _loop_7, _e, returnFreeItems_2, item;
+            var nonCondDiscounts, condDiscounts, returnItems, returnFreeItems, salesLineBatches, grossTotal, newGrossTotal, multilineDiscQuantity, salesOrderData, inQueryStr, multiLineItemCode, _i, _a, item, _b, _c, discount, checkDiscounts, multlineDiscItems, returnItemsGrossAmount, returnNetAmount, reutrnVat, returnDiscount, returnOrderData, _loop_4, _d, returnItems_2, item, _loop_5, _e, returnFreeItems_2, item;
             return __generator(this, function (_f) {
                 switch (_f.label) {
                     case 0:
@@ -675,7 +462,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         returnDiscount = 0;
                         returnOrderData = this.allocateReturnOrderData(salesOrderData, type);
                         returnOrderData.salesLine = [];
-                        _loop_6 = function (item) {
+                        _loop_4 = function (item) {
+                            item.vat = item.vat ? item.vat : 5;
+                            item.vatamount = item.vatvatamount ? item.vatvatamount : (parseFloat(item.salesprice) + parseFloat(item.colorantprice)) * 0.05;
                             var qty = parseInt(item.returnQuantity);
                             item.colorantprice = item.colorantprice ? item.colorantprice : 0;
                             var price = parseFloat(item.salesprice) + parseFloat(item.colorantprice);
@@ -685,7 +474,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             var vat = 0;
                             // let appliedVat = console.log(vat);
                             if (item.appliedDiscounts.length > 0) {
-                                var _loop_8 = function (discount) {
+                                var _loop_6 = function (discount) {
                                     if (nonCondDiscounts.includes(discount.discountType)) {
                                         var discountAmount = lineAmount * (parseFloat(discount.percentage) / 100);
                                         netAmount -= discountAmount;
@@ -756,14 +545,14 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                             console.log("BUY_ONE_GET_ONE_DISCOUNT");
                                             var freeItems = returnFreeItems.filter(function (v) { return v.linkId == item.linkId && v.isItemFree == true; });
                                             //   console.log(freeItems)
-                                            var returningFreeQty_3 = 0;
-                                            var totalDiscountOnItems_3 = 0;
+                                            var returningFreeQty_2 = 0;
+                                            var totalDiscountOnItems_2 = 0;
                                             freeItems.map(function (v) {
-                                                totalDiscountOnItems_3 += parseFloat(v.salesprice);
-                                                returningFreeQty_3 += v.returnQuantity;
+                                                totalDiscountOnItems_2 += parseFloat(v.salesprice);
+                                                returningFreeQty_2 += v.returnQuantity;
                                             });
                                             // console.log(returningFreeQty);
-                                            if (item.returnQuantity != returningFreeQty_3) {
+                                            if (item.returnQuantity != returningFreeQty_2) {
                                                 throw { message: "Please Return Free Item" };
                                             }
                                             else {
@@ -806,7 +595,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                 };
                                 for (var _i = 0, _a = item.appliedDiscounts; _i < _a.length; _i++) {
                                     var discount = _a[_i];
-                                    _loop_8(discount);
+                                    _loop_6(discount);
                                 }
                             }
                             else {
@@ -815,7 +604,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                 lineTotalDisc += discountAmount;
                             }
                             vat = netAmount * (parseFloat(item.vat) / 100);
-                            console.log(vat, lineTotalDisc, netAmount);
+                            console.log(item.vat, vat, lineTotalDisc, netAmount);
                             returnItemsGrossAmount += lineAmount;
                             reutrnVat += vat;
                             returnNetAmount += netAmount + vat;
@@ -827,11 +616,11 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             item.netAmount = netAmount;
                             returnOrderData.salesLine.push(item);
                         };
-                        for (_d = 0, returnItems_3 = returnItems; _d < returnItems_3.length; _d++) {
-                            item = returnItems_3[_d];
-                            _loop_6(item);
+                        for (_d = 0, returnItems_2 = returnItems; _d < returnItems_2.length; _d++) {
+                            item = returnItems_2[_d];
+                            _loop_4(item);
                         }
-                        _loop_7 = function (item) {
+                        _loop_5 = function (item) {
                             var qty = parseInt(item.returnQuantity);
                             var price = parseFloat(item.salesprice) + parseFloat(item.colorantprice);
                             var lineAmount = price * qty;
@@ -839,19 +628,19 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             var lineTotalDisc = 0;
                             var vat = 0;
                             if (item.appliedDiscounts.length > 0) {
-                                var _loop_9 = function (discount) {
+                                var _loop_7 = function (discount) {
                                     if (discount.discountType == "BUY_ONE_GET_ONE_DISCOUNT") {
                                         console.log("BUY_ONE_GET_ONE_DISCOUNT");
                                         var freeItems = returnItems.filter(function (v) { return v.linkId == item.linkId; });
                                         //   console.log(freeItems)
-                                        var returningFreeQty_4 = 0;
-                                        var totalDiscountOnItems_4 = 0;
+                                        var returningFreeQty_3 = 0;
+                                        var totalDiscountOnItems_3 = 0;
                                         freeItems.map(function (v) {
-                                            totalDiscountOnItems_4 += parseFloat(v.salesprice);
-                                            returningFreeQty_4 += v.returnQuantity;
+                                            totalDiscountOnItems_3 += parseFloat(v.salesprice);
+                                            returningFreeQty_3 += v.returnQuantity;
                                         });
                                         // console.log(returningFreeQty);
-                                        if (item.returnQuantity != returningFreeQty_4) {
+                                        if (item.returnQuantity != returningFreeQty_3) {
                                             throw { message: "Please Return Free Item" };
                                         }
                                         else {
@@ -870,7 +659,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                 };
                                 for (var _i = 0, _a = item.appliedDiscounts; _i < _a.length; _i++) {
                                     var discount = _a[_i];
-                                    _loop_9(discount);
+                                    _loop_7(discount);
                                 }
                             }
                             else {
@@ -893,7 +682,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         };
                         for (_e = 0, returnFreeItems_2 = returnFreeItems; _e < returnFreeItems_2.length; _e++) {
                             item = returnFreeItems_2[_e];
-                            _loop_7(item);
+                            _loop_5(item);
                         }
                         returnOrderData.amount = returnItemsGrossAmount;
                         returnOrderData.netAmount = returnNetAmount;

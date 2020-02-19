@@ -68,7 +68,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         if (!(axaptaData.invent_location_id_to.trim() == this.sessionInfo.inventlocationid)) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.mapSalesData(axaptaData)];
                     case 2: return [2 /*return*/, _a.sent()];
-                    case 3: throw { message: Props_1.Props.INVALID_DATA };
+                    case 3: throw { message: "Order Id Not Related To This Store" };
                     case 4: return [3 /*break*/, 6];
                     case 5:
                         error_1 = _a.sent();
@@ -144,7 +144,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                             return [2 /*return*/, salesData];
                         }
                         else {
-                            throw { message: Props_1.Props.INVALID_DATA };
+                            throw { message: "Order Id Not Related To This Store" };
                         }
                         return [3 /*break*/, 3];
                     case 2:

@@ -49,7 +49,7 @@ var ColorantReport = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 5, , 6]);
                         data = void 0;
-                        query = "\n            select \n                sl.salesid as \"salesId\",\n                sl.colorantid as colorant,\n                sl.base_size_id as basesizeid,\n                sl.colorid,\n                sl.colorantprice  as price,\n                to_char(sl.salesprice,  'FM999999999.000') as \"salesPrice\",\n                to_char(sl.salesqty, 'FM999999990.000') as quantity,\n                to_char((sl.salesqty * sl.colorantprice), 'FM999999990.000') as \"totalAmount\",\n                sl.inventsizeid as inventsizeid,\n                sz.description as \"sizeNameEn\",\n                sz.\"name\" as \"sizeNameAr\"\n                from salesline sl\n                left join inventsize sz on sz.inventsizeid = sl.inventsizeid and sz.itemid = sl.itemid \n                left join salestable st on st.salesid = sl.salesid\n                where sl.createddatetime >= '" + params.fromDate + "' ::date\n                and  sl.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval)\n                and st.transkind != 'SALESQUOTATION' AND st.transkind != 'TRANSFERORDER' and (st.status = 'POSTED' or st.status = 'PAID') AND sl.colorantprice > 0\n           ";
+                        query = "\n            select \n                sl.salesid as \"salesId\",\n                sl.colorantid as colorant,\n                sl.base_size_id as basesizeid,\n                sl.colorid,\n                sl.colorantprice  as price,\n                to_char(sl.salesprice,  'FM999999999.000') as \"salesPrice\",\n                to_char(sl.salesqty, 'FM999999990.000') as quantity,\n                to_char((sl.salesqty * sl.colorantprice), 'FM999999990.000') as \"totalAmount\",\n                sl.inventsizeid as inventsizeid,\n                sz.description as \"sizeNameEn\",\n                sz.\"name\" as \"sizeNameAr\",\n                w.name as \"wareHouseNameAr\",\n                w.namealias as \"wareHouseNameEn\"\n                from salesline sl\n                left join inventlocation w on w.inventlocationid=sl.inventlocationid\n                left join inventsize sz on sz.inventsizeid = sl.inventsizeid and sz.itemid = sl.itemid \n                left join salestable st on st.salesid = sl.salesid\n                where sl.createddatetime >= '" + params.fromDate + "' ::date\n                and  sl.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval)\n                and st.transkind != 'SALESQUOTATION' AND st.transkind != 'TRANSFERORDER' and (st.status = 'POSTED' or st.status = 'PAID') AND sl.colorantprice > 0\n           ";
                         if (params.inventlocationid != "ALL") {
                             query += "  and sl.inventlocationid = '" + params.inventlocationid + "' ";
                         }
@@ -78,11 +78,9 @@ var ColorantReport = /** @class */ (function () {
                             totalAmount_1 += v.totalAmount ? parseInt(v.totalAmount) : 0;
                         });
                         renderData = {
-                            printDate: new Date().toLocaleString(),
+                            printDate: new Date().toISOString().slice(0, 10),
                             fromDate: params.fromDate,
                             toDate: params.toDate,
-                            warehouseNameEn: params.warehouseNameEn,
-                            warehouseNameAr: params.warehouseNameAr,
                             totalQuantity: totalQuantity_1,
                             totalAmount: totalAmount_1,
                             user: params.user
@@ -114,22 +112,30 @@ var ColorantReport = /** @class */ (function () {
     };
     ColorantReport.prototype.report = function (result, params) {
         return __awaiter(this, void 0, void 0, function () {
-            var file;
+            var warehouse, file;
             return __generator(this, function (_a) {
-                console.log(result);
-                if (params.type == "excel") {
-                    file = params.lang == "en" ? "colorant-excel" : "colorant-excel-ar";
+                switch (_a.label) {
+                    case 0:
+                        console.log(result);
+                        return [4 /*yield*/, this.warehouseName(params.inventlocationid)];
+                    case 1:
+                        warehouse = _a.sent();
+                        result.warehouseNameEn = warehouse.namealias;
+                        result.warehouseNameAr = warehouse.name;
+                        if (params.type == "excel") {
+                            file = params.lang == "en" ? "colorant-excel" : "colorant-excel-ar";
+                        }
+                        else {
+                            file = params.lang == "en" ? "colorant-report" : "colorant-report-ar";
+                        }
+                        try {
+                            return [2 /*return*/, App_1.App.HtmlRender(file, result)];
+                        }
+                        catch (error) {
+                            throw error;
+                        }
+                        return [2 /*return*/];
                 }
-                else {
-                    file = params.lang == "en" ? "colorant-report" : "colorant-report-ar";
-                }
-                try {
-                    return [2 /*return*/, App_1.App.HtmlRender(file, result)];
-                }
-                catch (error) {
-                    throw error;
-                }
-                return [2 /*return*/];
             });
         });
     };

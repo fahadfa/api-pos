@@ -81,12 +81,16 @@ var WorkflowService = /** @class */ (function () {
                         data = _a.sent();
                         data.map(function (item) {
                             // console.log(item.orderType);
+                            // console.log(item.SalesTable.movementType)
                             item.orderTypeAr = Props_1.Props.Workflow_Order_Type[item.orderType][1];
                             item.orderTypeEn = Props_1.Props.Workflow_Order_Type[item.orderType][1];
                             item.ordertype = Props_1.Props.Workflow_Order_Type[item.orderType][1];
                             item.descriptionEn = Props_1.Props.WORKFLOW_STATUSID[item.statusId][1];
                             item.descriptionAr = Props_1.Props.WORKFLOW_STATUSID[item.statusId][2];
                             item.createdDateTime = new Date(item.createdDateTime).toLocaleDateString();
+                            item.inventoryType = item.SalesTable.movementType.movementType;
+                            item.inventoryTypeAr = item.SalesTable.movementType.movementArabic;
+                            delete item.SalesTable;
                         });
                         return [2 /*return*/, data];
                     case 2:
@@ -198,7 +202,8 @@ var WorkflowService = /** @class */ (function () {
                     case 15:
                         console.log(item.statusId);
                         if (status_1 == "accept" || status_1 == null) {
-                            if ((item.statusId == Props_1.Props.WORKFLOW_STATUSID.PENDINGRMAPPROVAL[0] || item.statusId == Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYDESIGNER[0])) {
+                            if (item.statusId == Props_1.Props.WORKFLOW_STATUSID.PENDINGRMAPPROVAL[0] ||
+                                item.statusId == Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYDESIGNER[0]) {
                                 item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRM[0];
                                 if (salesData.transkind == "RETURNORDER") {
                                     item.pendingWith = null;
@@ -213,7 +218,8 @@ var WorkflowService = /** @class */ (function () {
                                     }
                                 }
                             }
-                            else if ((item.statusId == Props_1.Props.WORKFLOW_STATUSID.PENDINGRAAPPROVAL[0] || item.statusId == Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRM[0])) {
+                            else if (item.statusId == Props_1.Props.WORKFLOW_STATUSID.PENDINGRAAPPROVAL[0] ||
+                                item.statusId == Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRM[0]) {
                                 console.log("====================================");
                                 item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRA[0];
                                 item.pendingWith = null;

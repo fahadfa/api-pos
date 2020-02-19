@@ -49,7 +49,7 @@ var ExpiredProductsReport = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 5, , 6]);
                         data = void 0;
-                        query = "\n            select \n            i.itemid as itemid, \n            i.configid as configid, \n            sum(qtyin) as \"qtyIn\", \n            sum(qtyout) as \"qtyOut\", \n            (sum(qtyin)+sum(qtyout)) as balance,\n            i.inventsizeid as inventsizeid,\n            sizenameen as \"sizeNameEn\",\n            sizenamear as \"sizeNameAr\",\n            nameen as \"nameEn\",\n            namear as \"nameAr\",\n            wareHouseNameAr as \"wareHouseNameAr\",\n            wareHouseNameEn as \"wareHouseNameEn\",\n            to_char(i.datestatus, 'yyyy-MM-dd') as \"lastModifiedDate\",\n            i.batchno as batchno,\n            to_char(i.expdate, 'yyyy-MM-dd') as \"expDate\",\n            DATE_PART('day',  to_char(i.expdate, 'yyyy-MM-dd')::timestamp - now()::timestamp) as \"expDays\" from (\n            select \n            i.itemid as itemid,\n            coalesce(case when i.qty > 0 then sum(i.qty) end, 0) as qtyin,\n            coalesce(case when i.qty < 0 then sum(i.qty) end, 0) as qtyout,\n            i.configid as configid,\n            i.inventsizeid as inventsizeid,\n            i.batchno as batchno,\n            s.description as sizenameen,\n            s.\"name\" as sizenamear,\n            bs.namealias as nameEn,\n            bs.itemname as nameAr,\n            w.name as wareHouseNameAr,\n            w.namealias as wareHouseNameEn,\n            i.datestatus as datestatus,\n            b.expdate as expdate\n            from inventtrans  i\n            left join inventbatch b on i.batchno = b.inventbatchid\n            left join inventtable bs on i.itemid = bs.itemid\n            left join inventsize s on s.inventsizeid = i.inventsizeid and s.itemid = i.itemid\n            left join inventlocation w on w.inventlocationid=i.inventlocationid\n             where ((reserve_status!='UNRESERVED' AND reserve_status != 'SAVED') or reserve_status is null) and\n            b.expdate <= ('" + params.date + "' ::date + '1 day'::interval) and i.transactionclosed = true ";
+                        query = "\n            select \n            i.itemid as itemid, \n            i.configid as configid, \n            to_char(sum(qtyin), 'FM999,999,999.') as \"qtyIn\", \n            to_char(sum(qtyout), 'FM999,999,999.') as \"qtyOut\", \n            to_char((sum(qtyin)+sum(qtyout)), 'FM999,999,999.') as balance,\n            i.inventsizeid as inventsizeid,\n            sizenameen as \"sizeNameEn\",\n            sizenamear as \"sizeNameAr\",\n            nameen as \"nameEn\",\n            namear as \"nameAr\",\n            wareHouseNameAr as \"wareHouseNameAr\",\n            wareHouseNameEn as \"wareHouseNameEn\",\n            to_char(i.datestatus, 'yyyy-MM-dd') as \"lastModifiedDate\",\n            i.batchno as batchno,\n            to_char(i.expdate, 'yyyy-MM-dd') as \"expDate\",\n            DATE_PART('day',  to_char(i.expdate, 'yyyy-MM-dd')::timestamp - now()::timestamp) as \"expDays\" from (\n            select \n            i.itemid as itemid,\n            coalesce(case when i.qty > 0 then sum(i.qty) end, 0) as qtyin,\n            coalesce(case when i.qty < 0 then sum(i.qty) end, 0) as qtyout,\n            i.configid as configid,\n            i.inventsizeid as inventsizeid,\n            i.batchno as batchno,\n            s.description as sizenameen,\n            s.\"name\" as sizenamear,\n            bs.namealias as nameEn,\n            bs.itemname as nameAr,\n            w.name as wareHouseNameAr,\n            w.namealias as wareHouseNameEn,\n            i.datestatus as datestatus,\n            b.expdate as expdate\n            from inventtrans  i\n            left join inventbatch b on i.batchno = b.inventbatchid\n            left join inventtable bs on i.itemid = bs.itemid\n            left join inventsize s on s.inventsizeid = i.inventsizeid and s.itemid = i.itemid\n            left join inventlocation w on w.inventlocationid=i.inventlocationid\n             where ((reserve_status!='UNRESERVED' AND reserve_status != 'SAVED') or reserve_status is null) and\n            b.expdate <= ('" + params.date + "' ::date + '1 day'::interval) and i.transactionclosed = true ";
                         if (!(params.inventlocationid == "ALL")) return [3 /*break*/, 2];
                         warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
                         return [4 /*yield*/, this.db.query(warehouseQuery)];
@@ -96,30 +96,38 @@ var ExpiredProductsReport = /** @class */ (function () {
     };
     ExpiredProductsReport.prototype.report = function (result, params) {
         return __awaiter(this, void 0, void 0, function () {
-            var renderData, file;
+            var warehouse, renderData, file;
             return __generator(this, function (_a) {
-                renderData = {
-                    printDate: new Date().toLocaleString(),
-                    date: params.date,
-                    inventlocationid: params.inventlocationid,
-                    user: params.user
-                };
-                // console.log(result.salesLine[0].product.nameEnglish);
-                renderData.data = result;
-                console.log(renderData);
-                if (params.type == "excel") {
-                    file = params.lang == "en" ? "expiredproducts-excel" : "expiredproducts-excel-ar";
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.warehouseName(params.inventlocationid)];
+                    case 1:
+                        warehouse = _a.sent();
+                        console.log(warehouse);
+                        renderData = {
+                            printDate: new Date().toISOString().slice(0, 10),
+                            date: params.date,
+                            inventlocationid: params.inventlocationid,
+                            user: params.user
+                        };
+                        // console.log(result.salesLine[0].product.nameEnglish);
+                        renderData.warehouseNameEn = warehouse.namealias;
+                        renderData.warehouseNameAr = warehouse.name;
+                        console.log(renderData);
+                        renderData.data = result;
+                        if (params.type == "excel") {
+                            file = params.lang == "en" ? "expiredproducts-excel" : "expiredproducts-excel-ar";
+                        }
+                        else {
+                            file = params.lang == "en" ? "expiredproducts-report" : "expiredproducts-report-ar";
+                        }
+                        try {
+                            return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];
+                        }
+                        catch (error) {
+                            throw error;
+                        }
+                        return [2 /*return*/];
                 }
-                else {
-                    file = params.lang == "en" ? "expiredproducts-report" : "expiredproducts-report-ar";
-                }
-                try {
-                    return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];
-                }
-                catch (error) {
-                    throw error;
-                }
-                return [2 /*return*/];
             });
         });
     };
