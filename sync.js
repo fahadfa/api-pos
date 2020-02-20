@@ -3,8 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Log_1 = require("./utils/Log");
 var SyncService_1 = require("./sync/SyncService");
 var cmd = require("node-cmd");
+var syncService;
 try {
-    new SyncService_1.SyncService();
+    syncService = new SyncService_1.SyncService();
 }
 catch (err) {
     Log_1.ulog.error("SyncService Error: ", err);
@@ -56,30 +57,10 @@ try {
         var zip = new AdmZip(__dirname + "/" + fileName);
         zip.extractAllTo("../", true);
         fs.unlinkSync(__dirname + "/" + fileName);
+        UpdateService();
         // cmd.get("npm i", (npmerr: any, npmdata: any) => {
         //   if (npmerr) log.error(npmerr);
         //   log.info(npmdata);
-        cmd.get("sc query  jpos-offline", function (err, data) {
-            if (err)
-                Log_1.ulog.error(err);
-            Log_1.ulog.warn(data);
-            if (data && data.includes("STOPPED")) {
-                Log_1.ulog.warn("net start jpos-offline");
-                cmd.run("net start jpos-offline");
-                setTimeout(function () {
-                    Log_1.ulog.warn("net stop jpos-alt");
-                    cmd.run("net stop jpos-alt");
-                }, 1000);
-            }
-            else {
-                Log_1.ulog.warn("net start jpos-alt");
-                cmd.run("net start jpos-alt");
-                setTimeout(function () {
-                    Log_1.ulog.warn("net stop jpos-offline");
-                    cmd.run("net stop jpos-offline");
-                }, 1000);
-            }
-        });
         // });
         // cmd.get("net stop jpos-offline", (err: any, data: any) => {
         //   log.log("warn", err, data);
@@ -108,6 +89,9 @@ try {
     });
     autoupdater.on("download.error", function (err) {
         Log_1.ulog.error("Error when downloading: " + err);
+        setTimeout(function () {
+            UpdateService();
+        }, 60000);
     });
     autoupdater.on("end", function () {
         Log_1.ulog.warn("The app is ready to function");
@@ -120,14 +104,39 @@ catch (err) {
     Log_1.ulog.error(" autoupdater error: ", err);
 }
 var cron = require("node-cron");
+Log_1.ulog.info("Update Started ... ");
 cron.schedule("* * * * *", function () {
     try {
         autoupdater.fire("check");
     }
     catch (error) {
+        Log_1.ulog.error(error);
         Log_1.ulog.error("******* Error on Downlooad **********");
     }
 });
+var UpdateService = function () {
+    cmd.get("sc query  jpos-offline", function (err, data) {
+        if (err)
+            Log_1.ulog.error(err);
+        Log_1.ulog.warn(data);
+        if (data && data.includes("STOPPED")) {
+            Log_1.ulog.warn("net start jpos-offline");
+            cmd.run("net start jpos-offline");
+            setTimeout(function () {
+                Log_1.ulog.warn("net stop jpos-alt");
+                cmd.run("net stop jpos-alt");
+            }, 1000);
+        }
+        else {
+            Log_1.ulog.warn("net start jpos-alt");
+            cmd.run("net start jpos-alt");
+            setTimeout(function () {
+                Log_1.ulog.warn("net stop jpos-offline");
+                cmd.run("net stop jpos-offline");
+            }, 1000);
+        }
+    });
+};
 // setInterval(() => {
 //   try {
 //     autoupdater.fire("check");

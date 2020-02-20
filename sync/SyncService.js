@@ -44,6 +44,7 @@ var stagingId = "STAGING";
 var storeId = process.env.ENV_STORE_ID || "LOCAL-TEST";
 var SyncService = /** @class */ (function () {
     function SyncService() {
+        this.lastSyncTime = new Date();
         this.syncDMLService = new SyncDMLService_1.SyncDMLService();
         this.syncDDLService = new SyncDDLService_1.SyncDDLService();
         Log_1.slog.log("debug", "&&&&&&&&&&&&&&&&&&&&&& ENV_STORE_ID : " + process.env.ENV_STORE_ID + " &&&&&&&&&&&&&&&&&&&&&&");
@@ -63,40 +64,43 @@ var SyncService = /** @class */ (function () {
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                _a.trys.push([0, 8, , 9]);
-                                if (!(isMasterProceed == true)) return [3 /*break*/, 6];
+                                this.lastSyncTime = new Date();
+                                _a.label = 1;
+                            case 1:
+                                _a.trys.push([1, 9, , 10]);
+                                if (!(isMasterProceed == true)) return [3 /*break*/, 7];
                                 isMasterProceed = false;
                                 Log_1.slog.debug("(((((((((( SYNC START MASTER))))))))))");
                                 return [4 /*yield*/, this.checkInternet()];
-                            case 1:
-                                if (!_a.sent()) return [3 /*break*/, 4];
+                            case 2:
+                                if (!_a.sent()) return [3 /*break*/, 5];
                                 Log_1.slog.log("info", ">>>>>>>>>>>>>>>> DDL <<<<<<<<<<<<<<<<<<<<<<<");
                                 return [4 /*yield*/, this.syncDDLService.execute()];
-                            case 2:
+                            case 3:
                                 _a.sent();
                                 Log_1.slog.log("info", ">>>>>>>>>>>>>>>>> DML <<<<<<<<<<<<<<<<<<<<<<<");
                                 return [4 /*yield*/, this.syncDMLService.execute("M")];
-                            case 3:
-                                _a.sent();
-                                return [3 /*break*/, 5];
                             case 4:
-                                Log_1.slog.warn(">>>>>>>>>>>>>>>>> No Internet connection <<<<<<<<<<<<<<<<<<<<");
-                                _a.label = 5;
+                                _a.sent();
+                                return [3 /*break*/, 6];
                             case 5:
+                                Log_1.slog.warn(">>>>>>>>>>>>>>>>> No Internet connection <<<<<<<<<<<<<<<<<<<<");
+                                _a.label = 6;
+                            case 6:
                                 Log_1.slog.debug("(((((((((( SYNC CLOSE MASTER ))))))))))");
                                 isMasterProceed = true;
-                                return [3 /*break*/, 7];
-                            case 6:
+                                return [3 /*break*/, 8];
+                            case 7:
                                 Log_1.slog.warn("still processing ...................................");
-                                _a.label = 7;
-                            case 7: return [3 /*break*/, 9];
-                            case 8:
+                                _a.label = 8;
+                            case 8: return [3 /*break*/, 10];
+                            case 9:
                                 error_1 = _a.sent();
                                 Log_1.slog.error("--------- CRON MASTER ERROR ---------");
                                 Log_1.slog.error(error_1);
                                 Log_1.slog.error("--------- CRON MASTER ERROR ---------");
-                                return [3 /*break*/, 9];
-                            case 9: return [2 /*return*/];
+                                return [3 /*break*/, 10];
+                            case 10: return [2 /*return*/];
                         }
                     });
                 }); });
