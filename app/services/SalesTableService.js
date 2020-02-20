@@ -1738,6 +1738,7 @@ var SalesTableService = /** @class */ (function () {
                             })];
                     case 3:
                         transferData = _e.sent();
+                        if (!transferData) return [3 /*break*/, 5];
                         transferData.status = "RECEIVED";
                         return [4 /*yield*/, this.salestableDAO.save(transferData)];
                     case 4:
