@@ -84,7 +84,7 @@ var InventoryOnHandReport = /** @class */ (function () {
                     case 4:
                         data = _a.sent();
                         i = 1;
-                        data = data.filter(function (item) { return item.totalAvailable >= 0; });
+                        data = data.filter(function (item) { return Number.parseFloat(item.totalAvailable) >= 0; });
                         for (_i = 0, data_1 = data; _i < data_1.length; _i++) {
                             item = data_1[_i];
                             item.sNo = i;

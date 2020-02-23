@@ -474,7 +474,7 @@ var SalestargetService = /** @class */ (function () {
                     case 1:
                         targetItem = _a.sent();
                         target = 0;
-                        if (month) {
+                        if (targetItem && month) {
                             target = targetItem["month" + (month + 1)];
                         }
                         else if (targetItem && targetItem.hasOwnProperty("yearTarget")) {
