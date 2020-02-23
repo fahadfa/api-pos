@@ -108,6 +108,21 @@ var InventtableDAO = /** @class */ (function () {
             });
         });
     };
+    InventtableDAO.prototype.findByIds = function (ids) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.dao.find({
+                            select: ["nameEn", "nameAr", "code"],
+                            where: {
+                                code: typeorm_1.In(ids)
+                            }
+                        })];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
     return InventtableDAO;
 }());
 exports.InventtableDAO = InventtableDAO;

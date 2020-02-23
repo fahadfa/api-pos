@@ -43,7 +43,7 @@ var Calender = /** @class */ (function () {
         return moment(date).format("YYYY-MM-DD");
     };
     Calender.prototype.isBusinessDay = function (date) {
-        return moment(date, 'DD-MM-YYYY').isBusinessDay();
+        return moment(date, "DD-MM-YYYY").isBusinessDay();
     };
     Calender.prototype.getPreviousDate = function (date) {
         console.log(moment(new Date()).month());
@@ -71,6 +71,18 @@ var Calender = /** @class */ (function () {
     };
     Calender.prototype.getYear = function (date) {
         return moment(date, "YYYY/MM/DD").year();
+    };
+    Calender.prototype.getCurrentDaysOnly = function (date, type) {
+        var today = moment(date);
+        var from_date = moment(today).startOf(type);
+        var to_date = moment(today).endOf(type);
+        return { from: from_date.format("YYYY-MM-DD"), to: to_date.format("YYYY-MM-DD") };
+    };
+    Calender.prototype.getPreviousDaysOnly = function (date, type) {
+        var today = moment().subtract(1, type + "s");
+        var from_date = moment(today).startOf(type);
+        var to_date = moment(today).endOf(type);
+        return { from: from_date.format("YYYY-MM-DD"), to: to_date.format("YYYY-MM-DD") };
     };
     Calender.prototype.getCurrentWeekDates = function () {
         return this.getWeekDatesFromDate(moment());

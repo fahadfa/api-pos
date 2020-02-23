@@ -191,7 +191,7 @@ var PhoneVerificationService = /** @class */ (function () {
                         phoneVerification.dataareaid = this.sessionInfo.dataareaid;
                         phoneVerification.createdBy = this.sessionInfo.userName;
                         phoneVerification.createdDateTime = new Date();
-                        phoneVerification.countryCode = item.countryCode;
+                        phoneVerification.countryCode = item.countryCode ? item.countryCode : 966;
                         phoneVerification.otpExpiryTime = new Date();
                         return [4 /*yield*/, this.save(phoneVerification)];
                     case 1:

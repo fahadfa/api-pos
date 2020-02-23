@@ -121,6 +121,21 @@ var InventoryOnhandDAO = /** @class */ (function () {
             });
         });
     };
+    InventoryOnhandDAO.prototype.findCriticalItems = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.dao.createQueryBuilder("onhand")
+                            .select("onhand.itemid")
+                            .addGroupBy("onhand.itemid")
+                            .addGroupBy("onhand.id")
+                            .orderBy("SUM(onhand.qty_in -onhand.qty_out )", "DESC")
+                            .getMany()];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
     return InventoryOnhandDAO;
 }());
 exports.InventoryOnhandDAO = InventoryOnhandDAO;

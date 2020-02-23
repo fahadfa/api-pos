@@ -1,9 +1,14 @@
-/salestarget/search:
+/salestarget/search/top20:
   get:
     tags:
       - salestargets
     description: search.
     parameters:
+      - name: unittime
+        in: query
+        required: true
+        type: string
+        example: "DAY"
       - name: inventlocationid
         in: query
         required: true

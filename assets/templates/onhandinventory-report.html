@@ -240,11 +240,35 @@
             border: 1px solid #000;
             padding: 10px;
         }
+
+        #bg__watermark {
+            position: absolute;
+            display: block;
+            min-width: 100%;
+            opacity: 0.5;
+            text-align: center;
+            background-color: transparent;
+            /* padding-top:50%; */
+        }
+        #bg__text__watermark {
+            color: lightgrey;
+            font-size: 120px;
+            transform: rotate(300deg);
+            -webkit-transform: rotate(300deg);
+            opacity: 0.9;
+            filter: alpha(opacity=50);
+            background-color: transparent;
+        }
     </style>
 
 </head>
 
 <body>
+
+    <div id="bg__watermark">
+        <p id="bg__text__watermark">Only for testing</p>
+    </div>
+
     <div>
         <table align="center" style="width:94%">
             <tr>

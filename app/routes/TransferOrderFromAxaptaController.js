@@ -76,7 +76,7 @@ var TransferOrderFromAxaptaController = /** @class */ (function () {
                         return [3 /*break*/, 6];
                     case 5:
                         error_1 = _a.sent();
-                        console.log(error_1);
+                        // console.log(error);
                         response.send({ status: 0, error: error_1 });
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];

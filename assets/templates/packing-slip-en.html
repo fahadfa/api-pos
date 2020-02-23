@@ -172,10 +172,33 @@
         margin: 0;
       }
     }
+
+    #bg__watermark {
+        position: absolute;
+        display: block;
+        min-width: 100%;
+        opacity: 0.5;
+        text-align: center;
+        background-color: transparent;
+        /* padding-top:50%; */
+    }
+    #bg__text__watermark {
+        color: lightgrey;
+        font-size: 120px;
+        transform: rotate(300deg);
+        -webkit-transform: rotate(300deg);
+        opacity: 0.9;
+        filter: alpha(opacity=50);
+        background-color: transparent;
+    }
   </style>
 </head>
 
 <body>
+
+<div id="bg__watermark">
+    <p id="bg__text__watermark">Only for testing</p>
+</div>
   <div class="page-header" style="text-align: center">
 
   </div>
@@ -323,8 +346,20 @@
             </table>
 
 
+            <table width="100%" style="text-align:right;margin-top: 8px;">
+                
+              <tr>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>
+                      Total Quantity:{{ quantity }}
+                  </td>
+              </tr>
+              
+          </table>
 
-
+            
 
             <table style="width: 98%;position:absolute;bottom:200px; border-collapse: collapse;">
               <tr style="border:1px dotted #ccc !important;">

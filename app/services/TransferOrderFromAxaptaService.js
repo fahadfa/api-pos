@@ -240,7 +240,9 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         return [2 /*return*/, data.data];
                     case 3:
                         error_4 = _a.sent();
-                        throw error_4;
+                        // console.log(Object.keys(error));
+                        // console.log(error.response.data.Message);
+                        throw { message: error_4.response.data.Message };
                     case 4: return [2 /*return*/];
                 }
             });

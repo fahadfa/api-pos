@@ -51,6 +51,7 @@ var AppExpress_1 = __importDefault(require("./apex/AppExpress"));
 var typeorm_1 = require("typeorm");
 var Config = __importStar(require("./utils/Config"));
 var Log_1 = require("./utils/Log");
+//import { main } from "./sync";
 var http = require("http");
 var port = 5000;
 var count = 0;
@@ -113,11 +114,23 @@ var run = function () { return __awaiter(_this, void 0, void 0, function () {
     });
 }); };
 run();
-var fs = require("fs");
-var syncFile = __dirname + "/sync.ts";
-syncFile = fs.existsSync(syncFile) ? __dirname + "/sync.ts" : __dirname + "/sync.js";
-var child_process = require("child_process");
-child_process.fork(syncFile);
+var sync = function () {
+    var fs = require("fs");
+    var syncFile = __dirname + "/sync.ts";
+    syncFile = fs.existsSync(syncFile) ? __dirname + "/sync.ts" : __dirname + "/sync.js";
+    var child_process = require("child_process");
+    child_process.fork(syncFile);
+};
+try {
+    sync();
+}
+catch (error) {
+    Log_1.log.error("Sync Error");
+    Log_1.log.error(error);
+    setTimeout(function () {
+        sync();
+    }, 60000);
+}
 process.on("uncaughtException", function (err) {
     Log_1.log.error("Caught exception: " + err);
     setTimeout(function () {

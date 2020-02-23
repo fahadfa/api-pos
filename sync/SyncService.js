@@ -59,7 +59,7 @@ var SyncService = /** @class */ (function () {
             var _this = this;
             return __generator(this, function (_a) {
                 isMasterProceed = true;
-                cron.schedule("*/10 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
+                cron.schedule("*/20 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
                     var error_1;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
@@ -105,7 +105,7 @@ var SyncService = /** @class */ (function () {
                     });
                 }); });
                 isTranscationProceed = true;
-                cron.schedule("*/10 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
+                cron.schedule("*/15 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
                     var error_2;
                     return __generator(this, function (_a) {
                         switch (_a.label) {

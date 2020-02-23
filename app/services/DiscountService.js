@@ -490,38 +490,6 @@ var DiscountService = /** @class */ (function () {
                                             else {
                                                 isBuyOneGetOneDiscount = false;
                                             }
-                                            // if (buy_one_get_one > 0) {
-                                            //   item.buyOneGetOneDiscount = Math.round(parseFloat(((buy_one_get_one / parseInt(item.quantity)) * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2);
-                                            //   console.log(buy_one_get_one);
-                                            //   await this.buyOneGetOneDiscount(item, reqData);
-                                            //   reqData.discount += item.lineTotalDisc;
-                                            //   total += item.priceAfterVat * parseInt(item.quantity);
-                                            //   totalBeforeVat += parseFloat(item.lineamountafterdiscount);
-                                            //   grossTotal += (parseFloat(item.price) + parseFloat(item.colorantprice)) * parseInt(item.quantity);
-                                            //   console.log(grossTotal);
-                                            //   appliedDiscounts.push({
-                                            //     discountType: "BUY_ONE_GET_DISCOUNT",
-                                            //     discountAmount: buy_one_get_one,
-                                            //     cond: [
-                                            //       {
-                                            //         multipleQty: buyOneGetOneDiscountDetails.multipleQty,
-                                            //         freeQty: buyOneGetOneDiscountDetails.freeQty
-                                            //       }
-                                            //     ]
-                                            //   });
-                                            // } else {
-                                            //   isBuyOneGetOneDiscount = false;
-                                            //   // buy_one_get_one = (item.price + item.colorantprice) / 2;
-                                            //   // item.buyOneGetOneDiscount = buy_one_get_one;
-                                            //   // console.log("==============", buy_one_get_one);
-                                            //   // item.freeQty = item.quantity;
-                                            //   // await this.buyOneGetOneDiscount(item, reqData);
-                                            //   // reqData.discount += item.buyOneGetOneDiscount * parseInt(item.quantity);
-                                            //   // total += item.priceAfterVat * parseInt(item.quantity);
-                                            //   // totalBeforeVat += parseFloat(item.lineamountafterdiscount);
-                                            //   // grossTotal += (parseFloat(item.price) + parseFloat(item.colorantprice)) * parseInt(item.quantity);
-                                            //   // console.log(grossTotal);
-                                            // }
                                         }
                                         _a.label = 5;
                                     case 5:

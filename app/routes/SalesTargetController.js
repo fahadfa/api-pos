@@ -50,7 +50,7 @@ var SalesTargetController = /** @class */ (function () {
     };
     SalesTargetController.prototype.getRouter = function () {
         var _this = this;
-        this.router.post("/search", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
+        this.router.get("/search", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
             var reqData, result, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -60,7 +60,7 @@ var SalesTargetController = /** @class */ (function () {
                         result = null;
                         this.service.sessionInfo = request.body.sessionInfo;
                         App_1.App.PrintLog(this.moduleName(), "Search", this.service.sessionInfo);
-                        reqData = request.body ? request.body.data : {};
+                        reqData = request.query ? request.query : {};
                         return [4 /*yield*/, App_1.App.ValildateUserAccess(this.service.sessionInfo, this.moduleName(), Props_1.Props.ACCESS_READ)];
                     case 1:
                         if (!_a.sent()) return [3 /*break*/, 3];
@@ -76,6 +76,70 @@ var SalesTargetController = /** @class */ (function () {
                         error_1 = _a.sent();
                         console.log(error_1);
                         response.send({ status: 0, error: error_1 });
+                        return [3 /*break*/, 6];
+                    case 6: return [2 /*return*/];
+                }
+            });
+        }); });
+        this.router.get("/search/top20", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
+            var reqData, result, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 5, , 6]);
+                        reqData = void 0;
+                        result = null;
+                        this.service.sessionInfo = request.body.sessionInfo;
+                        App_1.App.PrintLog(this.moduleName(), "Search", this.service.sessionInfo);
+                        reqData = request.query ? request.query : {};
+                        console.log(reqData);
+                        return [4 /*yield*/, App_1.App.ValildateUserAccess(this.service.sessionInfo, this.moduleName(), Props_1.Props.ACCESS_READ)];
+                    case 1:
+                        if (!_a.sent()) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.service.searchTop20(reqData)];
+                    case 2:
+                        result = _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3: throw this.service.sessionInfo ? this.service.sessionInfo : { message: Props_1.Props.TOKEN_MESSAGE };
+                    case 4:
+                        response.send({ status: 1, data: result });
+                        return [3 /*break*/, 6];
+                    case 5:
+                        error_2 = _a.sent();
+                        console.log(error_2);
+                        response.send({ status: 0, error: error_2 });
+                        return [3 /*break*/, 6];
+                    case 6: return [2 /*return*/];
+                }
+            });
+        }); });
+        this.router.get("/search/criticalinventory", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
+            var reqData, result, error_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 5, , 6]);
+                        reqData = void 0;
+                        result = null;
+                        this.service.sessionInfo = request.body.sessionInfo;
+                        App_1.App.PrintLog(this.moduleName(), "Search", this.service.sessionInfo);
+                        reqData = request.query ? request.query : {};
+                        console.log(reqData);
+                        return [4 /*yield*/, App_1.App.ValildateUserAccess(this.service.sessionInfo, this.moduleName(), Props_1.Props.ACCESS_READ)];
+                    case 1:
+                        if (!_a.sent()) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.service.seachCriticalItems(reqData)];
+                    case 2:
+                        result = _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3: throw this.service.sessionInfo ? this.service.sessionInfo : { message: Props_1.Props.TOKEN_MESSAGE };
+                    case 4:
+                        response.send({ status: 1, data: result });
+                        return [3 /*break*/, 6];
+                    case 5:
+                        error_3 = _a.sent();
+                        console.log(error_3);
+                        response.send({ status: 0, error: error_3 });
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
                 }
