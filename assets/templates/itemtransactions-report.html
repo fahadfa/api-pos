@@ -19,6 +19,25 @@
             padding: 0px;
             font-weight: normal !important;
         }
+        table {
+            page-break-inside: auto;
+            
+        }
+
+        tr {
+            page-break-inside: avoid;
+            page-break-after: always;
+            border-bottom:1px dotted #8a8989;
+            padding:1px;
+        }
+
+        thead {
+            display: table-header-group
+        }
+
+        tfoot {
+            display: table-footer-group
+        }
         .color {
             color: #2e5170;
         }
@@ -301,9 +320,10 @@
                         <div class="">
                             <div class="table-border">
                                 <table class="" style="width:100%;margin:auto;border-collapse: collapse !important;">
+                                    <thead>
                                     <tr class="background" style="font-size:14px">
                                         <th class="th">Sales Id</th>
-                                        <th class="th">Last Modified Date</th>
+                                        <th class="th">Transaction date</th>
                                         <th class="th">Product</th>
                                         <th class="th">Color</th>
                                         <th class="th">Size</th>
@@ -313,6 +333,7 @@
                                         <th class="th">Qty Out</th>
                                         <th class="th">Balance</th>
                                     </tr>
+                                    </thead>
                                     {{#each data}} 
                                     <tr class="tab-data">
                                             <td class="td">{{ this.salesId }}</td>
@@ -326,7 +347,7 @@
                                             <td class="td">{{ this.qtyOut }}</td>
                                             <td class="td">{{ this.balance }}</td>
                                     </tr>
-                                    <tr>
+                                    <!-- <tr>
                                         <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
                                         <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
                                         <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
@@ -338,7 +359,7 @@
                                         <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
                                         <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
                                     
-                                    </tr>
+                                    </tr> -->
                                     {{/each}}
                                 </table>
                             <div>

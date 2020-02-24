@@ -62,12 +62,12 @@ var SalesOrderReport = /** @class */ (function () {
                     case 1:
                         data_1 = _a.sent();
                         data_1 = data_1.length >= 1 ? data_1[0] : {};
-                        console.log(data_1.status);
+                        // console.log(data.status);
                         if (data_1.status != "RESERVED") {
                             data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
                             this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED");
                         }
-                        salesQuery = "\n              select\n              distinct\n              ln.salesid,\n              ln.itemid,\n              ln.batchno,\n              ln.configid,\n              ln.inventsizeid,\n              ln.saleslineqty,\n              to_char(ln.salesqty, 'FM999,999,999D') as \"salesQty\",\n              to_char(ln.salesprice, 'FM999,999,999,990.000') as salesprice,\n              to_char(ln.vatamount, 'FM999,999,999,990.000') as \"vatAmount\",\n              to_char((ln.linetotaldisc/ln.saleslineqty)*ln.salesqty, 'FM999,999,999,990.000') as \"lineTotalDisc\",\n              to_char(ln.colorantprice, 'FM999,999,999,990.000') as colorantprice,\n              to_char(((ln.salesprice + ln.colorantprice) \n              + (ln.vatamount) - ((ln.linetotaldisc/ln.saleslineqty)*ln.salesqty)) \n              , 'FM999,999,999,990.000') as \"lineAmount\",\n              ln.prodnamear as \"prodNameAr\",\n              ln.prodnameen as \"prodNameEn\",\n              ln.colNameAr as \"colNameAr\",\n              ln.colNameEn as \"colNameEn\",\n              ln.sizeNameEn as \"sizeNameEn\",\n              ln.sizeNameAr as \"sizeNameAr\",\n              to_char((ln.lineamount/ln.saleslineqty) - (ln.linetotaldisc/ln.saleslineqty)*ln.salesqty, 'FM999,999,999,990.000') as \"lineAmountBeforeVat\",\n              ln.vat as vat,\n              ln.colorantid as colorant,\n              ln.linenum as linenum\n              from\n              (\n                select\n                i.invoiceid as salesid,\n                i.batchno,\n                i.itemid,\n                i.configid,\n                i.inventsizeid,\n                st.status as status,\n                ABS(i.qty) as salesqty,\n                b.itemname as prodnamear,\n                b.namealias as prodnameen,\n                coalesce(sl.salesprice, 0)  as salesprice,\n                coalesce(sl.vatamount, 0)  as vatamount,\n                coalesce(sl.linetotaldisc, 0) as linetotaldisc,\n                coalesce(sl.colorantprice,0) as colorantprice,\n                c.name as colNameAr,\n                c.name as colNameEn,\n                s.description as sizeNameEn,\n                s.name as sizeNameAr,\n                coalesce(sl.lineamount,0) + (coalesce(sl.colorantprice, 0) * coalesce(sl.salesqty,0)) as  lineamount,\n                sl.colorantid as  colorantid,\n                sl.salesqty as saleslineqty,\n                sl.vat as vat,\n                sl.linenum\n                from inventtrans i\n                left join salestable st on st.salesid = i.invoiceid\n                left join salesline sl on sl.id = i.sales_line_id\n                left join inventtable b on i.itemid=b.itemid\n                left join inventsize s on s.itemid = i.itemid and i.inventsizeid = s.inventsizeid\n                left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n            where invoiceid='" + id + "'\n            ) as ln order by linenum ASC\n            ";
+                        salesQuery = "\n              select\n              distinct\n              ln.salesid,\n              ln.itemid,\n              ln.batchno,\n              ln.configid,\n              ln.inventsizeid,\n              ln.saleslineqty,\n              to_char(ln.salesqty, 'FM999,999,999D') as \"salesQty\",\n              to_char(ln.salesprice, 'FM999,999,999,990.000') as salesprice,\n              to_char(ln.vatamount/ln.salesqty, 'FM999,999,999,990.000') as \"vatAmount\",\n              to_char((ln.linetotaldisc/ln.saleslineqty)*ln.salesqty, 'FM999,999,999,990.000') as \"lineTotalDisc\",\n              to_char(ln.colorantprice, 'FM999,999,999,990.000') as colorantprice,\n              to_char((((ln.salesprice*ln.salesqty) + ln.colorantprice) \n              + (ln.vatamount/ln.salesqty) - ((ln.linetotaldisc/ln.saleslineqty)*ln.salesqty)) \n              , 'FM999,999,999,990.000') as \"lineAmount\",\n              ln.prodnamear as \"prodNameAr\",\n              ln.prodnameen as \"prodNameEn\",\n              ln.colNameAr as \"colNameAr\",\n              ln.colNameEn as \"colNameEn\",\n              ln.sizeNameEn as \"sizeNameEn\",\n              ln.sizeNameAr as \"sizeNameAr\",\n              to_char((ln.lineamount/ln.saleslineqty)*ln.salesqty - (ln.linetotaldisc/ln.saleslineqty)*ln.salesqty, 'FM999,999,999,990.000') as \"lineAmountBeforeVat\",\n              ln.vat as vat,\n              ln.colorantid as colorant,\n              ln.linenum as linenum\n              from\n              (\n                select\n                i.invoiceid as salesid,\n                i.batchno,\n                i.itemid,\n                i.configid,\n                i.inventsizeid,\n                st.status as status,\n                ABS(i.qty) as salesqty,\n                b.itemname as prodnamear,\n                b.namealias as prodnameen,\n                coalesce(sl.salesprice, 0)  as salesprice,\n                coalesce(sl.vatamount, 0)  as vatamount,\n                coalesce(sl.linetotaldisc, 0) as linetotaldisc,\n                coalesce(sl.colorantprice,0) as colorantprice,\n                c.name as colNameAr,\n                c.name as colNameEn,\n                s.description as sizeNameEn,\n                s.name as sizeNameAr,\n                coalesce(sl.lineamount,0) + (coalesce(sl.colorantprice, 0) * coalesce(sl.salesqty,0)) as  lineamount,\n                sl.colorantid as  colorantid,\n                sl.salesqty as saleslineqty,\n                sl.vat as vat,\n                sl.linenum\n                from inventtrans i\n                left join salestable st on st.salesid = i.invoiceid\n                left join salesline sl on sl.id = i.sales_line_id\n                left join inventtable b on i.itemid=b.itemid\n                left join inventsize s on s.itemid = i.itemid and i.inventsizeid = s.inventsizeid\n                left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n            where invoiceid='" + id + "'\n            ) as ln order by linenum ASC\n            ";
                         return [4 /*yield*/, this.db.query(salesQuery)];
                     case 2:
                         salesLine = _a.sent();
@@ -79,7 +79,6 @@ var SalesOrderReport = /** @class */ (function () {
                         chunkArray = _a.sent();
                         // console.log(chunkArray)
                         list = list.concat(chunkArray);
-                        console.log(list);
                         newSalesline_1 = [];
                         sNo_1 = 1;
                         list.map(function (val) {
@@ -93,8 +92,8 @@ var SalesOrderReport = /** @class */ (function () {
                             };
                             data_1.isbreak = val.length > 5 ? true : false;
                             val.map(function (v) {
-                                lines.netAmount += parseFloat(v.lineAmount);
-                                lines.amount += parseFloat(v.salesprice);
+                                lines.netAmount += parseFloat(v.lineAmount.replace(/,/g, ''));
+                                lines.amount += parseFloat(v.salesprice) * parseInt(v.salesQty);
                                 lines.disc += parseFloat(v.lineTotalDisc);
                                 lines.vatamount += parseFloat(v.vatAmount);
                                 lines.quantity += parseInt(v.salesQty);
@@ -106,12 +105,15 @@ var SalesOrderReport = /** @class */ (function () {
                             lines.netAmount = lines.netAmount.toFixed(3);
                             lines.amount = lines.amount.toFixed(3);
                             lines.disc = lines.disc.toFixed(3);
+                            lines.isSubTotal = (sNo_1 <= 4) ? false : true;
                             newSalesline_1.push(lines);
                         });
                         data_1.salesLine = newSalesline_1;
                         data_1.quantity = 0;
                         data_1.salesLine.map(function (v) {
                             data_1.quantity += parseInt(v.quantity);
+                            // console.log(data.salesLine.length)
+                            // data.isSubTotal = data.salesLine.length < 5 ? true: false;
                         });
                         return [2 /*return*/, data_1];
                     case 4:

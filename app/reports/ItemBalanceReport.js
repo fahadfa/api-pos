@@ -125,6 +125,9 @@ var ItemBalanceReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 // console.log(result.salesLine[0].product.nameEnglish);
                 renderData = result;
+                renderData.fromDate = params.fromDate;
+                renderData.toDate = params.toDate;
+                renderData.inventlocationid = params.inventlocationid;
                 console.log(renderData);
                 if (params.type == "excel") {
                     file = params.lang == "en" ? "itembalance-excel" : "itembalance-excel-ar";

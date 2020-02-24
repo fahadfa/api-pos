@@ -53,6 +53,7 @@ var Config = __importStar(require("./utils/Config"));
 var Log_1 = require("./utils/Log");
 //import { main } from "./sync";
 var http = require("http");
+var Store_1 = require("./utils/Store");
 var port = 5000;
 var count = 0;
 Config.setEnvConfig();
@@ -122,7 +123,21 @@ var sync = function () {
     child_process.fork(syncFile);
 };
 try {
-    sync();
+    var cron = require("node-cron");
+    var lastSyncDate_1 = null;
+    var diff_1 = null;
+    Store_1.StoreInIt();
+    cron.schedule("*/10 * * * *", function () {
+        lastSyncDate_1 = Store_1.getItem("syncdate");
+        Log_1.log.warn(lastSyncDate_1);
+        lastSyncDate_1 = new Date(lastSyncDate_1);
+        diff_1 = (new Date().getTime() - lastSyncDate_1.getTime()) / 60000;
+        Log_1.log.warn("----->: sync time diff : " + diff_1);
+        if (diff_1 > 50) {
+            Log_1.log.error("----->: sync time start : " + diff_1);
+            sync();
+        }
+    });
 }
 catch (error) {
     Log_1.log.error("Sync Error");

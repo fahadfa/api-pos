@@ -4,7 +4,7 @@
 <head>
     <!-- <link href="https://fonts.googleapis.com/css?family=Raleway+Dots&display=swap" rel="stylesheet"> -->
     <!-- <link href="http://allfont.net/allfont.css?fonts=dot-matrix" rel="stylesheet" type="text/css" /> -->
-    <meta http-equiv='content-Type' content='text/html; charset=UTF-8'/>
+    <meta http-equiv='content-Type' content='text/html; charset=UTF-8' />
     <meta http-equiv="Content-Language" content="ar-sy">
     <meta name="description" content="بيسب">
     <style>
@@ -25,6 +25,26 @@
             /*margin: 0px;*/
             /* margin: auto; */
             /* color: #2e5170 !important; */
+        }
+
+        table {
+            page-break-inside: auto;
+            
+        }
+
+        tr {
+            page-break-inside: avoid;
+            page-break-after: always;
+            border-bottom:1px dotted #8a8989;
+            padding:1px;
+        }
+
+        thead {
+            display: table-header-group
+        }
+
+        tfoot {
+            display: table-footer-group
         }
         .color {
             color: #2e5170;
@@ -184,6 +204,7 @@
             /* margin: 1cm; */
             tfoot {
                 display: table-footer-group;
+                font-weight: bold;
             }
 
             @page {
@@ -241,23 +262,29 @@
         }
 
         #bg__watermark {
-            position: absolute;
-            display: block;
-            min-width: 100%;
-            opacity: 0.5;
-            text-align: center;
-            background-color: transparent;
-            /* padding-top:50%; */
-        }
-        #bg__text__watermark {
-            color: lightgrey;
-            font-size: 120px;
-            transform: rotate(300deg);
-            -webkit-transform: rotate(300deg);
-            opacity: 0.9;
-            filter: alpha(opacity=50);
-            background-color: transparent;
-        }
+               position: absolute;
+               display: block;
+               min-width: 100%;
+               opacity: 0.5;
+               text-align: center;
+               background-color: transparent;
+               /* padding-top:50%; */
+           }
+           #bg__text__watermark {
+               color: lightgrey;
+               font-size: 120px;
+               /* transform: rotate(300deg);
+               -webkit-transform: rotate(300deg); */
+                transform: rotate(-45deg);
+				transform-origin: 100% 50%;
+                -webkit-transform: rotate(-45deg);
+				-webkit-transform-origin: 100% 50%;
+               opacity: 0.9;
+               filter: alpha(opacity=50);
+               background-color: transparent;
+               background-size: 100%;
+               position: fixed;
+           }
     </style>
 
 </head>
@@ -268,59 +295,59 @@
         <p id="bg__text__watermark">Only for testing</p>
     </div>
 
-<div>
+    <div>
         <table align="center" style="width:94%">
             <tr>
                 <td style="text-align: center;font-weight:600;font-size:20px">Sales Orders</td>
             </tr>
             <div class="">
-                    <div >
-                        </h1>
-                        <table align="center" width="98%">
-                            <tr class="header">
-                                <td style="width:50%">
-                                    <table align="left">
-                                        <tr class="billing">
-                                            <td>Print Date</td>
-                                            <td>:</td>
-                                            <td>
-                                               {{printDate}}
-                                            </td>
-                                        </tr>
-                                        <tr class="billing">
-                                            <td>From Date</td>
-                                            <td>:</td>
-                                            <td>
-                                                {{fromDate}}
-                                            </td>
-                                        </tr>
-                                       
-                                    </table>
-                                </td>
-                                <td align="left" style="width:50%">
-                                    <table align="right">
-                                        <tr class="billing">
-                                            <td>Status</td>
-                                            <td>:</td>
-                                            <td>{{status}}</td>
-                                        </tr>
-                                        <tr class="billing">
-                                            <td>To Date</td>
-                                            <td>:</td>
-                                            <td> {{toDate}}</td>
-                                        </tr>
-                                        <tr class="billing">
-                                                <td>Printed By</td>
-                                                <td>:</td>
-                                                <td>
-                                                    {{user}}
-                                                </td>
-                                            </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
+                <div>
+                    </h1>
+                    <table align="center" width="98%">
+                        <tr class="header">
+                            <td style="width:50%">
+                                <table align="left">
+                                    <tr class="billing">
+                                        <td>Print Date</td>
+                                        <td>:</td>
+                                        <td>
+                                            {{printDate}}
+                                        </td>
+                                    </tr>
+                                    <tr class="billing">
+                                        <td>From Date</td>
+                                        <td>:</td>
+                                        <td>
+                                            {{fromDate}}
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </td>
+                            <td align="left" style="width:50%">
+                                <table align="right">
+                                    <tr class="billing">
+                                        <td>Status</td>
+                                        <td>:</td>
+                                        <td>{{status}}</td>
+                                    </tr>
+                                    <tr class="billing">
+                                        <td>To Date</td>
+                                        <td>:</td>
+                                        <td> {{toDate}}</td>
+                                    </tr>
+                                    <tr class="billing">
+                                        <td>Printed By</td>
+                                        <td>:</td>
+                                        <td>
+                                            {{user}}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
         </table>
         <table style="width:100%">
             <tbody>
@@ -329,8 +356,10 @@
                         <div class="">
                             <div class="table-border">
                                 <table class="" style="width:100%;margin:auto;border-collapse: collapse !important;">
+                                    <thead>
                                     <tr class="background" style="font-size:14px">
                                         <th class="th">Sales Id</th>
+                                        <!-- <th class="th">Sales Man Id</th> -->
                                         <th class="th">Gross Amount</th>
                                         <th class="th">Discount</th>
                                         <th class="th">VAT</th>
@@ -341,9 +370,11 @@
                                         <th class="th">Payment Mode</th>
                                         <th class="th">Status</th>
                                     </tr>
+                                    </thead>
                                     {{#each data}} 
                                     <tr class="tab-data">
                                             <td class="td">{{ this.salesId }}</td>
+                                            <!-- <td class="td">{{ this.salesManId }}</td> -->
                                             <td class="td">{{ this.grossAmount }}</td>
                                             <td class="td">{{ this.discount }}</td>
                                             <td class="td">{{this.vatAmount}}</td>
@@ -362,7 +393,7 @@
                                             <td class="td">{{ this.paymentMode }}</td>
                                             <td class="td">{{ this.status }}</td>
                                     </tr>
-                                    <tr>
+                                    <!-- <tr>
                                         <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
                                         </td>
                                         <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
@@ -383,23 +414,38 @@
                                             </td><td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
                                                 </td>
 
-                                    </tr>
+                                    </tr> -->
                                     {{/each}}
+                                    <tr style="font-weight: bold;" class="tab-data">
+                                        <td>&nbsp;</td>
+                                        <td>Total</td>
+                                        <td>{{ netAmount }}</td>
+                                        <td>{{ discount }}</td>
+                                        <td>{{vatAmount}}</td>
+                                        <td>{{ grossAmount }}</td>
+                                        <td class="td">&nbsp;</td>
+                                        <td class="td" colspan="3">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="11"
+                                            style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
+                                        </td>
+                                    </tr>
                                 </table>
-                            <div>
-                        </div>
+                                <div>
+                                </div>
                     </td>
                 </tr>
             </tbody>
-        <tfoot>
-            <tr>
-                <td>
-                    <!--place holder for the fixed-position footer-->
-                    <div class="page-footer-space"></div>
-                </td>
-            </tr>
-        </tfoot>
-    </table>
+            <tfoot>
+                <tr>
+                    <td>
+                        <!--place holder for the fixed-position footer-->
+                        <div class="page-footer-space"></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
     </div>
 </body>
 

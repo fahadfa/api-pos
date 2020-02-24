@@ -433,7 +433,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         trans.TRANSREFID = trans.TRANSREFID == "Nothing" ? trans.INVOICEID : trans.TRANSREFID;
                         _a.label = 5;
                     case 5:
-                        saleslinequery = "select id from salesline where salesid = '" + trans.INVOICEID + "' AND itemid = '" + trans.ITEMID + "' AND configid = '" + trans.ConfigId + "' AND inventsizeid = '" + trans.InventSizeId + "' AND batchno = '" + trans.BATCHNO + "' limit 1";
+                        saleslinequery = "select id from salesline where salesid = '" + trans.INVOICEID + "' AND itemid = '" + trans.ITEMID + "' AND configid = '" + trans.ConfigId + "' AND inventsizeid = '" + trans.InventSizeId + "' AND batchno = '" + trans.BATCHNO + "' AND salesqty = ABS'" + trans.QTY + "' limit 1";
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(this.localDbConfig, saleslinequery)];
                     case 6:
                         salesLineData = _a.sent();

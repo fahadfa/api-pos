@@ -294,7 +294,9 @@ var DiscountService = /** @class */ (function () {
                                             console.log(item_1, reqData.grossTotal);
                                             // istantDiscountPercentage += parseFloat(item.discpercent);
                                             // istantDiscountPercentage = item.discpercent;
-                                            if (reqData.grossTotal && reqData.grossTotal >= parseFloat(item_1.minamount) && reqData.grossTotal <= parseFloat(item_1.maxamount)) {
+                                            if (reqData.grossTotal &&
+                                                reqData.grossTotal >= parseFloat(item_1.minamount) &&
+                                                reqData.grossTotal <= parseFloat(item_1.maxamount)) {
                                                 // discount = istantDiscountPercentage;
                                                 instantDiscountPercent = item_1.discpercent;
                                                 console.log(instantDiscountPercent);
@@ -511,7 +513,8 @@ var DiscountService = /** @class */ (function () {
                                         }
                                         if (isInstantDiscount && !isNoDiscount) {
                                             //console.log(instantDiscountExcludeItems, item.itemid);
-                                            if (instantDiscountExcludeItems.includes(item.itemid)) {
+                                            if (instantDiscountExcludeItems.includes(item.itemid) ||
+                                                instantDiscountExcludeItems.includes(item.product.itemGroupId || item.product.intExt != 4)) {
                                                 isInstantDiscount = false;
                                             }
                                             else {

@@ -27,6 +27,26 @@
             /* margin: auto; */
             /* color: #2e5170 !important; */
         }
+
+        table {
+            page-break-inside: auto;
+            
+        }
+
+        tr {
+            page-break-inside: avoid;
+            page-break-after: always;
+            border-bottom:1px dotted #8a8989;
+            padding:1px;
+        }
+
+        thead {
+            display: table-header-group
+        }
+
+        tfoot {
+            display: table-footer-group
+        }
         .color {
             color: #2e5170;
         }
@@ -296,6 +316,7 @@
 
                             <div class="table-border">
                                 <table class="" style="width:100%;margin:auto;border-collapse: collapse !important;">
+                                   <thead>
                                     <tr class="background" style="font-size:14px">
                                         <th class="th">الرقم التسلسلي</th>
                                         <th class="th">المستودع</th>
@@ -313,11 +334,12 @@
                                         <th class="th">تاريخ الانتهاء</th>
                                         {{/if}}
                                     </tr>
+                                    </thead>
                                   
                                 {{#each data}}
                                     <tr class="tab-data">
                                         <td class="td">{{this.sNo}}</td>
-                                        <td class="td">{{this.WareHouseNameAr}}</td>
+                                        <td class="td">{{this.warehousenamear}}</td>
                                         <td class="td">{{this.namear}}</td>
                                         <td class="td">{{this.itemid}}</td>
                                         <td class="td">{{this.configid}}</td>
@@ -344,7 +366,7 @@
                                         </td>
                                         {{/if}}
                                     </tr>
-                                    <tr>
+                                    <!-- <tr>
                                         <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
                                         </td>
                                         <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
@@ -368,7 +390,7 @@
                                             <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
                                                 </td>
 
-                                    </tr>
+                                    </tr> -->
                                     {{/each}}
 
                 </tr>

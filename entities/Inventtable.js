@@ -44,6 +44,10 @@ var Inventtable = /** @class */ (function () {
         __metadata("design:type", String)
     ], Inventtable.prototype, "intExt", void 0);
     __decorate([
+        typeorm_1.Column({ name: "citgroupid" }),
+        __metadata("design:type", String)
+    ], Inventtable.prototype, "citGroupId", void 0);
+    __decorate([
         typeorm_1.Column({ name: "updated_on" }),
         __metadata("design:type", String)
     ], Inventtable.prototype, "updatedOn", void 0);

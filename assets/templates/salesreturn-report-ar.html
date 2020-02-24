@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <meta http-equiv='content-Type' content='text/html; charset=UTF-8'/>
+    <meta http-equiv='content-Type' content='text/html; charset=UTF-8' />
     <meta http-equiv="Content-Language" content="ar-sy">
     <meta name="description" content="بيسب">
     <style>
@@ -20,6 +20,26 @@
             font-weight: normal !important;
             direction: rtl;
         }
+        table {
+            page-break-inside: auto;
+            
+        }
+
+        tr {
+            page-break-inside: avoid;
+            page-break-after: always;
+            border-bottom:1px dotted #8a8989;
+            padding:1px;
+        }
+
+        thead {
+            display: table-header-group
+        }
+
+        tfoot {
+            display: table-footer-group
+        }
+
         .color {
             color: #2e5170;
         }
@@ -195,23 +215,29 @@
         }
 
         #bg__watermark {
-            position: absolute;
-            display: block;
-            min-width: 100%;
-            opacity: 0.5;
-            text-align: center;
-            background-color: transparent;
-            /* padding-top:50%; */
-        }
-        #bg__text__watermark {
-            color: lightgrey;
-            font-size: 120px;
-            transform: rotate(300deg);
-            -webkit-transform: rotate(300deg);
-            opacity: 0.9;
-            filter: alpha(opacity=50);
-            background-color: transparent;
-        }
+               position: absolute;
+               display: block;
+               min-width: 100%;
+               opacity: 0.5;
+               text-align: center;
+               background-color: transparent;
+               /* padding-top:50%; */
+           }
+           #bg__text__watermark {
+               color: lightgrey;
+               font-size: 120px;
+               /* transform: rotate(300deg);
+               -webkit-transform: rotate(300deg); */
+                transform: rotate(-45deg);
+				transform-origin: 50% 50%;
+                -webkit-transform: rotate(-45deg);
+				-webkit-transform-origin: 50% 50%;
+               opacity: 0.9;
+               filter: alpha(opacity=50);
+               background-color: transparent;
+               background-size: 100%;
+               position: fixed;
+           }
     </style>
 
 </head>
@@ -221,70 +247,70 @@
         <p id="bg__text__watermark">فقط للاختبار</p>
     </div>
 
-<div>
+    <div>
         <table align="center" style="width:94%">
             <tr>
-               <td style="text-align: center;font-weight:600;font-size:20px">البنود عاد</td>
+                <td style="text-align: center;font-weight:600;font-size:20px">البنود عاد</td>
             </tr>
             <div class="">
-                    <div >
-                        </h1>
-                        <table align="center" width="98%">
-                            <tr class="header">
-                                <td style="width:50%">
-                                    <table align="left">
-                                        <tr class="billing">
-                                            <td>تاريخ الطباعة</td>
-                                            <td>:</td>
-                                            <td>
-                                               {{printDate}}
-                                            </td>
-                                        </tr>
-                                        <tr class="billing">
-                                            <td>من التاريخ</td>
-                                            <td>:</td>
-                                            <td>
-                                                {{fromDate}}
-                                            </td>
-                                        </tr>
-                                        <tr class="billing">
-                                            <td>كود العميل</td>
-                                            <td>:</td>
-                                            <td>
-                                                {{nameAlias}}
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td align="left" style="width:50%">
-                                    <table align="right">
-                                        <tr class="billing">
-                                            <td>الحالة</td>
-                                            <td>:</td>
-                                            <td>{{status}}</td>
-                                        </tr>
-                                        <tr class="billing">
-                                            <td>حتى الآن</td>
-                                            <td>:</td>
-                                            <td> {{toDate}}</td>
-                                        </tr>
-                                        <tr class="billing">
-                                            <td>المستودع</td>
-                                            <td>:</td>
-                                            <td> {{WarehouseNameAr}}</td>
-                                        </tr>
-                                        <tr class="billing">
-                                                <td>طبع بواسطة</td>
-                                                <td>:</td>
-                                                <td>
-                                                    {{user}}
-                                                </td>
-                                            </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
+                <div>
+                    </h1>
+                    <table align="center" width="98%">
+                        <tr class="header">
+                            <td style="width:50%">
+                                <table align="left">
+                                    <tr class="billing">
+                                        <td>تاريخ الطباعة</td>
+                                        <td>:</td>
+                                        <td>
+                                            {{printDate}}
+                                        </td>
+                                    </tr>
+                                    <tr class="billing">
+                                        <td>من التاريخ</td>
+                                        <td>:</td>
+                                        <td>
+                                            {{fromDate}}
+                                        </td>
+                                    </tr>
+                                    <tr class="billing">
+                                        <td>كود العميل</td>
+                                        <td>:</td>
+                                        <td>
+                                            {{nameAlias}}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td align="left" style="width:50%">
+                                <table align="right">
+                                    <tr class="billing">
+                                        <td>الحالة</td>
+                                        <td>:</td>
+                                        <td>{{status}}</td>
+                                    </tr>
+                                    <tr class="billing">
+                                        <td>حتى الآن</td>
+                                        <td>:</td>
+                                        <td> {{toDate}}</td>
+                                    </tr>
+                                    <tr class="billing">
+                                        <td>المستودع</td>
+                                        <td>:</td>
+                                        <td> {{WarehouseNameAr}}</td>
+                                    </tr>
+                                    <tr class="billing">
+                                        <td>طبع بواسطة</td>
+                                        <td>:</td>
+                                        <td>
+                                            {{user}}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
         </table>
         <table style="width:100%">
             <tbody>
@@ -293,6 +319,7 @@
                         <div class="">
                             <div class="table-border">
                                 <table class="" style="width:100%;margin:auto;border-collapse: collapse !important;">
+                                  <thead>
                                     <tr class="background" style="font-size:14px">
                                         <th class="th">Retur Order Id Ar</th>
                                         <th class="th">العملاء</th>
@@ -303,7 +330,7 @@
                                         <th class="th">كمية</th>
                                         <th class="th">Status Ar</th>
                                     </tr>
-                                  
+                                  </thead>
                                     {{#each data}} 
 
                                     <tr class="tab-data">
@@ -324,7 +351,7 @@
                                         <td class="td">{{ this.netAmount }}</td>
                                         <td class="td">{{ this.status }}</td>
                                     </tr>
-                                    <tr>
+                                    <!-- <tr>
                                         <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
                                         </td>
                                         <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
@@ -341,19 +368,35 @@
                                         </td>
                                         <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
                                             </td>
-                                    </tr>
+                                    </tr> -->
                                 
                                     {{/each}}
-                                </div>
+
+                                    <tr style="font-weight: bold;" class="tab-data">
+                                        <td colspan="2">&nbsp;</td>
+                                        <td colspan="2">مجموع</td>
+                                        <td>{{ netAmount }}</td>
+                                        <td>{{ discount }}</td>
+                                        <td>{{vatAmount}}</td>
+                                        <td>{{ grossAmount }}</td>
+                                        <td class="td">&nbsp;</td>
+                                        <td class="td" colspan="2">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="11"
+                                            style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
+                                        </td>
+                                    </tr>
                             </div>
-                        </td>
+                        </div>
+                    </td>
                 </tr>
 
         </table>
         <div>
-           
+
         </div>
-    
+
     </div>
     </td>
     </tr>

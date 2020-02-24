@@ -77,11 +77,17 @@
            #bg__text__watermark {
                color: lightgrey;
                font-size: 120px;
-               transform: rotate(300deg);
-               -webkit-transform: rotate(300deg);
+               /* transform: rotate(300deg);
+               -webkit-transform: rotate(300deg); */
+                transform: rotate(-45deg);
+				transform-origin: 50% 50%;
+                -webkit-transform: rotate(-45deg);
+				-webkit-transform-origin: 50% 50%;
                opacity: 0.9;
                filter: alpha(opacity=50);
                background-color: transparent;
+               background-size: 100%;
+               position: fixed;
            }
     </style>
 </head>
@@ -273,14 +279,14 @@
                     {{/each}}
 
                 </table>
-
+                {{# if this.isSubTotal}}
 
                 <table width="100%" style="text-align:right; border-bottom:1px dotted #8a8989;margin-top: 8px;">
                     <tr class="header">
                         <td style="width:100%; text-align: right;">
                             <table width="100%" style="font-size:11px; text-align: right;">
                                 <tr class="billing" style="border-top: 1px solid black">
-                                    <td width="80%" style="font-size:11px;font-weight:600">Gross Total</td>
+                                    <td width="80%" style="font-size:11px;font-weight:600">Sub Total</td>
                                     <td width="2%">:</td>
                                     <td width="18%" style="font-size:11px;font-weight:600">
                                         {{this.amount}} SAR
@@ -318,7 +324,13 @@
                         </td>
                     </tr>
                 </table>
+                {{/if}}
+
+                
                 {{/each}}
+
+
+
                 {{# if this.isbreak}}
                 <table width="100%" style="text-align:right; border-bottom:1px dotted #8a8989;margin-top: 8px;page-break-before: always;">
                 {{else}}

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var Log_1 = require("./utils/Log");
 var SyncService_1 = require("./sync/SyncService");
+var Store_1 = require("./utils/Store");
 var cmd = require("node-cmd");
 var cron = require("node-cron");
 var CallSync = function () {
@@ -88,6 +89,7 @@ var UpdateService = function () {
     }
     cron.schedule("* * * * *", function () {
         try {
+            Store_1.setItem("syncdate", new Date().toISOString());
             autoupdater.fire("check");
         }
         catch (error) {
@@ -135,6 +137,7 @@ var UpdateService = function () {
 };
 var main = function () {
     Log_1.ulog.info("Update Started ... ");
+    Store_1.setItem("syncdate", new Date().toISOString());
     CallSync();
     UpdateService();
 };

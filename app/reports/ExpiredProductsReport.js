@@ -85,7 +85,10 @@ var ExpiredProductsReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select inventlocationid, name, namealias from inventlocation where inventlocationid ='" + param + "' limit 1";
+                        query = "select inventlocationid, name, namealias from inventlocation";
+                        if (param.toUpperCase() !== "ALL") {
+                            query += " where inventlocationid ='" + param + "' limit 1";
+                        }
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();

@@ -92,41 +92,35 @@ var SalesTableService = /** @class */ (function () {
     SalesTableService.prototype.entity = function (id, type) {
         if (type === void 0) { type = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var data, _a, _b, _c, _d, salesLine, _i, salesLine_1, item, baseSizeBatchesList_1, error_1;
-            return __generator(this, function (_e) {
-                switch (_e.label) {
+            var data, _a, _b, _c, salesLine, _i, salesLine_1, item, baseSizeBatchesList_1, error_1;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
                     case 0:
-                        _e.trys.push([0, 16, , 17]);
+                        _d.trys.push([0, 14, , 15]);
                         return [4 /*yield*/, this.salestableDAO.entity(id.toUpperCase())];
                     case 1:
-                        data = _e.sent();
+                        data = _d.sent();
                         if (!data) {
                             throw { message: Props_1.Props.ORDER_NOT_FOUND };
                         }
                         return [4 /*yield*/, this.calData(data)];
                     case 2:
-                        _e.sent();
+                        _d.sent();
                         data.custAccount = data.custAccount ? data.custAccount.trim() : null;
                         _a = data;
                         return [4 /*yield*/, this.custtableDAO.entity(data.custAccount)];
                     case 3:
-                        _a.customer = _e.sent();
+                        _a.customer = _d.sent();
                         data.customer = data.customer ? data.customer : {};
                         _b = data;
                         return [4 /*yield*/, this.inventlocationDAO.entity(data.custAccount)];
                     case 4:
-                        _b.toWarehouse = _e.sent();
+                        _b.toWarehouse = _d.sent();
                         _c = data;
-                        if (!data.painter) return [3 /*break*/, 6];
                         return [4 /*yield*/, this.custtableDAO.entity(data.painter)];
                     case 5:
-                        _d = _e.sent();
-                        return [3 /*break*/, 7];
-                    case 6:
-                        _d = {};
-                        _e.label = 7;
-                    case 7:
-                        _c.painter = _d;
+                        _c.painter = _d.sent();
+                        data.painter = data.painter ? data.painter : {};
                         data.instantDiscChecked = data.instantDiscChecked ? data.instantDiscChecked : false;
                         data.voucherDiscChecked = data.voucherDiscChecked ? data.voucherDiscChecked : false;
                         data.originalPrinted = data.originalPrinted ? data.originalPrinted : false;
@@ -139,8 +133,8 @@ var SalesTableService = /** @class */ (function () {
                         data.movementType = data.movementType ? data.movementType : {};
                         salesLine = data.salesLine;
                         return [4 /*yield*/, this.allocateSalesLineData(salesLine)];
-                    case 8:
-                        _e.sent();
+                    case 6:
+                        _d.sent();
                         salesLine.sort(function (a, b) {
                             var lineA = a.lineNum, lineB = b.lineNum;
                             if (lineA < lineB)
@@ -151,32 +145,32 @@ var SalesTableService = /** @class */ (function () {
                             return 0; //default return value (no sorting)
                         });
                         _i = 0, salesLine_1 = salesLine;
-                        _e.label = 9;
-                    case 9:
-                        if (!(_i < salesLine_1.length)) return [3 /*break*/, 14];
+                        _d.label = 7;
+                    case 7:
+                        if (!(_i < salesLine_1.length)) return [3 /*break*/, 12];
                         item = salesLine_1[_i];
                         item.product = item.size ? item.size.product : {};
                         item.size = item.size ? item.size : {};
                         delete item.size.product;
-                        if (!(data.transkind == "SALESORDER")) return [3 /*break*/, 11];
+                        if (!(data.transkind == "SALESORDER" && data.status != "POSTED" && data.status != "PAID")) return [3 /*break*/, 9];
                         return [4 /*yield*/, this.inventoryOnHandCheck(item, data.transkind, null)];
-                    case 10:
-                        _e.sent();
-                        return [3 /*break*/, 13];
-                    case 11:
-                        if (!(data.transkind == "TRANSFERORDER" && data.custAccount == this.sessionInfo.inventlocationid)) return [3 /*break*/, 13];
+                    case 8:
+                        _d.sent();
+                        return [3 /*break*/, 11];
+                    case 9:
+                        if (!(data.transkind == "TRANSFERORDER" && data.custAccount == this.sessionInfo.inventlocationid)) return [3 /*break*/, 11];
                         //console.log("---------------------------------------------------------------------------------------", data.transkind, data.status);
                         return [4 /*yield*/, this.inventoryOnHandCheck(item, data.transkind, data.custAccount)];
-                    case 12:
+                    case 10:
                         //console.log("---------------------------------------------------------------------------------------", data.transkind, data.status);
-                        _e.sent();
-                        _e.label = 13;
-                    case 13:
+                        _d.sent();
+                        _d.label = 11;
+                    case 11:
                         _i++;
-                        return [3 /*break*/, 9];
-                    case 14: return [4 /*yield*/, this.rawQuery.getBaseSizeBatchesList(id)];
-                    case 15:
-                        baseSizeBatchesList_1 = _e.sent();
+                        return [3 /*break*/, 7];
+                    case 12: return [4 /*yield*/, this.rawQuery.getBaseSizeBatchesList(id)];
+                    case 13:
+                        baseSizeBatchesList_1 = _d.sent();
                         if (data.transkind == "SALESORDER" || data.transkind == "TRANSFERORDER") {
                             salesLine.map(function (item) {
                                 item.batches = baseSizeBatchesList_1.filter(function (v) {
@@ -215,10 +209,10 @@ var SalesTableService = /** @class */ (function () {
                         }
                         // //console.log(data);
                         return [2 /*return*/, data];
-                    case 16:
-                        error_1 = _e.sent();
+                    case 14:
+                        error_1 = _d.sent();
                         throw error_1;
-                    case 17: return [2 /*return*/];
+                    case 15: return [2 /*return*/];
                 }
             });
         });

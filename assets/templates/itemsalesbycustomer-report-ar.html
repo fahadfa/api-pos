@@ -20,6 +20,25 @@
             font-weight: normal !important;
             direction: rtl;
         }
+        table {
+            page-break-inside: auto;
+            
+        }
+
+        tr {
+            page-break-inside: avoid;
+            page-break-after: always;
+            border-bottom:1px dotted #8a8989;
+            padding:1px;
+        }
+
+        thead {
+            display: table-header-group
+        }
+
+        tfoot {
+            display: table-footer-group
+        }
         .color {
             color: #2e5170;
         }
@@ -291,6 +310,8 @@
                         <div class="">
                             <div class="table-border">
                                 <table class="" style="width:100%;margin:auto;border-collapse: collapse !important;">
+                                    
+                                    <thead>
                                     <tr class="background" style="font-size:14px">
                                         <th class="th">اسم العنصر</th>
                                         <th class="th">الألوان</th>
@@ -300,7 +321,7 @@
                                         <th class="th">مبلغ الخط</th>
                                     
                                     </tr>
-                                  
+                                  </thead>
                                     {{#each data}} 
 
                                     <tr class="tab-data">
@@ -311,7 +332,7 @@
                                         <td class="td">{{ this.price }}</td>
                                         <td class="td">{{ this.lineAmount }}</td>
                                     </tr>
-                                    <tr>
+                                    <!-- <tr>
                                         <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
                                         <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
                                         <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
@@ -319,7 +340,7 @@
                                         <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
                                         <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
                                     
-                                    </tr>
+                                    </tr> -->
                                 
                                     {{/each}}
                                 </div>

@@ -49,7 +49,7 @@ var SalesOrdersReport = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 5, , 6]);
                         data = void 0;
-                        query = "\n            select \n            distinct\n            s.salesid as \"salesId\",\n            s.inventlocationid as \"fromWareHouse\",\n            s.custaccount as \"custaccount\",\n            to_char(s.createddatetime, 'DD-MM-YYYY') as createdDateTime,\n            to_char(s.lastmodifieddate, 'DD-MM-YYYY') as lastModifiedDate,\n            s.status as status,\n            to_char(s.disc , 'FM999,999,999,990.000') as discount,\n            s.salesname as name,\n            s.salesname as \"nameAlias\",\n            to_char(s.amount , 'FM999,999,999,990.000') as \"netAmount\",\n            to_char(s.netamount , 'FM999,999,999,990.000') as \"grossAmount\",\n            to_char(s.vatamount , 'FM999,999,999,990.000') as \"vatAmount\",\n            w.name as \"wareHouseNameAr\",\n            w.namealias as \"wareHouseNameEn\",\n            s.payment as \"paymentMode\",\n            c.walkincustomer as \"walkincustomer\",\n            s.mobileno as phone,\n            s.createddatetime,\n            coalesce(s.deliveryaddress, '') || coalesce(s.citycode, '') || coalesce(s.districtcode, '') || coalesce(s.country_code, '') as deliveryaddress,\n            d.\"name\" as salesman\n            from salestable s\n            left join inventlocation w on w.inventlocationid=s.inventlocationid\n            left join custtable c on c.accountnum=s.custaccount\n            left join dimensions d on d.num = s.dimension6_\n            where s.transkind = 'SALESORDER' \n            and s.createddatetime >= '" + params.fromDate + "' ::date\n            AND  s.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval) \n            ";
+                        query = "\n            select \n            distinct\n            s.salesid as \"salesId\",\n            s.dimension6_ as \"salesManId\",\n            s.inventlocationid as \"fromWareHouse\",\n            s.custaccount as \"custaccount\",\n            to_char(s.createddatetime, 'DD-MM-YYYY') as createdDateTime,\n            to_char(s.lastmodifieddate, 'DD-MM-YYYY') as lastModifiedDate,\n            s.status as status,\n            to_char(s.disc , 'FM999,999,999,990.000') as discount,\n            s.salesname as name,\n            s.salesname as \"nameAlias\",\n            to_char(s.amount , 'FM999,999,999,990.000') as \"netAmount\",\n            to_char(s.netamount , 'FM999,999,999,990.000') as \"grossAmount\",\n            to_char(s.vatamount , 'FM999,999,999,990.000') as \"vatAmount\",\n            w.name as \"wareHouseNameAr\",\n            w.namealias as \"wareHouseNameEn\",\n            s.payment as \"paymentMode\",\n            c.walkincustomer as \"walkincustomer\",\n            s.mobileno as phone,\n            s.createddatetime,\n            coalesce(s.deliveryaddress, '') || coalesce(s.citycode, '') || coalesce(s.districtcode, '') || coalesce(s.country_code, '') as deliveryaddress,\n            d.\"name\" as salesman\n            from salestable s\n            left join inventlocation w on w.inventlocationid=s.inventlocationid\n            left join custtable c on c.accountnum=s.custaccount\n            left join dimensions d on d.num = s.dimension6_\n            where s.transkind = 'SALESORDER' \n            and s.createddatetime >= '" + params.fromDate + "' ::date\n            AND  s.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval) \n            ";
                         if (!(params.inventlocationid == "ALL")) return [3 /*break*/, 2];
                         warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
                         return [4 /*yield*/, this.db.query(warehouseQuery)];
@@ -79,6 +79,7 @@ var SalesOrdersReport = /** @class */ (function () {
                         data.map(function (v) {
                             v.discount = v.discount ? v.discount : 0;
                         });
+                        console.log("salesorders  ", data);
                         return [2 /*return*/, data];
                     case 5:
                         error_1 = _a.sent();
@@ -114,6 +115,21 @@ var SalesOrdersReport = /** @class */ (function () {
                     status: params.status,
                     user: params.user
                 };
+                // renderData.total = 0;
+                renderData.grossAmount = 0;
+                renderData.discount = 0;
+                renderData.vatAmount = 0;
+                renderData.netAmount = 0;
+                result.map(function (v) {
+                    renderData.grossAmount += parseFloat(v.grossAmount.replace(/,/g, ''));
+                    renderData.discount += parseFloat(v.discount.replace(/,/g, ''));
+                    renderData.vatAmount += parseFloat(v.vatAmount.replace(/,/g, ''));
+                    renderData.netAmount += parseFloat(v.netAmount.replace(/,/g, ''));
+                });
+                renderData.grossAmount = renderData.grossAmount.toFixed(3);
+                renderData.discount = renderData.discount.toFixed(3);
+                renderData.vatAmount = renderData.vatAmount.toFixed(3);
+                renderData.netAmount = renderData.netAmount.toFixed(3);
                 // console.log(result.salesLine[0].product.nameEnglish);
                 renderData.data = result;
                 console.log(renderData);

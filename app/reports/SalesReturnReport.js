@@ -110,9 +110,22 @@ var SalesReturnReport = /** @class */ (function () {
                     status: params.status,
                     user: params.user
                 };
+                renderData.grossAmount = 0;
+                renderData.discount = 0;
+                renderData.vatAmount = 0;
+                renderData.netAmount = 0;
+                result.map(function (v) {
+                    renderData.grossAmount += parseFloat(v.grossAmount.replace(/,/g, ''));
+                    renderData.discount += parseFloat(v.discount.replace(/,/g, ''));
+                    renderData.vatAmount += parseFloat(v.vatAmount.replace(/,/g, ''));
+                    renderData.netAmount += parseFloat(v.netAmount.replace(/,/g, ''));
+                });
+                renderData.grossAmount = renderData.grossAmount.toFixed(3);
+                renderData.discount = renderData.discount.toFixed(3);
+                renderData.vatAmount = renderData.vatAmount.toFixed(3);
+                renderData.netAmount = renderData.netAmount.toFixed(3);
                 // console.log(result.salesLine[0].product.nameEnglish);
                 renderData.data = result;
-                console.log(renderData);
                 if (params.type == "excel") {
                     file = params.lang == "en" ? "salesreturn-excel" : "salesreturn-excel-ar";
                 }

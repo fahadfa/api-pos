@@ -19,7 +19,25 @@
             padding: 0px;
             font-weight: normal !important;
         }
+        table {
+            page-break-inside: auto;
+            
+        }
 
+        tr {
+            page-break-inside: avoid;
+            page-break-after: always;
+            border-bottom:1px dotted #8a8989;
+            padding:1px;
+        }
+
+        thead {
+            display: table-header-group
+        }
+
+        tfoot {
+            display: table-footer-group
+        }
         .color {
             color: #2e5170;
         }
@@ -195,23 +213,29 @@
         }
 
         #bg__watermark {
-            position: absolute;
-            display: block;
-            min-width: 100%;
-            opacity: 0.5;
-            text-align: center;
-            background-color: transparent;
-            /* padding-top:50%; */
-        }
-        #bg__text__watermark {
-            color: lightgrey;
-            font-size: 120px;
-            transform: rotate(300deg);
-            -webkit-transform: rotate(300deg);
-            opacity: 0.9;
-            filter: alpha(opacity=50);
-            background-color: transparent;
-        }
+               position: absolute;
+               display: block;
+               min-width: 100%;
+               opacity: 0.5;
+               text-align: center;
+               background-color: transparent;
+               /* padding-top:50%; */
+           }
+           #bg__text__watermark {
+               color: lightgrey;
+               font-size: 120px;
+               /* transform: rotate(300deg);
+               -webkit-transform: rotate(300deg); */
+                transform: rotate(-45deg);
+				transform-origin: 50% 50%;
+                -webkit-transform: rotate(-45deg);
+				-webkit-transform-origin: 50% 50%;
+               opacity: 0.9;
+               filter: alpha(opacity=50);
+               background-color: transparent;
+               background-size: 100%;
+               position: fixed;
+           }
     </style>
 
 </head>
@@ -278,6 +302,7 @@
                         <div class="">
                             <div class="table-border">
                                 <table class="" style="width:100%;margin:auto;border-collapse: collapse !important;">
+                                    <thead>
                                     <tr class="background" style="font-size:14px">
                                         <th class="th">Sales Id</th>
                                         <th class="th">Color</th>
@@ -286,6 +311,7 @@
                                         <th class="th">Quantity</th>
                                         <th class="th">Total Amount</th>
                                     </tr>
+                                    </thead>
                                     {{#each data}}
                                     <tr class="tab-data">
                                         <td class="td">{{ this.salesId }}</td>
@@ -295,7 +321,7 @@
                                         <td class="td">{{ this.quantity }}</td>
                                         <td class="td">{{ this.totalAmount }}</td>
                                     </tr>
-                                    <tr>
+                                    <!-- <tr>
                                         <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
                                         </td>
                                         <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
@@ -309,8 +335,21 @@
                                         <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
                                         </td>
 
-                                    </tr>
+                                    </tr> -->
                                     {{/each}}
+
+                                    <tr class="tab-data">
+                                        <td class="td">&nbsp;</td>
+                                        <td class="td">&nbsp;</td>
+                                        <td class="td">Total</td>
+                                        <td class="td">{{ price }}</td>
+                                        <td class="td">{{ totalQuantity }}</td>
+                                        <td class="td">{{ totalAmount }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6" style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
+                                        </td>
+                                    </tr>
                                 </table>
                                 <div>
                                 </div>

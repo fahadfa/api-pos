@@ -1333,6 +1333,42 @@ var LoadService = /** @class */ (function () {
             });
         });
     };
+    LoadService.prototype.checkForColorantOption = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, error_11;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.db.query("select nocolorantcheckgroup, blocklistedbasecolor from usergroupconfig where id = '" + this.sessionInfo.usergroupconfigid + "'")];
+                    case 1:
+                        data = _a.sent();
+                        data = data.length > 0 ? data[0] : {};
+                        data.nocolorantcheckgroup = data.nocolorantcheckgroup ? data.nocolorantcheckgroup.split(",") : [];
+                        data.blocklistedbasecolor = data.blocklistedbasecolor ? data.blocklistedbasecolor.split(",") : [];
+                        return [2 /*return*/, data];
+                    case 2:
+                        error_11 = _a.sent();
+                        return [2 /*return*/, error_11];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    LoadService.prototype.instantDiscountExcludeItems = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.db.query("select istantdiscountexclude from usergroupconfig where id = '" + this.sessionInfo.usergroupconfigid + "'")];
+                    case 1:
+                        data = _a.sent();
+                        data = data.length > 0 ? data[0].istantdiscountexclude.split(',') : [];
+                        return [2 /*return*/, data];
+                }
+            });
+        });
+    };
     return LoadService;
 }());
 exports.LoadService = LoadService;
