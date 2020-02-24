@@ -15,7 +15,7 @@ var CallSync = function () {
         Log_1.ulog.error(err);
     }
 };
-var UpdateService = function () {
+var UpdateSyncService = function () {
     try {
         var AutoUpdater = require("auto-updater");
         var autoupdater = new AutoUpdater({
@@ -139,7 +139,7 @@ var main = function () {
     Log_1.ulog.info("Update Started ... ");
     Store_1.setItem("syncdate", new Date().toISOString());
     CallSync();
-    UpdateService();
+    UpdateSyncService();
 };
 main();
 // setInterval(() => {
