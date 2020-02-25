@@ -325,29 +325,13 @@
                                         <td class="td">{{ this.quantity }}</td>
                                         <td class="td">{{ this.totalAmount }}</td>
                                     </tr>
-                                    <!-- <tr>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
-                                    
-                                    </tr> -->
                                 
                                     {{/each}}
 
-                                    <tr class="tab-data">
-                                        <td class="td">&nbsp;</td>
-                                        <td class="td">&nbsp;</td>
-                                        <td class="td">مجموع</td>
-                                        <td class="td">{{ price }}</td>
-                                        <td class="td">{{ totalQuantity }}</td>
-                                        <td class="td">{{ totalAmount }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="6" style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
+                                    <tr class="tab-data" style="font-weight: bold;">
+                                        <td class="td" colspan="2">&nbsp;</td>
+                                        <td class="td" colspan="2">الكمية الإجمالية:{{ totalQuantity }}</td>
+                                        <td class="td" colspan="2">المبلغ الإجمالي:{{ totalAmount }}</td>
                                     </tr>
                                 </div>
                             </div>

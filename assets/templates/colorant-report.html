@@ -213,19 +213,14 @@
         }
 
         #bg__watermark {
-               position: absolute;
                display: block;
                min-width: 100%;
-               opacity: 0.5;
-               text-align: center;
-               background-color: transparent;
-               /* padding-top:50%; */
+               opacity: 0.5;               
            }
            #bg__text__watermark {
                color: lightgrey;
                font-size: 120px;
-               /* transform: rotate(300deg);
-               -webkit-transform: rotate(300deg); */
+               text-align: center;
                 transform: rotate(-45deg);
 				transform-origin: 50% 50%;
                 -webkit-transform: rotate(-45deg);
@@ -235,6 +230,7 @@
                background-color: transparent;
                background-size: 100%;
                position: fixed;
+               margin: 50% auto;
            }
     </style>
 
@@ -321,34 +317,12 @@
                                         <td class="td">{{ this.quantity }}</td>
                                         <td class="td">{{ this.totalAmount }}</td>
                                     </tr>
-                                    <!-- <tr>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
-
-                                    </tr> -->
                                     {{/each}}
 
-                                    <tr class="tab-data">
-                                        <td class="td">&nbsp;</td>
-                                        <td class="td">&nbsp;</td>
-                                        <td class="td">Total</td>
-                                        <td class="td">{{ price }}</td>
-                                        <td class="td">{{ totalQuantity }}</td>
-                                        <td class="td">{{ totalAmount }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="6" style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
+                                    <tr class="tab-data" style="font-weight: bold;">
+                                        <td class="td" colspan="2">&nbsp;</td>
+                                        <td class="td" colspan="2">Total Quantity:{{ totalQuantity }}</td>
+                                        <td class="td" colspan="2">Total Amount:{{ totalAmount }}</td>
                                     </tr>
                                 </table>
                                 <div>
