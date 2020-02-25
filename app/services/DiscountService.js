@@ -275,7 +275,7 @@ var DiscountService = /** @class */ (function () {
                         _b.label = 12;
                     case 12:
                         _loop_1 = function (item) {
-                            var instantDiscountPercent, _i, instantDiscountRanges_1, item_1, multilinefilter, condition, appliedDiscounts, freeQty, freeItem, promotionalDiscountAmount, buy_one_get_one, promotionalDiscountDetails, isPromotionDiscount, isBuyOneGetOneDiscount, buyOneGetOneDiscountDetails, promotionalDiscountItemsFilter, itemsquantity_1, freeItems, j, i, itemDiscount;
+                            var instantDiscountPercent, _i, instantDiscountRanges_1, item_1, multilinefilter, condition, appliedDiscounts, freeQty, freeItem, promotionalDiscountAmount, buy_one_get_one, promotionalDiscountDetails, isPromotionDiscount, isBuyOneGetOneDiscount, buyOneGetOneDiscountDetails, selectedQuantity, freeItems, j, i, freeItems, j, i, itemDiscount;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
@@ -330,88 +330,58 @@ var DiscountService = /** @class */ (function () {
                                         buyOneGetOneDiscountDetails = void 0;
                                         if (!(reqData.discountType != "voucherDiscount" && reqData.discountType != "instantDiscount")) return [3 /*break*/, 5];
                                         promotionalDiscountDetails = promotionalDiscountDetails.length > 0 ? promotionalDiscountDetails[0] : null;
-                                        // if (promotionalDiscountDetails) {
-                                        //   if (promotionalDiscountDetails.multipleQty && item.quantity >= promotionalDiscountDetails.multipleQty) {
-                                        //     isPromotionDiscount = true;
-                                        //     let freeItems: any = reqData.selectedItems.filter(
-                                        //       (v: any) => v.linkId == item.linkId && v.isItemFree == true
-                                        //     );
-                                        //     console.log(freeItems);
-                                        //     for (let j in freeItems) {
-                                        //       let i: number = reqData.selectedItems.indexOf(freeItems[j]);
-                                        //       promotionalDiscountAmount +=
-                                        //         (parseFloat(reqData.selectedItems[i].price) + parseFloat(reqData.selectedItems[i].colorantprice)) *
-                                        //         parseFloat(reqData.selectedItems[i].quantity);
-                                        //       reqData.selectedItems[i].priceAfterdiscount =
-                                        //         (parseFloat(reqData.selectedItems[i].price) + parseFloat(reqData.selectedItems[i].colorantprice)) *
-                                        //           reqData.selectedItems[i].quantity -
-                                        //         0;
-                                        //       // console.log(
-                                        //       //   "==========================priceAfterdiscount===========================",
-                                        //       //   0,
-                                        //       //   reqData.selectedItems[i].priceAfterdiscount
-                                        //       // );
-                                        //       reqData.selectedItems[i].lineTotalDisc = 0;
-                                        //       reqData.selectedItems[i].lineamountafterdiscount = parseFloat(
-                                        //         reqData.selectedItems[i].priceAfterdiscount
-                                        //       );
-                                        //       reqData.selectedItems[i].vat = 5;
-                                        //       reqData.selectedItems[i].vatamount =
-                                        //         parseFloat(reqData.selectedItems[i].priceAfterdiscount) * (reqData.selectedItems[i].vat / 100);
-                                        //       reqData.selectedItems[i].priceAfterVat =
-                                        //         parseFloat(reqData.selectedItems[i].priceAfterdiscount) +
-                                        //         parseFloat(reqData.selectedItems[i].vatamount);
-                                        //       reqData.selectedItems[i].lineTotalDisc = reqData.selectedItems[i].lineTotalDisc
-                                        //         ? parseFloat(reqData.selectedItems[i].lineTotalDisc)
-                                        //         : 0;
-                                        //       reqData.discount += reqData.selectedItems[i].lineTotalDisc;
-                                        //       total += reqData.selectedItems[i].priceAfterVat;
-                                        //       totalBeforeVat += parseFloat(reqData.selectedItems[i].lineamountafterdiscount);
-                                        //       //console.log(i, grossTotal);
-                                        //       grossTotal +=
-                                        //         (parseFloat(reqData.selectedItems[i].price) + parseFloat(reqData.selectedItems[i].colorantprice)) *
-                                        //         parseInt(reqData.selectedItems[i].quantity);
-                                        //       console.log(parseFloat(reqData.selectedItems[i].price) * parseInt(reqData.selectedItems[i].quantity));
-                                        //       //console.log(i, grossTotal);
-                                        //     }
-                                        //     freeQty =
-                                        //       Math.floor(item.quantity / promotionalDiscountDetails.multipleQty) * promotionalDiscountDetails.freeQty;
-                                        //   }
-                                        // }
-                                        // if (promotionalDiscountAmount > 0) {
-                                        //   isPromotionDiscount = true;
-                                        // } else {
-                                        //   isPromotionDiscount = false;
-                                        // }
-                                        if (promotionalDiscountDetails) {
-                                            promotionalDiscountItemsFilter = reqData.selectedItems.filter(function (v) { return v.itemid == item.itemid && v.inventsizeid == item.inventsizeid; });
-                                            itemsquantity_1 = 0;
-                                            promotionalDiscountItemsFilter.map(function (v) {
-                                                itemsquantity_1 += v.quantity;
-                                            });
-                                            if (promotionalDiscountDetails.multipleQty && itemsquantity_1 >= promotionalDiscountDetails.multipleQty) {
-                                                freeQty =
-                                                    Math.floor(itemsquantity_1 / promotionalDiscountDetails.multipleQty) * promotionalDiscountDetails.freeQty;
-                                            }
-                                            console.log(freeQty);
-                                            if (freeQty > 0) {
+                                        selectedQuantity = reqData.selectedItems
+                                            .filter(function (v) { return v.itemid == v.itemid && v.inventsizeid == v.inventsizeid; })
+                                            .reduce(function (res, item) { return res + parseInt(item.quantity); }, 0);
+                                        if (promotionalDiscountDetails && item.isParent) {
+                                            if (promotionalDiscountDetails.multipleQty && selectedQuantity >= promotionalDiscountDetails.multipleQty) {
                                                 isPromotionDiscount = true;
-                                                promotionalDiscountAmount = (parseFloat(item.price) / itemsquantity_1) * freeQty;
-                                                //console.log(promotionalDiscountAmount);
-                                                item.promotionalDiscount = promotionalDiscountAmount * item.quantity;
-                                                item.supplMultipleQty = promotionalDiscountDetails.multipleQty;
-                                                item.supplFreeQty = promotionalDiscountDetails.freeQty;
-                                                appliedDiscounts.push({
-                                                    discountType: "PROMOTIONAL_DISCOUNT",
-                                                    discountAmount: item.promotionalDiscount,
-                                                    cond: [
-                                                        {
-                                                            multipleQty: promotionalDiscountDetails.multipleQty,
-                                                            freeQty: promotionalDiscountDetails.freeQty
-                                                        }
-                                                    ]
-                                                });
+                                                freeItems = reqData.selectedItems.filter(function (v) { return v.linkId == item.linkId && v.isItemFree == true; });
+                                                console.log(freeItems);
+                                                for (j in freeItems) {
+                                                    i = reqData.selectedItems.indexOf(freeItems[j]);
+                                                    promotionalDiscountAmount +=
+                                                        (parseFloat(reqData.selectedItems[i].price) + parseFloat(reqData.selectedItems[i].colorantprice)) *
+                                                            parseFloat(reqData.selectedItems[i].quantity);
+                                                    reqData.selectedItems[i].priceAfterdiscount =
+                                                        (parseFloat(reqData.selectedItems[i].price) + parseFloat(reqData.selectedItems[i].colorantprice)) *
+                                                            reqData.selectedItems[i].quantity -
+                                                            0;
+                                                    // console.log(
+                                                    //   "==========================priceAfterdiscount===========================",
+                                                    //   0,
+                                                    //   reqData.selectedItems[i].priceAfterdiscount
+                                                    // );
+                                                    reqData.selectedItems[i].lineTotalDisc = 0;
+                                                    reqData.selectedItems[i].lineamountafterdiscount = parseFloat(reqData.selectedItems[i].priceAfterdiscount);
+                                                    reqData.selectedItems[i].vat = 5;
+                                                    reqData.selectedItems[i].vatamount =
+                                                        parseFloat(reqData.selectedItems[i].priceAfterdiscount) * (reqData.selectedItems[i].vat / 100);
+                                                    reqData.selectedItems[i].priceAfterVat =
+                                                        parseFloat(reqData.selectedItems[i].priceAfterdiscount) +
+                                                            parseFloat(reqData.selectedItems[i].vatamount);
+                                                    reqData.selectedItems[i].lineTotalDisc = reqData.selectedItems[i].lineTotalDisc
+                                                        ? parseFloat(reqData.selectedItems[i].lineTotalDisc)
+                                                        : 0;
+                                                    reqData.discount += reqData.selectedItems[i].lineTotalDisc;
+                                                    total += reqData.selectedItems[i].priceAfterVat;
+                                                    totalBeforeVat += parseFloat(reqData.selectedItems[i].lineamountafterdiscount);
+                                                    //console.log(i, grossTotal);
+                                                    grossTotal +=
+                                                        (parseFloat(reqData.selectedItems[i].price) + parseFloat(reqData.selectedItems[i].colorantprice)) *
+                                                            parseInt(reqData.selectedItems[i].quantity);
+                                                    console.log(parseFloat(reqData.selectedItems[i].price) * parseInt(reqData.selectedItems[i].quantity));
+                                                    //console.log(i, grossTotal);
+                                                }
+                                                freeQty =
+                                                    Math.floor(item.quantity / promotionalDiscountDetails.multipleQty) * promotionalDiscountDetails.freeQty;
                                             }
+                                        }
+                                        if (promotionalDiscountAmount > 0) {
+                                            isPromotionDiscount = true;
+                                        }
+                                        else {
+                                            isPromotionDiscount = false;
                                         }
                                         buyOneGetOneDiscountDetails = buyOneGetOneDiscountItems.filter(function (v) { return v.itemid == item.itemid; });
                                         //console.log(item.itemid);
@@ -619,18 +589,23 @@ var DiscountService = /** @class */ (function () {
                                         if (!(isPromotionDiscount && !isNoDiscount)) return [3 /*break*/, 20];
                                         if (!(promotionalDiscountAmount > 0)) return [3 /*break*/, 20];
                                         // console.log("======promotionalDiscount============", grossTotal);
-                                        // console.log(promotionalDiscountAmount);
-                                        // item.promotionalDiscount = promotionalDiscountAmount;
-                                        // item.supplMultipleQty = promotionalDiscountDetails.multipleQty;
-                                        // item.supplFreeQty = promotionalDiscountDetails.freeQty;
+                                        console.log(promotionalDiscountAmount);
+                                        item.promotionalDiscount = promotionalDiscountAmount;
+                                        item.supplMultipleQty = promotionalDiscountDetails.multipleQty;
+                                        item.supplFreeQty = promotionalDiscountDetails.freeQty;
                                         return [4 /*yield*/, this_1.promotionalDiscount(item, reqData)];
                                     case 19:
-                                        // console.log("======promotionalDiscount============", grossTotal);
-                                        // console.log(promotionalDiscountAmount);
-                                        // item.promotionalDiscount = promotionalDiscountAmount;
-                                        // item.supplMultipleQty = promotionalDiscountDetails.multipleQty;
-                                        // item.supplFreeQty = promotionalDiscountDetails.freeQty;
                                         _a.sent();
+                                        appliedDiscounts.push({
+                                            discountType: "PROMOTIONAL_DISCOUNT",
+                                            discountAmount: item.promotionalDiscount,
+                                            cond: [
+                                                {
+                                                    multipleQty: promotionalDiscountDetails.multipleQty,
+                                                    freeQty: promotionalDiscountDetails.freeQty
+                                                }
+                                            ]
+                                        });
                                         _a.label = 20;
                                     case 20:
                                         if (!(isBuyOneGetOneDiscount && !isNoDiscount)) return [3 /*break*/, 22];

@@ -127,6 +127,7 @@ try {
     var lastSyncDate_1 = null;
     var diff_1 = null;
     Store_1.StoreInIt();
+    sync();
     cron.schedule("*/10 * * * *", function () {
         lastSyncDate_1 = Store_1.getItem("syncdate");
         Log_1.log.warn(lastSyncDate_1);
