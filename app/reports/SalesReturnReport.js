@@ -49,7 +49,7 @@ var SalesReturnReport = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 5, , 6]);
                         data = void 0;
-                        query = "\n            select \n                distinct\n                s.salesid as \"salesId\",\n                s.inventlocationid as \"fromWareHouse\",\n                s.custaccount as \"custaccount\",\n                to_char(s.createddatetime, 'DD-MM-YYYY') as createdDateTime,\n                to_char(s.lastmodifieddate, 'DD-MM-YYYY') as lastModifiedDate,\n                to_char(s.disc , 'FM999,999,999,990.000') as discount,\n                to_char(s.amount , 'FM999,999,999,990.000') as \"netAmount\",\n                to_char(s.netamount , 'FM999,999,999,990.000') as \"grossAmount\",\n                to_char(s.vatamount , 'FM999,999,999,990.000') as \"vatAmount\",\n                s.status as status,\n                s.disc as discount,\n                s.salesname as name,\n                s.salesname as \"nameAlias\",\n                s.amount as \"netAmount\",\n                s.netamount as \"grossAmount\",\n                w.name as \"wareHouseNameAr\",\n                w.namealias as \"wareHouseNameEn\",\n                c.paymtermid as \"paymentMode\",\n                c.walkincustomer as \"walkincustomer\",\n                c.phone as phone\n                from salestable s\n                left join inventlocation w on w.inventlocationid=s.inventlocationid\n                left join custtable c on c.accountnum=s.custaccount\n            where s.transkind = 'RETURNORDER'  \n            and s.createddatetime >= '" + params.fromDate + "' ::date\n            AND  s.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval) \n            ";
+                        query = "\n            select \n                distinct\n                s.salesid as \"salesId\",\n                s.inventlocationid as \"fromWareHouse\",\n                s.custaccount as \"custaccount\",\n                to_char(s.createddatetime, 'DD-MM-YYYY') as createdDateTime,\n                to_char(s.lastmodifieddate, 'DD-MM-YYYY') as lastModifiedDate,\n                to_char(s.disc , 'FM999999999990.000') as discount,\n                to_char(s.amount , 'FM999999999990.000') as \"netAmount\",\n                to_char(s.netamount , 'FM999999999990.000') as \"grossAmount\",\n                to_char(s.vatamount , 'FM999999999990.000') as \"vatAmount\",\n                s.status as status,\n                s.disc as discount,\n                s.salesname as name,\n                s.salesname as \"nameAlias\",\n                s.amount as \"netAmount\",\n                s.netamount as \"grossAmount\",\n                w.name as \"wareHouseNameAr\",\n                w.namealias as \"wareHouseNameEn\",\n                c.paymtermid as \"paymentMode\",\n                c.walkincustomer as \"walkincustomer\",\n                c.phone as phone\n                from salestable s\n                left join inventlocation w on w.inventlocationid=s.inventlocationid\n                left join custtable c on c.accountnum=s.custaccount\n            where s.transkind = 'RETURNORDER'  \n            and s.createddatetime >= '" + params.fromDate + "' ::date\n            AND  s.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval) \n            ";
                         if (!(params.inventlocationid == "ALL")) return [3 /*break*/, 2];
                         warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
                         return [4 /*yield*/, this.db.query(warehouseQuery)];
@@ -101,44 +101,52 @@ var SalesReturnReport = /** @class */ (function () {
     };
     SalesReturnReport.prototype.report = function (result, params) {
         return __awaiter(this, void 0, void 0, function () {
-            var renderData, file;
+            var renderData, warehouse, file;
             return __generator(this, function (_a) {
-                renderData = {
-                    printDate: new Date().toLocaleString(),
-                    fromDate: params.fromDate,
-                    toDate: params.toDate,
-                    status: params.status,
-                    user: params.user
-                };
-                renderData.grossAmount = 0;
-                renderData.discount = 0;
-                renderData.vatAmount = 0;
-                renderData.netAmount = 0;
-                result.map(function (v) {
-                    renderData.grossAmount += parseFloat(v.grossAmount.replace(/,/g, ''));
-                    renderData.discount += parseFloat(v.discount.replace(/,/g, ''));
-                    renderData.vatAmount += parseFloat(v.vatAmount.replace(/,/g, ''));
-                    renderData.netAmount += parseFloat(v.netAmount.replace(/,/g, ''));
-                });
-                renderData.grossAmount = renderData.grossAmount.toFixed(3);
-                renderData.discount = renderData.discount.toFixed(3);
-                renderData.vatAmount = renderData.vatAmount.toFixed(3);
-                renderData.netAmount = renderData.netAmount.toFixed(3);
-                // console.log(result.salesLine[0].product.nameEnglish);
-                renderData.data = result;
-                if (params.type == "excel") {
-                    file = params.lang == "en" ? "salesreturn-excel" : "salesreturn-excel-ar";
+                switch (_a.label) {
+                    case 0:
+                        renderData = {
+                            printDate: new Date().toLocaleString(),
+                            fromDate: params.fromDate,
+                            toDate: params.toDate,
+                            status: params.status,
+                            user: params.user
+                        };
+                        return [4 /*yield*/, this.warehouseName(params.inventlocationid)];
+                    case 1:
+                        warehouse = _a.sent();
+                        renderData.warehouseNameEn = warehouse.namealias;
+                        renderData.warehouseNameAr = warehouse.name;
+                        renderData.grossAmount = 0;
+                        renderData.discount = 0;
+                        renderData.vatAmount = 0;
+                        renderData.netAmount = 0;
+                        result.map(function (v) {
+                            renderData.grossAmount += parseFloat(v.grossAmount);
+                            renderData.discount += parseFloat(v.discount);
+                            renderData.vatAmount += parseFloat(v.vatAmount);
+                            renderData.netAmount += parseFloat(v.netAmount);
+                        });
+                        renderData.grossAmount = renderData.grossAmount.toFixed(3);
+                        renderData.discount = renderData.discount.toFixed(3);
+                        renderData.vatAmount = renderData.vatAmount.toFixed(3);
+                        renderData.netAmount = renderData.netAmount.toFixed(3);
+                        // console.log(result.salesLine[0].product.nameEnglish);
+                        renderData.data = result;
+                        if (params.type == "excel") {
+                            file = params.lang == "en" ? "salesreturn-excel" : "salesreturn-excel-ar";
+                        }
+                        else {
+                            file = params.lang == "en" ? "salesreturn-report" : "salesreturn-report-ar";
+                        }
+                        try {
+                            return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];
+                        }
+                        catch (error) {
+                            throw error;
+                        }
+                        return [2 /*return*/];
                 }
-                else {
-                    file = params.lang == "en" ? "salesreturn-report" : "salesreturn-report-ar";
-                }
-                try {
-                    return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];
-                }
-                catch (error) {
-                    throw error;
-                }
-                return [2 /*return*/];
             });
         });
     };

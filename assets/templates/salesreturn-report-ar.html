@@ -215,19 +215,14 @@
         }
 
         #bg__watermark {
-               position: absolute;
                display: block;
                min-width: 100%;
-               opacity: 0.5;
-               text-align: center;
-               background-color: transparent;
-               /* padding-top:50%; */
+               opacity: 0.5;               
            }
            #bg__text__watermark {
                color: lightgrey;
                font-size: 120px;
-               /* transform: rotate(300deg);
-               -webkit-transform: rotate(300deg); */
+               text-align: center;
                 transform: rotate(-45deg);
 				transform-origin: 50% 50%;
                 -webkit-transform: rotate(-45deg);
@@ -237,6 +232,7 @@
                background-color: transparent;
                background-size: 100%;
                position: fixed;
+               margin: 50% auto;
            }
     </style>
 
@@ -258,14 +254,8 @@
                     <table align="center" width="98%">
                         <tr class="header">
                             <td style="width:50%">
-                                <table align="left">
-                                    <tr class="billing">
-                                        <td>تاريخ الطباعة</td>
-                                        <td>:</td>
-                                        <td>
-                                            {{printDate}}
-                                        </td>
-                                    </tr>
+                                <table align="right">
+                                    
                                     <tr class="billing">
                                         <td>من التاريخ</td>
                                         <td>:</td>
@@ -274,31 +264,45 @@
                                         </td>
                                     </tr>
                                     <tr class="billing">
+                                        <td>حتى الآن</td>
+                                        <td>:</td>
+                                        <td> {{toDate}}</td>
+                                    </tr>
+                                    {{#if nameAlias}}
+                                    <tr class="billing">
                                         <td>كود العميل</td>
                                         <td>:</td>
                                         <td>
                                             {{nameAlias}}
                                         </td>
                                     </tr>
+                                    {{/if}}
                                 </table>
                             </td>
                             <td align="left" style="width:50%">
                                 <table align="right">
                                     <tr class="billing">
+                                        <td>تاريخ الطباعة</td>
+                                        <td>:</td>
+                                        <td>
+                                            {{printDate}}
+                                        </td>
+                                    </tr>
+                                    {{#if status}}
+                                    <tr class="billing">
                                         <td>الحالة</td>
                                         <td>:</td>
                                         <td>{{status}}</td>
                                     </tr>
-                                    <tr class="billing">
-                                        <td>حتى الآن</td>
-                                        <td>:</td>
-                                        <td> {{toDate}}</td>
-                                    </tr>
+                                    {{/if}}
+                                    {{#if warehouseNameAr}}
                                     <tr class="billing">
                                         <td>المستودع</td>
                                         <td>:</td>
-                                        <td> {{WarehouseNameAr}}</td>
+                                        <td> {{warehouseNameAr}}</td>
                                     </tr>
+                                    {{/if}}
+                                    {{#if user}}
                                     <tr class="billing">
                                         <td>طبع بواسطة</td>
                                         <td>:</td>
@@ -306,6 +310,7 @@
                                             {{user}}
                                         </td>
                                     </tr>
+                                    {{/if}}
                                 </table>
                             </td>
                         </tr>
@@ -327,8 +332,9 @@
                                         <th class="th">طريقة الدفع أو الدفع</th>
                                         <th class="th">المبلغ الإجمالي</th>
                                         <th class="th">خصم</th>
+                                        <th class="th">ضريبة القيمة المضافة</th>
                                         <th class="th">كمية</th>
-                                        <th class="th">Status Ar</th>
+                                        <th class="th">الحالة</th>
                                     </tr>
                                   </thead>
                                     {{#each data}} 
@@ -348,44 +354,21 @@
                                         <td class="td">{{ this.paymentMode }}</td>
                                         <td class="td">{{ this.grossAmount }}</td>
                                         <td class="td">{{ this.discount }}</td>
+                                        <td class="td">{{ this.vatAmount  }}</td>                                        
                                         <td class="td">{{ this.netAmount }}</td>
                                         <td class="td">{{ this.status }}</td>
                                     </tr>
-                                    <!-- <tr>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                            </td>
-                                    </tr> -->
                                 
                                     {{/each}}
 
                                     <tr style="font-weight: bold;" class="tab-data">
                                         <td colspan="2">&nbsp;</td>
                                         <td colspan="2">مجموع</td>
-                                        <td>{{ netAmount }}</td>
+                                        <td>{{ grossAmount }}</td>
                                         <td>{{ discount }}</td>
                                         <td>{{vatAmount}}</td>
-                                        <td>{{ grossAmount }}</td>
+                                        <td>{{ netAmount }}</td>
                                         <td class="td">&nbsp;</td>
-                                        <td class="td" colspan="2">&nbsp;</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="11"
-                                            style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
                                     </tr>
                             </div>
                         </div>

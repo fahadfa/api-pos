@@ -213,23 +213,31 @@
         }
 
         #bg__watermark {
-            position: absolute;
-            display: block;
-            min-width: 100%;
-            opacity: 0.5;
-            text-align: center;
-            background-color: transparent;
-            /* padding-top:50%; */
-        }
-        #bg__text__watermark {
-            color: lightgrey;
-            font-size: 120px;
-            transform: rotate(300deg);
-            -webkit-transform: rotate(300deg);
-            opacity: 0.9;
-            filter: alpha(opacity=50);
-            background-color: transparent;
-        }
+               /* position: absolute;                
+               text-align: center;
+               background-color: transparent; */
+               display: block;
+               min-width: 100%;
+               opacity: 0.5;               
+           }
+           #bg__text__watermark {
+               color: lightgrey;
+               font-size: 120px;
+               text-align: center;
+               /* transform: rotate(300deg);
+               -webkit-transform: rotate(300deg);
+               background-position:center; */
+                transform: rotate(-45deg);
+				transform-origin: 50% 50%;
+                -webkit-transform: rotate(-45deg);
+				-webkit-transform-origin: 50% 50%;
+               opacity: 0.9;
+               filter: alpha(opacity=50);
+               background-color: transparent;
+               background-size: 100%;
+               position: fixed;
+               margin: 50% auto;
+           }
     </style>
 
 </head>
@@ -244,19 +252,11 @@
                 <td style="text-align: center;font-weight:600;font-size:20px">Item Transactions</td>
             </tr>
             <div class="">
-                    <div >
-                        </h1>
+                    <div>
                         <table align="center" width="98%">
                             <tr class="header">
-                                <td style="width:50%">
-                                    <table align="left">
-                                        <tr class="billing">
-                                            <td>Print Date</td>
-                                            <td>:</td>
-                                            <td>
-                                               {{printDate}}
-                                            </td>
-                                        </tr>
+                                <td valign="top" style="width:45%">
+                                    <table align="left">                                        
                                         <tr class="billing">
                                             <td>From Date</td>
                                             <td>:</td>
@@ -265,43 +265,61 @@
                                             </td>
                                         </tr>
                                         <tr class="billing">
+                                            <td>To Date</td>
+                                            <td>:</td>
+                                            <td> {{toDate}}</td>
+                                        </tr>
+                                        {{#if transType}}
+                                        <tr class="billing">
                                             <td>Transaction Type</td>
                                             <td>:</td>
                                             <td>
                                                 {{transType}}
                                             </td>
                                         </tr>
+                                        {{/if}}
+                                        
+                                        {{#if batchNo}}
                                         <tr class="billing">
-                                            <td>Batch No</td>
+                                            <td>Batch No111</td>
                                             <td>:</td>
                                             <td>
                                                 {{batchNo}}
                                             </td>
                                         </tr>
+                                        {{/if}}
+                                        
                                     </table>
                                 </td>
-                                <td align="left" style="width:50%">
+                                <td valign="top" align="left" style="width:55%">
                                     <table align="right">
+                                        <tr class="billing">
+                                            <td width="40%">Print Date</td>
+                                            <td width="5%">:</td>
+                                            <td width="55%">
+                                               {{printDate}}
+                                            </td>
+                                        </tr>
+                                        {{#if status}}
                                         <tr class="billing">
                                             <td>Status</td>
                                             <td>:</td>
                                             <td>{{status}}</td>
                                         </tr>
-                                        <tr class="billing">
-                                            <td>To Date</td>
-                                            <td>:</td>
-                                            <td> {{toDate}}</td>
-                                        </tr>
+                                        {{/if}}
+                                        
                                         <tr class="billing">
                                             <td>Product</td>
                                             <td>:</td>
                                             <td> {{product}}</td>
                                         </tr>
+                                        {{#if color}}
                                         <tr class="billing">
                                             <td>Color</td>
                                             <td>:</td>
                                             <td> {{color}}</td>
                                         </tr>
+                                        {{/if}}
                                         <tr class="billing">
                                                 <td>Print By</td>
                                                 <td>:</td>
@@ -311,7 +329,7 @@
                                 </td>
                             </tr>
                         </table>
-                    </div>
+                    </div
         </table>
         <table style="width:100%">
             <tbody>
@@ -360,7 +378,28 @@
                                         <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
                                     
                                     </tr> -->
+                                    
                                     {{/each}}
+                                    <!-- <tr>
+                                        <td colspan="10" style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
+                                    </tr> -->
+                                    <tr style="font-weight: bold;" class="tab-data">
+                                        <td class="td">&nbsp;</td>
+                                        <td class="td">&nbsp;</td>
+                                        <td class="td">&nbsp;</td>
+                                        <td class="td">&nbsp;</td>
+                                        <td class="td">&nbsp;</td>
+                                        <td class="td">&nbsp;</td>
+                                        <td class="td">Total</td>
+                                        <td class="td">{{ qtyIn }}</td>
+                                        <td class="td">{{ qtyOut }}</td>
+                                        <td class="td">{{ balance }}</td>
+                                </tr>
+                                    <!-- <tr>
+                                        <td colspan="10" style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
+                                    </tr> -->
+
+
                                 </table>
                             <div>
                         </div>

@@ -262,28 +262,24 @@
         }
 
         #bg__watermark {
-               position: absolute;
                display: block;
                min-width: 100%;
-               opacity: 0.5;
-               text-align: center;
-               background-color: transparent;
-               /* padding-top:50%; */
+               opacity: 0.5;               
            }
            #bg__text__watermark {
                color: lightgrey;
                font-size: 120px;
-               /* transform: rotate(300deg);
-               -webkit-transform: rotate(300deg); */
+               text-align: center;
                 transform: rotate(-45deg);
-				transform-origin: 100% 50%;
+				transform-origin: 50% 50%;
                 -webkit-transform: rotate(-45deg);
-				-webkit-transform-origin: 100% 50%;
+				-webkit-transform-origin: 50% 50%;
                opacity: 0.9;
                filter: alpha(opacity=50);
                background-color: transparent;
                background-size: 100%;
                position: fixed;
+               margin: 50% auto;
            }
     </style>
 
@@ -307,6 +303,24 @@
                         <tr class="header">
                             <td style="width:50%">
                                 <table align="left">
+                                    
+                                    <tr class="billing">
+                                        <td>From Date</td>
+                                        <td>:</td>
+                                        <td>
+                                            {{fromDate}}
+                                        </td>
+                                    </tr>
+                                    <tr class="billing">
+                                        <td>To Date</td>
+                                        <td>:</td>
+                                        <td> {{toDate}}</td>
+                                    </tr>
+
+                                </table>
+                            </td>
+                            <td align="left" style="width:50%">
+                                <table align="right">
                                     <tr class="billing">
                                         <td>Print Date</td>
                                         <td>:</td>
@@ -315,27 +329,11 @@
                                         </td>
                                     </tr>
                                     <tr class="billing">
-                                        <td>From Date</td>
-                                        <td>:</td>
-                                        <td>
-                                            {{fromDate}}
-                                        </td>
-                                    </tr>
-
-                                </table>
-                            </td>
-                            <td align="left" style="width:50%">
-                                <table align="right">
-                                    <tr class="billing">
                                         <td>Status</td>
                                         <td>:</td>
                                         <td>{{status}}</td>
                                     </tr>
-                                    <tr class="billing">
-                                        <td>To Date</td>
-                                        <td>:</td>
-                                        <td> {{toDate}}</td>
-                                    </tr>
+                                    
                                     <tr class="billing">
                                         <td>Printed By</td>
                                         <td>:</td>
@@ -393,28 +391,6 @@
                                             <td class="td">{{ this.paymentMode }}</td>
                                             <td class="td">{{ this.status }}</td>
                                     </tr>
-                                    <!-- <tr>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                            </td><td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                                </td>
-
-                                    </tr> -->
                                     {{/each}}
                                     <tr style="font-weight: bold;" class="tab-data">
                                         <td>&nbsp;</td>
@@ -425,12 +401,8 @@
                                         <td>{{ grossAmount }}</td>
                                         <td class="td">&nbsp;</td>
                                         <td class="td" colspan="3">&nbsp;</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="11"
-                                            style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">
-                                        </td>
-                                    </tr>
+                                    </tr>                                    
+                                    
                                 </table>
                                 <div>
                                 </div>

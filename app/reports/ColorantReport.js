@@ -43,7 +43,7 @@ var ColorantReport = /** @class */ (function () {
     }
     ColorantReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, query, warehouseQuery, regionalWarehouses, inQueryStr_1, totalQuantity_1, totalAmount_1, renderData_1, error_1;
+            var data, query, warehouseQuery, regionalWarehouses, inQueryStr_1, totalQuantity_1, totalAmount_1, renderData, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -77,7 +77,7 @@ var ColorantReport = /** @class */ (function () {
                             totalQuantity_1 += v.quantity ? parseInt(v.quantity) : 0;
                             totalAmount_1 += v.totalAmount ? parseInt(v.totalAmount) : 0;
                         });
-                        renderData_1 = {
+                        renderData = {
                             printDate: new Date().toISOString().slice(0, 10),
                             fromDate: params.fromDate,
                             toDate: params.toDate,
@@ -85,15 +85,9 @@ var ColorantReport = /** @class */ (function () {
                             totalAmount: totalAmount_1,
                             user: params.user
                         };
-                        renderData_1.totalQuantity = 0;
-                        renderData_1.totalAmount = 0;
-                        data.map(function (v) {
-                            renderData_1.totalQuantity += v.totalQuantity;
-                            renderData_1.totalAmount += parseFloat(v.totalAmount.replace(/,/g, ''));
-                        });
-                        renderData_1.totalAmount = renderData_1.totalAmount.toFixed(3);
-                        renderData_1.data = data;
-                        return [2 /*return*/, renderData_1];
+                        renderData.totalAmount = renderData.totalAmount.toFixed(3);
+                        renderData.data = data;
+                        return [2 /*return*/, renderData];
                     case 5:
                         error_1 = _a.sent();
                         throw error_1;

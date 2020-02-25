@@ -112,9 +112,19 @@ var itemTransactionsReport = /** @class */ (function () {
                     color: params.color,
                     user: params.user
                 };
+                renderData.qtyIn = 0;
+                renderData.qtyOut = 0;
+                renderData.balance = 0;
+                result.map(function (v) {
+                    renderData.qtyIn += parseFloat(v.qtyIn);
+                    renderData.qtyOut += parseFloat(v.qtyOut);
+                    renderData.balance += parseFloat(v.balance);
+                });
                 // console.log(result.salesLine[0].product.nameEnglish);
                 renderData.data = result;
+                console.log('--------------------------');
                 console.log(renderData);
+                console.log('--------------------------');
                 if (params.type == "excel") {
                     file = params.lang == "en" ? "itemtransactions-excel" : "itemtransactions-excel-ar";
                 }

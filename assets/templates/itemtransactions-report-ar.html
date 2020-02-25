@@ -214,23 +214,31 @@
         }
 
         #bg__watermark {
-            position: absolute;
-            display: block;
-            min-width: 100%;
-            opacity: 0.5;
-            text-align: center;
-            background-color: transparent;
-            /* padding-top:50%; */
-        }
-        #bg__text__watermark {
-            color: lightgrey;
-            font-size: 120px;
-            transform: rotate(300deg);
-            -webkit-transform: rotate(300deg);
-            opacity: 0.9;
-            filter: alpha(opacity=50);
-            background-color: transparent;
-        }
+               /* position: absolute;                
+               text-align: center;
+               background-color: transparent; */
+               display: block;
+               min-width: 100%;
+               opacity: 0.5;               
+           }
+           #bg__text__watermark {
+               color: lightgrey;
+               font-size: 120px;
+               text-align: center;
+               /* transform: rotate(300deg);
+               -webkit-transform: rotate(300deg);
+               background-position:center; */
+                transform: rotate(-45deg);
+				transform-origin: 50% 50%;
+                -webkit-transform: rotate(-45deg);
+				-webkit-transform-origin: 50% 50%;
+               opacity: 0.9;
+               filter: alpha(opacity=50);
+               background-color: transparent;
+               background-size: 100%;
+               position: fixed;
+               margin: 50% auto;
+           }
     </style>
 
 </head>
@@ -364,6 +372,22 @@
                                     </tr> -->
                                 
                                     {{/each}}
+
+                                    <tr style="font-weight: bold;" class="tab-data">
+                                        <td class="td">&nbsp;</td>
+                                        <td class="td">&nbsp;</td>
+                                        <td class="td">&nbsp;</td>
+                                        <td class="td">&nbsp;</td>
+                                        <td class="td">&nbsp;</td>
+                                        <td class="td">&nbsp;</td>
+                                        <td class="td">مجموع</td>
+                                        <td class="td">{{ qtyIn }}</td>
+                                        <td class="td">{{ qtyOut }}</td>
+                                        <td class="td">{{ balance }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="10" style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
+                                </tr>
                                 </div>
                             </div>
                         </td>

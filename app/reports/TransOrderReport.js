@@ -79,7 +79,9 @@ var TransOrderReport = /** @class */ (function () {
                         query += " and s.custaccount in (" + inQueryStr_2.substr(0, inQueryStr_2.length - 1) + ") ";
                         return [3 /*break*/, 6];
                     case 5:
-                        query += " and s.custaccount='" + params.toWareHouseId + "' ";
+                        if (params.toWareHouseId) {
+                            query += " and s.custaccount='" + params.toWareHouseId + "' ";
+                        }
                         _a.label = 6;
                     case 6:
                         if (params.status != "ALL") {

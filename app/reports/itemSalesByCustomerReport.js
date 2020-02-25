@@ -43,13 +43,13 @@ var itemSalesByCustomerReport = /** @class */ (function () {
     }
     itemSalesByCustomerReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, query, warehouseQuery, regionalWarehouses, inQueryStr_1, totalQuantity_1, totalLineAmount_1, renderData, error_1;
+            var data, query, warehouseQuery, regionalWarehouses, inQueryStr_1, totalQuantity_1, totalLineAmount_1, price_1, renderData, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 5, , 6]);
                         data = void 0;
-                        query = "\n            select \n            i.itemid, \n            i.name, \n            i.nameAlias as \"nameAlias\", \n            to_char(sum(i.quantity), 'FM999,999,999,999D') as \"quantity\", \n            to_char(sum(i.price), 'FM999,999,999,990D000') as price, \n            to_char(sum(i.vatAmount), 'FM999,999,999,990D000') as \"vatAmount\",\n            to_char(sum(i.lineAmount), 'FM999,999,999,990D000') as \"lineAmount\",\n            i.wareHouseNameAr as \"wareHouseNameAr\", i.wareHouseNameEn as \"wareHouseNameEn\",\n            i.sizeNameEn as \"sizeNameEn\", i.sizeNameAr as \"sizeNameAr\",\n            i.nameEn as \"nameEn\", i.nameAr as \"nameAr\", i.configId as \"configId\", i.inventsizeid as \"inventsizeid\"\n            from( select \n            distinct\n            s.inventlocationid as inventlocationid,\n            s.custaccount as custaccount,\n            to_char(s.createddatetime, 'DD-MM-YYYY') as createdDateTime,\n            to_char(s.lastmodifieddate, 'DD-MM-YYYY') as lastModifiedDate,\n            sl.salesqty as quantity,\n            sl.salesprice as price,\n            sl.vatamount as vatAmount,\n            sl.linetotaldisc as totalDisc,\n            sl.itemid as itemid,\n            ((sl.lineamount - linetotaldisc + sl.vatamount)* sl.salesqty) as lineAmount,\n            c.name as name,\n            c.namealias as nameAlias,\n            w.name as wareHouseNameAr,\n            w.namealias as wareHouseNameEn,\n            c.paymmode as paymentMode,\n            sz.description as sizeNameEn,\n            sz.name as sizeNameAr,\n            sz.inventsizeid as inventsizeid,\n            bs.namealias as nameEn,\n            bs.itemname as nameAr,\n            col.configid as configid\n            from salesline sl\n            inner join salestable s on s.salesid = sl.salesid\n            left join inventlocation w on w.inventlocationid=s.inventlocationid\n            left join custtable c on c.accountnum=s.custaccount\n            left join inventtrans i on i.invoiceid=s.salesid\n            left join configtable col on sl.configid = col.configid\n            left join inventsize sz on  sz.itemid = sl.itemid and sz.inventsizeid = sl.inventsizeid\n            left join inventtable bs on bs.itemid = sl.itemid\n            where s.transkind = 'SALESORDER' and s.status = 'PAID'\n            and s.createddatetime >= '" + params.fromDate + "' ::date\n            AND  s.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval) \n            ";
+                        query = "\n            select \n            i.itemid, \n            i.name, \n            i.nameAlias as \"nameAlias\", \n            to_char(sum(i.quantity), 'FM999,999,999,999D') as \"quantity\", \n            to_char(sum(i.price), 'FM999999999990.000') as price, \n            to_char(sum(i.vatAmount), 'FM999999999990.000') as \"vatAmount\",\n            to_char(sum(i.lineAmount), 'FM999999999990.000') as \"lineAmount\",\n            i.wareHouseNameAr as \"wareHouseNameAr\", i.wareHouseNameEn as \"wareHouseNameEn\",\n            i.sizeNameEn as \"sizeNameEn\", i.sizeNameAr as \"sizeNameAr\",\n            i.nameEn as \"nameEn\", i.nameAr as \"nameAr\", i.configId as \"configId\", i.inventsizeid as \"inventsizeid\"\n            from( select \n            distinct\n            s.inventlocationid as inventlocationid,\n            s.custaccount as custaccount,\n            to_char(s.createddatetime, 'DD-MM-YYYY') as createdDateTime,\n            to_char(s.lastmodifieddate, 'DD-MM-YYYY') as lastModifiedDate,\n            sl.salesqty as quantity,\n            sl.salesprice as price,\n            sl.vatamount as vatAmount,\n            sl.linetotaldisc as totalDisc,\n            sl.itemid as itemid,\n            ((sl.lineamount - linetotaldisc + sl.vatamount)* sl.salesqty) as lineAmount,\n            c.name as name,\n            c.namealias as nameAlias,\n            w.name as wareHouseNameAr,\n            w.namealias as wareHouseNameEn,\n            c.paymmode as paymentMode,\n            sz.description as sizeNameEn,\n            sz.name as sizeNameAr,\n            sz.inventsizeid as inventsizeid,\n            bs.namealias as nameEn,\n            bs.itemname as nameAr,\n            col.configid as configid\n            from salesline sl\n            inner join salestable s on s.salesid = sl.salesid\n            left join inventlocation w on w.inventlocationid=s.inventlocationid\n            left join custtable c on c.accountnum=s.custaccount\n            left join inventtrans i on i.invoiceid=s.salesid\n            left join configtable col on sl.configid = col.configid\n            left join inventsize sz on  sz.itemid = sl.itemid and sz.inventsizeid = sl.inventsizeid\n            left join inventtable bs on bs.itemid = sl.itemid\n            where s.transkind = 'SALESORDER' and s.status in ('PAID', 'POSTED')\n            and s.createddatetime >= '" + params.fromDate + "' ::date\n            AND  s.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval) \n            ";
                         if (!(params.inventlocationid == "ALL")) return [3 /*break*/, 2];
                         warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
                         return [4 /*yield*/, this.db.query(warehouseQuery)];
@@ -90,9 +90,11 @@ var itemSalesByCustomerReport = /** @class */ (function () {
                         data = _a.sent();
                         totalQuantity_1 = 0;
                         totalLineAmount_1 = 0;
+                        price_1 = 0;
                         data.forEach(function (v) {
                             totalQuantity_1 += v.quantity ? parseInt(v.quantity) : 0;
                             totalLineAmount_1 += v.lineAmount ? parseInt(v.lineAmount) : 0;
+                            price_1 += v.price ? parseInt(v.price) : 0;
                         });
                         renderData = {
                             printDate: new Date().toLocaleString(),
@@ -105,7 +107,8 @@ var itemSalesByCustomerReport = /** @class */ (function () {
                             customerName: params.customerName,
                             totalQuantity: totalQuantity_1,
                             totalLineAmount: totalLineAmount_1,
-                            user: params.user
+                            user: params.user,
+                            price: price_1
                         };
                         renderData.data = data;
                         return [2 /*return*/, renderData];
