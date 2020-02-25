@@ -771,9 +771,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
     };
     ReturnOrderAmountService.prototype.returnAmount = function (reqData, type) {
         return __awaiter(this, void 0, void 0, function () {
-            var nonCondDiscounts, condDiscounts, salesOrderData, salesLine, salesLineIds, grossAmount, total, discount, vat, totalGrossAmountAfterReturnItems, filteredSalesLine, promotionalDiscountItems, _loop_8, _i, _a, item, _loop_9, _b, _c, item;
-            return __generator(this, function (_d) {
-                switch (_d.label) {
+            var nonCondDiscounts, condDiscounts, salesOrderData, salesLine, salesLineIds, grossAmount, total, discount, vat, totalGrossAmountAfterReturnItems, filteredSalesLine, promotionalDiscountItems, promotionalreturnItems, _i, salesLine_1, item, checkForPromotional, _loop_8, _a, _b, item;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
                         nonCondDiscounts = [
                             "TOTAL_DISCOUNT",
@@ -790,7 +790,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         ];
                         return [4 /*yield*/, this.salesTableDAO.entity(reqData.salesid.toUpperCase())];
                     case 1:
-                        salesOrderData = _d.sent();
+                        salesOrderData = _c.sent();
                         salesLine = salesOrderData.salesLine;
                         salesLineIds = [];
                         grossAmount = 0;
@@ -808,153 +808,167 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             totalGrossAmountAfterReturnItems -= parseFloat(v.salesprice) * returnQuantity - v.totalSettledAmount;
                         });
                         promotionalDiscountItems = [];
+                        promotionalreturnItems = [];
+                        for (_i = 0, salesLine_1 = salesLine; _i < salesLine_1.length; _i++) {
+                            item = salesLine_1[_i];
+                            checkForPromotional = item.appliedDiscounts.filter(function (v) { return v.discountType == "PROMOTIONAL_DISCOUNT"; });
+                            if (checkForPromotional.length > 0) {
+                                promotionalDiscountItems.push(item);
+                            }
+                        }
                         _loop_8 = function (item) {
                             var line = salesLine.filter(function (v) { return v.id == item.salesLineId; })[0];
-                            var checkForPromotional = line.appliedDiscounts.filter(function (v) { return (v.discountType == 'PROMOTIONAL_DISCOUNT'); });
-                            if (checkForPromotional.length > 0) {
-                                promotionalDiscountItems.push(line);
+                            var promotionalItems = promotionalDiscountItems.filter(function (v) { return v.linkId == line.linkId; });
+                            if (promotionalItems.length > 0) {
+                                promotionalreturnItems.push(item);
                             }
-                        };
-                        for (_i = 0, _a = reqData.selectedBatches; _i < _a.length; _i++) {
-                            item = _a[_i];
-                            _loop_8(item);
-                        }
-                        console.log(promotionalDiscountItems);
-                        _loop_9 = function (item) {
-                            var line = salesLine.filter(function (v) { return v.id == item.salesLineId; })[0];
-                            // console.log(line.appliedDiscounts);
-                            // let itemsForPromotionalDiscount: any[] = salesLine.filter((v: any) => (v.linkId = line.linkId));
-                            // console.log(itemsForPromotionalDiscount);
-                            if (line.appliedDiscounts.length > 0) {
-                                for (var _i = 0, _a = line.appliedDiscounts; _i < _a.length; _i++) {
-                                    var discountItem = _a[_i];
-                                    if (discountItem.discountType == "TOTAL_DISCOUNT") {
-                                        grossAmount += parseFloat(line.salesprice) * parseInt(item.returnQuantity);
-                                        discount +=
-                                            parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
-                                        total +=
-                                            (parseFloat(line.salesprice) -
-                                                parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) +
-                                                parseFloat(line.vatamount) / parseInt(line.salesQty)) *
-                                                parseInt(item.returnQuantity);
-                                        vat += (parseFloat(line.vatamount) / parseInt(line.salesQty)) * parseInt(item.returnQuantity);
-                                    }
-                                    if (discountItem.discountType == "LINE_DISCOUNT") {
-                                        grossAmount += parseFloat(line.salesprice) * parseInt(item.returnQuantity);
-                                        discount +=
-                                            parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
-                                        total +=
-                                            (parseFloat(line.salesprice) -
-                                                parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) +
-                                                parseFloat(line.vatamount) / parseInt(line.salesQty)) *
-                                                parseInt(item.returnQuantity);
-                                        vat += (parseFloat(line.vatamount) / parseInt(line.salesQty)) * parseInt(item.returnQuantity);
-                                    }
-                                    if (discountItem.discountType == "ARAMKO_TAHAKOM_DISOUNT") {
-                                        grossAmount += parseFloat(line.salesprice) * parseInt(item.returnQuantity);
-                                        discount +=
-                                            parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
-                                        total +=
-                                            (parseFloat(line.salesprice) -
-                                                parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) +
-                                                parseFloat(line.vatamount) / parseInt(line.salesQty)) *
-                                                parseInt(item.returnQuantity);
-                                        vat += (parseFloat(line.vatamount) / parseInt(line.salesQty)) * parseInt(item.returnQuantity);
-                                    }
-                                    if (discountItem.discountType == "SABIC_CUSTOMER_DISCOUNT") {
-                                        grossAmount += parseFloat(line.salesprice) * parseInt(item.returnQuantity);
-                                        discount +=
-                                            parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
-                                        total +=
-                                            (parseFloat(line.salesprice) -
-                                                parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) +
-                                                parseFloat(line.vatamount) / parseInt(line.salesQty)) *
-                                                parseInt(item.returnQuantity);
-                                        vat += (parseFloat(line.vatamount) / parseInt(line.salesQty)) * parseInt(item.returnQuantity);
-                                    }
-                                    if (discountItem.discountType == "VOUCHER_DISCOUNT") {
-                                        grossAmount += parseFloat(line.salesprice) * parseInt(item.returnQuantity);
-                                        discount +=
-                                            parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
-                                        total +=
-                                            (parseFloat(line.salesprice) -
-                                                parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) +
-                                                parseFloat(line.vatamount) / parseInt(line.salesQty)) *
-                                                parseInt(item.returnQuantity);
-                                        vat += (parseFloat(line.vatamount) / parseInt(line.salesQty)) * parseInt(item.returnQuantity);
-                                    }
-                                    if (discountItem.discountType == "INSTANT_DISCOUNT") {
-                                        var percentage = 0;
-                                        for (var _b = 0, _c = discountItem.cond; _b < _c.length; _b++) {
-                                            var range = _c[_b];
-                                            if (totalGrossAmountAfterReturnItems >= parseFloat(range.minamount) &&
-                                                totalGrossAmountAfterReturnItems <= parseFloat(range.maxamount)) {
-                                                percentage = parseInt(range.discpercent);
-                                                break;
-                                            }
+                            if (promotionalItems.length == 0) {
+                                if (line.appliedDiscounts.length > 0) {
+                                    for (var _i = 0, _a = line.appliedDiscounts; _i < _a.length; _i++) {
+                                        var discountItem = _a[_i];
+                                        if (discountItem.discountType == "TOTAL_DISCOUNT") {
+                                            grossAmount += parseFloat(line.salesprice) * parseInt(item.returnQuantity);
+                                            discount +=
+                                                parseFloat(line.salesprice) *
+                                                    (parseFloat(discountItem.percentage) / 100) *
+                                                    parseInt(item.returnQuantity);
+                                            total +=
+                                                (parseFloat(line.salesprice) -
+                                                    parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) +
+                                                    parseFloat(line.vatamount) / parseInt(line.salesQty)) *
+                                                    parseInt(item.returnQuantity);
+                                            vat += (parseFloat(line.vatamount) / parseInt(line.salesQty)) * parseInt(item.returnQuantity);
                                         }
-                                        grossAmount += parseFloat(line.salesprice) * parseInt(item.returnQuantity);
-                                        discount +=
-                                            parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
-                                        total +=
-                                            (parseFloat(line.salesprice) -
-                                                parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) +
-                                                parseFloat(line.vatamount) / parseInt(line.salesQty)) *
-                                                parseInt(item.returnQuantity);
-                                        vat += (parseFloat(line.vatamount) / parseInt(line.salesQty)) * parseInt(item.returnQuantity);
-                                        // grossAmount += parseFloat(line.salesprice) * parseInt(item.returnQuantity);
-                                        // let oldDiscount: number = discountItem.discountAmount;
-                                        // let newDiscountAmount: number = parseFloat(line.salesprice) * parseInt(line.salesQty) * (percentage / 100);
-                                        // let discountDiff: number = (oldDiscount - newDiscountAmount) / parseFloat(line.salesQty);
-                                        // discountDiff = newDiscountAmount > 0 ? discountDiff : 0
-                                        // let lineDiscount: number =
-                                        //   ((parseFloat(line.salesprice) * percentage) / 100 + discountDiff)
-                                        // discount += lineDiscount * parseInt(item.returnQuantity);
-                                        // let oldVat = parseFloat(line.vatamount)
-                                        // let newVat =  (parseFloat(line.salesprice) - lineDiscount) * (parseFloat(line.vat)/100)
-                                        // let vatDiff = (newVat- oldVat) / parseFloat(line.salesQty)
-                                        // let lineVat = newVat - (vatDiff * parseInt(item.returnQuantity))
-                                        // total +=
-                                        //   (parseFloat(line.salesprice) - lineDiscount + lineVat / parseInt(line.salesQty)) *
-                                        //   parseInt(item.returnQuantity);
-                                        // vat += lineVat
-                                    }
-                                    if (discountItem.discountType == "MULTI_LINE_DISCOUNT") {
-                                        grossAmount += parseFloat(line.salesprice) * parseInt(item.returnQuantity);
-                                        discount +=
-                                            parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
-                                        total +=
-                                            (parseFloat(line.salesprice) -
-                                                parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) +
-                                                parseFloat(line.vatamount) / parseInt(line.salesQty)) *
-                                                parseInt(item.returnQuantity);
-                                        vat += (parseFloat(line.vatamount) / parseInt(line.salesQty)) * parseInt(item.returnQuantity);
-                                    }
-                                    // if (discountItem.discountType == "PROMOTIONAL_DISCOUNT") {
-                                    //   grossAmount += parseFloat(line.salesprice) * parseInt(item.returnQuantity);
-                                    //   let promotionalDiscountItems = salesLine.filter(
-                                    //     (v: any) => v.itemid == item.itemid && v.inventsizeid == item.inventsizeid
-                                    //   );
-                                    //   console.log(promotionalDiscountItems);
-                                    // }
-                                    if (discountItem.discountType == "BUY_ONE_GET_ONE_DISCOUNT") {
+                                        if (discountItem.discountType == "LINE_DISCOUNT") {
+                                            grossAmount += parseFloat(line.salesprice) * parseInt(item.returnQuantity);
+                                            discount +=
+                                                parseFloat(line.salesprice) *
+                                                    (parseFloat(discountItem.percentage) / 100) *
+                                                    parseInt(item.returnQuantity);
+                                            total +=
+                                                (parseFloat(line.salesprice) -
+                                                    parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) +
+                                                    parseFloat(line.vatamount) / parseInt(line.salesQty)) *
+                                                    parseInt(item.returnQuantity);
+                                            vat += (parseFloat(line.vatamount) / parseInt(line.salesQty)) * parseInt(item.returnQuantity);
+                                        }
+                                        if (discountItem.discountType == "ARAMKO_TAHAKOM_DISOUNT") {
+                                            grossAmount += parseFloat(line.salesprice) * parseInt(item.returnQuantity);
+                                            discount +=
+                                                parseFloat(line.salesprice) *
+                                                    (parseFloat(discountItem.percentage) / 100) *
+                                                    parseInt(item.returnQuantity);
+                                            total +=
+                                                (parseFloat(line.salesprice) -
+                                                    parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) +
+                                                    parseFloat(line.vatamount) / parseInt(line.salesQty)) *
+                                                    parseInt(item.returnQuantity);
+                                            vat += (parseFloat(line.vatamount) / parseInt(line.salesQty)) * parseInt(item.returnQuantity);
+                                        }
+                                        if (discountItem.discountType == "SABIC_CUSTOMER_DISCOUNT") {
+                                            grossAmount += parseFloat(line.salesprice) * parseInt(item.returnQuantity);
+                                            discount +=
+                                                parseFloat(line.salesprice) *
+                                                    (parseFloat(discountItem.percentage) / 100) *
+                                                    parseInt(item.returnQuantity);
+                                            total +=
+                                                (parseFloat(line.salesprice) -
+                                                    parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) +
+                                                    parseFloat(line.vatamount) / parseInt(line.salesQty)) *
+                                                    parseInt(item.returnQuantity);
+                                            vat += (parseFloat(line.vatamount) / parseInt(line.salesQty)) * parseInt(item.returnQuantity);
+                                        }
+                                        if (discountItem.discountType == "VOUCHER_DISCOUNT") {
+                                            grossAmount += parseFloat(line.salesprice) * parseInt(item.returnQuantity);
+                                            discount +=
+                                                parseFloat(line.salesprice) *
+                                                    (parseFloat(discountItem.percentage) / 100) *
+                                                    parseInt(item.returnQuantity);
+                                            total +=
+                                                (parseFloat(line.salesprice) -
+                                                    parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) +
+                                                    parseFloat(line.vatamount) / parseInt(line.salesQty)) *
+                                                    parseInt(item.returnQuantity);
+                                            vat += (parseFloat(line.vatamount) / parseInt(line.salesQty)) * parseInt(item.returnQuantity);
+                                        }
+                                        if (discountItem.discountType == "INSTANT_DISCOUNT") {
+                                            var percentage = 0;
+                                            for (var _b = 0, _c = discountItem.cond; _b < _c.length; _b++) {
+                                                var range = _c[_b];
+                                                if (totalGrossAmountAfterReturnItems >= parseFloat(range.minamount) &&
+                                                    totalGrossAmountAfterReturnItems <= parseFloat(range.maxamount)) {
+                                                    percentage = parseInt(range.discpercent);
+                                                    break;
+                                                }
+                                            }
+                                            grossAmount += parseFloat(line.salesprice) * parseInt(item.returnQuantity);
+                                            discount +=
+                                                parseFloat(line.salesprice) *
+                                                    (parseFloat(discountItem.percentage) / 100) *
+                                                    parseInt(item.returnQuantity);
+                                            total +=
+                                                (parseFloat(line.salesprice) -
+                                                    parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) +
+                                                    parseFloat(line.vatamount) / parseInt(line.salesQty)) *
+                                                    parseInt(item.returnQuantity);
+                                            vat += (parseFloat(line.vatamount) / parseInt(line.salesQty)) * parseInt(item.returnQuantity);
+                                            // grossAmount += parseFloat(line.salesprice) * parseInt(item.returnQuantity);
+                                            // let oldDiscount: number = discountItem.discountAmount;
+                                            // let newDiscountAmount: number = parseFloat(line.salesprice) * parseInt(line.salesQty) * (percentage / 100);
+                                            // let discountDiff: number = (oldDiscount - newDiscountAmount) / parseFloat(line.salesQty);
+                                            // discountDiff = newDiscountAmount > 0 ? discountDiff : 0
+                                            // let lineDiscount: number =
+                                            //   ((parseFloat(line.salesprice) * percentage) / 100 + discountDiff)
+                                            // discount += lineDiscount * parseInt(item.returnQuantity);
+                                            // let oldVat = parseFloat(line.vatamount)
+                                            // let newVat =  (parseFloat(line.salesprice) - lineDiscount) * (parseFloat(line.vat)/100)
+                                            // let vatDiff = (newVat- oldVat) / parseFloat(line.salesQty)
+                                            // let lineVat = newVat - (vatDiff * parseInt(item.returnQuantity))
+                                            // total +=
+                                            //   (parseFloat(line.salesprice) - lineDiscount + lineVat / parseInt(line.salesQty)) *
+                                            //   parseInt(item.returnQuantity);
+                                            // vat += lineVat
+                                        }
+                                        if (discountItem.discountType == "MULTI_LINE_DISCOUNT") {
+                                            grossAmount += parseFloat(line.salesprice) * parseInt(item.returnQuantity);
+                                            discount +=
+                                                parseFloat(line.salesprice) *
+                                                    (parseFloat(discountItem.percentage) / 100) *
+                                                    parseInt(item.returnQuantity);
+                                            total +=
+                                                (parseFloat(line.salesprice) -
+                                                    parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) +
+                                                    parseFloat(line.vatamount) / parseInt(line.salesQty)) *
+                                                    parseInt(item.returnQuantity);
+                                            vat += (parseFloat(line.vatamount) / parseInt(line.salesQty)) * parseInt(item.returnQuantity);
+                                        }
+                                        // if (discountItem.discountType == "PROMOTIONAL_DISCOUNT") {
+                                        //   grossAmount += parseFloat(line.salesprice) * parseInt(item.returnQuantity);
+                                        //   let promotionalDiscountItems = salesLine.filter(
+                                        //     (v: any) => v.itemid == item.itemid && v.inventsizeid == item.inventsizeid
+                                        //   );
+                                        //   console.log(promotionalDiscountItems);
+                                        // }
+                                        if (discountItem.discountType == "BUY_ONE_GET_ONE_DISCOUNT") {
+                                        }
                                     }
                                 }
-                            }
-                            else {
-                                grossAmount += parseFloat(line.salesprice) * parseInt(item.returnQuantity);
-                                discount += line.lineTotalDisc;
-                                total +=
-                                    (parseFloat(line.salesprice) -
-                                        parseInt(line.lineTotalDisc) / parseInt(line.salesQty) +
-                                        parseFloat(line.vatamount) / parseInt(line.salesQty)) *
-                                        parseInt(item.returnQuantity);
-                                vat += (parseFloat(line.vatamount) / parseInt(line.salesQty)) * parseInt(item.returnQuantity);
+                                else {
+                                    grossAmount += parseFloat(line.salesprice) * parseInt(item.returnQuantity);
+                                    discount += line.lineTotalDisc;
+                                    total +=
+                                        (parseFloat(line.salesprice) -
+                                            parseInt(line.lineTotalDisc) / parseInt(line.salesQty) +
+                                            parseFloat(line.vatamount) / parseInt(line.salesQty)) *
+                                            parseInt(item.returnQuantity);
+                                    vat += (parseFloat(line.vatamount) / parseInt(line.salesQty)) * parseInt(item.returnQuantity);
+                                }
                             }
                         };
-                        for (_b = 0, _c = reqData.selectedBatches; _b < _c.length; _b++) {
-                            item = _c[_b];
-                            _loop_9(item);
+                        // console.log(promotionalDiscountItems);
+                        for (_a = 0, _b = reqData.selectedBatches; _a < _b.length; _a++) {
+                            item = _b[_a];
+                            _loop_8(item);
                         }
                         return [2 /*return*/, { total: total, grossTotal: grossAmount, discount: discount, vatPrice: vat, returnOrderData: {} }];
                 }

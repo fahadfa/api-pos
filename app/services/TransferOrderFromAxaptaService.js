@@ -140,11 +140,12 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                                 salesData.salesLines.push(salesLine);
                                 i += 1;
                             }
+                            salesData.status = 1;
                             // return { message: Props.SAVED_SUCCESSFULLY };
                             return [2 /*return*/, salesData];
                         }
                         else {
-                            throw { message: "Order Id Not Related To This Store" };
+                            throw { status: 1, message: "Order Id Not Related To This Store" };
                         }
                         return [3 /*break*/, 3];
                     case 2:
@@ -205,9 +206,9 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                     case 9:
                         _i++;
                         return [3 /*break*/, 6];
-                    case 10: return [2 /*return*/, { id: salesData.salesId, message: Props_1.Props.SAVED_SUCCESSFULLY }];
+                    case 10: return [2 /*return*/, { status: 1, id: salesData.salesId, message: Props_1.Props.SAVED_SUCCESSFULLY }];
                     case 11: return [3 /*break*/, 13];
-                    case 12: throw "Can't save this data";
+                    case 12: throw { status: 0, message: "Can't save this data" };
                     case 13: return [3 /*break*/, 15];
                     case 14:
                         error_3 = _a.sent();
@@ -242,7 +243,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         error_4 = _a.sent();
                         // console.log(Object.keys(error));
                         // console.log(error.response.data.Message);
-                        throw { message: error_4.response.data.Message };
+                        throw { status: 0, message: error_4.response.data.Message };
                     case 4: return [2 /*return*/];
                 }
             });
@@ -265,7 +266,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         return [2 /*return*/, token];
                     case 2:
                         error_5 = _a.sent();
-                        throw error_5;
+                        throw { status: 0, message: error_5 };
                     case 3: return [2 /*return*/];
                 }
             });
