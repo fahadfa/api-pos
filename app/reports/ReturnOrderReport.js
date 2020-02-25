@@ -167,8 +167,8 @@ var ReturnOrderReport = /** @class */ (function () {
                         return [4 /*yield*/, this.salesLineDAO.findOne({
                                 isItemFree: v.isitemfree,
                                 itemid: v.itemid,
-                                colors: { id: v.colorid },
-                                baseSizes: { id: v.basesizeid },
+                                configId: v.configid,
+                                inventsizeid: v.inventsizeid,
                                 salesId: v.salesorderid
                             })];
                     case 3:

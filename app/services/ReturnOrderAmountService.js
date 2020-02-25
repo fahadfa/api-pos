@@ -771,9 +771,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
     };
     ReturnOrderAmountService.prototype.returnAmount = function (reqData, type) {
         return __awaiter(this, void 0, void 0, function () {
-            var nonCondDiscounts, condDiscounts, salesOrderData, salesLine, salesLineIds, grossAmount, total, discount, vat, totalGrossAmountAfterReturnItems, filteredSalesLine, promotionalDiscountItems, promotionalreturnItems, _i, salesLine_1, item, checkForPromotional, _loop_8, _a, _b, item;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+            var nonCondDiscounts, condDiscounts, salesOrderData, salesLine, salesLineIds, grossAmount, total, discount, vat, totalGrossAmountAfterReturnItems, filteredSalesLine, promotionalDiscountItems, promotionalreturnItems, _i, salesLine_1, item, checkForPromotional, _loop_8, _a, _b, item, result, _loop_9, _c, result_1, item;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
                     case 0:
                         nonCondDiscounts = [
                             "TOTAL_DISCOUNT",
@@ -790,7 +790,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         ];
                         return [4 /*yield*/, this.salesTableDAO.entity(reqData.salesid.toUpperCase())];
                     case 1:
-                        salesOrderData = _c.sent();
+                        salesOrderData = _d.sent();
                         salesLine = salesOrderData.salesLine;
                         salesLineIds = [];
                         grossAmount = 0;
@@ -818,9 +818,10 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         }
                         _loop_8 = function (item) {
                             var line = salesLine.filter(function (v) { return v.id == item.salesLineId; })[0];
+                            line.returnQuantity = item.returnQuantity;
                             var promotionalItems = promotionalDiscountItems.filter(function (v) { return v.linkId == line.linkId; });
                             if (promotionalItems.length > 0) {
-                                promotionalreturnItems.push(item);
+                                promotionalreturnItems.push(line);
                             }
                             if (promotionalItems.length == 0) {
                                 if (line.appliedDiscounts.length > 0) {
@@ -970,9 +971,57 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             item = _b[_a];
                             _loop_8(item);
                         }
+                        result = this.groupBy(promotionalreturnItems, function (item) {
+                            return [item.linkId];
+                        });
+                        console.log(result[0].length);
+                        _loop_9 = function (item) {
+                            var totalQuantity = 0;
+                            var totalReturningQty = 0;
+                            var totalSettledAmount = 0;
+                            var Promotionallines = salesLine.filter(function (v) { return item[0].linkId == v.linkId; });
+                            var gotFreeQty = 0;
+                            var promotionalFreeItems = salesLine.filter(function (v) { return item[0].linkId == v.linkId && v.isItemFree == true; });
+                            promotionalFreeItems.map(function (v) {
+                                gotFreeQty += parseInt(v.salesQty);
+                            });
+                            Promotionallines.map(function (v) {
+                                totalQuantity += parseInt(v.salesQty) - parseInt(v.totalReturnedQuantity);
+                                totalSettledAmount += parseFloat(v.totalSettledAmount);
+                            });
+                            item.map(function (v) {
+                                totalReturningQty += v.returnQuantity;
+                            });
+                            var totalQuantityAfterReturn = totalQuantity - totalReturningQty;
+                            console.log(totalQuantity, totalReturningQty, totalQuantityAfterReturn);
+                            var line = salesLine.filter(function (v) { return v.id == item[0].id; })[0];
+                            var promotionalParentItem = promotionalDiscountItems.filter(function (v) { return v.linkId == line.linkId; })[0];
+                            var promotionalDiscountCondition = promotionalParentItem.appliedDiscounts.filter(function (v) { return v.discountType == "PROMOTIONAL_DISCOUNT"; })[0];
+                            var promotionalDiscountAmount = promotionalDiscountCondition.discountAmount;
+                            var multipleQty = promotionalDiscountCondition.cond[0].multipleQty;
+                            var freeQty = promotionalDiscountCondition.cond[0].freeQty;
+                            var eligitbleFreeQuantity = Math.floor((totalQuantityAfterReturn - gotFreeQty) / multipleQty) * freeQty;
+                            var promotionalDiscount = promotionalDiscountAmount - (promotionalDiscountAmount / gotFreeQty) * eligitbleFreeQuantity;
+                            console.log("==================", eligitbleFreeQuantity, gotFreeQty, promotionalDiscount, totalSettledAmount);
+                        };
+                        for (_c = 0, result_1 = result; _c < result_1.length; _c++) {
+                            item = result_1[_c];
+                            _loop_9(item);
+                        }
                         return [2 /*return*/, { total: total, grossTotal: grossAmount, discount: discount, vatPrice: vat, returnOrderData: {} }];
                 }
             });
+        });
+    };
+    ReturnOrderAmountService.prototype.groupBy = function (array, f) {
+        var groups = {};
+        array.forEach(function (o) {
+            var group = JSON.stringify(f(o));
+            groups[group] = groups[group] || [];
+            groups[group].push(o);
+        });
+        return Object.keys(groups).map(function (group) {
+            return groups[group];
         });
     };
     ReturnOrderAmountService.prototype.allocateReturnOrderData = function (salesOrderData, type) {

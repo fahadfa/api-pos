@@ -50,7 +50,7 @@ var InventsizeDAO = /** @class */ (function () {
                         return [4 /*yield*/, this.dao
                                 .createQueryBuilder("InventSize")
                                 //  .leftJoinAndSelect("Configtable.product", "inventtable")
-                                .where("InventSize.code IN (:...names)", { names: items })
+                                .where("lower(InventSize.code) IN (:...names)", { names: items })
                                 .andWhere("InventSize.itemid = '" + data.itemid + "'")
                                 .orderBy("InventSize.nameEnglish", "ASC")
                                 .getMany()];
