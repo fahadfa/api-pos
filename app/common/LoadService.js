@@ -488,9 +488,29 @@ var LoadService = /** @class */ (function () {
             });
         });
     };
-    LoadService.prototype.currency = function (param) {
+    LoadService.prototype.locationsalesman = function (param) {
         return __awaiter(this, void 0, void 0, function () {
             var query, data, error_9;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        query = "select name as \"name\",\n                description as \"nameAlias\",\n                dimensioncode as  dimensioncode,\n                num as salesmanid\n                from dimensions where num in  (select salesmanid from usergroupconfig where inventlocationid = '" + this.sessionInfo.inventlocationid + "')";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, data];
+                    case 2:
+                        error_9 = _a.sent();
+                        throw error_9;
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    LoadService.prototype.currency = function (param) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data, error_10;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -502,8 +522,8 @@ var LoadService = /** @class */ (function () {
                         // console.log(data);
                         return [2 /*return*/, data];
                     case 2:
-                        error_9 = _a.sent();
-                        throw error_9;
+                        error_10 = _a.sent();
+                        throw error_10;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -1303,7 +1323,7 @@ var LoadService = /** @class */ (function () {
     };
     LoadService.prototype.checkIsBase = function (param) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, error_10;
+            var data, error_11;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -1326,8 +1346,8 @@ var LoadService = /** @class */ (function () {
                         }
                         return [3 /*break*/, 3];
                     case 2:
-                        error_10 = _a.sent();
-                        return [2 /*return*/, error_10];
+                        error_11 = _a.sent();
+                        return [2 /*return*/, error_11];
                     case 3: return [2 /*return*/];
                 }
             });
@@ -1335,7 +1355,7 @@ var LoadService = /** @class */ (function () {
     };
     LoadService.prototype.checkForColorantOption = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var data, error_11;
+            var data, error_12;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -1348,8 +1368,8 @@ var LoadService = /** @class */ (function () {
                         data.blocklistedbasecolor = data.blocklistedbasecolor ? data.blocklistedbasecolor.split(",") : [];
                         return [2 /*return*/, data];
                     case 2:
-                        error_11 = _a.sent();
-                        return [2 /*return*/, error_11];
+                        error_12 = _a.sent();
+                        return [2 /*return*/, error_12];
                     case 3: return [2 /*return*/];
                 }
             });
@@ -1363,7 +1383,7 @@ var LoadService = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.db.query("select istantdiscountexclude from usergroupconfig where id = '" + this.sessionInfo.usergroupconfigid + "'")];
                     case 1:
                         data = _a.sent();
-                        data = data.length > 0 ? data[0].istantdiscountexclude.split(',') : [];
+                        data = data.length > 0 ? data[0].istantdiscountexclude.split(",") : [];
                         return [2 /*return*/, data];
                 }
             });

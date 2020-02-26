@@ -138,7 +138,7 @@ var InventsizeService = /** @class */ (function () {
     };
     InventsizeService.prototype.searchSizesWithNoPrice = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var t0, data, items, t1, error_4;
+            var t0, data, items_3, t1, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -150,9 +150,12 @@ var InventsizeService = /** @class */ (function () {
                         params.inventlocationid = this.sessionInfo.inventlocationid;
                         return [4 /*yield*/, this.rawQuery.getSizeCodes(params)];
                     case 1:
-                        items = _a.sent();
-                        if (!(items.length > 0)) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.inventsizeDAO.search(params, items)];
+                        items_3 = _a.sent();
+                        items_3.map(function (v) {
+                            items_3.push(v.toLowerCase());
+                        });
+                        if (!(items_3.length > 0)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.inventsizeDAO.search(params, items_3)];
                     case 2:
                         data = _a.sent();
                         return [3 /*break*/, 4];

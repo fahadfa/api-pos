@@ -214,23 +214,25 @@
         }
 
         #bg__watermark {
-            position: absolute;
-            display: block;
-            min-width: 100%;
-            opacity: 0.5;
-            text-align: center;
-            background-color: transparent;
-            /* padding-top:50%; */
-        }
-        #bg__text__watermark {
-            color: lightgrey;
-            font-size: 120px;
-            transform: rotate(300deg);
-            -webkit-transform: rotate(300deg);
-            opacity: 0.9;
-            filter: alpha(opacity=50);
-            background-color: transparent;
-        }
+               display: block;
+               min-width: 100%;
+               opacity: 0.5;               
+           }
+           #bg__text__watermark {
+               color: lightgrey;
+               font-size: 120px;
+               text-align: center;
+                transform: rotate(-45deg);
+				transform-origin: 50% 50%;
+                -webkit-transform: rotate(-45deg);
+				-webkit-transform-origin: 50% 50%;
+               opacity: 0.9;
+               filter: alpha(opacity=50);
+               background-color: transparent;
+               background-size: 100%;
+               position: fixed;
+               margin: 50% auto;
+           }
     </style>
 
 </head>
