@@ -96,6 +96,8 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             var totalQuantity = 0;
                             var totalReturningQty = 0;
                             var totalSettledAmount = 0;
+                            var totalReturnedQuantity = 0;
+                            var remainSalesFinancial = 0;
                             var Promotionallines = salesLine.filter(function (v) { return item[0].linkId == v.linkId; });
                             var gotFreeQty = 0;
                             var promotionalFreeItems = salesLine.filter(function (v) { return item[0].linkId == v.linkId && v.isItemFree == true; });
@@ -105,6 +107,8 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             Promotionallines.map(function (v) {
                                 totalQuantity += parseInt(v.salesQty) - parseInt(v.totalReturnedQuantity);
                                 totalSettledAmount += parseFloat(v.totalSettledAmount);
+                                totalReturnedQuantity += parseFloat(v.totalReturnedQuantity);
+                                remainSalesFinancial += v.remainSalesFinancial ? parseInt(v.remainSalesFinancial) : 0;
                             });
                             item.map(function (v) {
                                 totalReturningQty += v.returnQuantity;
@@ -119,7 +123,10 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             var freeQty = promotionalDiscountCondition.cond[0].freeQty;
                             var eligitbleFreeQuantity = Math.floor((totalQuantityAfterReturn - gotFreeQty) / multipleQty) * freeQty;
                             eligitbleFreeQuantity = eligitbleFreeQuantity >= 0 ? eligitbleFreeQuantity : 0;
-                            var promotionalDiscount = promotionalDiscountAmount - (promotionalDiscountAmount / gotFreeQty) * eligitbleFreeQuantity;
+                            var discountOnEachItem = promotionalDiscountAmount / gotFreeQty;
+                            var qtyForDeducting = gotFreeQty - eligitbleFreeQuantity - remainSalesFinancial;
+                            var promotionalDiscount = promotionalDiscountAmount - discountOnEachItem * eligitbleFreeQuantity - (discountOnEachItem * remainSalesFinancial);
+                            promotionalDiscount = promotionalDiscount >= 0 ? promotionalDiscount : 0;
                             console.log(linkId);
                             discountConditions[linkId] = {
                                 linkId: item[0].linkId,
@@ -132,6 +139,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                 deductableFreeAmount: promotionalDiscount,
                                 isAmountDeducated: false,
                                 totalQuantityAfterReturn: totalQuantityAfterReturn,
+                                qtyForDeducting: qtyForDeducting,
                                 discountType: "PROMOTIONAL_DISCOUNT"
                             };
                         };
@@ -301,6 +309,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                     itemDiscount += discObj.deductableFreeAmount;
                                     itemTotal -= discObj.deductableFreeAmount;
                                     discountConditions[line.linkId].deductableFreeAmount -= discObj.deductableFreeAmount;
+                                    returnItem.remainSalesFinancial = discObj.qtyForDeducting;
                                     discountConditions[line.linkId].isAmountDeducated = true;
                                     console.log(total);
                                 }
@@ -336,7 +345,18 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             item = _e[_d];
                             _loop_3(item);
                         }
-                        return [2 /*return*/, { total: total, grossTotal: grossAmount, discount: discount, vatPrice: vat, returnOrderData: returnOrderData }];
+                        returnOrderData.amount = grossAmount;
+                        returnOrderData.netAmount = total;
+                        returnOrderData.disc = discount;
+                        returnOrderData.vatamount = vat;
+                        returnOrderData.sumTax = vat;
+                        return [2 /*return*/, {
+                                total: total > 0 ? total : 0,
+                                grossTotal: grossAmount,
+                                discount: discount,
+                                vatPrice: vat,
+                                returnOrderData: returnOrderData
+                            }];
                 }
             });
         });
