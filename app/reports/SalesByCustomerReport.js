@@ -75,7 +75,8 @@ var SalesByCustomerReport = /** @class */ (function () {
                             result.headers.fromDate = params.fromDate;
                             result.headers.toDate = params.toDate;
                             result.headers.salesman = params.salesmanid ? rows[0].salesman : "ALL";
-                            result.headers.time = moment().format("HH:mm:ss");
+                            result.headers.printtime = moment().format("HH:mm:ss");
+                            result.headers.printdate = moment().format("DD-MM-YY");
                         }
                         _loop_1 = function (item) {
                             saleslist = result.data.find(function (ele) { return ele.salesgroup.salesman == item.salesman; });
@@ -102,10 +103,10 @@ var SalesByCustomerReport = /** @class */ (function () {
                         }
                         for (_a = 0, _b = result.data; _a < _b.length; _a++) {
                             saleslist_1 = _b[_a];
-                            saleslist_1.salesgroup.amount = Number(saleslist_1.salesgroup.amount).toFixed(2);
-                            saleslist_1.salesgroup.netamount = Number(saleslist_1.salesgroup.netamount).toFixed(2);
-                            saleslist_1.salesgroup.vatamount = Number(saleslist_1.salesgroup.vatamount).toFixed(2);
-                            saleslist_1.salesgroup.disc = Number(saleslist_1.salesgroup.disc).toFixed(2);
+                            saleslist_1.salesgroup.amount = Number(saleslist_1.salesgroup.amount).toFixed(3);
+                            saleslist_1.salesgroup.netamount = Number(saleslist_1.salesgroup.netamount).toFixed(3);
+                            saleslist_1.salesgroup.vatamount = Number(saleslist_1.salesgroup.vatamount).toFixed(3);
+                            saleslist_1.salesgroup.disc = Number(saleslist_1.salesgroup.disc).toFixed(3);
                         }
                         return [2 /*return*/, result];
                 }
@@ -142,7 +143,7 @@ var SalesByCustomerReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        sql = "\n      select\n        st.salesname as customername,\n        to_char(sum(st.vatamount), 'FM999,999,999,990.000') as vatamount,\n        to_char(sum(st.netamount), 'FM999,999,999,990.000') as \"netamount\",\n        to_char(sum(st.disc), 'FM999,999,999,990.000') as disc,\n        to_char(sum(st.amount) , 'FM999,999,999,990.000') as amount,\n        w.namealias as wnamealias,\n        w.name as wname,\n        d.description as salesman\n      from\n        salestable st\n      left join inventlocation w on\n        w.inventlocationid = st.inventlocationid\n      left join dimensions d on\n        d.num = st.dimension6_\n      where\n        1 = 1\n        and st.status not in ('RESERVED')\n        and st.deliverydate between '" + params.fromDate + "' and ('" + params.toDate + "'::date + '2 day'::interval)\n        and st.inventlocationid = '" + params.inventlocationid + "'\n  ";
+                        sql = "\n      select\n        st.salesname as customername,\n        to_char(sum(st.vatamount), 'FM999,999,999,990.000') as vatamount,\n        to_char(sum(st.netamount), 'FM999,999,999,990.000') as \"netamount\",\n        to_char(sum(st.disc), 'FM999,999,999,990.000') as disc,\n        to_char(sum(st.amount) , 'FM999,999,999,990.000') as amount,\n        w.namealias as wnamealias,\n        w.name as wname,\n        d.description as salesman\n      from\n        salestable st\n      left join inventlocation w on\n        w.inventlocationid = st.inventlocationid\n      inner join dimensions d on\n        d.num = st.dimension6_\n      where\n        1 = 1\n        and st.status not in ('RESERVED')\n        and st.deliverydate between '" + params.fromDate + "' and ('" + params.toDate + "'::date + '2 day'::interval)\n        and st.inventlocationid = '" + params.inventlocationid + "'\n  ";
                         if (params.salesmanid) {
                             sql = sql + (" and d.num = '" + params.salesmanid + "' ");
                         }

@@ -112,13 +112,13 @@ var itemTransactionsReport = /** @class */ (function () {
                     color: params.color,
                     user: params.user
                 };
-                renderData.qtyIn = 0;
-                renderData.qtyOut = 0;
-                renderData.balance = 0;
+                // renderData.qtyIn = 0;
+                // renderData.qtyOut = 0;
+                renderData.qty = 0;
                 result.map(function (v) {
-                    renderData.qtyIn += parseFloat(v.qtyIn);
-                    renderData.qtyOut += parseFloat(v.qtyOut);
-                    renderData.balance += parseFloat(v.balance);
+                    // renderData.qtyIn += parseFloat(v.qtyIn);
+                    // renderData.qtyOut += parseFloat(v.qtyOut);
+                    renderData.qty += parseFloat(v.qty);
                 });
                 // console.log(result.salesLine[0].product.nameEnglish);
                 renderData.data = result;

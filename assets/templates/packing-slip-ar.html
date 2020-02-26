@@ -229,6 +229,7 @@ margin: 50% auto;
               <tr class="header">
                 <td style="width:35%">
                   <table align="left">
+                    {{#if wname}}
                     <tr class="billing">
                       <td>من</td>
                       <td>:</td>
@@ -236,14 +237,17 @@ margin: 50% auto;
                         {{wname}}
                       </td>
                     </tr>
+                    {{/if}}
+                    {{#if cphone}}
                     <tr class="billing">
                       <td>الهاتف</td>
                       <td>:</td>
-
                       <td>
                         {{cphone}}
                       </td>
                     </tr>
+                    {{/if}}
+                    {{#if fax}}
                     <tr class="billing">
                       <td>الفاكس</td>
                       <td>:</td>
@@ -251,6 +255,8 @@ margin: 50% auto;
                         <!-- 03 234567 -->{{fax}}
                       </td>
                     </tr>
+                    {{/if}}
+                    {{#if cname}}
                     <tr class="billing">
                       <td>العميل</td>
                       <td>:</td>
@@ -258,7 +264,7 @@ margin: 50% auto;
                         {{cname}}
                       </td>
                     </tr>
-
+                    {{/if}}
                   </table>
                 </td>
                 <td style="width:30%;" align="center">
@@ -280,6 +286,7 @@ margin: 50% auto;
                 </td>
                 <td align="left" style="width:35%">
                   <table align="right">
+                    {{#if createdby}}
                     <tr class="billing">
                       <td>المستخدم</td>
                       <td>:</td>
@@ -287,6 +294,7 @@ margin: 50% auto;
                         {{createdby}}
                       </td>
                     </tr>
+                    {{/if}}
                     <tr class="billing">
                       <td>الصفحة</td>
                       <td>:</td>

@@ -142,10 +142,3 @@ var main = function () {
     UpdateSyncService();
 };
 main();
-// setInterval(() => {
-//   try {
-//     autoupdater.fire("check");
-//   } catch (error) {
-//     console.error("******* Error on Downlooad **********");
-//   }
-// }, 60000);

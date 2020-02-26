@@ -75,7 +75,9 @@ var SalesByOrderReport = /** @class */ (function () {
                             result.headers.fromDate = params.fromDate;
                             result.headers.toDate = params.toDate;
                             result.headers.salesman = params.salesmanid ? rows[0].salesman : "ALL";
-                            result.headers.time = moment().format("HH:mm:ss");
+                            // result.headers.time = moment().format("HH:mm:ss");
+                            result.headers.printtime = moment().format("HH:mm:ss");
+                            result.headers.printdate = moment().format("DD-MM-YY");
                         }
                         _loop_1 = function (item) {
                             saleslist = result.data.find(function (ele) { return ele.salesgroup.salesman == item.salesman; });

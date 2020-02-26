@@ -226,6 +226,7 @@
               <tr class="header">
                 <td style="width:35%">
                   <table align="left">
+                    {{#if wnamealias}}
                     <tr class="billing">
                       <td>From</td>
                       <td>:</td>
@@ -233,14 +234,17 @@
                         {{wnamealias}}
                       </td>
                     </tr>
+                    {{/if}}
+                    {{#if cphone}}
                     <tr class="billing">
                       <td>Phone</td>
                       <td>:</td>
-
                       <td>
                         {{cphone}}
                       </td>
                     </tr>
+                    {{/if}}
+                    {{#if fax}}
                     <tr class="billing">
                       <td>Fax</td>
                       <td>:</td>
@@ -248,6 +252,8 @@
                         <!-- 03 234567 -->{{fax}}
                       </td>
                     </tr>
+                    {{/if}}
+                    {{#if cnamealias}}
                     <tr class="billing">
                       <td>Customer</td>
                       <td>:</td>
@@ -277,6 +283,7 @@
                 </td>
                 <td align="left" style="width:35%">
                   <table align="right">
+                    {{#if createdby}}
                     <tr class="billing">
                       <td>User</td>
                       <td>:</td>
@@ -284,6 +291,7 @@
                         {{createdby}}
                       </td>
                     </tr>
+                    {{/if}}
                     <tr class="billing">
                       <td>Page</td>
                       <td>:</td>

@@ -273,6 +273,7 @@
                                                 {{fromDate}}
                                             </td>
                                         </tr>
+                                        {{#if transType}}
                                         <tr class="billing">
                                             <td>نوع المعاملة</td>
                                             <td>:</td>
@@ -280,6 +281,8 @@
                                                 {{transType}}
                                             </td>
                                         </tr>
+                                        {{/if}}
+                                        {{#if batchNo}}
                                         <tr class="billing">
                                             <td>رقم الدفعة</td>
                                             <td>:</td>
@@ -287,15 +290,18 @@
                                                 {{batchNo}}
                                             </td>
                                         </tr>
+                                        {{/if}}
                                     </table>
                                 </td>
                                 <td align="left" style="width:50%">
                                     <table align="right">
+                                        {{#if status}}
                                         <tr class="billing">
                                             <td>الحالة</td>
                                             <td>:</td>
                                             <td>{{status}}</td>
                                         </tr>
+                                        {{/if}}
                                         <tr class="billing">
                                             <td>حتى الآن</td>
                                             <td>:</td>
@@ -306,11 +312,13 @@
                                             <td>:</td>
                                             <td> {{product}}</td>
                                         </tr>
+                                        {{#if color}}
                                         <tr class="billing">
                                             <td>الألوان</td>
                                             <td>:</td>
                                             <td> {{color}}</td>
                                         </tr>
+                                        {{/if}}
                                         <tr class="billing">
                                                 <td>طباعة بواسطة</td>
                                                 <td>:</td>
@@ -338,13 +346,12 @@
                                         <th class="th">بحجم</th>
                                         <th class="th">رقم الدفعة</th>
                                         <th class="th">نوع المعاملة</th>
-                                        <th class="th">عد العناصر في</th>
-                                        <th class="th">عد العناصر خارج</th>
-                                        <th class="th">الرصيد</th>
+                                        <!-- <th class="th">عد العناصر في</th> -->
+                                        <!-- <th class="th">عد العناصر خارج</th> -->
+                                        <th class="th">كمية</th>
                                     </tr>
                                   </thead>
                                     {{#each data}} 
-
                                     <tr class="tab-data">
                                         <td class="td">{{ this.salesId }}</td>
                                         <td class="td">{{ this.lastModifiedDate }}</td>
@@ -353,23 +360,10 @@
                                         <td class="td">{{ this.sizenamear }}</td>
                                         <td class="td">{{ this.batchno }}</td>
                                         <td class="td">{{ this.transType }}</td>
-                                        <td class="td">{{ this.qtyIn }}</td>
-                                        <td class="td">{{ this.qtyOut }}</td>
-                                        <td class="td">{{ this.balance }}</td>
+                                        <!-- <td class="td">{{ this.qtyIn }}</td> -->
+                                        <!-- <td class="td">{{ this.qtyOut }}</td> -->
+                                        <td class="td">{{ this.qty }}</td>
                                     </tr>
-                                    <!-- <tr>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
-                                        <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
-                                    
-                                    </tr> -->
                                 
                                     {{/each}}
 
@@ -381,12 +375,9 @@
                                         <td class="td">&nbsp;</td>
                                         <td class="td">&nbsp;</td>
                                         <td class="td">مجموع</td>
-                                        <td class="td">{{ qtyIn }}</td>
-                                        <td class="td">{{ qtyOut }}</td>
-                                        <td class="td">{{ balance }}</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="10" style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px"></td>
+                                        <!-- <td class="td">{{ qtyIn }}</td> -->
+                                        <!-- <td class="td">{{ qtyOut }}</td> -->
+                                        <td class="td">{{ qty }}</td>
                                 </tr>
                                 </div>
                             </div>

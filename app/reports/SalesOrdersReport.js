@@ -121,10 +121,10 @@ var SalesOrdersReport = /** @class */ (function () {
                 renderData.vatAmount = 0;
                 renderData.netAmount = 0;
                 result.map(function (v) {
-                    renderData.grossAmount += parseFloat(v.grossAmount.replace(/,/g, ''));
-                    renderData.discount += parseFloat(v.discount.replace(/,/g, ''));
-                    renderData.vatAmount += parseFloat(v.vatAmount.replace(/,/g, ''));
-                    renderData.netAmount += parseFloat(v.netAmount.replace(/,/g, ''));
+                    renderData.grossAmount += parseFloat(v.grossAmount);
+                    renderData.discount += parseFloat(v.discount);
+                    renderData.vatAmount += parseFloat(v.vatAmount);
+                    renderData.netAmount += parseFloat(v.netAmount);
                 });
                 renderData.grossAmount = renderData.grossAmount.toFixed(3);
                 renderData.discount = renderData.discount.toFixed(3);

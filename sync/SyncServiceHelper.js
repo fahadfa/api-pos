@@ -55,6 +55,12 @@ var App_1 = require("../utils/App");
 var format = require("pg-format");
 var Log_1 = require("../utils/Log");
 var STORE_ID = process.env.ENV_STORE_ID || "LOCAL";
+pg_1.types.setTypeParser(1114, function (stringValue) {
+    return stringValue
+        .replace(" ", "T")
+        .split(".")
+        .shift();
+});
 var SyncServiceHelper = /** @class */ (function () {
     function SyncServiceHelper() {
     }
@@ -135,48 +141,48 @@ var SyncServiceHelper = /** @class */ (function () {
     };
     SyncServiceHelper.ExecuteQuery = function (config, sql) {
         return __awaiter(this, void 0, void 0, function () {
-            var showLog, db, res, _a, e_3;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var showLog, res, db, e_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
                         showLog = !(sql.includes("DISTINCT") || sql.includes("sync_table") || sql.includes("sync_source"));
+                        //let showLog = true;
                         if (showLog)
                             Log_1.slog.info("----------------- Query Starts----------------------------");
-                        db = null;
+                        //let db: PoolClient = null;
                         if (showLog)
                             Log_1.slog.info("\tHost Query: " + config.host);
                         if (showLog)
                             Log_1.slog.debug(sql);
                         res = null;
-                        _b.label = 1;
+                        db = new pg_1.Client(config);
+                        _a.label = 1;
                     case 1:
-                        _b.trys.push([1, 7, 8, 9]);
-                        if (!(config.host.indexOf("localhost") != -1)) return [3 /*break*/, 3];
-                        return [4 /*yield*/, SyncServiceHelper.LocalPool.connect()];
+                        _a.trys.push([1, 4, 5, 6]);
+                        return [4 /*yield*/, db.connect()];
                     case 2:
-                        _a = _b.sent();
-                        return [3 /*break*/, 5];
-                    case 3: return [4 /*yield*/, SyncServiceHelper.StagePool.connect()];
-                    case 4:
-                        _a = _b.sent();
-                        _b.label = 5;
-                    case 5:
-                        db = _a;
+                        _a.sent();
                         return [4 /*yield*/, db.query(sql)];
-                    case 6:
-                        res = _b.sent();
+                    case 3:
+                        // db =
+                        //   config.host.indexOf("localhost") != -1
+                        //     ? await SyncServiceHelper.LocalPool.connect()
+                        //     : await SyncServiceHelper.StagePool.connect();
+                        res = _a.sent();
+                        //console.log(res.rows);
                         return [2 /*return*/, { metaData: res.fields, rows: res.rows }];
-                    case 7:
-                        e_3 = _b.sent();
+                    case 4:
+                        e_3 = _a.sent();
                         Log_1.slog.error(e_3);
                         throw e_3;
-                    case 8:
+                    case 5:
+                        //if (db) db.release();
                         if (db)
-                            db.release();
+                            db.end();
                         if (showLog)
                             Log_1.slog.info("----------------- Query Ends----------------------------");
                         return [7 /*endfinally*/];
-                    case 9: return [2 /*return*/];
+                    case 6: return [2 /*return*/];
                 }
             });
         });
@@ -256,6 +262,7 @@ var SyncServiceHelper = /** @class */ (function () {
                         sql_1 = format(sql_1, records_2);
                         //  sql = sql.replace(/'t'/g, "'TRUE'");
                         //  sql = sql.replace(/'f'/g, "'FALSE'");
+                        //console.log(sql);
                         return [2 /*return*/, sql_1];
                     case 14: return [2 /*return*/];
                 }
@@ -278,8 +285,8 @@ var SyncServiceHelper = /** @class */ (function () {
                 return "BOOLEAN";
             case "varchar":
                 return "text";
-            case "date":
-                return "timestamp";
+            // case "date":
+            //   return "timestamp";
             default:
                 return type;
         }

@@ -93,8 +93,8 @@ var itemSalesByCustomerReport = /** @class */ (function () {
                         price_1 = 0;
                         data.forEach(function (v) {
                             totalQuantity_1 += v.quantity ? parseInt(v.quantity) : 0;
-                            totalLineAmount_1 += v.lineAmount ? parseInt(v.lineAmount) : 0;
-                            price_1 += v.price ? parseInt(v.price) : 0;
+                            totalLineAmount_1 += v.lineAmount ? parseFloat(v.lineAmount) : 0;
+                            price_1 += v.price ? parseFloat(v.price) : 0;
                         });
                         renderData = {
                             printDate: new Date().toLocaleString(),

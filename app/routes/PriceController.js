@@ -161,7 +161,7 @@ var PriceController = /** @class */ (function () {
                         return [4 /*yield*/, App_1.App.ValildateUserAccess(this.discountService.sessionInfo, this.componentName, Props_1.Props.ACCESS_READ)];
                     case 1:
                         if (!_a.sent()) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.returnOrderAmountService.returnOrderAmount(reqData, null)];
+                        return [4 /*yield*/, this.returnOrderAmountService.returnAmount(reqData, null)];
                     case 2:
                         // result = await this.service.calculateReturnAmount(reqData, null);
                         result = _a.sent();
@@ -193,7 +193,7 @@ var PriceController = /** @class */ (function () {
                         return [4 /*yield*/, App_1.App.ValildateUserAccess(this.discountService.sessionInfo, this.componentName, Props_1.Props.ACCESS_READ)];
                     case 1:
                         if (!_a.sent()) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.returnOrderAmountService.getReturnOrderAmount1(reqData, "purchasereturn")];
+                        return [4 /*yield*/, this.returnOrderAmountService.returnAmount(reqData, "purchasereturn")];
                     case 2:
                         result = _a.sent();
                         return [3 /*break*/, 4];

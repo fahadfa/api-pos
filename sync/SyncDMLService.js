@@ -63,11 +63,11 @@ var SyncDMLService = /** @class */ (function () {
                     case 1:
                         utcDate = _a.sent();
                         utcDateTime = utcDate.rows[0]["utc_date"];
-                        currentTime = moment().format();
+                        currentTime = moment().toISOString();
+                        Log_1.slog.info("Db Date: " + utcDateTime);
+                        Log_1.slog.info("Sys Date: " + currentTime);
                         // log.info("currentTime Date: ", currentTime);
                         if (App_1.App.DaysDiff(new Date(utcDateTime), new Date(currentTime)) != 0) {
-                            Log_1.slog.info("Db Date: " + utcDateTime);
-                            Log_1.slog.info("Sys Date: " + currentTime);
                             Log_1.slog.error("+++++++++++++++++++++++ INVALID DATE SYNC +++++++++++++++++++++++");
                             return [2 /*return*/, Promise.resolve("")];
                         }
@@ -87,18 +87,17 @@ var SyncDMLService = /** @class */ (function () {
                         syncResults = _a.sent();
                         syncResults = syncResults ? syncResults.rows : [];
                         syncResults = syncResults.length > 0 ? syncResults[0] : null;
-                        Log_1.slog.debug(JSON.stringify(syncResults));
+                        Log_1.slog.debug(JSON.stringify(syncResults, null, 2));
                         if (!syncResults)
                             return [2 /*return*/, Promise.resolve("")];
-                        syncResults.last_update = new Date(syncResults.last_update).toISOString();
                         if (!(syncResults.source_id != syncResults.target_id)) return [3 /*break*/, 5];
                         sourceDB = syncResults.source_id == STAGING_ID ? stageDbConfig : localDbConfig;
                         targetDB = syncResults.target_id == STORE_ID ? localDbConfig : stageDbConfig;
-                        if (syncResults.source_id != STAGING_ID) {
-                            syncResults.last_update = moment(syncResults.last_update)
-                                .format()
-                                .split("+")[0];
-                        }
+                        // if (syncResults.source_id != STAGING_ID) {
+                        //   syncResults.last_update = moment(syncResults.last_update)
+                        //     .format()
+                        //     .split("+")[0];
+                        // }
                         Log_1.slog.warn("\n\n((((((<<<< " + syncResults.map_table + "::" + syncResults.last_update + " >>>>))))))\n\n");
                         return [4 /*yield*/, this.syncDb(sourceDB, targetDB, syncResults, currentTime)];
                     case 4:
@@ -122,7 +121,6 @@ var SyncDMLService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.table(sync);
                         updateSyncConfig = SyncServiceHelper_1.SyncServiceHelper.StageDBOptions();
                         batchSql = [];
                         isChunkEnd = false;
