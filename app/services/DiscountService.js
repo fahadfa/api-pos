@@ -72,12 +72,12 @@ var DiscountService = /** @class */ (function () {
                     case 3:
                         checkCustomer = _a.sent();
                         if (!checkCustomer) {
-                            throw { message: "INVALID CUSTOMER" };
+                            throw { message: "INVALID_CUSTOMER_CODE" };
                         }
                         _a.label = 4;
                     case 4:
                         if (!checkCustomer) {
-                            throw { message: "INVALID CUSTOMER" };
+                            throw { message: "INVALID_CUSTOMER_CODE" };
                         }
                         reqData.cashdisc = checkCustomer.cashdisc;
                         reqData.paymtermid = checkCustomer.paymtermid;
@@ -255,15 +255,15 @@ var DiscountService = /** @class */ (function () {
                             // console.log("=========================");
                             if (vouchers.is_enabled == 1) {
                                 isValidVoucher = false;
-                                message = "VOUCHER NUMBER IS DISABLED";
+                                message = "INVALID_VOUCHER";
                             }
                             else if (vouchers.allowed_numbers <= vouchers.used_numbers) {
                                 isValidVoucher = false;
-                                message = "ALREADY USED";
+                                message = "ALREADY_USED";
                             }
                             else if (new Date(vouchers.expiry_date) < new Date()) {
                                 isValidVoucher = false;
-                                message = "VOUCHER EXPIRED";
+                                message = "VOUCHER_EXPIRED";
                             }
                         }
                         else {
@@ -271,7 +271,7 @@ var DiscountService = /** @class */ (function () {
                         }
                         return [3 /*break*/, 12];
                     case 11:
-                        message = "INVALID VOUCHER";
+                        message = "INVALID_VOUCHER";
                         _b.label = 12;
                     case 12:
                         _loop_1 = function (item) {

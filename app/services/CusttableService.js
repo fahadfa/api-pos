@@ -219,17 +219,17 @@ var CusttableService = /** @class */ (function () {
                         return [4 /*yield*/, this.custtableDAO.save(reqData)];
                     case 2:
                         customer = _a.sent();
-                        returnData = { id: customer.accountnum, message: Props_1.Props.SAVED_SUCCESSFULLY };
+                        returnData = { id: customer.accountnum, message: 'SAVED_SUCCESSFULLY' };
                         return [2 /*return*/, returnData];
                     case 3:
                         if (cond == "updated") {
-                            throw { message: Props_1.Props.MISS_MATCH_MESSAGE };
+                            throw { message: 'UPDATED' };
                         }
                         if (cond == "phone") {
-                            throw { message: Props_1.Props.RECORD_EXISTS };
+                            throw { message: 'RECORD_ALREADY_EXISTS' };
                         }
                         else {
-                            throw { message: Props_1.Props.INVALID_DATA };
+                            throw { message: 'INVALID_DATA' };
                         }
                         return [3 /*break*/, 5];
                     case 4:
@@ -341,7 +341,7 @@ var CusttableService = /** @class */ (function () {
                     case 4: return [4 /*yield*/, this.custtableDAO.save(customer)];
                     case 5:
                         _a.sent();
-                        return [2 /*return*/, { id: customer.accountnum, message: Props_1.Props.REMOVED_SUCCESSFULLY }];
+                        return [2 /*return*/, { id: customer.accountnum, message: 'REMOVED_SUCCESSFULLY' }];
                     case 6:
                         error_6 = _a.sent();
                         throw error_6;

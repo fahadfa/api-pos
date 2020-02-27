@@ -35,7 +35,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var Props_1 = require("../../constants/Props");
 var DesignerserviceRepository_1 = require("../repos/DesignerserviceRepository");
 var RawQuery_1 = require("../common/RawQuery");
 var DesignerserviceService = /** @class */ (function () {
@@ -91,7 +90,7 @@ var DesignerserviceService = /** @class */ (function () {
                         if (!item.accountnum) return [3 /*break*/, 2];
                         return [4 /*yield*/, this.rawQuery.getDesignerServiceList(item.accountnum, item.mobileNo)];
                     case 1: return [2 /*return*/, _a.sent()];
-                    case 2: throw { message: Props_1.Props.PROVIDE_ID };
+                    case 2: throw { message: 'PLEASE_PROVIDE_ID' };
                     case 3: return [3 /*break*/, 5];
                     case 4:
                         error_3 = _a.sent();
@@ -111,7 +110,7 @@ var DesignerserviceService = /** @class */ (function () {
                         return [4 /*yield*/, this.designerserviceRepository.save(item)];
                     case 1:
                         designerserviceData = _a.sent();
-                        returnData = { id: item.serviceid, message: Props_1.Props.SAVED_SUCCESSFULLY };
+                        returnData = { id: item.serviceid, message: 'SAVED_SUCCESSFULLY' };
                         return [2 /*return*/, returnData];
                     case 2:
                         error_4 = _a.sent();
@@ -131,12 +130,13 @@ var DesignerserviceService = /** @class */ (function () {
                         return [4 /*yield*/, this.designerserviceRepository.entity(id)];
                     case 1:
                         data = _a.sent();
-                        if (!data)
-                            throw { message: Props_1.Props.RECORD_NOT_EXISTS };
+                        if (!data) {
+                            throw { message: 'DATA_NOT_FOUND' };
+                        }
                         return [4 /*yield*/, this.designerserviceRepository.delete(data)];
                     case 2:
                         result = _a.sent();
-                        returnData = { id: id, message: Props_1.Props.REMOVED_SUCCESSFULLY };
+                        returnData = { id: id, message: 'REMOVED' };
                         return [2 /*return*/, returnData];
                     case 3:
                         error_5 = _a.sent();

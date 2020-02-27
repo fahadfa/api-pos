@@ -36,7 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var App_1 = require("../../utils/App");
-var Props_1 = require("../../constants/Props");
 var MenuDAO_1 = require("../repos/MenuDAO");
 var MenuService = /** @class */ (function () {
     function MenuService() {
@@ -97,9 +96,9 @@ var MenuService = /** @class */ (function () {
                         return [4 /*yield*/, this.menuRepository.save(item)];
                     case 2:
                         menuData = _a.sent();
-                        returnData = { id: item.id, message: Props_1.Props.SAVED_SUCCESSFULLY };
+                        returnData = { id: item.id, message: 'SAVED_SUCCESSFULLY' };
                         return [2 /*return*/, returnData];
-                    case 3: throw { message: Props_1.Props.INVALID_DATA };
+                    case 3: throw { message: 'INVALID_DATA' };
                     case 4: return [3 /*break*/, 6];
                     case 5:
                         error_3 = _a.sent();
@@ -120,12 +119,12 @@ var MenuService = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         if (!data)
-                            throw { message: "Record not Exit" };
+                            throw { message: "RECORD_NOT_FOUND" };
                         data.updatedBy = this.sessionInfo.id;
                         return [4 /*yield*/, this.menuRepository.delete(data)];
                     case 2:
                         result = _a.sent();
-                        returnData = { id: id, message: Props_1.Props.REMOVED_SUCCESSFULLY };
+                        returnData = { id: id, message: 'REMOVED' };
                         return [2 /*return*/, returnData];
                     case 3:
                         error_4 = _a.sent();

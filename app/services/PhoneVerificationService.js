@@ -37,7 +37,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var App_1 = require("../../utils/App");
 var Sms_1 = require("../../utils/Sms");
-var Props_1 = require("../../constants/Props");
 var PhoneVerification_1 = require("../../entities/PhoneVerification");
 var PhoneVerificationDAO_1 = require("../repos/PhoneVerificationDAO");
 var PhoneVerificationService = /** @class */ (function () {
@@ -100,9 +99,9 @@ var PhoneVerificationService = /** @class */ (function () {
                         return [4 /*yield*/, this.phoneVerificationDAO.save(item)];
                     case 2:
                         data = _a.sent();
-                        returnData = { id: data.id, message: Props_1.Props.SAVED_SUCCESSFULLY };
+                        returnData = { id: data.id, message: "SAVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
-                    case 3: throw { message: Props_1.Props.INVALID_DATA };
+                    case 3: throw { message: "INVALID_DATA" };
                     case 4: return [3 /*break*/, 6];
                     case 5:
                         error_3 = _a.sent();
@@ -123,12 +122,12 @@ var PhoneVerificationService = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         if (!data)
-                            throw { message: "Record not Exit" };
+                            throw { message: "RECORD_NOT_FOUND" };
                         data.lastmodifiedBy = this.sessionInfo.id;
                         return [4 /*yield*/, this.phoneVerificationDAO.delete(data)];
                     case 2:
                         result = _a.sent();
-                        returnData = { id: id, message: Props_1.Props.REMOVED_SUCCESSFULLY };
+                        returnData = { id: id, message: "REMOVED" };
                         return [2 /*return*/, returnData];
                     case 3:
                         error_4 = _a.sent();
@@ -166,7 +165,8 @@ var PhoneVerificationService = /** @class */ (function () {
                             // }
                         }
                         else {
-                            if (item.lastModifiedDate && previousItem.lastModifiedDate.toISOString() != new Date(item.lastModifiedDate).toISOString()) {
+                            if (item.lastModifiedDate &&
+                                previousItem.lastModifiedDate.toISOString() != new Date(item.lastModifiedDate).toISOString()) {
                                 return [2 /*return*/, "updated"];
                             }
                         }
@@ -216,7 +216,10 @@ var PhoneVerificationService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 7, , 8]);
-                        return [4 /*yield*/, this.phoneVerificationDAO.findOne({ phoneNumber: item.phoneNumber, customerId: item.customerId })];
+                        return [4 /*yield*/, this.phoneVerificationDAO.findOne({
+                                phoneNumber: item.phoneNumber,
+                                customerId: item.customerId
+                            })];
                     case 1:
                         phoneVerification = _a.sent();
                         if (!phoneVerification) return [3 /*break*/, 5];
@@ -226,10 +229,10 @@ var PhoneVerificationService = /** @class */ (function () {
                         return [4 /*yield*/, this.save(phoneVerification)];
                     case 2:
                         _a.sent();
-                        return [2 /*return*/, { message: Props_1.Props.VERIFIED, status: true }];
-                    case 3: throw Props_1.Props.INVALID_TOKEN;
+                        return [2 /*return*/, { message: "VERIFIED", status: true }];
+                    case 3: throw { message: "INVALID_TOKEN" };
                     case 4: return [3 /*break*/, 6];
-                    case 5: throw Props_1.Props.INVALID_MOBILE;
+                    case 5: throw { message: "INVALID_MOBILE_NUMBER" };
                     case 6: return [3 /*break*/, 8];
                     case 7:
                         error_6 = _a.sent();

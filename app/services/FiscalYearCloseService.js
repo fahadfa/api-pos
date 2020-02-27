@@ -36,7 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var App_1 = require("../../utils/App");
-var Props_1 = require("../../constants/Props");
 var FiscalYearCloseDAO_1 = require("../repos/FiscalYearCloseDAO");
 var typeorm_1 = require("typeorm");
 var RawQuery_1 = require("../common/RawQuery");
@@ -111,17 +110,17 @@ var FiscalYearCloseService = /** @class */ (function () {
                             date = item.endingDate.toLocaleDateString().split("/");
                             this.rawQuery.updateFiscalYearClose(item.yearNo, date);
                         }
-                        returnData = { id: item.id, message: Props_1.Props.SAVED_SUCCESSFULLY };
+                        returnData = { id: item.id, message: 'SAVED_SUCCESSFULLY' };
                         return [2 /*return*/, returnData];
                     case 3:
                         if (cond == "Duplicate") {
-                            throw { message: Props_1.Props.DUPLICATE_RECORD };
+                            throw { message: 'DUPLICATE_RECORD' };
                         }
                         else if (cond == "notClosed") {
-                            throw { message: "credit and debit balance of some journals are not equal" };
+                            throw { message: "BALANCES_ARE_NOT_EQUAL" };
                         }
                         else {
-                            throw { message: Props_1.Props.INVALID_DATA };
+                            throw { message: "INVALID_DATA" };
                         }
                         _a.label = 4;
                     case 4: return [3 /*break*/, 6];
@@ -144,11 +143,11 @@ var FiscalYearCloseService = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         if (!data)
-                            throw { message: Props_1.Props.RECORD_NOT_EXISTS };
+                            throw { message: 'RECORD_NOT_FOUND' };
                         return [4 /*yield*/, this.fiscalyearcloseRepository.delete(data)];
                     case 2:
                         result = _a.sent();
-                        returnData = { id: id, message: Props_1.Props.REMOVED_SUCCESSFULLY };
+                        returnData = { id: id, message: 'REMOVED' };
                         return [2 /*return*/, returnData];
                     case 3:
                         error_4 = _a.sent();

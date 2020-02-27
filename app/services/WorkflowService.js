@@ -145,7 +145,7 @@ var WorkflowService = /** @class */ (function () {
                             item.pendingWith = RM_AND_RA.rm;
                         }
                         else {
-                            throw { message: Props_1.Props.NO_RM };
+                            throw { message: 'NO_RM_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN' };
                         }
                         return [3 /*break*/, 14];
                     case 7:
@@ -156,7 +156,7 @@ var WorkflowService = /** @class */ (function () {
                             item.pendingWith = RM_AND_RA.rm;
                         }
                         else {
-                            throw { message: Props_1.Props.NO_RM };
+                            throw { message: 'NO_RM_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN' };
                         }
                         return [3 /*break*/, 12];
                     case 8:
@@ -166,7 +166,7 @@ var WorkflowService = /** @class */ (function () {
                             item.pendingWith = RM_AND_RA.ra;
                         }
                         else {
-                            throw { message: Props_1.Props.NO_RA };
+                            throw { message: 'NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN' };
                         }
                         return [3 /*break*/, 12];
                     case 9: return [4 /*yield*/, this.rawQuery.updateSalesTableWorkFlowStatus(salesData.salesId, "NOWORKFLOW")];
@@ -182,7 +182,7 @@ var WorkflowService = /** @class */ (function () {
                                 item.pendingWith = RM_AND_RA.designer_signing_authority;
                             }
                             else {
-                                throw { message: Props_1.Props.NO_DESIGNER };
+                                throw { message: 'NO_DESIGNER_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT' };
                             }
                         }
                         else {
@@ -191,7 +191,7 @@ var WorkflowService = /** @class */ (function () {
                                 item.pendingWith = RM_AND_RA.rm;
                             }
                             else {
-                                throw { message: Props_1.Props.NO_RM };
+                                throw { message: 'NO_RM_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN' };
                             }
                         }
                         _a.label = 14;
@@ -214,7 +214,7 @@ var WorkflowService = /** @class */ (function () {
                                         item.pendingWith = RM_AND_RA.ra;
                                     }
                                     else {
-                                        throw { message: Props_1.Props.NO_RA };
+                                        throw { message: 'NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN' };
                                     }
                                 }
                             }
@@ -230,7 +230,7 @@ var WorkflowService = /** @class */ (function () {
                                     item.pendingWith = RM_AND_RA.rm;
                                 }
                                 else {
-                                    throw { message: Props_1.Props.NO_RM };
+                                    throw { message: 'NO_RM_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN' };
                                 }
                             }
                         }
@@ -256,8 +256,8 @@ var WorkflowService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.updateSalesTableWorkFlowStatus(salesData.salesId, item.statusId)];
                     case 19:
                         _a.sent();
-                        return [2 /*return*/, { id: item.id, status: status_1, message: Props_1.Props.SAVED_SUCCESSFULLY }];
-                    case 20: throw { message: Props_1.Props.INVALID_DATA };
+                        return [2 /*return*/, { id: item.id, status: status_1, message: 'SAVED_SUCCESSFULLY' }];
+                    case 20: throw { message: 'INVALID_DATA' };
                     case 21: return [3 /*break*/, 23];
                     case 22:
                         error_3 = _a.sent();
@@ -327,7 +327,7 @@ var WorkflowService = /** @class */ (function () {
                     case 3:
                         _a.sent();
                         return [2 /*return*/, id];
-                    case 4: throw { message: Props_1.Props.NO_NUMBER_SEQUENCE };
+                    case 4: throw { message: 'CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE' };
                 }
             });
         });

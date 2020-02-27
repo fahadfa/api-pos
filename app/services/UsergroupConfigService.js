@@ -37,7 +37,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var UserInfo_1 = require("../../entities/UserInfo");
 var UsergroupconfigDAO_1 = require("../repos/UsergroupconfigDAO");
-var Props_1 = require("../../constants/Props");
 var typeorm_1 = require("typeorm");
 var RawQuery_1 = require("../common/RawQuery");
 var uuid = require("uuid");
@@ -143,24 +142,25 @@ var UsergroupConfigService = /** @class */ (function () {
                     case 4:
                         console.log(itemsNotInNumSeq);
                         if (itemsNotInNumSeq.length > 0) {
-                            throw { message: Props_1.Props.NO_NUMBER_SEQUENCE };
+                            throw { message: 'CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE' };
                         }
                         return [4 /*yield*/, this.validate(reqData)];
                     case 5:
                         cond = _a.sent();
                         console.log(cond);
                         if (!(cond == true)) return [3 /*break*/, 7];
+                        reqData.lastmodifieddate = new Date();
                         return [4 /*yield*/, this.usergroupconfigDAO.save(reqData)];
                     case 6:
                         user = _a.sent();
-                        returnData = { id: reqData.id, message: Props_1.Props.SAVED_SUCCESSFULLY };
+                        returnData = { id: reqData.id, message: 'SAVED_SUCCESSFULLY' };
                         return [2 /*return*/, returnData];
                     case 7:
                         if (cond == "groupname") {
-                            throw { message: Props_1.Props.RECORD_EXISTS };
+                            throw { message: 'RECORD_ALREADY_EXISTS' };
                         }
                         else {
-                            throw { message: Props_1.Props.INVALID_DATA };
+                            throw { message: 'INVALID_DATA' };
                         }
                         return [3 /*break*/, 9];
                     case 8:
@@ -240,7 +240,7 @@ var UsergroupConfigService = /** @class */ (function () {
                         return [4 /*yield*/, this.usergroupconfigDAO.save(usergroupconfig)];
                     case 5:
                         _a.sent();
-                        return [2 /*return*/, { id: usergroupconfig.groupid, message: Props_1.Props.REMOVED_SUCCESSFULLY }];
+                        return [2 /*return*/, { id: usergroupconfig.groupid, message: 'REMOVED' }];
                     case 6:
                         error_4 = _a.sent();
                         throw error_4;

@@ -19,16 +19,17 @@
             padding: 0px;
             font-weight: normal !important;
         }
+
         table {
             page-break-inside: auto;
-            
+
         }
 
         tr {
             page-break-inside: avoid;
             page-break-after: always;
-            border-bottom:1px dotted #8a8989;
-            padding:1px;
+            border-bottom: 1px dotted #8a8989;
+            padding: 1px;
         }
 
         thead {
@@ -38,6 +39,7 @@
         tfoot {
             display: table-footer-group
         }
+
         .color {
             color: #2e5170;
         }
@@ -213,30 +215,31 @@
         }
 
         #bg__watermark {
-               display: block;
-               min-width: 100%;
-               opacity: 0.5;               
-           }
-           #bg__text__watermark {
-               color: lightgrey;
-               font-size: 120px;
-               text-align: center;
-                transform: rotate(-45deg);
-				transform-origin: 50% 50%;
-                -webkit-transform: rotate(-45deg);
-				-webkit-transform-origin: 50% 50%;
-               opacity: 0.9;
-               filter: alpha(opacity=50);
-               background-color: transparent;
-               background-size: 100%;
-               position: fixed;
-               margin: 50% auto;
-           }
+            display: block;
+            min-width: 100%;
+            opacity: 0.5;
+        }
+
+        #bg__text__watermark {
+            color: lightgrey;
+            font-size: 120px;
+            text-align: center;
+            transform: rotate(-45deg);
+            transform-origin: 50% 50%;
+            -webkit-transform: rotate(-45deg);
+            -webkit-transform-origin: 50% 50%;
+            opacity: 0.9;
+            filter: alpha(opacity=50);
+            background-color: transparent;
+            background-size: 100%;
+            position: fixed;
+            margin: 50% auto;
+        }
     </style>
 
 </head>
 
-<body>   
+<body>
     <div id="bg__watermark">
         <p id="bg__text__watermark">Only for testing</p>
     </div>
@@ -299,14 +302,14 @@
                             <div class="table-border">
                                 <table class="" style="width:100%;margin:auto;border-collapse: collapse !important;">
                                     <thead>
-                                    <tr class="background" style="font-size:14px">
-                                        <th class="th">Sales Id</th>
-                                        <th class="th">Color</th>
-                                        <th class="th">Size</th>
-                                        <th class="th">Price</th>
-                                        <th class="th">Quantity</th>
-                                        <th class="th">Total Amount</th>
-                                    </tr>
+                                        <tr class="background" style="font-size:14px">
+                                            <th class="th">Transaction ID</th>
+                                            <th class="th">Colorant</th>
+                                            <th class="th">Size</th>
+                                            <th class="th">Colorant Price</th>
+                                            <th class="th">Quantity</th>
+                                            <th class="th">Total Amount</th>
+                                        </tr>
                                     </thead>
                                     {{#each data}}
                                     <tr class="tab-data">

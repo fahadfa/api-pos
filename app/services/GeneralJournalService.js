@@ -37,7 +37,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var App_1 = require("../../utils/App");
 var GeneralJournalDAO_1 = require("../repos/GeneralJournalDAO");
-var Props_1 = require("../../constants/Props");
 var UsergroupconfigDAO_1 = require("../repos/UsergroupconfigDAO");
 var RawQuery_1 = require("../common/RawQuery");
 var LedgerJournalTransDAO_1 = require("../repos/LedgerJournalTransDAO");
@@ -76,7 +75,7 @@ var GeneralJournalService = /** @class */ (function () {
                         });
                         data.legerJournalTras = legerJournalTras;
                         return [2 /*return*/, data];
-                    case 3: throw { message: Props_1.Props.RECORD_NOT_EXISTS };
+                    case 3: throw { message: 'RECORD_NOT_FOUND' };
                     case 4: return [3 /*break*/, 6];
                     case 5:
                         error_1 = _a.sent();
@@ -192,10 +191,10 @@ var GeneralJournalService = /** @class */ (function () {
                     case 11: return [4 /*yield*/, this.ledgerTrasDAO.save(ledgerTransData)];
                     case 12:
                         ledgerTrasfer = _b.sent();
-                        return [2 /*return*/, { id: reqData.journalNum, message: Props_1.Props.SAVED_SUCCESSFULLY }];
+                        return [2 /*return*/, { id: reqData.journalNum, message: 'SAVED_SUCCESSFULLY' }];
                     case 13:
                         if (cond == "journalNum") {
-                            throw { message: Props_1.Props.RECORD_EXISTS };
+                            throw { message: 'RECORD_ALREADY_EXISTS' };
                         }
                         return [3 /*break*/, 15];
                     case 14:
@@ -223,6 +222,7 @@ var GeneralJournalService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.getNumberSequence(seqNum)];
                     case 2:
                         data = _a.sent();
+                        console.log(data);
                         if (!data) return [3 /*break*/, 4];
                         prevYear = new Date(data.lastmodifieddate)
                             .getFullYear()
@@ -240,12 +240,12 @@ var GeneralJournalService = /** @class */ (function () {
                     case 3:
                         _a.sent();
                         return [2 /*return*/, salesId];
-                    case 4: throw { message: Props_1.Props.NO_NUMBER_SEQUENCE };
+                    case 4: throw { message: 'CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE' };
                     case 5: return [3 /*break*/, 7];
                     case 6:
                         error_4 = _a.sent();
                         if (error_4 == {}) {
-                            error_4 = Props_1.Props.TECHNICAL_ISSUE;
+                            error_4 = { message: 'TECHNICAL_ISSUE,_PLEASE_CONTACT_YOUR_TECHNICAL_TEAM' };
                         }
                         throw error_4;
                     case 7: return [2 /*return*/];
@@ -324,13 +324,13 @@ var GeneralJournalService = /** @class */ (function () {
                             entity.deleted = true;
                         }
                         else {
-                            throw { message: Props_1.Props.RECORD_NOT_EXISTS };
+                            throw { message: 'RECORD_NOT_FOUND' };
                         }
                         entity.deletedby = this.sessionInfo.userName;
                         return [4 /*yield*/, this.generalJournalDAO.save(entity)];
                     case 2:
                         _a.sent();
-                        return [2 /*return*/, { id: entity.journalNum, message: Props_1.Props.REMOVED_SUCCESSFULLY }];
+                        return [2 /*return*/, { id: entity.journalNum, message: 'REMOVED' }];
                     case 3:
                         error_5 = _a.sent();
                         throw error_5;

@@ -37,7 +37,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var UserinfoDAO_1 = require("../repos/UserinfoDAO");
 var App_1 = require("../..//utils/App");
-var Props_1 = require("../../constants/Props");
 var RawQuery_1 = require("../common/RawQuery");
 var MenuGroupDAO_1 = require("../repos/MenuGroupDAO");
 var AuthService = /** @class */ (function () {
@@ -107,7 +106,7 @@ var AuthService = /** @class */ (function () {
                         }
                         else {
                             return [2 /*return*/, Promise.reject({
-                                    message: "Didn't find any profile with the provided email "
+                                    message: "INVALID_USERNAME/PASSWORD"
                                 })];
                         }
                         return [2 /*return*/, Promise.resolve(responseData)];
@@ -149,7 +148,7 @@ var AuthService = /** @class */ (function () {
                     case 1:
                         profileObj = _a.sent();
                         if (profileObj == null) {
-                            return [2 /*return*/, Promise.reject({ message: Props_1.Props.INVALID_PASSWORD })];
+                            return [2 /*return*/, Promise.reject({ message: 'INVALID_PASSWORD' })];
                         }
                         else {
                             auth = false;
@@ -161,13 +160,13 @@ var AuthService = /** @class */ (function () {
                                 }
                                 else {
                                     return [2 /*return*/, Promise.reject({
-                                            message: Props_1.Props.ACCOUNT_DEACTIVATED
+                                            message: 'ACCOUNT_DEACTIVATED,_PLEASE_CONTACT_ADMIN'
                                         })];
                                 }
                             }
                             else {
                                 return [2 /*return*/, Promise.reject({
-                                        message: Props_1.Props.INVALID_PASSWORD
+                                        message: 'INVALID_PASSWORD'
                                     })];
                             }
                         }
@@ -207,8 +206,8 @@ var AuthService = /** @class */ (function () {
                     case 5:
                         _a.sent();
                         return [3 /*break*/, 7];
-                    case 6: throw Props_1.Props.INVALID_USERNAME;
-                    case 7: return [2 /*return*/, { message: Props_1.Props.PASSWORD_RESET_TOKEN }];
+                    case 6: throw 'INVALID_USERNAME';
+                    case 7: return [2 /*return*/, { message: 'PASSWORD_RESET_TOKEN_SENT_TO_MAIL' }];
                     case 8:
                         error_2 = _a.sent();
                         throw error_2;
@@ -244,8 +243,8 @@ var AuthService = /** @class */ (function () {
                     case 4:
                         _a.sent();
                         return [3 /*break*/, 6];
-                    case 5: throw Props_1.Props.INVALID_TOKEN;
-                    case 6: return [2 /*return*/, { message: Props_1.Props.PASSWORD_UPDATED_SUCCESSFULLY }];
+                    case 5: throw { message: 'INVALID_TOKEN' };
+                    case 6: return [2 /*return*/, { message: 'PASSWORD_UPDATED' }];
                     case 7:
                         error_3 = _a.sent();
                         throw error_3;

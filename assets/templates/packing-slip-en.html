@@ -174,33 +174,34 @@
     }
 
     #bg__watermark {
-        display: block;
-        min-width: 100%;
-        opacity: 0.5;               
+      display: block;
+      min-width: 100%;
+      opacity: 0.5;
     }
+
     #bg__text__watermark {
-        color: lightgrey;
-        font-size: 120px;
-        text-align: center;
-        transform: rotate(-45deg);
-        transform-origin: 50% 50%;
-        -webkit-transform: rotate(-45deg);
-        -webkit-transform-origin: 50% 50%;
-        opacity: 0.9;
-        filter: alpha(opacity=50);
-        background-color: transparent;
-        background-size: 100%;
-        position: fixed;
-        margin: 50% auto;
+      color: lightgrey;
+      font-size: 120px;
+      text-align: center;
+      transform: rotate(-45deg);
+      transform-origin: 50% 50%;
+      -webkit-transform: rotate(-45deg);
+      -webkit-transform-origin: 50% 50%;
+      opacity: 0.9;
+      filter: alpha(opacity=50);
+      background-color: transparent;
+      background-size: 100%;
+      position: fixed;
+      margin: 50% auto;
     }
   </style>
 </head>
 
 <body>
 
-<div id="bg__watermark">
+  <div id="bg__watermark">
     <p id="bg__text__watermark">Only for testing</p>
-</div>
+  </div>
   <div class="page-header" style="text-align: center">
 
   </div>
@@ -261,7 +262,7 @@
                         {{cnamealias}}
                       </td>
                     </tr>
-
+                    {{/if}}
                   </table>
                 </td>
                 <td style="width:30%;" align="center">
@@ -352,24 +353,24 @@
 
               </tr>
 
-              {{/ each}}
+              {{/each}}
             </table>
 
 
             <table width="100%" style="text-align:right;margin-top: 8px;">
-                
-              <tr>
-                  <td>&nbsp;</td>
-                  <td>&nbsp;</td>
-                  <td>&nbsp;</td>
-                  <td>
-                      Total Quantity:{{ quantity }}
-                  </td>
-              </tr>
-              
-          </table>
 
-            
+              <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>
+                  Total Quantity:{{ quantity }}
+                </td>
+              </tr>
+
+            </table>
+
+
 
             <table style="width: 98%;position:absolute;bottom:200px; border-collapse: collapse;">
               <tr style="border:1px dotted #ccc !important;">

@@ -68,7 +68,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         if (!(axaptaData.invent_location_id_to.trim() == this.sessionInfo.inventlocationid)) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.mapSalesData(axaptaData)];
                     case 2: return [2 /*return*/, _a.sent()];
-                    case 3: throw { message: "Order Id Not Related To This Store" };
+                    case 3: throw { message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
                     case 4: return [3 /*break*/, 6];
                     case 5:
                         error_1 = _a.sent();
@@ -145,7 +145,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                             return [2 /*return*/, salesData];
                         }
                         else {
-                            throw { status: 1, message: "Order Id Not Related To This Store" };
+                            throw { status: 1, message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
                         }
                         return [3 /*break*/, 3];
                     case 2:
@@ -168,7 +168,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                     case 1:
                         salesData = _a.sent();
                         if (!salesData) return [3 /*break*/, 2];
-                        throw { message: "Already Received From Axapta" };
+                        throw { message: "ALREADY_RECEIVED" };
                     case 2:
                         salesData = data;
                         salesLines = data.salesLines;
@@ -208,7 +208,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         return [3 /*break*/, 6];
                     case 10: return [2 /*return*/, { status: 1, id: salesData.salesId, message: Props_1.Props.SAVED_SUCCESSFULLY }];
                     case 11: return [3 /*break*/, 13];
-                    case 12: throw { status: 0, message: "Can't save this data" };
+                    case 12: throw { status: 0, message: "INVALID_DATA" };
                     case 13: return [3 /*break*/, 15];
                     case 14:
                         error_3 = _a.sent();

@@ -69,9 +69,9 @@ var SalestargetService = /** @class */ (function () {
                         return [4 /*yield*/, this.salestagetRepository.save(item)];
                     case 2:
                         pricediscgroupData = _a.sent();
-                        returnData = { message: Props_1.Props.SAVED_SUCCESSFULLY };
+                        returnData = { message: 'SAVED_SUCCESSFULLY' };
                         return [2 /*return*/, returnData];
-                    case 3: throw { message: Props_1.Props.INVALID_DATA };
+                    case 3: throw { message: 'INVALID_DATA' };
                     case 4: return [3 /*break*/, 6];
                     case 5:
                         error_1 = _a.sent();
@@ -167,8 +167,8 @@ var SalestargetService = /** @class */ (function () {
                             return products_1.map(function (c, i) { return Object.assign({}, c, b[i]); });
                         });
                         return [2 /*return*/, result];
-                    case 8: throw { message: Props_1.Props.INVALID_DATA };
-                    case 9: throw { message: Props_1.Props.INVALID_DATA };
+                    case 8: throw { message: 'INVALID_DATA' };
+                    case 9: throw { message: 'INVALID_DATA' };
                     case 10:
                         error_3 = _c.sent();
                         throw error_3;

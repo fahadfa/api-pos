@@ -36,7 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var App_1 = require("../../utils/App");
-var Props_1 = require("../../constants/Props");
 var MenuGroupDAO_1 = require("../repos/MenuGroupDAO");
 var MenuService_1 = require("./MenuService");
 var MenuDAO_1 = require("../repos/MenuDAO");
@@ -167,7 +166,7 @@ var MenuGroupService = /** @class */ (function () {
                         return [4 /*yield*/, this.menuGroupRepository.save(saveData_1)];
                     case 1:
                         menuGroupData = _a.sent();
-                        returnData = { message: Props_1.Props.SAVED_SUCCESSFULLY };
+                        returnData = { message: 'SAVED_SUCCESSFULLY' };
                         return [2 /*return*/, returnData];
                     case 2:
                         error_3 = _a.sent();
@@ -188,12 +187,12 @@ var MenuGroupService = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         if (!data)
-                            throw { message: Props_1.Props.RECORD_NOT_EXISTS };
+                            throw { message: 'RECORD_NOT_FOUND' };
                         data.updatedBy = this.sessionInfo.id;
                         return [4 /*yield*/, this.menuGroupRepository.delete(data)];
                     case 2:
                         result = _a.sent();
-                        returnData = { id: id, message: Props_1.Props.REMOVED_SUCCESSFULLY };
+                        returnData = { id: id, message: 'REMOVED_SUCCESSFULLY' };
                         return [2 /*return*/, returnData];
                     case 3:
                         error_4 = _a.sent();

@@ -60,11 +60,13 @@ var AccountsTableService = /** @class */ (function () {
                             data.closed = data.closed == 1 ? true : false;
                             data.locked = data.locked == 1 ? true : false;
                             data.createdDateTime = data.createdDateTime ? data.createdDateTime.toLocaleDateString() : data.createdDateTime;
-                            data.lastModifiedDate = data.lastModifiedDate ? data.lastModifiedDate.toLocaleDateString() : data.lastModifiedDate;
+                            data.lastModifiedDate = data.lastModifiedDate
+                                ? data.lastModifiedDate.toLocaleDateString()
+                                : data.lastModifiedDate;
                             return [2 /*return*/, data];
                         }
                         else {
-                            throw "No Data Found";
+                            throw { message: "DATA_NOT_FOUND" };
                         }
                         return [3 /*break*/, 3];
                     case 2:
@@ -90,8 +92,12 @@ var AccountsTableService = /** @class */ (function () {
                             element.accountTypeName = Props_1.Props.ACCOUNT_TYPE[element.accountType];
                             element.closed = element.closed == 1 ? true : false;
                             element.locked = element.locked == 1 ? true : false;
-                            element.createdDatetime = element.createdDatetime ? element.createdDatetime.toLocaleDateString() : element.createdDatetime;
-                            element.lastModifiedDate = element.lastModifiedDate ? element.lastModifiedDate.toLocaleDateString() : element.lastModifiedDate;
+                            element.createdDatetime = element.createdDatetime
+                                ? element.createdDatetime.toLocaleDateString()
+                                : element.createdDatetime;
+                            element.lastModifiedDate = element.lastModifiedDate
+                                ? element.lastModifiedDate.toLocaleDateString()
+                                : element.lastModifiedDate;
                         });
                         return [2 /*return*/, data];
                     case 2:
@@ -117,16 +123,16 @@ var AccountsTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.accountsTableDAO.save(reqData)];
                     case 2:
                         account = _a.sent();
-                        return [2 /*return*/, { id: account.accountNum, message: Props_1.Props.SAVED_SUCCESSFULLY }];
+                        return [2 /*return*/, { id: account.accountNum, message: 'SAVED_SUCCESSFULLY' }];
                     case 3:
                         if (cond == "required") {
-                            throw { message: "accountNum Required" };
+                            throw { message: "ACCOUNT_NUM_REQUIREMENT" };
                         }
                         else if (cond == "accountNum") {
-                            throw { message: Props_1.Props.RECORD_EXISTS };
+                            throw { message: 'RECORD_ALREADY_EXISTS' };
                         }
                         else {
-                            throw { message: Props_1.Props.INVALID_DATA };
+                            throw { message: 'INVALID_DATA' };
                         }
                         _a.label = 4;
                     case 4: return [3 /*break*/, 6];
@@ -172,12 +178,12 @@ var AccountsTableService = /** @class */ (function () {
                     case 3:
                         _a.sent();
                         return [2 /*return*/, salesId];
-                    case 4: throw "Cannot Find Sequence Format From Number Sequence Table";
+                    case 4: throw { message: 'CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE' };
                     case 5: return [3 /*break*/, 7];
                     case 6:
                         error_4 = _a.sent();
                         if (error_4 == {}) {
-                            error_4 = "Server Side Error";
+                            error_4 = "SERVER_SIDE_ERROR";
                         }
                         throw error_4;
                     case 7: return [2 /*return*/];
@@ -246,7 +252,7 @@ var AccountsTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.accountsTableDAO.save(accountsTable)];
                     case 2:
                         _a.sent();
-                        return [2 /*return*/, { id: accountsTable.accountNum, message: Props_1.Props.REMOVED_SUCCESSFULLY }];
+                        return [2 /*return*/, { id: accountsTable.accountNum, message: 'REMOVED' }];
                     case 3:
                         error_5 = _a.sent();
                         throw error_5;

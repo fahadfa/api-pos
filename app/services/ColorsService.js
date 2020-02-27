@@ -36,7 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var ColorsDAO_1 = require("../repos/ColorsDAO");
-var Props_1 = require("../../constants/Props");
 var ColorsService = /** @class */ (function () {
     function ColorsService() {
         this.colorsDAO = new ColorsDAO_1.ColorsDAO();
@@ -75,7 +74,7 @@ var ColorsService = /** @class */ (function () {
                         return [4 /*yield*/, this.colorsDAO.save(reqData)];
                     case 2:
                         colors = _a.sent();
-                        returnData = { message: Props_1.Props.SAVED_SUCCESSFULLY };
+                        returnData = { message: "SAVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
                     case 3:
                         error_2 = _a.sent();

@@ -36,7 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var App_1 = require("../../utils/App");
-var Props_1 = require("../../constants/Props");
 var FixedAssetGroupDAO_1 = require("../repos/FixedAssetGroupDAO");
 var UsergroupconfigDAO_1 = require("../repos/UsergroupconfigDAO");
 var RawQuery_1 = require("../common/RawQuery");
@@ -105,9 +104,9 @@ var FixedAssetGroupService = /** @class */ (function () {
                         return [4 /*yield*/, this.fixedassetgroupRepository.save(item)];
                     case 2:
                         fixedassetgroupData = _a.sent();
-                        returnData = { id: fixedassetgroupData.groupid, message: Props_1.Props.SAVED_SUCCESSFULLY };
+                        returnData = { id: fixedassetgroupData.groupid, message: 'SAVED_SUCCESSFULLY' };
                         return [2 /*return*/, returnData];
-                    case 3: throw { message: Props_1.Props.INVALID_DATA };
+                    case 3: throw { message: 'INVALID_DATA' };
                     case 4: return [3 /*break*/, 6];
                     case 5:
                         error_3 = _a.sent();
@@ -131,13 +130,13 @@ var FixedAssetGroupService = /** @class */ (function () {
                             entity.deleted = true;
                         }
                         else {
-                            throw { message: Props_1.Props.DATA_NOT_FOUND };
+                            throw { message: 'DATA_NOT_FOUND' };
                         }
                         entity.deletedby = this.sessionInfo.userName;
                         return [4 /*yield*/, this.fixedassetgroupRepository.save(entity)];
                     case 2:
                         _a.sent();
-                        return [2 /*return*/, { id: entity.assetId, message: Props_1.Props.REMOVED_SUCCESSFULLY }];
+                        return [2 /*return*/, { id: entity.assetId, message: 'REMOVED_SUCCESSFULLY' }];
                     case 3:
                         error_4 = _a.sent();
                         throw error_4;
@@ -228,12 +227,12 @@ var FixedAssetGroupService = /** @class */ (function () {
                         _a.sent();
                         return [4 /*yield*/, salesId];
                     case 4: return [2 /*return*/, _a.sent()];
-                    case 5: throw "Cannot Find Sequence Format From Number Sequence Table";
+                    case 5: throw { message: 'CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE' };
                     case 6: return [3 /*break*/, 8];
                     case 7:
                         error_5 = _a.sent();
                         if (error_5 == {}) {
-                            error_5 = "Server Side Error";
+                            error_5 = { message: 'SERVER_SIDE_ERROR' };
                         }
                         throw error_5;
                     case 8: return [2 /*return*/];

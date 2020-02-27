@@ -94,17 +94,17 @@ var SyncSourceService = /** @class */ (function () {
                         return [4 /*yield*/, this.syncSourceRepository.save(item)];
                     case 2:
                         syncSourceData = _a.sent();
-                        returnData = { id: item.id, message: Props_1.Props.SAVED_SUCCESSFULLY };
+                        returnData = { id: item.id, message: 'SAVED_SUCCESSFULLY' };
                         return [2 /*return*/, returnData];
                     case 3:
                         if (cond == "updated") {
                             throw { message: Props_1.Props.MISS_MATCH_MESSAGE };
                         }
                         else if (cond == "name") {
-                            throw { message: Props_1.Props.RECORD_EXISTS };
+                            throw { message: 'RECORD_ALREADY_EXISTS' };
                         }
                         else {
-                            throw { message: Props_1.Props.INVALID_DATA };
+                            throw { message: 'INVALID_DATA' };
                         }
                         _a.label = 4;
                     case 4: return [3 /*break*/, 6];
@@ -127,12 +127,12 @@ var SyncSourceService = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         if (!data)
-                            throw { message: Props_1.Props.RECORD_NOT_EXISTS };
+                            throw { message: 'RECORD_NOT_FOUND' };
                         data.updatedBy = this.sessionInfo.id;
                         return [4 /*yield*/, this.syncSourceRepository.delete(data)];
                     case 2:
                         result = _a.sent();
-                        returnData = { id: id, message: Props_1.Props.REMOVED_SUCCESSFULLY };
+                        returnData = { id: id, message: 'REMOVED' };
                         return [2 /*return*/, returnData];
                     case 3:
                         error_4 = _a.sent();

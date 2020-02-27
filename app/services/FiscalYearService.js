@@ -36,7 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var App_1 = require("../../utils/App");
-var Props_1 = require("../../constants/Props");
 var FiscalYearDAO_1 = require("../repos/FiscalYearDAO");
 var FiscalYearService = /** @class */ (function () {
     function FiscalYearService() {
@@ -134,14 +133,14 @@ var FiscalYearService = /** @class */ (function () {
                         return [4 /*yield*/, this.fiscalyearRepository.save(data)];
                     case 7:
                         fiscalyearData = _b.sent();
-                        returnData = { id: item.yearNo, message: Props_1.Props.SAVED_SUCCESSFULLY };
+                        returnData = { id: item.yearNo, message: 'SAVED_SUCCESSFULLY' };
                         return [2 /*return*/, returnData];
                     case 8:
                         if (cond == "year") {
-                            throw { message: Props_1.Props.DUPLICATE_RECORD };
+                            throw { message: 'DUPLICATE_RECORD' };
                         }
                         else {
-                            throw { message: Props_1.Props.INVALID_DATA };
+                            throw { message: 'INVALID_DATA' };
                         }
                         _b.label = 9;
                     case 9: return [3 /*break*/, 11];
@@ -161,7 +160,7 @@ var FiscalYearService = /** @class */ (function () {
                     case 0:
                         previousItem = null;
                         if (!(!item.yearNo || item.yearNo.toString() == "" || item.yearNo.toString() == "0")) return [3 /*break*/, 1];
-                        throw "YearNo Required";
+                        throw "YEAR_REQUIRED";
                     case 1: return [4 /*yield*/, this.fiscalyearRepository.entity(item.yearNo)];
                     case 2:
                         previousItem = _a.sent();
@@ -195,11 +194,11 @@ var FiscalYearService = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         if (!data)
-                            throw { message: Props_1.Props.RECORD_NOT_EXISTS };
+                            throw { message: 'RECORD_NOT_FOUND' };
                         return [4 /*yield*/, this.fiscalyearRepository.delete(data)];
                     case 2:
                         result = _a.sent();
-                        returnData = { id: id, message: Props_1.Props.REMOVED_SUCCESSFULLY };
+                        returnData = { id: id, message: 'REMOVED' };
                         return [2 /*return*/, returnData];
                     case 3:
                         error_4 = _a.sent();

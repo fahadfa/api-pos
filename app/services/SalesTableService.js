@@ -101,7 +101,7 @@ var SalesTableService = /** @class */ (function () {
                     case 1:
                         data = _d.sent();
                         if (!data) {
-                            throw { message: Props_1.Props.ORDER_NOT_FOUND };
+                            throw { message: 'ORDER_NOT_FOUND' };
                         }
                         return [4 /*yield*/, this.calData(data)];
                     case 2:
@@ -258,7 +258,7 @@ var SalesTableService = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         if (!data) {
-                            throw { message: Props_1.Props.ORDER_NOT_FOUND };
+                            throw { message: 'ORDER_NOT_FOUND' };
                         }
                         return [4 /*yield*/, this.salesLineDAO.getDesignerServiceLines(id)];
                     case 2:
@@ -525,13 +525,13 @@ var SalesTableService = /** @class */ (function () {
                         if (!(reqData.interCompanyOriginalSalesId && reqData.interCompanyOriginalSalesId != "")) return [3 /*break*/, 17];
                         return [4 /*yield*/, this.saveOrderShipment(reqData)];
                     case 16: return [2 /*return*/, _b.sent()];
-                    case 17: throw { message: Props_1.Props.SALES_ID_REQUIRED };
+                    case 17: throw { message: 'INVOICE_ID_REQUIRED' };
                     case 18: return [3 /*break*/, 35];
                     case 19:
                         if (!(reqData.interCompanyOriginalSalesId && reqData.interCompanyOriginalSalesId != "")) return [3 /*break*/, 21];
                         return [4 /*yield*/, this.saveOrderReceive(reqData)];
                     case 20: return [2 /*return*/, _b.sent()];
-                    case 21: throw { message: Props_1.Props.SALES_ID_REQUIRED };
+                    case 21: throw { message: 'INVOICE_ID_REQUIRED' };
                     case 22: return [3 /*break*/, 35];
                     case 23: return [4 /*yield*/, this.saveQuotation(reqData)];
                     case 24: return [2 /*return*/, _b.sent()];
@@ -541,17 +541,17 @@ var SalesTableService = /** @class */ (function () {
                         if (!custAccount) return [3 /*break*/, 28];
                         return [4 /*yield*/, this.saveQuotation(reqData)];
                     case 27: return [2 /*return*/, _b.sent()];
-                    case 28: throw { message: Props_1.Props.NO_VENDOR_FOR_CUSTOMER };
+                    case 28: throw { message: 'NO_VENDOR_FOR_CUSTOMER' };
                     case 29: return [4 /*yield*/, this.saveReturnOrder(reqData)];
                     case 30: return [2 /*return*/, _b.sent()];
                     case 31:
                         if (!reqData.mobileNo) return [3 /*break*/, 33];
                         return [4 /*yield*/, this.saveQuotation(reqData)];
                     case 32: return [2 /*return*/, _b.sent()];
-                    case 33: throw { message: "Mobile Required" };
-                    case 34: throw { message: Props_1.Props.TRANSKIND_REQUIRED };
+                    case 33: throw { message: "PLEASE_ENTER_MOBILE_NUMBER" };
+                    case 34: throw { message: 'TRANSKIND_REQUIRED' };
                     case 35: return [3 /*break*/, 37];
-                    case 36: throw Props_1.Props.INVALID_SALESLINE_DATA;
+                    case 36: throw { message: 'INVALID_DATA' };
                     case 37: return [3 /*break*/, 39];
                     case 38:
                         error_4 = _b.sent();
@@ -706,7 +706,7 @@ var SalesTableService = /** @class */ (function () {
                     case 27:
                         data = _b.sent();
                         return [3 /*break*/, 29];
-                    case 28: throw { message: Props_1.Props.TRANSKIND_REQUIRED };
+                    case 28: throw { message: 'TRANSKIND_REQUIRED' };
                     case 29:
                         if (!(data && data.format)) return [3 /*break*/, 31];
                         hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);
@@ -729,12 +729,12 @@ var SalesTableService = /** @class */ (function () {
                         //console.log(salesId);
                         _b.sent();
                         return [2 /*return*/, salesId];
-                    case 31: throw { message: Props_1.Props.NO_NUMBER_SEQUENCE };
+                    case 31: throw { message: 'CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE' };
                     case 32: return [3 /*break*/, 34];
                     case 33:
                         error_5 = _b.sent();
                         if (error_5 == {}) {
-                            error_5 = "Server Side Error";
+                            error_5 = { message: 'SERVER_SIDE_ERROR' };
                         }
                         throw error_5;
                     case 34: return [2 /*return*/];
@@ -798,7 +798,7 @@ var SalesTableService = /** @class */ (function () {
                         data.status = "CONVERTED";
                         return [2 /*return*/, data];
                     case 5: throw {
-                        message: "Can't Convert To Sales Order Because Items : " + itemString + " Are Not Available In Inventory"
+                        message: "CANNOT_CONVERT_TO_SALESORDER"
                     };
                 }
             });
@@ -851,7 +851,7 @@ var SalesTableService = /** @class */ (function () {
                     case 2:
                         convertedData = _a.sent();
                         if (!(convertedData.length > 0)) return [3 /*break*/, 3];
-                        throw { message: Props_1.Props.ALREADY_CONVERTED };
+                        throw { message: 'ALREADY_CONVERTED' };
                     case 3: return [4 /*yield*/, this.salestableDAO.save(salesData)];
                     case 4:
                         _a.sent();
@@ -904,11 +904,11 @@ var SalesTableService = /** @class */ (function () {
                             return [2 /*return*/, data];
                         }
                         else {
-                            throw { message: Props_1.Props.NO_VENDOR_FOR_CUSTOMER };
+                            throw { message: 'NO_VENDOR_FOR_CUSTOMER' };
                         }
                         return [3 /*break*/, 8];
                     case 7: throw {
-                        message: "Can't Convert To Sales Order Because Some Items : " + itemString_1 + " Are Not Available In Inventory"
+                        message: "CANNOT_CONVERT_TO_SALESORDER"
                     };
                     case 8: return [3 /*break*/, 10];
                     case 9:
@@ -940,7 +940,7 @@ var SalesTableService = /** @class */ (function () {
                         //console.log(purchaseOrderData);
                         purchaseOrderData = purchaseOrderData.length > 0 ? purchaseOrderData[0] : {};
                         if (!(purchaseOrderData == {})) return [3 /*break*/, 4];
-                        throw { message: Props_1.Props.TECHNICAL_ISSUE };
+                        throw { message: 'TECHNICAL_ISSUE,_PLEASE_CONTACT_YOUR_TECHNICAL_TEAM' };
                     case 4: return [4 /*yield*/, this.rawQuery.salesTableInterCompanyOriginalData(purchaseOrderData.salesid, "SALESORDER")];
                     case 5:
                         salesOrderData = _b.sent();
@@ -1028,7 +1028,7 @@ var SalesTableService = /** @class */ (function () {
                     case 6:
                         returnData = {
                             id: id,
-                            message: Props_1.Props.UNRESERVED_SUCCESSFULLY,
+                            message: 'UNRESERVED',
                             status: salesData.status
                         };
                         //console.log(returnData);
@@ -1121,7 +1121,7 @@ var SalesTableService = /** @class */ (function () {
                     case 11:
                         returnData = {
                             id: salesTable.salesId,
-                            message: Props_1.Props.SAVED_SUCCESSFULLY,
+                            message: 'SAVED_SUCCESSFULLY',
                             status: reqData.status
                         };
                         //console.log(returnData);
@@ -1170,7 +1170,7 @@ var SalesTableService = /** @class */ (function () {
                             }
                         });
                         if (!canConvert_2) {
-                            throw { message: "Can't Make Invoice Because Some Items : " + itemString_2 + " Are Not Available In Inventory" };
+                            throw { message: "CANNOT_CONVERT_TO_SALESORDER" };
                         }
                         _g.label = 2;
                     case 2: return [4 /*yield*/, this.validate(reqData)];
@@ -1475,7 +1475,7 @@ var SalesTableService = /** @class */ (function () {
                     case 55:
                         returnData = {
                             id: salesTable.salesId,
-                            message: Props_1.Props.SAVED_SUCCESSFULLY,
+                            message: 'SAVED_SUCCESSFULLY',
                             status: reqData.status
                         };
                         return [2 /*return*/, returnData];
@@ -1572,7 +1572,7 @@ var SalesTableService = /** @class */ (function () {
                     case 14:
                         PrevReturnedData = _c.sent();
                         if (PrevReturnedData.length > 0) {
-                            throw { message: "Already Returned" };
+                            throw { message: "ALREADY_RETURNED" };
                         }
                         return [4 /*yield*/, this.designerServiceDAO.findOne({
                                 invoiceid: reqData.interCompanyOriginalSalesId
@@ -1589,7 +1589,7 @@ var SalesTableService = /** @class */ (function () {
                     case 17:
                         returnData = {
                             id: salesTable.salesId,
-                            message: Props_1.Props.SAVED_SUCCESSFULLY,
+                            message: 'SAVED_SUCCESSFULLY',
                             status: reqData.status
                         };
                         //console.log(returnData);
@@ -1689,7 +1689,7 @@ var SalesTableService = /** @class */ (function () {
                         salesline = _c.sent();
                         returnData = {
                             id: salesTable.salesId,
-                            message: Props_1.Props.SAVED_SUCCESSFULLY,
+                            message: 'SAVED_SUCCESSFULLY',
                             status: reqData.status
                         };
                         // //console.log(returnData);
@@ -1843,7 +1843,7 @@ var SalesTableService = /** @class */ (function () {
                         salesline = _e.sent();
                         returnData = {
                             id: salesTable.salesId,
-                            message: Props_1.Props.SAVED_SUCCESSFULLY,
+                            message: 'SAVED_SUCCESSFULLY',
                             status: reqData.status
                         };
                         // //console.log(returnData);
@@ -2019,7 +2019,7 @@ var SalesTableService = /** @class */ (function () {
                     case 27:
                         returnData = {
                             id: salesTable.salesId,
-                            message: Props_1.Props.SAVED_SUCCESSFULLY,
+                            message: 'SAVED_SUCCESSFULLY',
                             status: reqData.status
                         };
                         // //console.log(returnData);
@@ -2045,7 +2045,7 @@ var SalesTableService = /** @class */ (function () {
                         transferorder = _a.sent();
                         return [2 /*return*/, {
                                 id: transferorder.salesId,
-                                message: Props_1.Props.REQUESTED_SUCCESSFULLY,
+                                message: 'REQUESTED',
                                 status: transferorder.status
                             }];
                     case 3:
@@ -2072,7 +2072,7 @@ var SalesTableService = /** @class */ (function () {
                         transferorder = _a.sent();
                         return [2 /*return*/, {
                                 id: transferorder.salesId,
-                                message: Props_1.Props.REJECTED_SUCCESSFULLY,
+                                message: 'REJECTED',
                                 status: transferorder.status
                             }];
                     case 3:

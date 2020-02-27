@@ -287,7 +287,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 (parseFloat(discountItem.discountAmount) / parseFloat(line.salesQty)) * parseInt(item.returnQuantity);
                                         }
                                         else {
-                                            throw { message: "Please Add Free Item To Get Return Amount" };
+                                            throw { message: "PLEASE_ADD_FREE_ITEMS" };
                                         }
                                     }
                                 };

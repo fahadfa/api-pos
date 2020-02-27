@@ -36,7 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var App_1 = require("../../utils/App");
-var Props_1 = require("../../constants/Props");
 var FixedAssetTableDAO_1 = require("../repos/FixedAssetTableDAO");
 var UsergroupconfigDAO_1 = require("../repos/UsergroupconfigDAO");
 var RawQuery_1 = require("../common/RawQuery");
@@ -124,14 +123,14 @@ var FixedAssetTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.fixedassettableRepository.save(item)];
                     case 2:
                         fixedassettableData = _a.sent();
-                        returnData = { id: fixedassettableData.assetId, message: Props_1.Props.SAVED_SUCCESSFULLY };
+                        returnData = { id: fixedassettableData.assetId, message: "SAVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
                     case 3:
                         if (cond == "assetId") {
-                            throw { message: Props_1.Props.RECORD_EXISTS };
+                            throw { message: 'RECORD_ALREADY_EXISTS' };
                         }
                         else {
-                            throw { message: Props_1.Props.INVALID_DATA };
+                            throw { message: 'INVALID_DATA' };
                         }
                         _a.label = 4;
                     case 4: return [3 /*break*/, 6];
@@ -157,13 +156,13 @@ var FixedAssetTableService = /** @class */ (function () {
                             entity.deleted = true;
                         }
                         else {
-                            throw { MESSAGE: Props_1.Props.RECORD_NOT_EXISTS };
+                            throw { MESSAGE: 'RECORD_NOT_FOUND' };
                         }
                         entity.deletedby = this.sessionInfo.userName;
                         return [4 /*yield*/, this.fixedassettableRepository.save(entity)];
                     case 2:
                         _a.sent();
-                        return [2 /*return*/, { id: entity.assetId, message: Props_1.Props.REMOVED_SUCCESSFULLY }];
+                        return [2 /*return*/, { id: entity.assetId, message: 'REMOVED' }];
                     case 3:
                         error_4 = _a.sent();
                         throw error_4;
@@ -267,12 +266,12 @@ var FixedAssetTableService = /** @class */ (function () {
                         _a.sent();
                         return [4 /*yield*/, salesId];
                     case 5: return [2 /*return*/, _a.sent()];
-                    case 6: throw { message: Props_1.Props.NO_NUMBER_SEQUENCE };
+                    case 6: throw { message: 'CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE' };
                     case 7: return [3 /*break*/, 9];
                     case 8:
                         error_5 = _a.sent();
                         if (error_5 == {}) {
-                            error_5 = Props_1.Props.TECHNICAL_ISSUE;
+                            error_5 = { message: 'TECHNICAL_ISSUE,_PLEASE_CONTACT_YOUR_TECHNICAL_TEAM' };
                         }
                         throw error_5;
                     case 9: return [2 /*return*/];

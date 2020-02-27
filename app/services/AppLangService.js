@@ -100,10 +100,10 @@ var AppLangService = /** @class */ (function () {
                         return [4 /*yield*/, this.appLangRepository.save(item)];
                     case 2:
                         appLangData = _a.sent();
-                        returnData = { id: item.id, message: Props_1.Props.SAVED_SUCCESSFULLY };
+                        returnData = { id: item.id, message: 'SAVED_SUCCESSFULLY' };
                         this.cacheService.app_lang("Reload");
                         return [2 /*return*/, returnData];
-                    case 3: throw { message: Props_1.Props.INVALID_DATA };
+                    case 3: throw { message: 'INVALID_DATA' };
                     case 4: return [3 /*break*/, 6];
                     case 5:
                         error_3 = _a.sent();
@@ -128,7 +128,7 @@ var AppLangService = /** @class */ (function () {
                         return [4 /*yield*/, this.appLangRepository.delete(data)];
                     case 2:
                         result = _a.sent();
-                        returnData = { id: id, message: Props_1.Props.REMOVED_SUCCESSFULLY };
+                        returnData = { id: id, message: 'REMOVED' };
                         return [2 /*return*/, returnData];
                     case 3:
                         error_4 = _a.sent();

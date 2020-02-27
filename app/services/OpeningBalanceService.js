@@ -46,7 +46,6 @@ var InventTrans_1 = require("../../entities/InventTrans");
 var InventTransDAO_1 = require("../repos/InventTransDAO");
 var InventoryOnhandDAO_1 = require("../repos/InventoryOnhandDAO");
 var RawQuery_1 = require("../common/RawQuery");
-var Props_1 = require("../../constants/Props");
 var fs = __importStar(require("fs"));
 var Log_1 = require("../../utils/Log");
 // let mssqlDbOptions = {
@@ -194,7 +193,7 @@ var OpeningBalanceService = /** @class */ (function () {
                             ? __dirname + "/SyncPrevTransactionsServices.ts"
                             : __dirname + "/SyncPrevTransactionsServices.js";
                         child_process.fork(syncFile);
-                        returnData = { message: Props_1.Props.SAVED_SUCCESSFULLY };
+                        returnData = { message: 'SAVED_SUCCESSFULLY' };
                         return [2 /*return*/, returnData];
                     case 8:
                         err_2 = _a.sent();
@@ -256,7 +255,7 @@ var OpeningBalanceService = /** @class */ (function () {
                     case 4:
                         err_3 = _a.sent();
                         Log_1.log.error(err_3);
-                        throw { message: "INVALID CREDENTIALS" };
+                        throw { message: "INVALID_CREDENTIALS" };
                     case 5: return [2 /*return*/];
                 }
             });

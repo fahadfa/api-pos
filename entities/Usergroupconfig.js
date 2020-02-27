@@ -250,6 +250,10 @@ var Usergroupconfig = /** @class */ (function () {
         __metadata("design:type", String)
     ], Usergroupconfig.prototype, "sequencegroup", void 0);
     __decorate([
+        typeorm_1.Column({ name: "lastmodifieddate" }),
+        __metadata("design:type", Date)
+    ], Usergroupconfig.prototype, "lastmodifieddate", void 0);
+    __decorate([
         typeorm_1.Column({ name: "journalnameid" }),
         __metadata("design:type", String)
     ], Usergroupconfig.prototype, "journalnameid", void 0);

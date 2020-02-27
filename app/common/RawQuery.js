@@ -108,7 +108,7 @@ var RawQuery = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         // console.log(data);
-                        return [2 /*return*/, data.length > 0 ? data[0] : {}];
+                        return [2 /*return*/, data.length > 0 ? data[0] : null];
                 }
             });
         });
