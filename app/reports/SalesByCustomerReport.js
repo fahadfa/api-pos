@@ -114,10 +114,10 @@ var SalesByCustomerReport = /** @class */ (function () {
         });
     };
     SalesByCustomerReport.prototype.updateAmount = function (saleslist, item) {
-        saleslist.salesgroup.amount += Number.parseFloat(item.amount.replace(/,/g, ""));
-        saleslist.salesgroup.netamount += Number.parseFloat(item.netamount.replace(/,/g, ""));
-        saleslist.salesgroup.vatamount += Number.parseFloat(item.vatamount.replace(/,/g, ""));
-        saleslist.salesgroup.disc += Number.parseFloat(item.disc.replace(/,/g, ""));
+        saleslist.salesgroup.amount += Number.parseFloat(item.amount);
+        saleslist.salesgroup.netamount += Number.parseFloat(item.netamount);
+        saleslist.salesgroup.vatamount += Number.parseFloat(item.vatamount);
+        saleslist.salesgroup.disc += Number.parseFloat(item.disc);
     };
     SalesByCustomerReport.prototype.report = function (result, params) {
         return __awaiter(this, void 0, void 0, function () {
@@ -143,7 +143,7 @@ var SalesByCustomerReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        sql = "\n      select\n        st.salesname as customername,\n        to_char(sum(st.vatamount), 'FM999,999,999,990.000') as vatamount,\n        to_char(sum(st.netamount), 'FM999,999,999,990.000') as \"netamount\",\n        to_char(sum(st.disc), 'FM999,999,999,990.000') as disc,\n        to_char(sum(st.amount) , 'FM999,999,999,990.000') as amount,\n        w.namealias as wnamealias,\n        w.name as wname,\n        d.description as salesman\n      from\n        salestable st\n      left join inventlocation w on\n        w.inventlocationid = st.inventlocationid\n      inner join dimensions d on\n        d.num = st.dimension6_\n      where\n        1 = 1\n        and st.status not in ('RESERVED')\n        and st.deliverydate between '" + params.fromDate + "' and ('" + params.toDate + "'::date + '2 day'::interval)\n        and st.inventlocationid = '" + params.inventlocationid + "'\n  ";
+                        sql = "\n      select\n        st.salesname as customername,\n        to_char(sum(st.vatamount), 'FM999999999990.000') as vatamount,\n        to_char(sum(st.netamount), 'FM999999999990.000') as \"netamount\",\n        to_char(sum(st.disc), 'FM999999999990.000') as disc,\n        to_char(sum(st.amount) , 'FM999999999990.000') as amount,\n        w.namealias as wnamealias,\n        w.name as wname,\n        d.description as salesman\n      from\n        salestable st\n      left join inventlocation w on\n        w.inventlocationid = st.inventlocationid\n      inner join dimensions d on\n        d.num = st.dimension6_\n      where\n        1 = 1\n        and st.status not in ('RESERVED')\n        and st.deliverydate between '" + params.fromDate + "' and ('" + params.toDate + "'::date + '2 day'::interval)\n        and st.inventlocationid = '" + params.inventlocationid + "'\n  ";
                         if (params.salesmanid) {
                             sql = sql + (" and d.num = '" + params.salesmanid + "' ");
                         }

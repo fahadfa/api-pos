@@ -70,8 +70,8 @@ var MovementReport = /** @class */ (function () {
                         salesLine = _a.sent();
                         // salesLine = salesLine.length > 0 ? salesLine : [];
                         data_1.salesLine = salesLine;
-                        data_1.qunatity = 0;
-                        salesLine.map(function (v) {
+                        data_1.quantity = 0;
+                        data_1.salesLine.map(function (v) {
                             data_1.quantity += parseInt(v.salesQty);
                         });
                         console.log("===================dffhsafyrkfhiufghllgsh================");

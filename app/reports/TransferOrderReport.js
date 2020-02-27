@@ -60,7 +60,7 @@ var TransferOrderReport = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 13, , 14]);
                         id = params.salesId;
-                        query = "\n            select \n            st.salesid as \"salesId\",\n            st.custaccount as \"custAccount\",\n            st.status as status,\n            st.transkind as transkind,\n            st.vatamount as vatamount,\n            st.netamount as \"netAmount\",\n            st.disc as disc,\n            amount as amount,\n            to_char(st.createddatetime, 'DD-MM-YYYY') as createddatetime,\n            st.originalprinted as \"originalPrinted\",\n            st.inventlocationid as \"inventLocationId\",\n            fw.namealias as fwnamealias,\n            fw.name as fwname,\n            tw.namealias as twnamealias,\n            tw.name as twname,\n            st.intercompanyoriginalsalesId as \"interCompanyOriginalSalesId\"\n            from salestable st \n            left join inventlocation fw on fw.inventlocationid = st.inventlocationid\n            left join inventlocation tw on tw.inventlocationid = st.custaccount\n            where salesid='" + id + "'\n            ";
+                        query = "\n            select \n            st.salesid as \"salesId\",\n            st.custaccount as \"custAccount\",\n            st.status as status,\n            st.transkind as transkind,\n            st.vatamount as vatamount,\n            st.netamount as \"netAmount\",\n            st.disc as disc,\n            amount as amount,\n            to_char(st.createddatetime, 'DD-MM-YYYY') as createddatetime,\n            to_char(st.lastmodifieddate, 'DD-MM-YYYY') as lastmodifieddate,\n            st.originalprinted as \"originalPrinted\",\n            st.inventlocationid as \"inventLocationId\",\n            fw.namealias as fwnamealias,\n            fw.name as fwname,\n            tw.namealias as twnamealias,\n            tw.name as twname,\n            st.intercompanyoriginalsalesId as \"interCompanyOriginalSalesId\"\n            from salestable st \n            left join inventlocation fw on fw.inventlocationid = st.inventlocationid\n            left join inventlocation tw on tw.inventlocationid = st.custaccount\n            where salesid='" + id + "'\n            ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data_1 = _a.sent();
@@ -111,8 +111,8 @@ var TransferOrderReport = /** @class */ (function () {
                         salesLine = _a.sent();
                         // salesLine = salesLine.length > 0 ? salesLine : [];
                         data_1.salesLine = salesLine;
-                        data_1.qunatity = 0;
-                        salesLine.map(function (v) {
+                        data_1.quantity = 0;
+                        data_1.salesLine.map(function (v) {
                             data_1.quantity += parseInt(v.salesQty);
                         });
                         return [2 /*return*/, data_1];

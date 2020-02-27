@@ -235,6 +235,7 @@ var UsesrInfoService = /** @class */ (function () {
                         user.userGroupConfig = user.userGroupConfig == null ? {} : user.userGroupConfig;
                         user.userGroup = user.userGroup == null ? {} : user.userGroup;
                         user.password = App_1.App.HashSync(reqData.newPassword);
+                        user.lastmodifieddate = new Date();
                         return [4 /*yield*/, this.userinfoDAO.save(user)];
                     case 2:
                         _a.sent();
