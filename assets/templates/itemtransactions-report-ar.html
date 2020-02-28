@@ -109,10 +109,10 @@
     border: 1px dashed #cccccc;
     border-collapse: collapse;
   }
+
   table.dash td {
     border: 1px dashed #cccccc;
   }
- 
 </style>
 
 <body>
@@ -133,14 +133,14 @@
       <td colspan="6">&nbsp;</td>
       {{else}}
       <td colspan="9">&nbsp;</td>
-      {{/if}} 
+      {{/if}}
 
-	  {{#if product}}
+      {{#if product}}
       <td class="tdright">{{product}}</td>
       <td>:</td>
       <td class="tdright">المنتج</td>
       {{/if}}
-    </tr>    
+    </tr>
     <tr>
       {{#if toDate}}
       <td class="tdright">{{toDate}}</td>
@@ -152,76 +152,73 @@
       <td colspan="6">&nbsp;</td>
       {{else}}
       <td colspan="9">&nbsp;</td>
-      {{/if}} 
+      {{/if}}
 
-	  {{#if fromDate}}      
+      {{#if fromDate}}
       <td class="tdright">{{fromDate}}</td>
       <td>:</td>
       <td class="tdright">من التاريخ</td>
       {{/if}}
     </tr>
     <tr>
-        {{#if batchNo}}
-        <td class="tdright">{{batchNo}}</td>
-        <td>:</td>
-        <td class="tdleft">رقم الحزمة</td>        
-        {{/if}}  
-        
-        {{#if batchNo}}
-        <td colspan="6">&nbsp;</td>
-        {{else}}
-        <td colspan="9">&nbsp;</td>
-        {{/if}}
+      {{#if batchNo}}
+      <td class="tdright">{{batchNo}}</td>
+      <td>:</td>
+      <td class="tdleft">رقم الحزمة</td>
+      {{/if}}
 
-		{{#if transType}}
-        <td class="tdright">{{transType}}</td>
-        <td>:</td>
-        <td class="tdright">نوع المعاملة</td>
-        {{/if}}
-      </tr>
-      <tr>           
-        <td class="tdleft">&nbsp;</td>
-        <td>&nbsp;</td>
-        <td class="tdleft">&nbsp;</td>
-		{{#if color}}
-        <td class="tdright">{{color}}</td>
-        <td>:</td>
-        <td class="tdright">اللون</td>
-        {{/if}}
-      </tr>
+      {{#if batchNo}}
+      <td colspan="6">&nbsp;</td>
+      {{else}}
+      <td colspan="9">&nbsp;</td>
+      {{/if}}
+
+      {{#if transType}}
+      <td class="tdright">{{transType}}</td>
+      <td>:</td>
+      <td class="tdright">نوع المعاملة</td>
+      {{/if}}
+    </tr>
+    <tr>
+      <td class="tdleft">&nbsp;</td>
+      <td>&nbsp;</td>
+      <td class="tdleft">&nbsp;</td>
+      {{#if color}}
+      <td class="tdright">{{color}}</td>
+      <td>:</td>
+      <td class="tdright">اللون</td>
+      {{/if}}
+    </tr>
   </table>
-
   <table class="dash" width="100%" cellpadding="0" cellspacing="0">
     <thead>
-      <tr>	  
-		<th width="10%">كمية</th>
-		<th width="10%">نوع المعاملة</th>
-		<th width="10%">دفعة</th>
-		<th width="10%">بحجم</th>
-		<th width="10%">اللون</th>
-		<th width="10%">المنتج</th>
-		<th width="10%">تاريخ الصفقة</th>
-        <th width="30%">رقم تعريف المبيعات</th>        
+      <tr>
+        <th width="10%">كمية</th>
+        <th width="10%">نوع المعاملة</th>
+        <th width="10%">دفعة</th>
+        <th width="10%">بحجم</th>
+        <th width="10%">اللون</th>
+        <th width="10%">المنتج</th>
+        <th width="10%">تاريخ الصفقة</th>
+        <th width="30%">رقم تعريف المبيعات</th>
       </tr>
     </thead>
     <tbody>
-
-    {{#each data}} 
-    <tr class="tab-data">	
-		<td class="tdright" width="10%">{{ this.qty }}</td>
-		<td class="tdcenter" width="10%">{{ this.transType }}</td>
-		<td class="tdcenter" width="10%">{{ this.batchno }}</td>
-		<td class="tdcenter" width="10%">{{ this.sizenameen }}</td>
-		<td class="tdcenter" width="10%">{{ this.configid }}</td>
-		<td class="tdcenter" width="10%">{{ this.nameen }}</td>
-		<td class="tdright" width="10%">{{ this.lastModifiedDate }}</td>
-        <td class="tdright" width="30%">{{ this.salesId }}</td>        
-    </tr>    
-    {{/each}}
-    <tr class="textbold">
-		<td class="tdright">{{qty}}</td>
+      {{#each data}}
+      <tr class="tab-data">
+        <td class="tdright" width="10%">{{ this.qty }}</td>
+        <td class="tdcenter" width="10%">{{ this.transType }}</td>
+        <td class="tdcenter" width="10%">{{ this.batchno }}</td>
+        <td class="tdcenter" width="10%">{{ this.sizenamear }}</td>
+        <td class="tdcenter" width="10%">{{ this.configid }}</td>
+        <td class="tdcenter" width="10%">{{ this.namear }}</td>
+        <td class="tdright" width="10%">{{ this.lastModifiedDate }}</td>
+        <td class="tdright" width="30%">{{ this.salesId }}</td>
+      </tr>
+      {{/each}}
+      <tr class="textbold">
+        <td class="tdright">{{qty}}</td>
         <td class="tdleft" colspan="7">مجموع</td>
-        
       </tr>
     </tbody>
   </table>

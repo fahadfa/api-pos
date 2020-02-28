@@ -198,6 +198,7 @@ var WorkflowService = /** @class */ (function () {
                     case 14:
                         item.usergroupid = this.sessionInfo.groupid;
                         item.orderType = Props_1.Props.WORKFLOW_ORDER_TYPE[salesData.transkind][0];
+                        item.inventLocationId = this.sessionInfo.inventlocationid;
                         return [3 /*break*/, 16];
                     case 15:
                         console.log(item.statusId);
@@ -244,7 +245,6 @@ var WorkflowService = /** @class */ (function () {
                         }
                         _a.label = 16;
                     case 16:
-                        item.inventLocationId = this.sessionInfo.inventlocationid;
                         item.lastModifiedBy = this.sessionInfo.userName;
                         item.lastMOdifiedDate = new Date();
                         return [4 /*yield*/, this.validate(item)];

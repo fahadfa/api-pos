@@ -106,9 +106,9 @@ var itemSalesByCustomerReport = /** @class */ (function () {
                             product: params.product,
                             customerName: params.customerName,
                             totalQuantity: totalQuantity_1,
-                            totalLineAmount: totalLineAmount_1,
+                            totalLineAmount: totalLineAmount_1.toFixed(3),
                             user: params.user,
-                            price: price_1
+                            price: price_1.toFixed(3)
                         };
                         renderData.data = data;
                         return [2 /*return*/, renderData];

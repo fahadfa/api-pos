@@ -129,7 +129,10 @@ var TransOrderReport = /** @class */ (function () {
                 };
                 // console.log(result.salesLine[0].product.nameEnglish);
                 renderData.data = result;
-                console.log(renderData);
+                renderData.total = 0;
+                result.map(function (v) {
+                    renderData.total += parseInt(v.quantity);
+                });
                 if (params.type == "excel") {
                     file = params.lang == "en" ? "transorder-excel" : "transorder-excel-ar";
                 }
