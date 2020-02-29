@@ -121,75 +121,84 @@
   </div>
 
   <div class="mainheading">معاملات البند</div>
-  <table id="headertbl">
+
+  <table border="1" id="headertbl" width="98%">
     <tr>
-      {{#if printDate}}
-      <td class="tdright">{{printDate}}</td>
-      <td>:</td>
-      <td class="tdleft">تاريخ الطباعة</td>
-      {{/if}}
+        <td valign="top" style="width:50%">
+          <table align="left">
+            {{#if toDate}}
+            <tr>
+             <td class="tdright">{{toDate}}</td> 
+             <td>:</td>  
+             <td class="tdright">حتى الآن</td>
+            </tr>
+            {{/if}}                   
+            
+            {{#if user}}
+            <tr>
+              <td class="tdright">{{user}}</td> 
+              <td>:</td> 
+              <td class="tdright">طباعة بواسطة</td>
+            </tr>
+            {{/if}}
 
-      {{#if printDate}}
-      <td colspan="6">&nbsp;</td>
-      {{else}}
-      <td colspan="9">&nbsp;</td>
-      {{/if}}
+            {{#if transType}}
+            <tr>
+              <td class="tdright">نوع المعاملة</td>
+              <td>:</td>
+              <td class="tdright">{{transType}}</td>
+            </tr>
+            {{/if}}
 
-      {{#if product}}
-      <td class="tdright">{{product}}</td>
-      <td>:</td>
-      <td class="tdright">المنتج</td>
-      {{/if}}
-    </tr>
-    <tr>
-      {{#if toDate}}
-      <td class="tdright">{{toDate}}</td>
-      <td>:</td>
-      <td class="tdleft">حتى تاريخه</td>
-      {{/if}}
+            {{#if color}}
+            <tr>
+              <td class="tdright">اللون</td>
+              <td>:</td>
+              <td class="tdright">{{color}}</td>
+            </tr>
+            {{/if}}
 
-      {{#if toDate}}
-      <td colspan="6">&nbsp;</td>
-      {{else}}
-      <td colspan="9">&nbsp;</td>
-      {{/if}}
-
-      {{#if fromDate}}
-      <td class="tdright">{{fromDate}}</td>
-      <td>:</td>
-      <td class="tdright">من التاريخ</td>
-      {{/if}}
-    </tr>
-    <tr>
-      {{#if batchNo}}
-      <td class="tdright">{{batchNo}}</td>
-      <td>:</td>
-      <td class="tdleft">رقم الحزمة</td>
-      {{/if}}
-
-      {{#if batchNo}}
-      <td colspan="6">&nbsp;</td>
-      {{else}}
-      <td colspan="9">&nbsp;</td>
-      {{/if}}
-
-      {{#if transType}}
-      <td class="tdright">{{transType}}</td>
-      <td>:</td>
-      <td class="tdright">نوع المعاملة</td>
-      {{/if}}
-    </tr>
-    <tr>
-      <td class="tdleft">&nbsp;</td>
-      <td>&nbsp;</td>
-      <td class="tdleft">&nbsp;</td>
-      {{#if color}}
-      <td class="tdright">{{color}}</td>
-      <td>:</td>
-      <td class="tdright">اللون</td>
-      {{/if}}
+          </table>  
+          
+        </td>
+        <td valign="top" style="width:50%">
+          <table align="right">
+            {{#if fromDate}}
+            <tr>
+                 <td class="tdright">{{fromDate}}</td>
+                 <td>:</td>
+                 <td class="tdright">من التاريخ</td>
+            </tr>
+            {{/if}}
+            
+            {{#if printDate}}
+            <tr>                
+                <td class="tdright">{{printDate}}</td>
+                <td>:</td>
+                <td class="tdright">تاريخ الطباعة</td>
+                
+            </tr>
+            {{/if}}
+            {{#if product}}
+            <tr>              
+                <td class="tdright">{{product}}</td>
+                <td>:</td>
+              <td class="tdright">المنتج</td>
+            </tr>
+            {{/if}}
+            {{#if batchNo}}
+            <tr>
+              <td class="tdleft">رقم الحزمة</td>
+              <td>:</td>
+              <td class="tdright">{{batchNo}}</td>
+            </tr>
+            {{/if}}
+          </table>
+        </td>
     </tr>
   </table>
+
+
   <table class="dash" width="100%" cellpadding="0" cellspacing="0">
     <thead>
       <tr>

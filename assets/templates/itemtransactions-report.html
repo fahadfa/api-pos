@@ -121,60 +121,77 @@
 
   <div class="mainheading">Item Transactions</div>
 
-  <table id="headertbl">
-    <tr>
-      {{#if product}}
-      <td class="tdleft">Product</td>
-      <td>:</td>
-      <td class="tdleft">{{product}}</td>
-      {{/if}}
-      <td colspan="6">&nbsp;</td>
-      {{#if printDate}}
-      <td class="tdright">Print Date</td>
-      <td>:</td>
-      <td class="tdright">{{printDate}}</td>
-      {{/if}}
-    </tr>
-    
-    <tr> 
-      {{#if fromDate}}      
-      <td class="tdleft">From Date</td>
-      <td>:</td>
-      <td class="tdleft">{{fromDate}}</td>
-      {{/if}}
-      <td colspan="6">&nbsp;</td>
-      {{#if toDate}}
-      <td class="tdright">To Date</td>
-      <td>:</td>
-      <td class="tdright">{{toDate}}</td>
-      {{/if}}
-    </tr>
 
+  <table id="headertbl" width="98%">
     <tr>
-        {{#if transType}}
-        <td class="tdleft">Transaction Type</td>
-        <td>:</td>
-        <td class="tdleft">{{transType}}</td>
-        {{/if}}
-        <td colspan="6">&nbsp;</td>
-        {{#if batchNo}}
-        <td class="tdright">Batch No</td>
-        <td>:</td>
-        <td class="tdright">{{batchNo}}</td>
-        {{/if}}
-      </tr>
-      <tr>
-        {{#if color}}
-        <td class="tdleft">Colour</td>
-        <td>:</td>
-        <td class="tdleft">{{color}}</td>
-        {{/if}}
-        <td colspan="6">&nbsp;</td>        
-        <td class="tdright">&nbsp;</td>
-        <td>&nbsp;</td>
-        <td class="tdright">&nbsp;</td>
-      </tr>
-  </table>
+        <td valign="top" style="width:50%">
+            <table align="left">
+                {{#if fromDate}}
+                <tr>                       
+                  <td>From Date</td>
+                  <td>:</td>
+                  <td>{{fromDate}}</td>
+                </tr>
+                {{/if}}
+                
+                {{#if user}}
+                <tr>
+                    <td>Print Date</td>
+                    <td>:</td>
+                    <td>{{printDate}}</td>
+                </tr>
+                {{/if}}  
+                {{#if product}}
+                <tr>                 
+                  <td>Product</td>
+                  <td>:</td>
+                  <td>{{product}}</td>
+                </tr>
+                {{/if}} 
+                {{#if batchNo}}
+                <tr>
+                  <td>Batch No</td>
+                  <td>:</td>
+                  <td>{{batchNo}}</td>
+                </tr>
+                {{/if}}         
+            </table>
+        </td>
+        <td valign="top" style="width:50%">
+            <table align="right">
+              {{#if toDate}}
+                <tr>                  
+                  <td>To Date</td>
+                  <td>:</td>
+                  <td>{{toDate}}</td>                  
+                </tr>
+                {{/if}}
+                
+                {{#if printDate}}
+                <tr>
+                    <td>Print By</td>
+                    <td>:</td>
+                    <td>{{user}}</td>
+                </tr>
+                {{/if}}
+                {{#if transType}}
+                <tr>                 
+                  <td>Transaction Type</td>
+                  <td>:</td>
+                  <td>{{transType}}</td>                  
+                </tr>
+                {{/if}} 
+                {{#if color}}
+                <tr>
+                  <td>Colour</td>
+                  <td>:</td>
+                  <td>{{color}}</td>
+                </tr>
+                {{/if}}
+            </table>
+        </td>
+    </tr>
+</table>
 
   <table class="dash" width="100%" cellpadding="0" cellspacing="0">
     <thead>

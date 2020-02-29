@@ -6,87 +6,114 @@
     <meta http-equiv="Content-Language" content="ar-sy" />
     <meta name="description" content="بيسب" />
     <style>
+        @page {
+            size: A4;
+            margin: 10px;
+        }
+
+        @media print {
+            tfoot {
+                display: table-footer-group;
+            }
+
+            @page {
+                margin: 2cm 0.5cm 1cm 0.5cm;
+            }
+        }
+
         body {
-            font-family: ' Courier New', Courier, monospace !important;
-            font-size: 11px;
-            width: 100%;
+            font-family: " Courier New", Courier, monospace !important;
+            font-size: 14px;
             background: #fff;
             padding: 0px;
             font-weight: normal !important;
-            width: 98%;
             direction: rtl;
+        }
+
+        table {
+            page-break-inside: auto;
+        }
+
+        tr {
+            page-break-inside: avoid;
+            page-break-after: always;
+            border-bottom: 1px dotted #8a8989;
+            padding: 1px;
         }
 
         thead {
             display: table-header-group;
         }
 
-        #invoiceDetails td,
-        #invoiceDetails th {
-            text-align: center;
-            vertical-align: middle;
-            border: 1px solid #c1c1c1;
-            border-style: dotted;
-            padding: 10px;
+        tfoot {
+            display: table-footer-group;
         }
 
-        .inline-table {
-            border-bottom: 1px solid black;
-            padding: 0px !important;
-            margin: 0px !important;
-        }
-
-        .copy-text {
-            color: #000;
-            font-size: 20px;
-            border: 1px solid #000;
-            font-weight: 600;
-            padding: 10px;
-            margin: 20px;
-        }
-
-        @page {
-            margin: 20mm;
-        }
-
-        @media print {
-            thead {
-                display: table-header-group;
-            }
-
-            tfoot {
-                display: table-footer-group;
-            }
-
-            button {
-                display: none;
-            }
-
-            body {
-                margin: 0;
-            }
+        th,
+        td {
+            padding: 5px 5px;
         }
 
         #bg__watermark {
-               display: block;
-               min-width: 100%;
-               opacity: 0.5;               
-           }
-           #bg__text__watermark {
-               color: lightgrey;
-               font-size: 120px;
-               text-align: center;
-                transform: rotate(-45deg);
-				transform-origin: 50% 50%;
-                -webkit-transform: rotate(-45deg);
-				-webkit-transform-origin: 50% 50%;
-               opacity: 0.9;
-               filter: alpha(opacity=50);
-               background-color: transparent;
-               background-size: 100%;
-               position: fixed;
-               margin: 50% auto;
-           }
+            display: block;
+            min-width: 100%;
+            opacity: 0.5;
+        }
+
+        #bg__text__watermark {
+            color: lightgrey;
+            font-size: 120px;
+            text-align: center;
+            transform: rotate(-45deg);
+            transform-origin: 50% 50%;
+            -webkit-transform: rotate(-45deg);
+            -webkit-transform-origin: 50% 50%;
+            opacity: 0.9;
+            filter: alpha(opacity=50);
+            background-color: transparent;
+            background-size: 100%;
+            position: fixed;
+            margin: 50% auto;
+        }
+
+        .mainheading {
+            text-align: center;
+            font-weight: 600;
+            font-size: 20px;
+            margin: 20px auto;
+        }
+
+        #headertbl {
+            width: 100%;
+            margin: 100px auto 50px auto;
+        }
+
+        .tdleft {
+            text-align: left;
+        }
+
+        .tdright {
+            text-align: right;
+        }
+
+        .tdcenter {
+            text-align: center;
+        }
+
+        .textbold {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        table.dash {
+            border: 1px dashed #cccccc;
+            border-collapse: collapse;
+        }
+
+        table.dash td,
+        table.dash th {
+            border: 1px dashed #cccccc;
+        }
     </style>
 </head>
 
@@ -95,7 +122,7 @@
         <p id="bg__text__watermark">فقط للاختبار</p>
     </div>
 
-    <table width="98%" style="margin-top: 100px;" cellpadding="0" cellspacing="0">
+    <table width="98%" id="headertbl">
         <tr>
             <td width="40%">
                 <table style="text-align:right;">
@@ -126,15 +153,13 @@
                     {{/if}}
                     <tr>
                         <td><span style="font-size:15px !important">الاستلام</span></td>
-                    </tr><br>
+                    </tr>
                     <tr>
-                        <span style="font-weight:600">
-                            <td> <span style="font-size:13px"> {{salesId}} </span></td>
-                        </span>
+                        <td> <span style="font-size:13px"> {{salesId}} </span></td>
                     </tr>
                 </table>
             </td>
-            <td style="text-align: right" width="40%">
+            <td style="text-align: left;" width="40%">
                 <table style="text-align: right">
                     <tr class="billing">
                         <td> الفاكس</td>
@@ -154,31 +179,28 @@
                 </table>
             </td>
         </tr>
+    </table>
 
-
-        <tr>
-            <td colspan="3">
-                <table id="invoiceDetails" style="margin-top: 40px;" width="100%" class="item-table" cellpadding="0"
-                    cellspacing="0">
+        
+                <table class="dash" width="100%" cellpadding="0" cellspacing="0">
                     <thead>
                         <tr>
-                            <th class="th">الرقم</th>
-                            <th class="th">رقم المنتج</th>
-                            <th class="th">وصف المنتج</th>
-                            <th class="th">رقم الدفعة</th>
-                            <th class="th">كمية</th>
+                            <th>الرقم</th>
+                            <th>رقم المنتج</th>
+                            <th>وصف المنتج</th>
+                            <th>رقم الدفعة</th>
+                            <th>كمية</th>
                         </tr>
                     </thead>
                     {{#each salesLine}}
                     <tr class="tab-data" style="font-size:13px !important">
-                        <td class="td">{{this.sNo}}</td>
-                        <td class="td">
+                        <td>{{this.sNo}}</td>
+                        <td>
                             <div style="font-size:13px">
                                 {{this.itemid}}
                             </div>
                         </td>
-                        <td class="td description-data">
-
+                        <td>
                             <span style="font-size:13px">
                                 {{this.prodNameAr}},
                                 {{# if this.colorant}}
@@ -187,59 +209,32 @@
                                 {{this.configid}},
                                 {{/if}}
                                 {{this.inventsizeid}}
-                            </span>
-                            <span>
-
-                            </span>
+                            </span>                            
                         </td>
-
-                        <td class="td">
-
-                            {{this.batchno}}
-                        </td>
-                        <td class="td">
-
-                            {{this.salesQty}}
-                        </td>
-
+                        <td>{{this.batchno}}</td>
+                        <td>{{this.salesQty}}</td>
                     </tr>
                     {{/each}}
 
-                </table>
-
-
-                <table width="100%" style="text-align:left; border-bottom:1px dotted #8a8989;margin-top: 8px;">
-
-                    <tr>
+                    <tr class="textbold">
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
-                        <td>
-                            الكمية الإجمالية:{{ quantity }}
-                        </td>
+                        <td>الكمية الإجمالية</td>
+                        <td>{{ quantity }}</td>
                     </tr>
 
-                </table>
+                </table>               
 
-
-                <table width="100%" style="background: #fff;">
+                <table id="headertbl">
                     <tr>
-                        <td style="width:33%;font-size:15px; text-align: right;">
-                            المستلم
-                            <!-- receipt -->
-                        </td>
-                        <td style="width:33%;font-size:15px; text-align:center;">
-                            البائع
-                        </td>
-                        <td style="width:33%;font-size:15px; text-align: left;">
-                            الشركة
-                        </td>
+                        <td width="33%">المستلم</td>
+                        <td width="33%" class="tdcenter">البائع</td>
+                        <td width="33%" class="tdleft">الشركة</td>
                     </tr>
                 </table>
 
-            </td>
-        </tr>
-    </table>
+           
 </body>
 
 </html>

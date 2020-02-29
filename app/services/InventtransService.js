@@ -144,7 +144,7 @@ var InventtransService = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         result = this.groupBy(data, function (item) {
-                            return [item.itemid, item.batchno, item.configid, item.inventsizeid, item.isItemFree];
+                            return [item.itemid, item.batchno, item.configid, item.inventsizeid, item.isItemFree, item.colorantId];
                         });
                         console.log(result);
                         new_data_1 = [];

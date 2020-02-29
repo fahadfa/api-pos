@@ -234,22 +234,6 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                             (parseFloat(line.salesprice) + parseFloat(line.colorantprice)) *
                                                 (parseFloat(discountItem.percentage) / 100) *
                                                 parseInt(item.returnQuantity);
-                                        // grossAmount += parseFloat(line.salesprice) * parseInt(item.returnQuantity);
-                                        // let oldDiscount: number = discountItem.discountAmount;
-                                        // let newDiscountAmount: number = parseFloat(line.salesprice) * parseInt(line.salesQty) * (percentage / 100);
-                                        // let discountDiff: number = (oldDiscount - newDiscountAmount) / parseFloat(line.salesQty);
-                                        // discountDiff = newDiscountAmount > 0 ? discountDiff : 0
-                                        // let lineDiscount: number =
-                                        //   ((parseFloat(line.salesprice) * percentage) / 100 + discountDiff)
-                                        // discount += lineDiscount * parseInt(item.returnQuantity);
-                                        // let oldVat = parseFloat(line.vatamount)
-                                        // let newVat =  (parseFloat(line.salesprice) - lineDiscount) * (parseFloat(line.vat)/100)
-                                        // let vatDiff = (newVat- oldVat) / parseFloat(line.salesQty)
-                                        // let lineVat = newVat - (vatDiff * parseInt(item.returnQuantity))
-                                        // total +=
-                                        //   (parseFloat(line.salesprice) - lineDiscount + lineVat / parseInt(line.salesQty)) *
-                                        //   parseInt(item.returnQuantity);
-                                        // vat += lineVat
                                     }
                                     if (discountItem.discountType == "MULTI_LINE_DISCOUNT") {
                                         itemDiscount +=
@@ -261,13 +245,6 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 (parseFloat(discountItem.percentage) / 100) *
                                                 parseInt(item.returnQuantity);
                                     }
-                                    // if (discountItem.discountType == "PROMOTIONAL_DISCOUNT") {
-                                    //   grossAmount += parseFloat(line.salesprice) * parseInt(item.returnQuantity);
-                                    //   let promotionalDiscountItems = salesLine.filter(
-                                    //     (v: any) => v.itemid == item.itemid && v.inventsizeid == item.inventsizeid
-                                    //   );
-                                    //   console.log(promotionalDiscountItems);
-                                    // }
                                     if (discountItem.discountType == "BUY_ONE_GET_ONE_DISCOUNT") {
                                         var returnParentQty_1 = 0;
                                         var returnFreeQty_1 = 0;
@@ -301,11 +278,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                 itemTotal -= 0;
                             }
                             if (discountConditions[line.linkId]) {
-                                // console.log("=====================================");
                                 var discObj = discountConditions[line.linkId];
                                 console.log(discObj);
                                 if (!discObj.isAmountDeducated) {
-                                    // console.log("==================total===================", total - discObj.deductableFreeAmount);
                                     itemDiscount += discObj.deductableFreeAmount;
                                     itemTotal -= discObj.deductableFreeAmount;
                                     discountConditions[line.linkId].deductableFreeAmount -= discObj.deductableFreeAmount;
@@ -395,8 +370,6 @@ var ReturnOrderAmountService = /** @class */ (function () {
             payment: salesOrderData.payment,
             inventLocationId: salesOrderData.inventLocationId,
             region: salesOrderData.region,
-            //   amount: salesOrderData.amount,
-            //   netAmount: salesOrderData.netAmount,
             dimension: salesOrderData.dimension,
             dimension2_: salesOrderData.dimension2_,
             dimension3_: salesOrderData.dimension3_,
@@ -430,6 +403,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
         returnItem.vat = item.vat;
         returnItem.appliedDiscounts = [];
         returnItem.colorantprice = item.colorantprice;
+        returnItem.colorantId = item.colorantId;
     };
     return ReturnOrderAmountService;
 }());

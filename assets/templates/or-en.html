@@ -6,86 +6,113 @@
     <meta http-equiv="Content-Language" content="ar-sy" />
     <meta name="description" content="بيسب" />
     <style>
+        @page {
+            size: A4;
+            margin: 10px;
+        }
+
+        @media print {
+            tfoot {
+                display: table-footer-group;
+            }
+
+            @page {
+                margin: 2cm 0.5cm 1cm 0.5cm;
+            }
+        }
+
         body {
-            font-family: ' Courier New', Courier, monospace !important;
-            font-size: 11px;
-            width: 100%;
+            font-family: " Courier New", Courier, monospace !important;
+            font-size: 14px;
             background: #fff;
             padding: 0px;
             font-weight: normal !important;
-            width: 98%;
+        }
+
+        table {
+            page-break-inside: auto;
+        }
+
+        tr {
+            page-break-inside: avoid;
+            page-break-after: always;
+            border-bottom: 1px dotted #8a8989;
+            padding: 1px;
         }
 
         thead {
             display: table-header-group;
         }
 
-        #invoiceDetails td,
-        #invoiceDetails th {
-            text-align: center;
-            vertical-align: middle;
-            border: 1px solid #c1c1c1;
-            border-style: dotted;
-            padding: 10px;
+        tfoot {
+            display: table-footer-group;
         }
 
-        .inline-table {
-            border-bottom: 1px solid black;
-            padding: 0px !important;
-            margin: 0px !important;
-        }
-
-        .copy-text {
-            color: #000;
-            font-size: 20px;
-            border: 1px solid #000;
-            font-weight: 600;
-            padding: 10px;
-            margin: 20px;
-        }
-
-        @page {
-            margin: 20mm;
-        }
-
-        @media print {
-            thead {
-                display: table-header-group;
-            }
-
-            tfoot {
-                display: table-footer-group;
-            }
-
-            button {
-                display: none;
-            }
-
-            body {
-                margin: 0;
-            }
+        th,
+        td {
+            padding: 5px 5px;
         }
 
         #bg__watermark {
-               display: block;
-               min-width: 100%;
-               opacity: 0.5;               
-           }
-           #bg__text__watermark {
-               color: lightgrey;
-               font-size: 120px;
-               text-align: center;
-                transform: rotate(-45deg);
-				transform-origin: 50% 50%;
-                -webkit-transform: rotate(-45deg);
-				-webkit-transform-origin: 50% 50%;
-               opacity: 0.9;
-               filter: alpha(opacity=50);
-               background-color: transparent;
-               background-size: 100%;
-               position: fixed;
-               margin: 50% auto;
-           }
+            display: block;
+            min-width: 100%;
+            opacity: 0.5;
+        }
+
+        #bg__text__watermark {
+            color: lightgrey;
+            font-size: 120px;
+            text-align: center;
+            transform: rotate(-45deg);
+            transform-origin: 50% 50%;
+            -webkit-transform: rotate(-45deg);
+            -webkit-transform-origin: 50% 50%;
+            opacity: 0.9;
+            filter: alpha(opacity=50);
+            background-color: transparent;
+            background-size: 100%;
+            position: fixed;
+            margin: 50% auto;
+        }
+
+        .mainheading {
+            text-align: center;
+            font-weight: 600;
+            font-size: 20px;
+            margin: 20px auto;
+        }
+
+        #headertbl {
+            width: 100%;
+            margin: 100px auto 50px auto;
+        }
+
+        .tdleft {
+            text-align: left;
+        }
+
+        .tdright {
+            text-align: right;
+        }
+
+        .tdcenter {
+            text-align: center;
+        }
+
+        .textbold {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        table.dash {
+            border: 1px dashed #cccccc;
+            border-collapse: collapse;
+        }
+
+        table.dash td,
+        table.dash th {
+            border: 1px dashed #cccccc;
+        }
     </style>
 </head>
 
@@ -94,10 +121,10 @@
     <div id="bg__watermark">
         <p id="bg__text__watermark">Only for testing</p>
     </div>
-    <table width="98%" style="margin-top: 100px;" cellpadding="0" cellspacing="0">
+    <table width="98%" id="headertbl">
         <tr>
             <td width="40%">
-                <table style="text-align:left;">
+                <table>
                     <tr class="billing">
                         <td valign="top">From</td>
                         <td valign="top">:</td>
@@ -114,9 +141,9 @@
                     </tr>
                 </table>
             </td>
-            <td width="20%" style="text-align:center">
+            <td width="25%" class="tdcenter">
 
-                <table style="text-align:center">
+                <table>
                     {{#if originalPrinted}}
                     <tr>
                         <td class="copy-text">COPY</td>
@@ -132,8 +159,8 @@
                     </tr>
                 </table>
             </td>
-            <td style="text-align: left" width="40%">
-                <table align="right">
+            <td align="right" width="35%">
+                <table>
                     <tr class="billing">
                         <td valign="top">Fax</td>
                         <td valign="top">:</td>
@@ -151,78 +178,58 @@
                 </table>
             </td>
         </tr>
-        <tr>
-            <td colspan="3">
-                <table id="invoiceDetails" style="margin-top: 40px;" width="100%" class="item-table" cellpadding="0"
-                    cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th class="th">S.No</th>
-                            <th class="th">Item No</th>
-                            <th class="th">Description</th>
-                            <th class="th">Batch No</th>
-                            <th class="th">Qty</th>
-                    </thead>
-                    {{#each salesLine}}
-                    <tr class="tab-data">
-                        <td class="td">{{this.sNo}}</td>
-                        <td class="td">
-                            <div style="font-size:13px">
-                                {{this.itemid}}
-                            </div>
-                        </td>
-                        <td class="td description-data">
-                            <span style="font-size:13px">
-                                {{this.prodNameEn}},
-                                {{# if this.colorant}}
-                                {{this.colorant}},
-                                {{else}}
-                                {{this.configid}},
-                                {{/if}}
-                                {{this.inventsizeid}}
-                            </span>
-                        </td>
-                        <td class="td">
-                            {{this.batchno}}
-                        </td>
-                        <td class="td">
-                            {{this.salesQty}}
-                        </td>
-                    </tr>
-                    {{/each}}
+    </table>
 
-                </table>
-
-
-                <table width="100%" style="text-align:right; border-bottom:1px dotted #8a8989;margin-top: 8px;">
-                
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>
-                            Total Quantity:{{ quantity }}
-                        </td>
-                    </tr>
-                    
-                </table>
-
-
-                <table width="100%" style="background: #fff;">
-                    <tr>
-                        <td style="width:33%;font-size:15px; text-align: left;">
-                            Recipient
-                        </td>
-                        <td style="width:33%;font-size:15px; text-align: center;">
-                            Seller
-                        </td>
-                        <td style="width:33%;font-size:15px;text-align: right;">
-                            Company
-                        </td>
-                    </tr>
-                </table>
-
+    <table class="dash" width="100%" cellpadding="0" cellspacing="0">
+        <thead>
+            <tr>
+                <th>S.No</th>
+                <th>Item No</th>
+                <th>Description</th>
+                <th>Batch No</th>
+                <th>Qty</th>
+        </thead>
+        {{#each salesLine}}
+        <tr class="tab-data">
+            <td>{{this.sNo}}</td>
+            <td>
+                <div style="font-size:13px">
+                    {{this.itemid}}
+                </div>
             </td>
+            <td>
+                <span style="font-size:13px">
+                    {{this.prodNameEn}},
+                    {{# if this.colorant}}
+                    {{this.colorant}},
+                    {{else}}
+                    {{this.configid}},
+                    {{/if}}
+                    {{this.inventsizeid}}
+                </span>
+            </td>
+            <td>
+                {{this.batchno}}
+            </td>
+            <td class="tdright">
+                {{this.salesQty}}
+            </td>
+        </tr>
+        {{/each}}
+        <tr class="textbold">
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>Total Quantity</td>
+            <td class="tdright">{{ quantity }}</td>
+        </tr>
+    </table>
+
+    <table id="headertbl">
+        <tr>
+            <td width="30%">Recipient</td>
+            <td width="30%" class="tdcenter">Seller</td>
+            <td width="30%" class="tdright">Company</td>
         </tr>
     </table>
 </body>

@@ -96,7 +96,7 @@ var SalesTableService = /** @class */ (function () {
             return __generator(this, function (_d) {
                 switch (_d.label) {
                     case 0:
-                        _d.trys.push([0, 14, , 15]);
+                        _d.trys.push([0, 12, , 13]);
                         return [4 /*yield*/, this.salestableDAO.entity(id.toUpperCase())];
                     case 1:
                         data = _d.sent();
@@ -147,29 +147,21 @@ var SalesTableService = /** @class */ (function () {
                         _i = 0, salesLine_1 = salesLine;
                         _d.label = 7;
                     case 7:
-                        if (!(_i < salesLine_1.length)) return [3 /*break*/, 12];
+                        if (!(_i < salesLine_1.length)) return [3 /*break*/, 10];
                         item = salesLine_1[_i];
                         item.product = item.size ? item.size.product : {};
                         item.size = item.size ? item.size : {};
                         delete item.size.product;
-                        if (!(data.transkind == "SALESORDER" && data.status != "POSTED" && data.status != "PAID")) return [3 /*break*/, 9];
-                        return [4 /*yield*/, this.inventoryOnHandCheck(item, data.transkind, null)];
+                        if (!(data.transkind == "TRANSFERORDER" && data.custAccount == this.sessionInfo.inventlocationid)) return [3 /*break*/, 9];
+                        return [4 /*yield*/, this.inventoryOnHandCheck(item, data.transkind, data.custAccount)];
                     case 8:
                         _d.sent();
-                        return [3 /*break*/, 11];
+                        _d.label = 9;
                     case 9:
-                        if (!(data.transkind == "TRANSFERORDER" && data.custAccount == this.sessionInfo.inventlocationid)) return [3 /*break*/, 11];
-                        //console.log("---------------------------------------------------------------------------------------", data.transkind, data.status);
-                        return [4 /*yield*/, this.inventoryOnHandCheck(item, data.transkind, data.custAccount)];
-                    case 10:
-                        //console.log("---------------------------------------------------------------------------------------", data.transkind, data.status);
-                        _d.sent();
-                        _d.label = 11;
-                    case 11:
                         _i++;
                         return [3 /*break*/, 7];
-                    case 12: return [4 /*yield*/, this.rawQuery.getBaseSizeBatchesList(id)];
-                    case 13:
+                    case 10: return [4 /*yield*/, this.rawQuery.getBaseSizeBatchesList(id)];
+                    case 11:
                         baseSizeBatchesList_1 = _d.sent();
                         if (data.transkind == "SALESORDER" || data.transkind == "TRANSFERORDER") {
                             salesLine.map(function (item) {
@@ -188,31 +180,12 @@ var SalesTableService = /** @class */ (function () {
                         else {
                             delete data.salesLine;
                             data.salesLine = salesLine;
-                            // let result: any = this.groupBy(salesLine, function(item: any) {
-                            //   return [item.product.id];
-                            // });
-                            // let new_data: any = [];
-                            // result.forEach(function(groupitem: any) {
-                            //   let product: any = groupitem[0].product;
-                            //   product.color = [];
-                            //   product.salesLine = [];
-                            //   groupitem.forEach(function(item: any) {
-                            //     product.color.push(item.colors) ? item.colors : product.color.push([]);
-                            //     item.colorId = item.colors ? item.colors.id : null;
-                            //     delete item.product;
-                            //     product.salesLine.push(item);
-                            //   });
-                            //   new_data.push(product);
-                            // });
-                            // delete data.salesLine;
-                            // data.products = new_data;
                         }
-                        // //console.log(data);
                         return [2 /*return*/, data];
-                    case 14:
+                    case 12:
                         error_1 = _d.sent();
                         throw error_1;
-                    case 15: return [2 /*return*/];
+                    case 13: return [2 /*return*/];
                 }
             });
         });
@@ -1053,7 +1026,7 @@ var SalesTableService = /** @class */ (function () {
                     case 1:
                         cond = _a.sent();
                         if (!(cond == true)) return [3 /*break*/, 12];
-                        reqData.payment = reqData.transkind == "DESIGNERSERVICE" ? 'CASH' : null;
+                        reqData.payment = reqData.transkind == "DESIGNERSERVICE" ? 'CASH' : false;
                         reqData.status = reqData.status ? reqData.status : "CREATED";
                         reqData.salesType = reqData.transkind == "TRANSFERORDER" ? 1 : null;
                         return [4 /*yield*/, this.salestableDAO.save(reqData)];

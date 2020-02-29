@@ -215,7 +215,7 @@ var SyncDMLService = /** @class */ (function () {
                         Log_1.slog.error(err_1);
                         updateQuery = null;
                         if (err_1 == Props_1.Props.RECORD_NOT_FOUND) {
-                            updateQuery = "update sync_table set last_update = '" + lastUpdate + "', updated_on = '" + currentTime + "'  where id='" + sync.id + "'";
+                            updateQuery = "update sync_table set updated_on = '" + currentTime + "'  where id='" + sync.id + "'";
                         }
                         else {
                             updateQuery = "update sync_table set updated_on = '" + currentTime + "'  where id='" + sync.id + "'";
