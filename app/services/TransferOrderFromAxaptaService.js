@@ -44,6 +44,8 @@ var ColorsDAO_1 = require("../repos/ColorsDAO");
 var SalesTableDAO_1 = require("../repos/SalesTableDAO");
 var SalesLineDAO_1 = require("../repos/SalesLineDAO");
 var uuid = require("uuid");
+var UsergroupconfigDAO_1 = require("../repos/UsergroupconfigDAO");
+var RawQuery_1 = require("../common/RawQuery");
 var TransferOrderFromAxaptaService = /** @class */ (function () {
     function TransferOrderFromAxaptaService() {
         this.axios = require("axios");
@@ -52,6 +54,8 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
         this.baseSizeDAO = new BaseSizesDAO_1.BaseSizesDAO();
         this.salesTableDAO = new SalesTableDAO_1.SalesTableDAO();
         this.salesLineDAO = new SalesLineDAO_1.SalesLineDAO();
+        this.usergroupconfigDAO = new UsergroupconfigDAO_1.UsergroupconfigDAO();
+        this.rawQuery = new RawQuery_1.RawQuery();
     }
     TransferOrderFromAxaptaService.prototype.get = function (transferID) {
         return __awaiter(this, void 0, void 0, function () {
@@ -94,7 +98,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                             salesData.salesId = data.transfer_id;
                             salesData.inventLocationId = data.invent_location_id_to;
                             salesData.transkind = "TRANSFERORDER";
-                            salesData.status = "RECEIVED";
+                            salesData.saleStatus = "RECEIVED";
                             salesData.custAccount = data.invent_location_id_from;
                             salesData.invoiceDate = data.shipdate;
                             salesData.shippingDateConfirmed = data.shipdate;
@@ -158,36 +162,71 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
     };
     TransferOrderFromAxaptaService.prototype.save = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var salesData, salesLines, prevSalesLines, _i, salesLines_1, item, batches, error_3;
+            var salesData, usergroupconfig, seqNum, seqData, hashString, date, prevYear, year, salesLines, prevSalesLines, _i, salesLines_1, item, batches, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 14, , 15]);
-                        if (!data.inventLocationId) return [3 /*break*/, 12];
-                        return [4 /*yield*/, this.salesTableDAO.findOne({ salesId: data.salesId })];
+                        _a.trys.push([0, 19, , 20]);
+                        if (!data.inventLocationId) return [3 /*break*/, 17];
+                        return [4 /*yield*/, this.salesTableDAO.findOne({ interCompanyOriginalSalesId: data.salesId })];
                     case 1:
                         salesData = _a.sent();
                         if (!salesData) return [3 /*break*/, 2];
                         throw { message: "ALREADY_RECEIVED" };
-                    case 2:
+                    case 2: return [4 /*yield*/, this.usergroupconfigDAO.findOne({
+                            groupid: this.sessionInfo.groupid
+                        })];
+                    case 3:
+                        usergroupconfig = _a.sent();
                         salesData = data;
+                        salesData.status = data.saleStatus;
+                        salesData.interCompanyOriginalSalesId = salesData.salesId;
+                        salesData.transkind = "ORDERRECEIVE";
+                        seqNum = usergroupconfig.orderreceivesequencegroup;
+                        return [4 /*yield*/, this.rawQuery.getNumberSequence(seqNum)];
+                    case 4:
+                        seqData = _a.sent();
+                        if (!(seqData && seqData.format)) return [3 /*break*/, 6];
+                        hashString = seqData.format.slice(seqData.format.indexOf("#"), seqData.format.lastIndexOf("#") + 1);
+                        date = new Date(seqData.lastmodifieddate).toLocaleString();
+                        console.log(date);
+                        console.log(seqData);
+                        prevYear = new Date(seqData.lastmodifieddate)
+                            .getFullYear()
+                            .toString()
+                            .substr(2, 2);
+                        year = new Date()
+                            .getFullYear()
+                            .toString()
+                            .substr(2, 2);
+                        seqData.nextrec = prevYear == year ? seqData.nextrec : "000001";
+                        salesData.salesId = seqData.format.replace(hashString, seqData.nextrec) + "-" + year;
+                        //console.log(salesId);
+                        return [4 /*yield*/, this.rawQuery.updateNumberSequence(seqNum, seqData.nextrec)];
+                    case 5:
+                        //console.log(salesId);
+                        _a.sent();
+                        return [3 /*break*/, 7];
+                    case 6: throw { message: "CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE" };
+                    case 7:
                         salesLines = data.salesLines;
                         delete salesData.salesLines;
                         return [4 /*yield*/, this.salesTableDAO.save(salesData)];
-                    case 3:
+                    case 8:
                         _a.sent();
-                        return [4 /*yield*/, this.salesLineDAO.findAll({ salesId: salesData.salesId })];
-                    case 4:
+                        return [4 /*yield*/, this.salesLineDAO.findAll({ salesId: salesData.interCompanyOriginalSalesId })];
+                    case 9:
                         prevSalesLines = _a.sent();
                         return [4 /*yield*/, this.salesLineDAO.delete(prevSalesLines)];
-                    case 5:
+                    case 10:
                         _a.sent();
                         _i = 0, salesLines_1 = salesLines;
-                        _a.label = 6;
-                    case 6:
-                        if (!(_i < salesLines_1.length)) return [3 /*break*/, 10];
+                        _a.label = 11;
+                    case 11:
+                        if (!(_i < salesLines_1.length)) return [3 /*break*/, 15];
                         item = salesLines_1[_i];
                         item.id = uuid();
+                        item.salesId = salesData.salesId;
                         item.batch = [
                             {
                                 batchNo: item.batches.batchno,
@@ -195,25 +234,26 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                             }
                         ];
                         batches = item.batches;
+                        batches.invoiceid = salesData.salesId;
                         batches.salesLineId = item.id;
                         return [4 /*yield*/, this.salesLineDAO.save(item)];
-                    case 7:
+                    case 12:
                         _a.sent();
                         return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches)];
-                    case 8:
+                    case 13:
                         _a.sent();
-                        _a.label = 9;
-                    case 9:
-                        _i++;
-                        return [3 /*break*/, 6];
-                    case 10: return [2 /*return*/, { status: 1, id: salesData.salesId, message: Props_1.Props.SAVED_SUCCESSFULLY }];
-                    case 11: return [3 /*break*/, 13];
-                    case 12: throw { status: 0, message: "INVALID_DATA" };
-                    case 13: return [3 /*break*/, 15];
+                        _a.label = 14;
                     case 14:
+                        _i++;
+                        return [3 /*break*/, 11];
+                    case 15: return [2 /*return*/, { status: 1, id: salesData.salesId, message: Props_1.Props.SAVED_SUCCESSFULLY }];
+                    case 16: return [3 /*break*/, 18];
+                    case 17: throw { status: 0, message: "INVALID_DATA" };
+                    case 18: return [3 /*break*/, 20];
+                    case 19:
                         error_3 = _a.sent();
                         throw error_3;
-                    case 15: return [2 /*return*/];
+                    case 20: return [2 /*return*/];
                 }
             });
         });

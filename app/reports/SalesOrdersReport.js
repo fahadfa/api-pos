@@ -86,10 +86,7 @@ var SalesOrdersReport = /** @class */ (function () {
                         if (params.accountnum) {
                             query += " and s.custaccount = '" + params.accountnum + "'";
                         }
-                        query += " order by s.createddatetime DESC";
-                        console.log('-------------------------Query Start-----------');
-                        console.log(query);
-                        console.log('-------------------------Query End-------------');
+                        query += " order by s.createddatetime ASC";
                         return [4 /*yield*/, this.db.query(query)];
                     case 4:
                         data = _a.sent();

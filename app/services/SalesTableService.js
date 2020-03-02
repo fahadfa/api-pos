@@ -92,34 +92,30 @@ var SalesTableService = /** @class */ (function () {
     SalesTableService.prototype.entity = function (id, type) {
         if (type === void 0) { type = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var data, _a, _b, _c, salesLine, _i, salesLine_1, item, baseSizeBatchesList_1, error_1;
-            return __generator(this, function (_d) {
-                switch (_d.label) {
+            var data, _a, _b, salesLine, _i, salesLine_1, item, baseSizeBatchesList_1, error_1;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
-                        _d.trys.push([0, 12, , 13]);
+                        _c.trys.push([0, 11, , 12]);
                         return [4 /*yield*/, this.salestableDAO.entity(id.toUpperCase())];
                     case 1:
-                        data = _d.sent();
+                        data = _c.sent();
                         if (!data) {
                             throw { message: "ORDER_NOT_FOUND" };
                         }
                         return [4 /*yield*/, this.calData(data)];
                     case 2:
-                        _d.sent();
+                        _c.sent();
                         data.custAccount = data.custAccount ? data.custAccount.trim() : null;
                         _a = data;
                         return [4 /*yield*/, this.custtableDAO.entity(data.custAccount)];
                     case 3:
-                        _a.customer = _d.sent();
+                        _a.customer = _c.sent();
                         data.customer = data.customer ? data.customer : {};
                         _b = data;
-                        return [4 /*yield*/, this.inventlocationDAO.entity(data.custAccount)];
-                    case 4:
-                        _b.toWarehouse = _d.sent();
-                        _c = data;
                         return [4 /*yield*/, this.custtableDAO.entity(data.painter)];
-                    case 5:
-                        _c.painter = _d.sent();
+                    case 4:
+                        _b.painter = _c.sent();
                         data.painter = data.painter ? data.painter : {};
                         data.instantDiscChecked = data.instantDiscChecked ? data.instantDiscChecked : false;
                         data.voucherDiscChecked = data.voucherDiscChecked ? data.voucherDiscChecked : false;
@@ -133,8 +129,8 @@ var SalesTableService = /** @class */ (function () {
                         data.movementType = data.movementType ? data.movementType : {};
                         salesLine = data.salesLine;
                         return [4 /*yield*/, this.allocateSalesLineData(salesLine)];
-                    case 6:
-                        _d.sent();
+                    case 5:
+                        _c.sent();
                         salesLine.sort(function (a, b) {
                             var lineA = a.lineNum, lineB = b.lineNum;
                             if (lineA < lineB)
@@ -145,24 +141,24 @@ var SalesTableService = /** @class */ (function () {
                             return 0; //default return value (no sorting)
                         });
                         _i = 0, salesLine_1 = salesLine;
-                        _d.label = 7;
-                    case 7:
-                        if (!(_i < salesLine_1.length)) return [3 /*break*/, 10];
+                        _c.label = 6;
+                    case 6:
+                        if (!(_i < salesLine_1.length)) return [3 /*break*/, 9];
                         item = salesLine_1[_i];
                         item.product = item.size ? item.size.product : {};
                         item.size = item.size ? item.size : {};
                         delete item.size.product;
-                        if (!(data.transkind == "TRANSFERORDER" && data.custAccount == this.sessionInfo.inventlocationid)) return [3 /*break*/, 9];
+                        if (!(data.transkind == "TRANSFERORDER" && data.custAccount == this.sessionInfo.inventlocationid)) return [3 /*break*/, 8];
                         return [4 /*yield*/, this.inventoryOnHandCheck(item, data.transkind, data.custAccount)];
+                    case 7:
+                        _c.sent();
+                        _c.label = 8;
                     case 8:
-                        _d.sent();
-                        _d.label = 9;
-                    case 9:
                         _i++;
-                        return [3 /*break*/, 7];
-                    case 10: return [4 /*yield*/, this.rawQuery.getBaseSizeBatchesList(id)];
-                    case 11:
-                        baseSizeBatchesList_1 = _d.sent();
+                        return [3 /*break*/, 6];
+                    case 9: return [4 /*yield*/, this.rawQuery.getBaseSizeBatchesList(id)];
+                    case 10:
+                        baseSizeBatchesList_1 = _c.sent();
                         if (data.transkind == "SALESORDER" || data.transkind == "TRANSFERORDER") {
                             salesLine.map(function (item) {
                                 item.batches = baseSizeBatchesList_1.filter(function (v) {
@@ -182,10 +178,10 @@ var SalesTableService = /** @class */ (function () {
                             data.salesLine = salesLine;
                         }
                         return [2 /*return*/, data];
-                    case 12:
-                        error_1 = _d.sent();
+                    case 11:
+                        error_1 = _c.sent();
                         throw error_1;
-                    case 13: return [2 /*return*/];
+                    case 12: return [2 /*return*/];
                 }
             });
         });
@@ -391,6 +387,18 @@ var SalesTableService = /** @class */ (function () {
                         data = _a;
                         newData_1 = [];
                         data.forEach(function (item) {
+                            if (item.transkind == "ORDERSHIPMENT" || item.transkind == "TRANSFERORDER") {
+                                var fromWarehouseEn = item.toWarehouseEn;
+                                var fromWarehouseAr = item.toWarehouseAr;
+                                var toWarehouseAr = item.fromWarehouseAr;
+                                var toWarehouseEn = item.fromWarehouseEn;
+                                item.toWarehouseId = item.custAccount;
+                                item.fromWarehouseId = item.inventLocationId;
+                                item.fromWarehouseEn = fromWarehouseEn;
+                                item.fromWarehouseAr = fromWarehouseAr;
+                                item.toWarehouseAr = toWarehouseAr;
+                                item.toWarehouseEn = toWarehouseEn;
+                            }
                             if (item.custAccount == _this.sessionInfo.inventlocationid && item.status != "CREATED") {
                                 newData_1.push(item);
                             }
@@ -1026,7 +1034,7 @@ var SalesTableService = /** @class */ (function () {
                     case 1:
                         cond = _a.sent();
                         if (!(cond == true)) return [3 /*break*/, 12];
-                        reqData.payment = reqData.transkind == "DESIGNERSERVICE" ? 'CASH' : false;
+                        reqData.payment = reqData.transkind == "DESIGNERSERVICE" ? "CASH" : false;
                         reqData.status = reqData.status ? reqData.status : "CREATED";
                         reqData.salesType = reqData.transkind == "TRANSFERORDER" ? 1 : null;
                         return [4 /*yield*/, this.salestableDAO.save(reqData)];
@@ -1608,6 +1616,7 @@ var SalesTableService = /** @class */ (function () {
                     case 5:
                         salesTable = _c.sent();
                         salesLine = salesLine.filter(function (v) { return v.status == "SHIPPED"; });
+                        console.log(salesLine);
                         _i = 0, salesLine_6 = salesLine;
                         _c.label = 6;
                     case 6:

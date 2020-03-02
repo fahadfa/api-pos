@@ -910,7 +910,7 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select journalnum, balance from (select \n            journalnum, \n            cast((sum(amountcurdebit)-sum(amountcurcredit)) as integer ) as balance\n            from ledgerjournal\n            trans where dataareaid='" + dataareaid + "' group by journalnum) as i where balance <> 0;";
+                        query = "select journalnum, balance from (select \n            journalnum, \n            cast((sum(amountcurdebit)-sum(amountcurcredit)) as integer ) as balance\n            from ledgerjournaltrans\n            trans where dataareaid='" + dataareaid + "' group by journalnum) as i where balance <> 0;";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         result = _a.sent();

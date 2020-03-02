@@ -49,7 +49,7 @@ var TransOrderReport = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 8, , 9]);
                         data = void 0;
-                        query = "\n            select \n                distinct\n                s.salesid as \"salesId\",\n                s.inventlocationid as \"fromWareHouse\",\n                s.custaccount as \"ToWareHouse\",\n                to_char(s.createddatetime, 'DD-MM-YYYY') as \"createddatetime\",\n                to_char(s.lastmodifieddate, 'DD-MM-YYYY') as \"lastmodifieddate\",\n                s.status as status,\n                fwh.name as \"fromWareHouseNameAr\",\n                fwh.namealias as \"fromWareHouseNameEn\",\n                twh.name as \"toWareHouseNameAr\",\n                twh.namealias as \"toWareHouseNameEn\",\n                (select to_char(sum(sl.salesqty), 'FM999999990.00') from salesline sl where sl.salesid=s.salesid) as quantity\n                from salestable s\n                left join inventlocation fwh on fwh.inventlocationid=s.inventlocationid\n                left join inventlocation twh on twh.inventlocationid=s.custaccount\n            where s.transkind in ('TRANSFERORDER' ,'ORDERSHIPMENT' ,'ORDERRECEIVE') and  s.createddatetime >= '" + params.fromDate + "' ::date\n            AND  s.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval) \n            ";
+                        query = "\n            select \n                distinct\n                s.salesid as \"salesId\",\n                s.inventlocationid as \"fromWareHouse\",\n                s.custaccount as \"ToWareHouse\",\n                to_char(s.createddatetime, 'DD-MM-YYYY') as \"createddatetime\",\n                to_char(s.lastmodifieddate, 'DD-MM-YYYY') as \"lastmodifieddate\",\n                s.status as status,\n                fwh.name as \"fromWareHouseNameAr\",\n                fwh.namealias as \"fromWareHouseNameEn\",\n                twh.name as \"toWareHouseNameAr\",\n                twh.namealias as \"toWareHouseNameEn\",\n                (select to_char(sum(sl.salesqty), 'FM999999990.00') from salesline sl where sl.salesid=s.salesid) as quantity\n                from salestable s\n                left join inventlocation fwh on fwh.inventlocationid=s.inventlocationid\n                left join inventlocation twh on twh.inventlocationid=s.custaccount\n            where  s.createddatetime >= '" + params.fromDate + "' ::date\n            AND  s.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval) \n            ";
                         if (!(params.fromWareHouseId == "ALL")) return [3 /*break*/, 2];
                         warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
                         return [4 /*yield*/, this.db.query(warehouseQuery)];
@@ -66,6 +66,24 @@ var TransOrderReport = /** @class */ (function () {
                         query += " and s.inventlocationid='" + params.fromWareHouseId + "' ";
                         _a.label = 3;
                     case 3:
+                        if (params.transkind == "ORDERSHIPMENT") {
+                            query += " and s.transkind in ('ORDERSHIPMENT') and s.status in ('SHIPPED', 'POSTED')  ";
+                        }
+                        else if (params.transkind == "ORDERRECEIVE") {
+                            query += " and s.transkind in ('ORDERRECEIVE') and s.status in ('RECEIVED', 'POSTED')  ";
+                        }
+                        else if (params.transkind == "TRANSFERORDER") {
+                            query += " and s.transkind in ('TRANSFERORDER') ";
+                            if (params.status != "ALL") {
+                                query += " AND  s.status = '" + params.status + "' ";
+                            }
+                        }
+                        else {
+                            if (params.status != "ALL") {
+                                query += " AND  s.status = '" + params.status + "' ";
+                            }
+                            query += "and s.transkind in ('TRANSFERORDER') ";
+                        }
                         if (!(params.toWareHouseId == "ALL")) return [3 /*break*/, 5];
                         warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
                         return [4 /*yield*/, this.db.query(warehouseQuery)];
@@ -83,11 +101,7 @@ var TransOrderReport = /** @class */ (function () {
                             query += " and s.custaccount='" + params.toWareHouseId + "' ";
                         }
                         _a.label = 6;
-                    case 6:
-                        if (params.status != "ALL") {
-                            query += " AND  s.status = '" + params.status + "' ";
-                        }
-                        return [4 /*yield*/, this.db.query(query)];
+                    case 6: return [4 /*yield*/, this.db.query(query)];
                     case 7:
                         data = _a.sent();
                         return [2 /*return*/, data];
