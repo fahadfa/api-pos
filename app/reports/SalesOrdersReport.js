@@ -67,12 +67,29 @@ var SalesOrdersReport = /** @class */ (function () {
                         _a.label = 3;
                     case 3:
                         if (params.status != "ALL") {
-                            query += " and  s.status = '" + params.status + "' ";
+                            if (params.status == "RESERVED") {
+                                query += " and s.status in ('RESERVED') ";
+                            }
+                            else if (params.status == "SAVED") {
+                                query += " and s.status in ('SAVED') ";
+                            }
+                            else if (params.status == "CREATED") {
+                                query += " and s.status in ('SAVED') ";
+                            }
+                            else if (params.status == "POSTED") {
+                                query += " and s.status in ('POSTED','PAID') ";
+                            }
+                            else if (params.status == "PAID") {
+                                query += " and s.status in ('PAID','POSTED') ";
+                            }
                         }
                         if (params.accountnum) {
                             query += " and s.custaccount = '" + params.accountnum + "'";
                         }
                         query += " order by s.createddatetime DESC";
+                        console.log('-------------------------Query Start-----------');
+                        console.log(query);
+                        console.log('-------------------------Query End-------------');
                         return [4 /*yield*/, this.db.query(query)];
                     case 4:
                         data = _a.sent();

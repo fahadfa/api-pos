@@ -599,7 +599,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         else {
                             trans.qty_in = parseInt(trans.QTY) > 0 ? Math.abs(parseInt(trans.QTY)) : 0;
                             trans.qty_out = parseInt(trans.QTY) <= 0 ? Math.abs(parseInt(trans.QTY)) : 0;
-                            onhandquery = "INSERT INTO public.inventory_onhand (itemid, configid, inventsizeid, batchno, qty_in, qty_out, qty_reserved, dataareaid, inventlocationid, updated_on, \"name\", updated_by) VALUES('" + trans.ITEMID + "', '" + trans.ConfigId + "', '" + trans.InventSizeId + "', '" + trans.BATCHNO + "', '" + trans.qty_in + "', '" + trans.qty_out + "', 0, '" + trans.DATAAREAID + "', '" + this.dateObj.inventlocationid + "', now(), 'OPEN_BALANCE', 'sayeed');";
+                            onhandquery = "INSERT INTO public.inventory_onhand (itemid, configid, inventsizeid, batchno, qty_in, qty_out, qty_reserved, dataareaid, inventlocationid, updated_on, \"name\", updated_by) VALUES('" + trans.ITEMID + "', '" + trans.ConfigId + "', '" + trans.InventSizeId + "', '" + trans.BATCHNO + "', '" + trans.qty_in + "', '" + trans.qty_out + "', 0, '" + trans.DATAAREAID.toLowerCase() + "', '" + this.dateObj.inventlocationid + "', now(), 'OPEN_BALANCE', 'sayeed');";
                             inventoryOnHandQuery.push(onhandquery);
                         }
                         _a.label = 8;

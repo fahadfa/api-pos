@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: ' Courier New', Courier, monospace !important;
-            font-size: 11px;
+            font-size: 12px;
             width: 100%;
             background: #fff;
             padding: 0px;
@@ -26,7 +26,7 @@
             vertical-align: middle;
             border: 1px solid #c1c1c1;
             border-style: dotted;
-            padding: 10px;
+            padding: 2px;
         }
 
         .inline-table {
@@ -93,7 +93,10 @@
         <p id="bg__text__watermark">Only for testing</p>
     </div>
 
-    <table width="98%" style="margin-top: 100px;" cellpadding="0" cellspacing="0">
+   
+
+    <table width="98%" style="margin-top: 100px; margin-bottom: 40px;" cellpadding="0" cellspacing="0">
+        <thead>
         <tr>
             <td width="40%">
                 <table style="text-align:left;">
@@ -192,12 +195,12 @@
                 </table>
             </td>
         </tr>
-
+        </thead>
 
         <tr>
             <td colspan="3">
                 {{#each salesLine}}
-                <table id="invoiceDetails" style="margin-top: 40px;page-break-before: always; font-size: 11px;"
+                <table id="invoiceDetails" style="page-break-before: always; font-size: 10px;"
                     width="100%" class="item-table" cellpadding="0" cellspacing="0">
                     <!-- <thead> -->
                     <tr>
@@ -229,12 +232,12 @@
                     <tr class="tab-data">
                         <td class="td">{{this.sNo}}</td>
                         <td class="td">
-                            <div style="font-size:11px">
+                            <div style="font-size:10px">
                                 {{this.itemid}}
                             </div>
                         </td>
                         <td class="td description-data">
-                            <span style="font-size:11px">
+                            <span style="font-size:10px">
                                 {{this.prodNameEn}},
                                 {{# if this.colorant}}
                                 {{this.colorant}},
@@ -275,44 +278,42 @@
                     {{/each}}
 
                 </table>
-                {{#if this.isSubTotal}}
-
-                <table width="100%" style="text-align:right; border-bottom:1px dotted #8a8989;margin-top: 8px;">
+                <table width="100%" style="text-align:right; margin-top: 8px;">
                     <tr class="header">
                         <td style="width:100%; text-align: right;">
-                            <table width="100%" style="font-size:11px; text-align: right;">
+                            <table width="100%" style="font-size:10px; text-align: right;">
                                 <tr class="billing" style="border-top: 1px solid black">
-                                    <td width="80%" style="font-size:11px;font-weight:600">Sub Total</td>
+                                    <td width="80%" style="font-size:10px;font-weight:400">Gross Total</td>
                                     <td width="2%">:</td>
-                                    <td width="18%" style="font-size:11px;font-weight:600">
+                                    <td width="18%" style="font-size:10px;font-weight:400">
                                         {{this.amount}} SAR
                                     </td>
                                 </tr>
                                 <tr class="billing">
-                                    <td style="font-size:11px;font-weight:600">Total Quantity</td>
+                                    <td style="font-size:10px;font-weight:400">Total Quantity</td>
                                     <td>:</td>
-                                    <td style="font-size:11px;font-weight:600">
+                                    <td style="font-size:10px;font-weight:400">
                                         {{this.quantity}}
                                     </td>
                                 </tr>
                                 <tr class="billing">
-                                    <td style="font-size:11px;font-weight:600"> Discount</td>
+                                    <td style="font-size:10px;font-weight:400"> Discount</td>
                                     <td>:</td>
-                                    <td style="font-size:11px;font-weight:600">
+                                    <td style="font-size:10px;font-weight:400">
                                         {{this.disc}} SAR
                                     </td>
                                 </tr>
                                 <tr class="billing">
                                     <td>VAT (5%)</td>
                                     <td>:</td>
-                                    <td style="font-size:11px;font-weight:600">
+                                    <td style="font-size:10px;font-weight:400">
                                         {{this.vatamount}} SAR
                                     </td>
                                 </tr>
                                 <tr class="billing">
-                                    <td width="80%" style="font-size:11px;font-weight:600">Net Amount</td>
+                                    <td width="80%" style="font-size:10px;font-weight:400">Net Amount</td>
                                     <td>:</td>
-                                    <td style="font-size:11px;font-weight:600">
+                                    <td style="font-size:10px;font-weight:400">
                                         {{this.netAmount}} SAR
                                     </td>
                                 </tr>
@@ -320,62 +321,11 @@
                         </td>
                     </tr>
                 </table>
-                {{/if}}
-
                 
                 {{/each}}
 
 
-
-                {{# if this.isbreak}}
-                <table width="100%" style="text-align:right; border-bottom:1px dotted #8a8989;margin-top: 8px;page-break-before: always;">
-                {{else}}
-                <table width="100%" style="text-align:right; border-bottom:1px dotted #8a8989;margin-top: 8px;">
-                {{/if}}
-                    <tr class="header">
-                        <td style="width:100%; text-align: right;">
-                            <table width="100%" style="font-size:15px; text-align: right;">
-                                <tr class="billing" style="border-top: 1px solid black">
-                                    <td width="80%" style="font-size:15px;font-weight:600">Gross Total</td>
-                                    <td width="2%">:</td>
-                                    <td width="18%" style="font-size:12px;font-weight:600">
-                                        {{amount}} SAR
-                                    </td>
-                                </tr>
-                                <tr class="billing">
-                                    <td width="80%" style="font-size:15px;font-weight:600">Total Quantity</td>
-                                    <td>:</td>
-                                    <td style="font-size:12px;font-weight:600">
-                                        {{quantity}}
-                                    </td>
-                                </tr>
-                                <tr class="billing">
-                                    <td width="80%" style="font-size:15px;font-weight:600">Discount</td>
-                                    <td>:</td>
-                                    <td style="font-size:12px;font-weight:600">
-                                        {{disc}} SAR
-                                    </td>
-                                </tr>
-                                <tr class="billing">
-                                    <td width="80%" style="font-size:15px;font-weight:600">VAT (5%)</td>
-                                    <td>:</td>
-                                    <td style="font-size:12px;font-weight:600">
-                                        {{vatamount}} SAR
-                                    </td>
-                                </tr>
-                                <tr class="billing">
-                                    <td width="80%" style="font-size:15px;font-weight:600">Net Amount</td>
-                                    <td>:</td>
-                                    <td style="font-size:12px;font-weight:600">
-                                        {{netAmount}} SAR
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-
-                <table width="100%" style="background: #fff;">
+                <table width="100%" style="background: #fff;border-top:1px dotted #8a8989;margin-top: 80px;">
                     <tr>
                         <td style="width:33%;font-size:15px; text-align: left;">
                             Recipient

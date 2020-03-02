@@ -51,7 +51,7 @@ var SalesOrderReport = /** @class */ (function () {
     }
     SalesOrderReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, status_1, query, data_1, salesQuery, salesLine, list, j, chunkArray, newSalesline_1, sNo_1, error_1;
+            var id, status_1, query, data_1, salesQuery, salesLine, list_1, j, chunkArray, newSalesline_1, sNo_1, quantity_1, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -71,58 +71,43 @@ var SalesOrderReport = /** @class */ (function () {
                         return [4 /*yield*/, this.db.query(salesQuery)];
                     case 2:
                         salesLine = _a.sent();
-                        list = [];
+                        list_1 = [];
                         j = 0;
-                        list.push(salesLine.slice(0, 4));
-                        return [4 /*yield*/, this.chunkArray(salesLine.slice(4), 7)];
+                        return [4 /*yield*/, this.chunkArray(salesLine, 12)];
                     case 3:
                         chunkArray = _a.sent();
                         // console.log(chunkArray)
-                        list = list.concat(chunkArray);
+                        list_1 = list_1.concat(chunkArray);
                         newSalesline_1 = [];
                         sNo_1 = 1;
-                        list.map(function (val) {
+                        quantity_1 = 0;
+                        list_1.map(function (val) {
                             var lines = {
-                                amount: 0,
+                                amount: parseFloat(data_1.amount),
                                 quantity: 0,
-                                netAmount: 0,
-                                disc: 0,
-                                vatamount: 0,
+                                netAmount: parseFloat(data_1.netAmount),
+                                disc: parseFloat(data_1.disc),
+                                vatamount: parseFloat(data_1.vatAmount),
+                                page: 1,
+                                totalPages: list_1.length,
                                 lines: []
                             };
                             data_1.isbreak = val.length > 5 ? true : false;
                             val.map(function (v) {
-                                lines.netAmount += parseFloat(v.lineAmount);
-                                lines.amount += (parseFloat(v.salesprice) + parseFloat(v.colorantprice)) * parseInt(v.salesQty);
-                                lines.disc += parseFloat(v.lineTotalDisc);
-                                lines.vatamount += parseFloat(v.vatAmount);
                                 lines.quantity += parseInt(v.salesQty);
                                 v.sNo = sNo_1;
                                 lines.lines.push(v);
                                 sNo_1 += 1;
                             });
-                            lines.vatamount = lines.vatamount.toFixed(3);
-                            lines.netAmount = lines.netAmount.toFixed(3);
-                            lines.amount = lines.amount.toFixed(3);
-                            lines.disc = lines.disc.toFixed(3);
+                            lines.page = list_1.indexOf(val) + 1;
+                            lines.quantity = lines.quantity + quantity_1;
+                            quantity_1 = lines.quantity;
                             newSalesline_1.push(lines);
                         });
                         data_1.salesLine = newSalesline_1;
-                        if (newSalesline_1.length <= 1) {
-                            data_1.salesLine.map(function (v) {
-                                v.isSubTotal = false;
-                            });
-                        }
-                        else {
-                            data_1.salesLine.map(function (v) {
-                                v.isSubTotal = true;
-                            });
-                        }
                         data_1.quantity = 0;
                         data_1.salesLine.map(function (v) {
                             data_1.quantity += parseInt(v.quantity);
-                            // console.log(data.salesLine.length)
-                            // data.isSubTotal = data.salesLine.length < 5 ? true: false;
                         });
                         return [2 /*return*/, data_1];
                     case 4:

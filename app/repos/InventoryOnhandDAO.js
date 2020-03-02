@@ -104,7 +104,8 @@ var InventoryOnhandDAO = /** @class */ (function () {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.dao
                             .createQueryBuilder("inventoryonhand")
-                            .where(data)
+                            .where({})
+                            .andWhere("LOWER(inventoryonhand.itemid) = LOWER('" + data.itemid + "') and \n                       LOWER(inventoryonhand.inventsizeid) = LOWER('" + data.inventsizeid + "') and\n                       LOWER(inventoryonhand.configid) = LOWER('" + data.configid + "') and \n                       LOWER(inventoryonhand.batchno) = LOWER('" + data.batchno + "') and \n                       LOWER(inventoryonhand.dataareaid) = LOWER('" + data.dataareaid + "') and\n                       LOWER(inventoryonhand.inventlocationid) = LOWER('" + data.inventlocationid + "')")
                             .getOne()];
                     case 1: return [2 /*return*/, _a.sent()];
                 }

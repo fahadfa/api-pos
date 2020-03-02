@@ -218,9 +218,9 @@ var RawQuery = /** @class */ (function () {
                     case 0:
                         query = "select distinct\n        i.itemid as itemid,\n        bs.namealias as nameEn,\n        bs.itemname as nameAr,\n        (i.qty_in-i.qty_out-i.qty_reserved) as availabilty,\n        i.configid as configid,\n        i.inventsizeid as inventsizeid,\n        i.batchno as batchno,\n        to_char(b.expdate, 'yyyy-MM-dd') as batchexpdate,\n        sz.description as \"sizeNameEn\",\n        sz.\"name\" as \"sizeNameAr\",\n        i.qty_reserved as \"reservedQuantity\",\n        (i.qty_in-i.qty_out) as \"totalAvailable\"\n        from inventory_onhand as i\n        left join inventbatch b on i.batchno = b.inventbatchid\n        left join inventtable bs on i.itemid = bs.itemid\n        left join inventsize sz on sz.inventsizeid = i.inventsizeid and sz.itemid = i.itemid\n        where i.inventlocationid='" + reqData.inventlocationid + "' and (i.qty_in-i.qty_out)>0 \n        ";
                         if (reqData.itemId) {
-                            query = query + (" and i.itemid = '" + reqData.itemId + "'");
+                            query = query + (" and LOWER(i.itemid) = LOWER('" + reqData.itemId + "')");
                             if (reqData.configid) {
-                                query = query + (" and i.configid='" + reqData.configid + "'");
+                                query = query + (" and LOWER(i.configid)=LOWER('" + reqData.configid + "')");
                             }
                             if (reqData.inventsizeid) {
                                 query = query + (" and LOWER(i.inventsizeid)=LOWER('" + reqData.inventsizeid + "')");
