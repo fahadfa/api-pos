@@ -155,9 +155,9 @@ var DiscountService = /** @class */ (function () {
                         discounts = getDiscountsList.discounts;
                         reqData.discount = 0;
                         reqData.voucherdiscamt = 0;
-                        isTotalDiscount = (discounts[0].enddisc && discounts[0].enddisc) != "" ? true : false;
-                        isLineDiscount = (discounts[0].linedisc && discounts[0].linedisc) != "" ? true : false;
-                        isMultiLineDiscount = (discounts[0].multilinedisc && discounts[0].multilinedisc) != "" ? true : false;
+                        isTotalDiscount = discounts[0].enddisc && discounts[0].enddisc != "" ? true : false;
+                        isLineDiscount = discounts[0].linedisc && discounts[0].linedisc != "" ? true : false;
+                        isMultiLineDiscount = discounts[0].multilinedisc && discounts[0].multilinedisc != "" ? true : false;
                         isNoDiscount = false;
                         return [4 /*yield*/, this.rawQuery.getTotalDiscPercentage(discounts[0].enddisc, reqData.currency, this.sessionInfo.dataareaid)];
                     case 2:

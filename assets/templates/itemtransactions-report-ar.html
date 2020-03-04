@@ -88,6 +88,9 @@
     margin: 20px auto;
   }
 
+table#headertbl th{
+  border: none;
+}
   .tdleft {
     text-align: left;
   }
@@ -110,21 +113,21 @@
     border-collapse: collapse;
   }
 
-  table.dash td {
+  table.dash td, table.dash th {
     border: 1px dashed #cccccc;
   }
 </style>
 
 <body>
   <div id="bg__watermark">
-    <p id="bg__text__watermark">Only for testing</p>
+    <p id="bg__text__watermark">فقط للاختبار</p>
   </div>
 
-  <div class="mainheading">معاملات البند</div>
+  <div class="mainheading">البند تقرير المعاملات</div>
 
-  <table border="1" id="headertbl" width="98%">
+  <table id="headertbl" width="100%">
     <tr>
-        <td valign="top" style="width:50%">
+        <td valign="top" style="width:33%">
           <table align="left">
             {{#if toDate}}
             <tr>
@@ -132,7 +135,15 @@
              <td>:</td>  
              <td class="tdright">حتى الآن</td>
             </tr>
-            {{/if}}                   
+            {{/if}}   
+            
+            {{#if inventsizeid}}
+              <tr>                  
+                <td class="tdright">{{inventsizeid}}</td>
+                <td>:</td>
+                <td class="tdright">بحجم</td>                  
+              </tr>
+              {{/if}}
             
             {{#if user}}
             <tr>
@@ -141,28 +152,10 @@
               <td class="tdright">طباعة بواسطة</td>
             </tr>
             {{/if}}
-
-            {{#if transType}}
-            <tr>
-              <td class="tdright">نوع المعاملة</td>
-              <td>:</td>
-              <td class="tdright">{{transType}}</td>
-            </tr>
-            {{/if}}
-
-            {{#if color}}
-            <tr>
-              <td class="tdright">اللون</td>
-              <td>:</td>
-              <td class="tdright">{{color}}</td>
-            </tr>
-            {{/if}}
-
           </table>  
-          
         </td>
-        <td valign="top" style="width:50%">
-          <table align="right">
+        <td valign="top" style="width:33%">
+          <table align="center">
             {{#if fromDate}}
             <tr>
                  <td class="tdright">{{fromDate}}</td>
@@ -171,14 +164,14 @@
             </tr>
             {{/if}}
             
-            {{#if printDate}}
-            <tr>                
-                <td class="tdright">{{printDate}}</td>
-                <td>:</td>
-                <td class="tdright">تاريخ الطباعة</td>
-                
+            {{#if color}}
+            <tr>
+              <td class="tdright">{{color}}</td>
+              <td>:</td>
+              <td class="tdright">اللون</td>
             </tr>
             {{/if}}
+            
             {{#if product}}
             <tr>              
                 <td class="tdright">{{product}}</td>
@@ -195,6 +188,31 @@
             {{/if}}
           </table>
         </td>
+        <td valign="top" style="width:33%">
+          <table align="right">
+              {{#if user}}
+              <tr>
+                  <td class="tdright">{{printDate}}</td>
+                  <td>:</td>
+                  <td class="tdright">تاريخ الطباعة</td>
+              </tr>
+              {{/if}}  
+              {{#if product}}
+              <tr>                 
+                <td class="tdright">{{product}}</td>
+                <td>:</td>
+                <td class="tdright">المنتج</td>
+              </tr>
+              {{/if}} 
+              {{#if batchno}}
+              <tr>
+                <td class="tdright">{{batchno}}</td>
+                <td>:</td>
+                <td class="tdright">رقم الحزمة</td>
+              </tr>
+              {{/if}}         
+          </table>
+      </td>
     </tr>
   </table>
 
@@ -202,33 +220,48 @@
   <table class="dash" width="100%" cellpadding="0" cellspacing="0">
     <thead>
       <tr>
-        <th width="10%">كمية</th>
-        <th width="10%">نوع المعاملة</th>
+        <th width="5%">توازن</th>
+        <th width="5%">الكمية خارج</th>
+        <th width="5%">الكمية في</th>
+        <th width="10%">موقعك</th>
         <th width="10%">دفعة</th>
         <th width="10%">بحجم</th>
-        <th width="10%">اللون</th>
-        <th width="10%">المنتج</th>
-        <th width="10%">تاريخ الصفقة</th>
-        <th width="30%">رقم تعريف المبيعات</th>
+        <th width="15%">اللون</th>
+        <th width="15%">تاريخ الصفقة</th>
+        <th width="25%">رقم تعريف المبيعات</th>
       </tr>
     </thead>
     <tbody>
+
       {{#each data}}
-      <tr class="tab-data">
-        <td class="tdright" width="10%">{{ this.qty }}</td>
-        <td class="tdcenter" width="10%">{{ this.transType }}</td>
-        <td class="tdcenter" width="10%">{{ this.batchno }}</td>
-        <td class="tdcenter" width="10%">{{ this.sizenamear }}</td>
-        <td class="tdcenter" width="10%">{{ this.configid }}</td>
-        <td class="tdcenter" width="10%">{{ this.namear }}</td>
-        <td class="tdright" width="10%">{{ this.lastModifiedDate }}</td>
-        <td class="tdright" width="30%">{{ this.salesId }}</td>
+      <tr>
+        <td class="tdright" colspan="9" class="td" class="textbold">
+          <strong>
+            {{this.itemNameAr}} : {{this.itemid}}   
+          </strong>
+        </td>
       </tr>
-      {{/each}}
+          {{#each data}}
+          <tr class="tab-data">
+            <td class="tdright" width="5%">{{ this.balance }}</td>
+            <td class="tdright" width="5%">{{ this.qtyOut }}</td>
+            <td class="tdright" width="5%">{{ this.qtyIn }}</td>
+            <td class="tdcenter" width="10%">{{ this.inventlocationid }}</td>
+            <td class="tdcenter" width="10%">{{ this.batchno }}</td>
+            <td class="tdcenter" width="10%">{{ this.sizeNameAr }}</td>
+            <td class="tdcenter" width="15%">{{ this.configid }}</td>
+            <td class="tdcenter" width="15%">{{ this.date }}</td>
+            <td class="tdright" width="25%">{{ this.invoiceid }}</td>
+          </tr>
+          {{/each}}
       <tr class="textbold">
-        <td class="tdright">{{qty}}</td>
-        <td class="tdleft" colspan="7">مجموع</td>
+        <td class="tdright">{{this.totalBalance}}</td>
+        <td class="tdright">{{this.totalQtyOut}}</td>
+        <td class="tdright">{{this.totalQtyIn}}</td>
+        <td colspan="6" class="tdleft">مجموع</td>
       </tr>
+    {{/each}}
+
     </tbody>
   </table>
 

@@ -1648,7 +1648,7 @@ var SalesTableService = /** @class */ (function () {
                         batches.inventlocationid = reqData.inventLocationId;
                         batches.dataareaid = reqData.dataareaid;
                         batches.reserveStatus = reqData.status;
-                        batches.transactionClosed = true;
+                        batches.transactionClosed = false;
                         batches.custvendac = reqData.custAccount;
                         batches.dateinvent = moment().format();
                         batches.salesLineId = item.id;
@@ -1657,7 +1657,7 @@ var SalesTableService = /** @class */ (function () {
                             quantity: batches.quantity
                         });
                         this.updateInventoryService.sessionInfo = this.sessionInfo;
-                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches, true)];
+                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches, false)];
                     case 8:
                         _c.sent();
                         _c.label = 9;
@@ -1803,7 +1803,7 @@ var SalesTableService = /** @class */ (function () {
                         batches_8.dataareaid = reqData.dataareaid;
                         batches_8.custvendac = reqData.custAccount;
                         batches_8.reserveStatus = reqData.status;
-                        batches_8.transactionClosed = true;
+                        batches_8.transactionClosed = false;
                         batches_8.dateinvent = moment().format();
                         batches_8.salesLineId = item.id;
                         item.batch.push({
@@ -1811,7 +1811,7 @@ var SalesTableService = /** @class */ (function () {
                             quantity: batches_8.quantity
                         });
                         this.updateInventoryService.sessionInfo = this.sessionInfo;
-                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches_8, true)];
+                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches_8, false)];
                     case 16:
                         _e.sent();
                         _e.label = 17;

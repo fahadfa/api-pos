@@ -177,107 +177,6 @@
     </div>
 
 
-    <!-- <table id="headertbl" width="98%">
-        <thead>
-            <tr>
-                <td colspan="3" valign="top" style="width:33%">
-                    <table style="text-align:left;">
-                        <tr class="billing">
-                            <td valign="top">From</td>
-                            <td valign="top">:</td>
-                            <td>
-                                {{wnamealias}}
-                            </td>
-                        </tr>
-                        <tr class="billing">
-                            <td valign="top">Phone</td>
-                            <td valign="top">:</td>
-    
-                            <td>
-                                {{custmobilenumber}}
-                            </td>
-                        </tr>
-                        <tr class="billing">
-                            <td valign="top">Fax</td>
-                            <td valign="top">:</td>
-                            <td>
-                                {{fax}}
-                            </td>
-                        </tr>
-                        <tr class="billing">
-                            <td valign="top">Customer</td>
-                            <td valign="top">:</td>
-                            <td>
-                                {{customername}}
-                            </td>
-                        </tr>
-                        <tr class="billing">
-                            <td>Receiving Vat No</td>
-                            <td>:</td>
-                            <td>
-                                {{cvatNum}}
-                            </td>
-                        </tr>
-                        <tr class="billing">
-                            <td>Deliver Address</td>
-                            <td>:</td>
-                            <td>
-                                {{deliveryaddress}}
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                <td colspan="3" valign="top" style="width:33%">
-                    <table style="text-align:center">
-                        {{#if originalPrinted}}
-                        <tr>
-                            <td class="copy-text">COPY</td>
-                        </tr>
-                        {{/if}}
-                        <tr>
-                            <td>Sales Invoice</td>
-                        </tr><br>
-                        <tr>
-                            <span style="font-weight:800">
-                                <td> <span style="font-size:9.75px !important"> {{salesId}} </span></td>
-                            </span>
-                        </tr>
-                    </table>
-                </td>
-                <td colspan="4" valign="top" style="width:33%">
-                    <table align="right">
-                        <tr class="billing">
-                            <td>User</td>
-                            <td>:</td>
-                            <td>
-                                {{createdby}}
-                            </td>
-                        </tr>
-                        <tr class="billing">
-                            <td class="quotation-date">Invoice Date</td>
-                            <td>:</td>
-                            <td class="quotation-date">
-                                {{createddatetime}}
-                            </td>
-                        </tr>
-                        <tr class="billing">
-                            <td>Supplier Vat No</td>
-                            <td>:</td>
-                            <td>300533832200003</td>
-                        </tr>
-    
-                        <tr class="billing">
-                            <td>Sales Man</td>
-                            <td>:</td>
-                            <td>{{salesman}}</td>
-                        </tr>
-    
-                    </table>
-                </td>
-            </tr>
-    </thead>
-    </table> -->
-
     {{#each salesLine}}
     <table id="headertbl">
         <tr>
@@ -335,7 +234,7 @@
                     </tr>                    
                 </table>
             </td>
-            <td colspan="3" valign="top" style="width:33%">
+            <td colspan="3" valign="bottom" style="width:33%">
                 <table align="center" style="text-align:center">
                     {{#if this.originalPrinted}}
                     <tr>
@@ -346,9 +245,7 @@
                         <td>Sales Invoice</td>
                     </tr>
                     <tr>
-                        <span style="font-weight:800">
-                            <td><span style="font-size:14px;font-weight: bold; ">{{salesId}}</span></td>
-                        </span>
+                        <td><span style="font-size:14px;font-weight: bold; ">{{salesId}}</span></td>
                     </tr>
                 </table>
             </td>
@@ -395,6 +292,7 @@
                 <th class="th">S.No</th>
                 <th class="th">Item No</th>
                 <th class="th">Description</th>
+                <th class="th">Shipping Date</th>
                 <th class="th">Qty</th>
                 <th class="th">Price</th>
                 <th class="th">Colarant Price</th>
@@ -437,6 +335,11 @@
                         {{this.batchno}}
                     </span>
                 </td>
+
+                <td class="tdcenter">
+                    {{this.shippingDate}}
+                </td>
+
                 <td class="tdcenter">
                     {{this.salesQty}}
                 </td>

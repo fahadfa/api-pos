@@ -1394,17 +1394,21 @@ var LoadService = /** @class */ (function () {
             var shipOrderData, receiveOrderData;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.db.query("select salesid, custaccount, inventlocationid from salestable where salesid = '" + param.key + "'")];
+                    case 0: return [4 /*yield*/, this.db.query("select salesid, custaccount, transkind, inventlocationid from salestable where salesid = '" + param.key + "'")];
                     case 1:
                         shipOrderData = _a.sent();
                         shipOrderData = shipOrderData.length > 0 ? shipOrderData[0] : null;
                         console.log(this.sessionInfo.inventlocationid);
+                        if (!(shipOrderData.transkind != "TRANSFERORDER" && shipOrderData.transkind != "ORDERRECEIVE")) return [3 /*break*/, 5];
                         if (!(shipOrderData && shipOrderData.custaccount == this.sessionInfo.inventlocationid)) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.db.query("select salesid, custaccount, inventlocationid from salestable where intercompanyoriginalsalesid = '" + param.key + "'")];
+                        return [4 /*yield*/, this.db.query("select salesid, custaccount,transkind, inventlocationid from salestable where intercompanyoriginalsalesid = '" + param.key + "'")];
                     case 2:
                         receiveOrderData = _a.sent();
                         return [2 /*return*/, receiveOrderData.length > 0 ? false : true];
                     case 3: return [2 /*return*/, false];
+                    case 4: return [3 /*break*/, 6];
+                    case 5: return [2 /*return*/, false];
+                    case 6: return [2 /*return*/];
                 }
             });
         });

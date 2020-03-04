@@ -109,7 +109,7 @@
     border: 1px dashed #cccccc;
     border-collapse: collapse;
   }
-  table.dash td {
+  table.dash td, table.dash th {
     border: 1px dashed #cccccc;
   }
 </style>
@@ -119,21 +119,14 @@
     <p id="bg__text__watermark">Only for testing</p>
   </div>
 
-  <div class="mainheading">Item Transactions</div>
+  <div class="mainheading">Item Transaction Report</div>
 
 
   <table id="headertbl" width="98%">
+    
     <tr>
-        <td valign="top" style="width:50%">
-            <table align="left">
-                {{#if fromDate}}
-                <tr>                       
-                  <td>From Date</td>
-                  <td>:</td>
-                  <td>{{fromDate}}</td>
-                </tr>
-                {{/if}}
-                
+        <td valign="top" style="width:33%">
+            <table>
                 {{#if user}}
                 <tr>
                     <td>Print Date</td>
@@ -148,106 +141,136 @@
                   <td>{{product}}</td>
                 </tr>
                 {{/if}} 
-                {{#if batchNo}}
+                {{#if batchno}}
                 <tr>
                   <td>Batch No</td>
                   <td>:</td>
-                  <td>{{batchNo}}</td>
+                  <td>{{batchno}}</td>
                 </tr>
                 {{/if}}         
             </table>
         </td>
-        <td valign="top" style="width:50%">
-            <table align="right">
-              {{#if toDate}}
-                <tr>                  
-                  <td>To Date</td>
+        <td width="33%" valign="top">
+          <table align="center">
+            {{#if fromDate}}
+              <tr>                       
+                <td>From Date</td>
+                <td>:</td>
+                <td>{{fromDate}}</td>
+              </tr>
+              {{/if}}
+              {{#if color}}
+              <tr>                       
+                <td>Color</td>
+                <td>:</td>
+                <td>{{color}}</td>
+              </tr>
+              {{/if}}
+              {{#if wareHouseNameEn}}
+              <tr>                       
+                <td valign="top">Warehouse</td>
+                <td>:</td>
+                <td>{{wareHouseNameEn}}</td>
+              </tr>
+              {{else}}
+              <tr>                       
+                <td valign="top">Warehouse</td>
+                <td>:</td>
+                <td>{{wareHouseNameAr}}</td>
+              </tr>
+              {{/if}}
+          </table>    
+        </td>  
+        <td width="33%" valign="top">
+          <table align="right">
+            {{#if toDate}}
+              <tr>                  
+                <td>To Date</td>
+                <td>:</td>
+                <td>{{toDate}}</td>                  
+              </tr>
+              {{/if}}
+              {{#if inventsizeid}}
+              <tr>                  
+                <td>Size</td>
+                <td>:</td>
+                <td>{{inventsizeid}}</td>                  
+              </tr>
+              {{/if}}
+              {{#if user}}
+              <tr>
+                  <td>Print By</td>
                   <td>:</td>
-                  <td>{{toDate}}</td>                  
-                </tr>
-                {{/if}}
-                
-                {{#if printDate}}
-                <tr>
-                    <td>Print By</td>
-                    <td>:</td>
-                    <td>{{user}}</td>
-                </tr>
-                {{/if}}
-                {{#if transType}}
-                <tr>                 
-                  <td>Transaction Type</td>
-                  <td>:</td>
-                  <td>{{transType}}</td>                  
-                </tr>
-                {{/if}} 
-                {{#if color}}
-                <tr>
-                  <td>Colour</td>
-                  <td>:</td>
-                  <td>{{color}}</td>
-                </tr>
-                {{/if}}
-            </table>
-        </td>
+                  <td>{{user}}</td>
+              </tr>
+              {{/if}}
+          </table>
+        </td>         
     </tr>
+    <!-- <tr>
+      <td colspan="3">
+        <table align="right">
+          {{#if toDate}}
+            <tr>                  
+              <td>Pages</td>
+              <td>:</td>
+              <td>1 | 10</td>                  
+            </tr>
+            {{/if}}
+        </table>
+    </td>
+  </tr> -->
 </table>
 
   <table class="dash" width="100%" cellpadding="0" cellspacing="0">
     <thead>
       <tr>
-        <th width="30%">Sales Id</th>
-        <th width="10%">Transaction date</th>
-        <th width="10%">Product</th>
-        <th width="10%">Color</th>
+        <th width="25%">Sales Id</th>
+        <th width="15%">Date</th>
+        <th width="15%">Color</th>
         <th width="10%">Size</th>
         <th width="10%">Batch</th>
-        <th width="10%">Trans Type</th>
-        <th width="10%">Qty</th>
+        <th width="10%">Location</th>
+        <th width="5%">Qty In</th>
+        <th width="5%">Qty Out</th>
+        <th width="5%">Balance</th>
       </tr>
     </thead>
     <tbody>
-      <!-- {{#each data}}
+      {{#each data}}
       <tr>
-        <td colspan="8" class="td" class="textbold"><strong>{{this.salesgroup.salesman}}</strong></td>
+        <td colspan="9" class="td" class="textbold">
+          <strong>
+            {{this.itemid}}: {{this.itemNameEn}}        
+          </strong>
+        </td>
       </tr>
-      {{#each salesdata}}
+      {{#each data}}
       <tr>
-        <td class="tdleft">{{ this.salesId }}</td>
-        <td class="tdleft">{{ this.lastModifiedDate }}</td>
-        <td class="tdleft">{{ this.nameen }}</td>
+        <td class="tdleft">{{ this.invoiceid }}</td>
+        <td class="tdleft">{{ this.date }}</td>
         <td class="tdleft">{{ this.configid }}</td>
-        <td class="tdleft">{{ this.sizenameen }}</td>
+        <td class="tdleft">
+          {{#if this.sizeNameEn}}
+            {{ this.sizeNameEn }}
+          {{else}}
+            {{ this.sizeNameAr }}
+          {{/if}}
+        </td>
         <td class="tdleft">{{ this.batchno }}</td>
-        <td class="tdleft">{{ this.transType }}</td>
-        <td class="tdleft">{{ this.qty }}</td>
+        <td>{{ this.inventlocationid }}</td>
+        <td class="tdright">{{ this.qtyIn }}</td>
+        <td class="tdright">{{ this.qtyOut }}</td>
+        <td class="tdright">{{ this.balance }}</td>
       </tr>
       {{/each}}
       <tr class="textbold">
-        <td class="tdright">Total</td>
-        <td class="tdright">{{this.salesgroup.amount}}</td>
-        <td class="tdright">{{this.salesgroup.disc}}</td>
-        <td class="tdright">{{this.salesgroup.vatamount}}</td>
-        <td class="tdright">{{this.salesgroup.netamount}}</td>
+        <td colspan="6" class="tdright">Total</td>
+        <td class="tdright">{{this.totalQtyIn}}</td>
+        <td class="tdright">{{this.totalQtyOut}}</td>
+        <td class="tdright">{{this.totalBalance}}</td>
       </tr>
-      {{/each}} -->
-
-    {{#each data}} 
-    <tr class="tab-data">
-        <td class="tdleft" width="30%">{{ this.salesId }}</td>
-        <td class="tdleft" width="10%">{{ this.lastModifiedDate }}</td>
-        <td class="tdcenter" width="10%">{{ this.nameen }}</td>
-        <td class="tdcenter" width="10%">{{ this.configid }}</td>
-        <td class="tdcenter" width="10%">{{ this.sizenameen }}</td>
-        <td class="tdcenter" width="10%">{{ this.batchno }}</td>
-        <td class="tdcenter" width="10%">{{ this.transType }}</td>
-        <td class="tdright" width="10%">{{ this.qty }}</td>
-    </tr>    
-    {{/each}}
-    <tr class="textbold">
-        <td class="tdright" colspan="7">Total</td>
-        <td class="tdright">{{qty}}</td>
-      </tr>
+      {{/each}} 
     </tbody>
   </table>
 

@@ -43,13 +43,12 @@ var itemTransactionsReport = /** @class */ (function () {
     }
     itemTransactionsReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, query, warehouseQuery, regionalWarehouses, inQueryStr_1, error_1;
+            var data_1, query, warehouseQuery, regionalWarehouses, inQueryStr_1, result, renderData, warehouse, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
-                        data = void 0;
-                        query = "\n            select \n            distinct\n            i.salesid as \"salesId\",\n            i.itemid as itemid, \n            i.configid as configid, \n            to_char(sum(qty), 'FM999,999,999D') as \"qty\",\n            i.inventsizeid as inventsizeid,\n            sizenameen,\n            sizenamear,\n            nameEn,\n            nameAr,\n            i.transtype as \"transType\",\n            wareHouseNameAr as \"wareHouseNameAr\",\n            wareHouseNameEn as \"wareHouseNameEn\",\n           i.lastmodifieddate as \"lastModifiedDate\",\n            i.batchno as batchno from (\n            select \n            distinct\n            i.itemid as itemid,\n            i.qty  as qty,\n            i.configid as configid,\n            i.inventsizeid as inventsizeid,\n            i.invoiceid as salesid,\n            i.batchno as batchno,\n            s.description as sizenameen,\n            s.name as sizenamear,\n            bs.namealias as nameEn,\n            bs.itemname as nameAr,\n            w.name as wareHouseNameAr,\n            w.namealias as wareHouseNameEn,\n            i.datestatus as datestatus,\n            st.transkind as transtype,\n            to_char(st.lastmodifieddate, 'DD-MM-YYYY') as lastmodifieddate\n            from inventtrans  i\n            left join inventbatch b on i.batchno = b.inventbatchid\n            left join inventtable bs on i.itemid = bs.itemid\n            left join inventsize s on s.inventsizeid = i.inventsizeid and s.itemid = i.itemid\n            left join salesline sl on sl.id = i.sales_line_id\n            left join salestable st on st.salesid = i.invoiceid \n            left join inventlocation w on w.inventlocationid=i.inventlocationid\n             where ((reserve_status!='UNRESERVED' AND reserve_status != 'SAVED') or reserve_status is null) and\n            sl.createddatetime >= '" + params.fromDate + "' ::date\n            AND  sl.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval) and i.transactionclosed = true ";
+                        _a.trys.push([0, 6, , 7]);
+                        query = "\n            select\n                i.invoiceid,\n                st.transkind as transtype,\n                to_char(i.dateinvent, 'YYYY-MM-DD') as date,\n                sz.description as \"sizeNameEn\",\n                sz.\"name\"  as \"sizeNameAr\",\n                i.configid,\n                i.itemid,\n                i.inventsizeid,\n                i.batchno,\n                case when qty>0 then abs(qty) else 0 end as \"qtyIn\",\n                case when qty<0 then abs(qty) else 0 end as \"qtyOut\",\n                i.inventlocationid as inventlocationid,\n                w.name as \"wareHouseNameAr\",\n                w.namealias as \"wareHouseNameEn\",\n                p.itemname as \"itemNameAr\",\n                p.namealias as \"itemNameEn\"\n                from inventtrans i \n                left join inventsize sz on sz.inventsizeid  = i.inventsizeid and sz.itemid = i.itemid\n                left join inventlocation w on w.inventlocationid=i.inventlocationid\n                left join salestable st on st.salesid = i.invoiceid\n                left join inventtable p on p.itemid = i.itemid\n                where dateinvent >= '" + params.fromDate + "' ::date and \n                dateinvent < ('" + params.toDate + "' ::date + '1 day'::interval) and transactionclosed = true ";
                         if (!(params.inventlocationid == "ALL")) return [3 /*break*/, 2];
                         warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
                         return [4 /*yield*/, this.db.query(warehouseQuery)];
@@ -66,9 +65,6 @@ var itemTransactionsReport = /** @class */ (function () {
                         query += " and i.inventlocationid='" + params.inventlocationid + "' ";
                         _a.label = 3;
                     case 3:
-                        if (params.status && params.status != "ALL") {
-                            query += " and  i.reserve_status = '" + params.status + "' ";
-                        }
                         if (params.color) {
                             query += " and  i.configid = '" + params.color + "' ";
                         }
@@ -84,47 +80,90 @@ var itemTransactionsReport = /** @class */ (function () {
                         if (params.inventsizeid) {
                             query += " and  i.inventsizeid = '" + params.inventsizeid + "' ";
                         }
-                        query += " group by i.itemid, i.qty,\n            i.inventsizeid, i.configid,  i.batchno, b.expdate, s.description, s.name, bs.itemname, bs.namealias, i.datestatus, w.name, w.namealias, i.invoiceid, st.transkind, st.lastmodifieddate\n            ) as i\n            \n              group by i.itemid, \n            i.inventsizeid, i.configid,  i.batchno, sizenameen, sizenamear, nameEn,nameAr, i.datestatus, wareHouseNameAr, wareHouseNameEn, salesid, i.transtype, i.lastmodifieddate ";
+                        query += "  order by dateinvent ASC ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 4:
-                        data = _a.sent();
-                        return [2 /*return*/, data];
+                        data_1 = _a.sent();
+                        result = this.groupBy(data_1, function (item) {
+                            return [item.itemid];
+                        });
+                        data_1 = [];
+                        result.map(function (val) {
+                            var obj = {};
+                            obj.itemid = val[0].itemid;
+                            obj.itemNameEn = val[0].itemNameEn;
+                            obj.itemNameAr = val[0].itemNameAr;
+                            obj.data = [];
+                            obj.totalQtyIn = 0;
+                            obj.totalQtyOut = 0;
+                            val.map(function (v) {
+                                v.qtyIn = parseInt(v.qtyIn);
+                                v.qtyOut = parseInt(v.qtyOut);
+                                v.balance = v.qtyIn - v.qtyOut;
+                                obj.totalQtyIn += v.qtyIn;
+                                obj.totalQtyOut += v.qtyOut;
+                                obj.data.push(v);
+                            });
+                            obj.totalBalance = obj.totalQtyIn - obj.totalQtyOut;
+                            data_1.push(obj);
+                        });
+                        renderData = {
+                            printDate: new Date().toLocaleString(),
+                            fromDate: params.fromDate,
+                            toDate: params.toDate,
+                            status: params.status,
+                            transType: params.transType,
+                            batchno: params.batchno ? params.batchno : "ALL",
+                            product: params.product ? params.product : "ALL",
+                            color: params.color ? params.color : "ALL",
+                            inventsizeid: params.inventsizeid ? params.inventsizeid : "ALL",
+                            user: params.user
+                        };
+                        return [4 /*yield*/, this.warehouseName(params.inventlocationid)];
                     case 5:
+                        warehouse = _a.sent();
+                        renderData.wareHouseNameAr = warehouse.name;
+                        renderData.wareHouseNameEn = warehouse.namealias;
+                        renderData.data = data_1;
+                        return [2 /*return*/, renderData];
+                    case 6:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 6: return [2 /*return*/];
+                    case 7: return [2 /*return*/];
                 }
             });
         });
     };
+    itemTransactionsReport.prototype.warehouseName = function (param) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "select inventlocationid, name, namealias from inventlocation where inventlocationid ='" + param + "' limit 1";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, data ? data[0] : {}];
+                }
+            });
+        });
+    };
+    itemTransactionsReport.prototype.groupBy = function (array, f) {
+        var groups = {};
+        array.forEach(function (o) {
+            var group = JSON.stringify(f(o));
+            groups[group] = groups[group] || [];
+            groups[group].push(o);
+        });
+        return Object.keys(groups).map(function (group) {
+            return groups[group];
+        });
+    };
     itemTransactionsReport.prototype.report = function (result, params) {
         return __awaiter(this, void 0, void 0, function () {
-            var renderData, file;
+            var file;
             return __generator(this, function (_a) {
-                renderData = {
-                    printDate: new Date().toLocaleString(),
-                    fromDate: params.fromDate,
-                    toDate: params.toDate,
-                    status: params.status,
-                    transType: params.transType,
-                    batchNo: params.batchNo,
-                    product: params.product ? params.product : "ALL",
-                    color: params.color,
-                    user: params.user
-                };
-                // renderData.qtyIn = 0;
-                // renderData.qtyOut = 0;
-                renderData.qty = 0;
-                result.map(function (v) {
-                    // renderData.qtyIn += parseFloat(v.qtyIn);
-                    // renderData.qtyOut += parseFloat(v.qtyOut);
-                    renderData.qty += parseFloat(v.qty);
-                });
-                // console.log(result.salesLine[0].product.nameEnglish);
-                renderData.data = result;
-                console.log('--------------------------');
-                console.log(renderData);
-                console.log('--------------------------');
                 if (params.type == "excel") {
                     file = params.lang == "en" ? "itemtransactions-excel" : "itemtransactions-excel-ar";
                 }
@@ -132,12 +171,32 @@ var itemTransactionsReport = /** @class */ (function () {
                     file = params.lang == "en" ? "itemtransactions-report" : "itemtransactions-report-ar";
                 }
                 try {
-                    return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];
+                    return [2 /*return*/, App_1.App.HtmlRender(file, result)];
                 }
                 catch (error) {
                     throw error;
                 }
                 return [2 /*return*/];
+            });
+        });
+    };
+    itemTransactionsReport.prototype.chunkArray = function (myArray, chunk_size) {
+        return __awaiter(this, void 0, void 0, function () {
+            var index, arrayLength, tempArray, myChunk;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        index = 0;
+                        arrayLength = myArray.length;
+                        tempArray = [];
+                        for (index = 0; index < arrayLength; index += chunk_size) {
+                            myChunk = myArray.slice(index, index + chunk_size);
+                            // Do something if you want with the group
+                            tempArray.push(myChunk);
+                        }
+                        return [4 /*yield*/, tempArray];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
             });
         });
     };

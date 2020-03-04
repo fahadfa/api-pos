@@ -62,11 +62,11 @@ var ReturnOrderReport = /** @class */ (function () {
     }
     ReturnOrderReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data_1, query, batchesQuery, batches, result, new_data_1, i_1, salesQuery, salesLine, error_1;
+            var data_1, query, batchesQuery, batches, result, new_data_1, i_1, batches_2, _i, batches_1, item, salesQuery, salesLine, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
+                        _a.trys.push([0, 7, , 8]);
                         query = "\n            select \n                distinct\n                s.salesid as \"salesId\",\n                s.inventlocationid as \"fromWareHouse\",\n                s.custaccount as \"custaccount\",\n                s.createddatetime as \"ReturnDate\",\n                s.lastmodifieddate as \"lastModifiedDate\",\n                s.status as status,\n                s.salesname as name,\n                to_char(s.disc, 'FM999999999990.000')  as discount,\n                s.mobileno as phone,\n                to_char(s.amount , 'FM999999999990.000') as \"grossAmount\",\n                to_char(s.netamount, 'FM999999999990.000') as \"netAmount\",\n                to_char(s.vatamount,  'FM999999999990.000') as \"vatAmount\",\n                s.originalprinted as \"originalPrinted\",\n                s.createdby as \"createdBy\",\n                s.intercompanyoriginalsalesid as \"salesOrderId\",\n                w.name as \"wareHouseNameAr\",\n                w.namealias as \"wareHouseNameEn\",\n                d.\"description\" as salesman,\n                to_char(s.createddatetime, 'DD-MM-YYYY') as createddatetime\n                from salestable s\n                left join inventlocation w on w.inventlocationid=s.inventlocationid\n                left join custtable c on c.accountnum=s.custaccount\n                left join dimensions d on d.num = s.dimension6_\n            where s.transkind = 'RETURNORDER' and s.salesid = '" + params.salesId + "' limit 1\n            ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
@@ -106,28 +106,25 @@ var ReturnOrderReport = /** @class */ (function () {
                         });
                         data_1[0].batches = new_data_1;
                         this.db.query(" update inventtrans set transactionclosed = true where invoiceid='" + params.salesId + "'");
-                        // if (data[0].status != "POSTED") {
-                        // this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED");
-                        // let batches: any = await this.inventTransDAO.findAll({ invoiceid: params.salesId });
-                        // for (let item of batches) {
-                        //   item.transactionClosed = true;
-                        //   // this.inventTransDAO.save(item);
-                        //   this.updateInventoryService.updateInventtransTable(item);
-                        // }
-                        return [4 /*yield*/, this.updateSalesLineData(params.salesId)];
+                        if (!(data_1[0].status != "POSTED")) return [3 /*break*/, 5];
+                        this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED");
+                        return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
                     case 3:
-                        // if (data[0].status != "POSTED") {
-                        // this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED");
-                        // let batches: any = await this.inventTransDAO.findAll({ invoiceid: params.salesId });
-                        // for (let item of batches) {
-                        //   item.transactionClosed = true;
-                        //   // this.inventTransDAO.save(item);
-                        //   this.updateInventoryService.updateInventtransTable(item);
-                        // }
+                        batches_2 = _a.sent();
+                        for (_i = 0, batches_1 = batches_2; _i < batches_1.length; _i++) {
+                            item = batches_1[_i];
+                            item.transactionClosed = true;
+                            // this.inventTransDAO.save(item);
+                            this.updateInventoryService.updateInventtransTable(item);
+                        }
+                        return [4 /*yield*/, this.updateSalesLineData(params.salesId)];
+                    case 4:
                         _a.sent();
+                        _a.label = 5;
+                    case 5:
                         salesQuery = "\n      select\n            distinct\n            ROW_NUMBER()  OVER (ORDER BY  ln.salesid) As \"sNo\",\n            ln.salesid,\n            ln.itemid,\n            ln.batchno,\n            ln.configid,\n            ln.inventsizeid,\n            cast(ln.salesqty as decimal(10,2)) as \"salesQty\",\n            cast(ln.salesprice as decimal(10,2)) as salesprice,\n            cast(ln.vatamount as decimal(10,2)) as \"vatAmount\",\n            cast(ln.linetotaldisc as decimal(10,2)) as \"lineTotalDisc\",\n            cast(ln.colorantprice as decimal(10,2)) as colorantprice,\n            cast(((ln.salesprice + ln.colorantprice) \n            + (ln.vatamount) - (ln.linetotaldisc)) \n            as decimal(10,2)) as \"lineAmount\",\n            ln.prodnamear as \"prodNameAr\",\n            ln.prodnameen as \"prodNameEn\",\n            ln.colNameAr as \"colNameAr\",\n            ln.colNameEn as \"colNameEn\",\n            ln.sizeNameEn as \"sizeNameEn\",\n            ln.sizeNameAr as \"sizeNameAr\",\n            cast(ln.lineamount - ln.linetotaldisc as decimal(10,2)) as \"lineAmountBeforeVat\",\n            ln.vat as vat,\n            ln.colorantid as colorant\n            from\n            (\n              select\n              i.invoiceid as salesid,\n              i.batchno,\n              i.itemid,\n              i.configid,\n              i.inventsizeid,\n              st.status as status,\n              ABS(i.qty) as salesqty,\n              b.itemname as prodnamear,\n              b.namealias as prodnameen,\n              coalesce(sl.salesprice, 0)  as salesprice,\n              coalesce(sl.vatamount, 0)  as vatamount,\n              coalesce(sl.linetotaldisc, 0) as linetotaldisc,\n              coalesce(sl.colorantprice,0) as colorantprice,\n              c.name as colNameAr,\n              c.name as colNameEn,\n              s.description as sizeNameEn,\n              s.name as sizeNameAr,\n              sl.lineamount + (sl.colorantprice * sl.salesqty) as  lineamount,\n              sl.colorantid as  colorantid,\n              sl.vat as vat,\n              sl.linenum\n              from inventtrans i\n              left join salestable st on st.salesid = i.invoiceid\n              left join salesline sl on sl.id = i.sales_line_id\n              left join inventtable b on i.itemid=b.itemid\n              left join inventsize s on s.itemid = i.itemid and i.inventsizeid = s.inventsizeid\n              left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n            where invoiceid='" + params.salesId + "'\n            ) as ln\n      \n      ";
                         return [4 /*yield*/, this.db.query(salesQuery)];
-                    case 4:
+                    case 6:
                         salesLine = _a.sent();
                         data_1 = data_1.length > 0 ? data_1[0] : {};
                         data_1.salesLine = salesLine;
@@ -136,10 +133,10 @@ var ReturnOrderReport = /** @class */ (function () {
                             data_1.quantity += parseInt(v.salesQty);
                         });
                         return [2 /*return*/, data_1];
-                    case 5:
+                    case 7:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 6: return [2 /*return*/];
+                    case 8: return [2 /*return*/];
                 }
             });
         });

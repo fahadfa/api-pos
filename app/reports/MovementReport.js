@@ -74,16 +74,14 @@ var MovementReport = /** @class */ (function () {
                         data_1.salesLine.map(function (v) {
                             data_1.quantity += parseInt(v.salesQty);
                         });
-                        console.log("===================dffhsafyrkfhiufghllgsh================");
                         if (!!data_1.originalPrinted) return [3 /*break*/, 4];
                         if (!(data_1.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 4];
-                        console.log("===================dffhsafyrkfhiufghllgsh================");
                         return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: id })];
                     case 3:
                         batches = _a.sent();
                         for (_i = 0, batches_1 = batches; _i < batches_1.length; _i++) {
                             item = batches_1[_i];
-                            console.log("===================dffhsafyrkfhiufghllgsh================");
+                            // console.log("===================dffhsafyrkfhiufghllgsh================");
                             item.transactionClosed = true;
                             // this.inventTransDAO.save(item);
                             this.updateInventoryService.updateInventtransTable(item);

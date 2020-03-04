@@ -51,11 +51,11 @@ var OrderReceiveReport = /** @class */ (function () {
     }
     OrderReceiveReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, status_1, query, data_1, salesQuery, salesLine, error_1;
+            var id, status_1, query, data_1, salesQuery, salesLine, batches, _i, batches_1, item, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
+                        _a.trys.push([0, 5, , 6]);
                         id = params.salesId;
                         query = "\n            select \n            st.salesid as \"salesId\",\n            st.custaccount as \"custAccount\",\n            st.status as status,\n            st.transkind as transkind,\n            st.vatamount as vatamount,\n            st.netamount as \"netAmount\",\n            st.disc as disc,\n            amount as amount,\n            to_char(st.createddatetime, 'DD-MM-YYYY') as createddatetime,\n            st.originalprinted as \"originalPrinted\",\n            st.inventlocationid as \"inventLocationId\",\n            fw.namealias as fwnamealias,\n            fw.name as fwname,\n            tw.namealias as twnamealias,\n            tw.name as twname,\n            st.intercompanyoriginalsalesid as \"interCompanyOriginalSalesId\",\n            (select intercompanyoriginalsalesid from salestable where salesid = st.intercompanyoriginalsalesid limit 1) as transferid\n            from salestable st \n            left join inventlocation fw on fw.inventlocationid = st.custaccount\n            left join inventlocation tw on tw.inventlocationid = st.inventlocationid\n            where salesid='" + id + "'\n            ";
                         return [4 /*yield*/, this.db.query(query)];
@@ -63,17 +63,7 @@ var OrderReceiveReport = /** @class */ (function () {
                         data_1 = _a.sent();
                         data_1 = data_1.length >= 1 ? data_1[0] : {};
                         data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
-                        if (data_1.originalPrinted == false && data_1.status == "RECEIVED") {
-                            status_1 = "POSTED";
-                            this.rawQuery.updateSalesTable(id.toUpperCase(), status_1);
-                            data_1.isCopy = true;
-                        }
-                        else {
-                            status_1 = "POSTED";
-                            this.rawQuery.updateSalesTable(id.toUpperCase(), status_1);
-                            data_1.isCopy = true;
-                        }
-                        salesQuery = "\n            select\n            ROW_NUMBER()  OVER (ORDER BY  ln.salesid) As \"sNo\",\n            ln.salesid,\n            ln.itemid,\n            ln.batchno,\n            ln.configid,\n            ln.inventsizeid,\n            ln.status,\n            to_char(ln.salesqty, 'FM999,999,999,999D') as \"salesQty\",\n            cast(ln.salesprice as decimal(10,3)) as salesprice,\n            cast(ln.vatamount as decimal(10,3)) as \"vatAmount\",\n            cast(ln.linetotaldisc as decimal(10,3)) as \"lineTotalDisc\",\n            cast(ln.colorantprice as decimal(10,3)) as colorantprice,\n            cast(((ln.salesqty * (ln.salesprice + ln.colorantprice)) \n            + (ln.salesqty * ln.vatamount) - (ln.salesqty * ln.linetotaldisc)) \n            as decimal(10,3)) as \"lineAmount\",\n            ln.prodnamear as \"prodNameAr\",\n            ln.prodnameen as \"prodNameEn\",\n            ln.colNameAr as \"colNameAr\",\n            ln.colNameEn as \"colNameEn\",\n            ln.sizeNameEn as \"sizeNameEn\",\n            ln.sizeNameAr as \"sizeNameAr\"\n            from\n            (\n                select\n                i.invoiceid as salesid,\n                i.batchno,\n                i.itemid,\n                i.configid,\n                i.inventsizeid,\n                st.status as status,\n                ABS(i.qty) as salesqty,\n                b.itemname as prodnamear,\n                b.namealias as prodnameen,\n                coalesce(sl.salesprice, 0)  as salesprice,\n                coalesce(sl.vatamount, 0)  as vatamount,\n                coalesce(sl.linetotaldisc, 0) as linetotaldisc,\n                coalesce(sl.colorantprice,0) as colorantprice,\n                c.name as colNameAr,\n                c.name as colNameEn,\n                s.description as sizeNameEn,\n                s.name as sizeNameAr,\n                sl.colorantid as  colorantid,\n                sl.linenum\n                from inventtrans i\n                left join salestable st on st.salesid = i.invoiceid\n                left join salesline sl on sl.id = i.sales_line_id\n                left join inventtable b on i.itemid=b.itemid\n                left join inventsize s on s.itemid = i.itemid and i.inventsizeid = s.inventsizeid\n                left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n            where invoiceid='" + id + "'\n            ) as ln\n            ";
+                        salesQuery = "\n            select\n            ROW_NUMBER()  OVER (ORDER BY  ln.salesid) As \"sNo\",\n            ln.salesid,\n            ln.itemid,\n            ln.batchno,\n            ln.configid,\n            ln.inventsizeid,\n            ln.status,\n            to_char(ln.salesqty, 'FM999,999,999,999D') as \"salesQty\",\n            ln.prodnamear as \"prodNameAr\",\n            ln.prodnameen as \"prodNameEn\",\n            ln.colNameAr as \"colNameAr\",\n            ln.colNameEn as \"colNameEn\",\n            ln.sizeNameEn as \"sizeNameEn\",\n            ln.sizeNameAr as \"sizeNameAr\"\n            from\n            (\n                select\n                i.invoiceid as salesid,\n                i.batchno,\n                i.itemid,\n                i.configid,\n                i.inventsizeid,\n                st.status as status,\n                ABS(i.qty) as salesqty,\n                b.itemname as prodnamear,\n                b.namealias as prodnameen,\n                c.name as colNameAr,\n                c.name as colNameEn,\n                s.description as sizeNameEn,\n                s.name as sizeNameAr,\n                sl.colorantid as  colorantid,\n                sl.linenum\n                from inventtrans i\n                left join salestable st on st.salesid = i.invoiceid\n                left join salesline sl on sl.id = i.sales_line_id\n                left join inventtable b on i.itemid=b.itemid\n                left join inventsize s on s.itemid = i.itemid and i.inventsizeid = s.inventsizeid\n                left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n            where invoiceid='" + id + "'\n            ) as ln\n            ";
                         return [4 /*yield*/, this.db.query(salesQuery)];
                     case 2:
                         salesLine = _a.sent();
@@ -83,11 +73,23 @@ var OrderReceiveReport = /** @class */ (function () {
                         salesLine.map(function (v) {
                             data_1.quantity += parseInt(v.salesQty);
                         });
-                        return [2 /*return*/, data_1];
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 4];
+                        this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED");
+                        return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
                     case 3:
+                        batches = _a.sent();
+                        for (_i = 0, batches_1 = batches; _i < batches_1.length; _i++) {
+                            item = batches_1[_i];
+                            item.transactionClosed = true;
+                            // this.inventTransDAO.save(item);
+                            this.updateInventoryService.updateInventtransTable(item);
+                        }
+                        _a.label = 4;
+                    case 4: return [2 /*return*/, data_1];
+                    case 5:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 4: return [2 /*return*/];
+                    case 6: return [2 /*return*/];
                 }
             });
         });

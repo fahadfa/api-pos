@@ -137,7 +137,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                                 batches.inventsizeid = salesLine.inventsizeid;
                                 batches.inventlocationid = salesLine.inventLocationId;
                                 batches.dataareaid = salesLine.dataareaid;
-                                batches.transactionClosed = true;
+                                batches.transactionClosed = false;
                                 batches.dateinvent = new Date();
                                 salesLine.batches = batches;
                                 // await this.updateInventoryService.updateInventtransTable(batches);
