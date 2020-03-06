@@ -565,7 +565,7 @@ var SalesTableService = /** @class */ (function () {
                         item.deleted = false;
                         item.inventLocationId = this.sessionInfo.inventlocationid;
                         item.createdby = this.sessionInfo.userName;
-                        item.createddatetime = moment().format();
+                        item.createddatetime = new Date();
                         return [4 /*yield*/, this.getSalesid(item.transkind)];
                     case 5:
                         uid = _a.sent();
@@ -573,7 +573,7 @@ var SalesTableService = /** @class */ (function () {
                         _a.label = 6;
                     case 6:
                         item.lastModifiedBy = this.sessionInfo.userName;
-                        item.lastModifiedDate = moment().format();
+                        item.lastModifiedDate = new Date();
                         return [2 /*return*/, true];
                 }
             });

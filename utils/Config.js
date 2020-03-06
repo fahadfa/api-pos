@@ -4,11 +4,11 @@ require("reflect-metadata");
 exports.dbOptions = {
     name: "default",
     type: "postgres",
-    host: "mposdb-preprod.cw34ebrphxxg.eu-central-1.rds.amazonaws.com",
+    host: "localhost",
     port: 5432,
-    username: "mposdb",
-    password: "mdbmpfpp",
-    database: "jpos_qa",
+    username: "postgres",
+    password: "Mpos1234",
+    database: "mpos_db",
     logging: true,
     synchronize: false,
     entities: [__dirname + "/../entities/**/*{.ts,.js}"]
@@ -54,11 +54,11 @@ exports.mssqlDbOptions = {
 exports.stageDbOptions = {
     name: "stage",
     type: "postgres",
-    host: "localhost",
+    host: "mposdb-preprod.cw34ebrphxxg.eu-central-1.rds.amazonaws.com",
     port: 5432,
-    username: "postgres",
-    password: "Mpos1234",
-    database: "mpos_db"
+    username: "mposdb",
+    password: "mdbmpfpp",
+    database: "jpos_qa"
 };
 exports.localDbOptions = {
     name: "local",
