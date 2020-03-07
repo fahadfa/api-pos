@@ -87,7 +87,9 @@ var MovementReport = /** @class */ (function () {
                             this.updateInventoryService.updateInventtransTable(item);
                         }
                         _a.label = 4;
-                    case 4: return [2 /*return*/, data_1];
+                    case 4:
+                        console.log(data_1);
+                        return [2 /*return*/, data_1];
                     case 5:
                         error_1 = _a.sent();
                         throw error_1;
