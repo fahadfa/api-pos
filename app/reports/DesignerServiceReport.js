@@ -74,6 +74,7 @@ var DesignerServiceReport = /** @class */ (function () {
                         data_1.salesLine.map(function (v) {
                             data_1.quantity += parseInt(v.salesQty);
                         });
+                        console.log(data_1);
                         return [2 /*return*/, data_1];
                     case 3:
                         error_1 = _a.sent();

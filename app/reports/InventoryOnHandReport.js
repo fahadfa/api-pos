@@ -43,7 +43,7 @@ var InventoryOnHandReport = /** @class */ (function () {
     }
     InventoryOnHandReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var query, warehouseQuery, regionalWarehouses, inQueryStr_1, data, i, _i, data_1, item, result, error_1;
+            var query, warehouseQuery, regionalWarehouses, inQueryStr_1, data, i, sum, _i, data_1, item, result, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -79,21 +79,26 @@ var InventoryOnHandReport = /** @class */ (function () {
                         if (params.batchno && params.batchCheck) {
                             query = query + (" and LOWER(i.batchno)=LOWER('" + params.batchno + "') ");
                         }
-                        query += " and (i.qty_in-i.qty_out)>0  GROUP BY bs.itemname, bs.namealias, w.name, w.namealias,\n              i.itemid, i.configid, i.inventsizeid " + (params.batchCheck ? ", i.batchno, b.expdate" : "") + " ";
+                        // query += ` and (i.qty_in-i.qty_out)>0  GROUP BY bs.itemname, bs.namealias, w.name, w.namealias,
+                        //         i.itemid, i.configid, i.inventsizeid ${params.batchCheck ? `, i.batchno, b.expdate` : ``} `;
+                        query += " GROUP BY bs.itemname, bs.namealias, w.name, w.namealias,\n              i.itemid, i.configid, i.inventsizeid " + (params.batchCheck ? ", i.batchno, b.expdate" : "") + " ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 4:
                         data = _a.sent();
                         i = 1;
+                        sum = 0;
                         data = data.filter(function (item) { return Number.parseFloat(item.totalAvailable) >= 0; });
                         for (_i = 0, data_1 = data; _i < data_1.length; _i++) {
                             item = data_1[_i];
                             item.sNo = i;
                             i += 1;
                             item.batchCheck = params.batchCheck;
+                            sum += Number.parseFloat(item.physicalAvailable);
                         }
                         result = {
                             printDate: new Date().toLocaleString(),
                             data: data,
+                            sum: sum,
                             batchCheck: params.batchCheck ? params.batchCheck : false,
                             user: params.user
                         };
