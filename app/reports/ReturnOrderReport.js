@@ -62,7 +62,7 @@ var ReturnOrderReport = /** @class */ (function () {
     }
     ReturnOrderReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data_1, query, batchesQuery, batches, result, new_data_1, i_1, batches_2, _i, batches_1, item, salesQuery, salesLine, error_1;
+            var data_1, query, batchesQuery, batches, result, new_data_1, i_1, batches_2, _i, batches_1, item, salesQuery, salesLine, sNo_1, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -126,6 +126,12 @@ var ReturnOrderReport = /** @class */ (function () {
                         return [4 /*yield*/, this.db.query(salesQuery)];
                     case 6:
                         salesLine = _a.sent();
+                        sNo_1 = 1;
+                        salesLine.map(function (val) {
+                            val.sNo = sNo_1;
+                            sNo_1 += 1;
+                        });
+                        //--------------------End-------------------//
                         data_1 = data_1.length > 0 ? data_1[0] : {};
                         data_1.salesLine = salesLine;
                         data_1.quantity = 0;

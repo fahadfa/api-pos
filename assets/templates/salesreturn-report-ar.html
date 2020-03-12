@@ -215,21 +215,20 @@
                 <td class="tdcenter">{{ this.custaccount }}</td>
                 {{/ if}}
                 <td class="tdcenter">{{ this.paymentMode }}</td>
-
                 <td class="tdcenter">{{ this.type }}</td>
                 <td class="tdcenter">{{ this.status }}</td>
-                <td class="tdright">{{ this.grossAmount }}</td>
+                <td class="tdright">{{ this.netAmount  }}</td>
                 <td class="tdright">{{ this.discount }}</td>
                 <td class="tdright">{{ this.vatAmount  }}</td>
-                <td class="tdright">{{ this.netAmount  }}</td>
+                <td class="tdright">{{ this.grossAmount }}</td>
             </tr>
             {{/each}}
             <tr class="textbold">
                 <td colspan="6" class="tdleft">مجموع</td>
-                <td class="tdright">{{ grossAmount }}</td>
+                <td class="tdright">{{ netAmount }}</td>
                 <td class="tdright">{{ discount }}</td>
                 <td class="tdright">{{vatAmount}}</td>
-                <td class="tdright">{{ netAmount }}</td>
+                <td class="tdright">{{ grossAmount }}</td>
             </tr>
         </tbody>
     </table>

@@ -74,7 +74,7 @@ var SalesOrdersReport = /** @class */ (function () {
                                 query += " and s.status in ('SAVED') ";
                             }
                             else if (params.status == "CREATED") {
-                                query += " and s.status in ('SAVED') ";
+                                query += " and s.status in ('CREATED') ";
                             }
                             else if (params.status == "POSTED") {
                                 query += " and s.status in ('POSTED','PAID') ";

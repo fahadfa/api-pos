@@ -100,6 +100,7 @@ var SalesOrderReport = /** @class */ (function () {
                                 cnamealias: data_1.cnamealias,
                                 cphone: data_1.cphone,
                                 createddatetime: data_1.createddatetime,
+                                lastmodifieddate: data_1.lastmodifieddate,
                                 originalPrinted: data_1.originalPrinted,
                                 inventLocationId: data_1.inventLocationId,
                                 wnamealias: data_1.wnamealias,
