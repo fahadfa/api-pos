@@ -61,7 +61,6 @@ var SalesByOrderReport = /** @class */ (function () {
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        console.log(params);
                         result = {};
                         result.headers = {};
                         result.data = [];
@@ -88,6 +87,7 @@ var SalesByOrderReport = /** @class */ (function () {
                             else {
                                 saleslist = { salesgroup: {}, salesdata: [] };
                                 saleslist.salesgroup.salesman = item.salesman;
+                                saleslist.salesgroup.salesmanId = item.salesmanId;
                                 saleslist.salesgroup.amount = 0;
                                 saleslist.salesgroup.netamount = 0;
                                 saleslist.salesgroup.vatamount = 0;
@@ -109,6 +109,9 @@ var SalesByOrderReport = /** @class */ (function () {
                             saleslist_1.salesgroup.vatamount = Number(saleslist_1.salesgroup.vatamount).toFixed(2);
                             saleslist_1.salesgroup.disc = Number(saleslist_1.salesgroup.disc).toFixed(2);
                         }
+                        // console.log('=============result=======================');
+                        // console.log(result);
+                        // console.log('===========result=========================');
                         return [2 /*return*/, result];
                 }
             });
@@ -144,7 +147,8 @@ var SalesByOrderReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        sql = "\n      select\n        st.salesid as \"salesid\" ,\n        st.custaccount as \"custaccount\",\n        st.status as status,\n        st.transkind as transkind,\n        st.salesname as customername,\n        st.mobileno as custmobilenumber,\n        to_char(st.vatamount, 'FM999999999990.00') as vatamount,\n        to_char(st.netamount, 'FM999999999990.00') as \"netamount\",\n        to_char(st.disc, 'FM999,999999990.00') as disc,\n        to_char(st.amount , 'FM999999999990.00') as amount,\n        w.namealias as wnamealias,\n        w.name as wname,\n        d.description as salesman,\n        to_char(st.deliverydate, 'DD-MM-YYYY') as \"deliverydate\"\n      from\n        salestable st\n      left join inventlocation w on\n        w.inventlocationid = st.inventlocationid\n      inner join dimensions d on\n        d.num = st.dimension6_\n      where\n        1 = 1\n        and st.status not in ('RESERVED')\n        and st.deliverydate between '" + params.fromDate + "' and ('" + params.toDate + "'::date + '2 day'::interval)\n        and st.inventlocationid = '" + params.inventlocationid + "'\n  ";
+                        console.log('My params', params);
+                        sql = "\n      select\n        st.salesid as \"salesid\" ,\n        st.custaccount as \"custaccount\",\n        st.status as status,\n        st.transkind as transkind,\n        st.salesname as customername,\n        st.mobileno as custmobilenumber,\n        to_char(st.vatamount, 'FM999999999990.00') as vatamount,\n        to_char(st.netamount, 'FM999999999990.00') as \"netamount\",\n        to_char(st.disc, 'FM999,999999990.00') as disc,\n        to_char(st.amount , 'FM999999999990.00') as amount,\n        w.namealias as wnamealias,\n        w.name as wname,\n        d.description as salesman,\n        d.num as \"salesmanId\",\n\n        to_char(st.deliverydate, 'DD-MM-YYYY') as \"deliverydate\"\n      from\n        salestable st\n      left join inventlocation w on\n        w.inventlocationid = st.inventlocationid\n      inner join dimensions d on\n        d.num = st.dimension6_\n      where\n        1 = 1\n        and st.status not in ('RESERVED')\n        and st.deliverydate between '" + params.fromDate + "' and ('" + params.toDate + "'::date + '2 day'::interval)\n        and st.inventlocationid = '" + params.inventlocationid + "'\n  ";
                         if (params.salesmanid) {
                             sql = sql + (" and d.num = '" + params.salesmanid + "' ");
                         }

@@ -67,7 +67,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         return [4 /*yield*/, this.getTransferOrder(transferID)];
                     case 1:
                         axaptaData = _a.sent();
-                        console.log(axaptaData);
+                        console.log("data-----------------", axaptaData);
                         axaptaData.invent_location_id_to.trim();
                         if (!(axaptaData.invent_location_id_to.trim() == this.sessionInfo.inventlocationid)) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.mapSalesData(axaptaData)];
@@ -270,7 +270,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         token = _a.sent();
                         console.log(token);
                         url = Props_1.Props.AXAPTA_URL + ("ShippedTransferOrder?transferID=" + transferID);
-                        console.log(url);
+                        console.log("axpta url :  ", url);
                         this.axios.defaults.headers["Token"] = token;
                         console.log(this.axios.defaults.headers);
                         return [4 /*yield*/, this.axios.get(url)];

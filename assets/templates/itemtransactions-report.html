@@ -125,15 +125,22 @@
   <table id="headertbl" width="98%">
     
     <tr>
-        <td valign="top" style="width:33%">
+        <td valign="top" style="width:50%">
             <table>
                 {{#if user}}
                 <tr>
-                    <td>Print Date</td>
-                    <td>:</td>
-                    <td>{{printDate}}</td>
+                    <td width="30%">Print Date</td>
+                    <td width="5%">:</td>
+                    <td width="65%">{{printDate}}</td>
                 </tr>
                 {{/if}}  
+                {{#if fromDate}}
+                <tr>                       
+                  <td>From Date</td>
+                  <td>:</td>
+                  <td>{{fromDate}}</td>
+                </tr>
+                {{/if}}
                 {{#if product}}
                 <tr>                 
                   <td>Product</td>
@@ -147,26 +154,8 @@
                   <td>:</td>
                   <td>{{batchno}}</td>
                 </tr>
-                {{/if}}         
-            </table>
-        </td>
-        <td width="33%" valign="top">
-          <table align="center">
-            {{#if fromDate}}
-              <tr>                       
-                <td>From Date</td>
-                <td>:</td>
-                <td>{{fromDate}}</td>
-              </tr>
-              {{/if}}
-              {{#if color}}
-              <tr>                       
-                <td>Color</td>
-                <td>:</td>
-                <td>{{color}}</td>
-              </tr>
-              {{/if}}
-              {{#if wareHouseNameEn}}
+                {{/if}} 
+                {{#if wareHouseNameEn}}
               <tr>                       
                 <td valign="top">Warehouse</td>
                 <td>:</td>
@@ -178,16 +167,30 @@
                 <td>:</td>
                 <td>{{wareHouseNameAr}}</td>
               </tr>
-              {{/if}}
-          </table>    
-        </td>  
-        <td width="33%" valign="top">
+              {{/if}}        
+            </table>
+        </td>
+        <td align="right" width="50%" valign="top">
           <table align="right">
-            {{#if toDate}}
+             {{#if user}}
+              <tr>
+                  <td>Print By</td>
+                  <td>:</td>
+                  <td>{{user}}</td>
+              </tr>
+              {{/if}}
+              {{#if toDate}}
               <tr>                  
                 <td>To Date</td>
                 <td>:</td>
                 <td>{{toDate}}</td>                  
+              </tr>
+              {{/if}}
+              {{#if color}}
+              <tr>                       
+                <td>Color</td>
+                <td>:</td>
+                <td>{{color}}</td>
               </tr>
               {{/if}}
               {{#if inventsizeid}}
@@ -197,29 +200,17 @@
                 <td>{{inventsizeid}}</td>                  
               </tr>
               {{/if}}
-              {{#if user}}
-              <tr>
-                  <td>Print By</td>
-                  <td>:</td>
-                  <td>{{user}}</td>
+              {{#if transType}}
+              <tr>                  
+                <td>Trans Type</td>
+                <td>:</td>
+                <td>{{transType}}</td>                  
               </tr>
               {{/if}}
           </table>
-        </td>         
+        </td> 
     </tr>
-    <!-- <tr>
-      <td colspan="3">
-        <table align="right">
-          {{#if toDate}}
-            <tr>                  
-              <td>Pages</td>
-              <td>:</td>
-              <td>1 | 10</td>                  
-            </tr>
-            {{/if}}
-        </table>
-    </td>
-  </tr> -->
+   
 </table>
 
   <table class="dash" width="100%" cellpadding="0" cellspacing="0">

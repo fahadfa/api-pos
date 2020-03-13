@@ -127,50 +127,20 @@ table#headertbl th{
 
   <table id="headertbl" width="100%">
     <tr>
-        <td valign="top" style="width:33%">
+        <!-- <td valign="top" style="width:33%">
           <table align="left">
-            {{#if toDate}}
-            <tr>
-             <td class="tdright">{{toDate}}</td> 
-             <td>:</td>  
-             <td class="tdright">حتى الآن</td>
-            </tr>
-            {{/if}}   
+               
             
-            {{#if inventsizeid}}
-              <tr>                  
-                <td class="tdright">{{inventsizeid}}</td>
-                <td>:</td>
-                <td class="tdright">بحجم</td>                  
-              </tr>
-              {{/if}}
             
-            {{#if user}}
-            <tr>
-              <td class="tdright">{{user}}</td> 
-              <td>:</td> 
-              <td class="tdright">طباعة بواسطة</td>
-            </tr>
-            {{/if}}
+            
+            
           </table>  
         </td>
         <td valign="top" style="width:33%">
           <table align="center">
-            {{#if fromDate}}
-            <tr>
-                 <td class="tdright">{{fromDate}}</td>
-                 <td>:</td>
-                 <td class="tdright">من التاريخ</td>
-            </tr>
-            {{/if}}
             
-            {{#if color}}
-            <tr>
-              <td class="tdright">{{color}}</td>
-              <td>:</td>
-              <td class="tdright">اللون</td>
-            </tr>
-            {{/if}}
+            
+            
             
             {{#if product}}
             <tr>              
@@ -187,8 +157,48 @@ table#headertbl th{
             </tr>
             {{/if}}
           </table>
-        </td>
-        <td valign="top" style="width:33%">
+        </td> -->
+        <td valign="top" style="width:50%">
+          <table align="left">
+            {{#if user}}
+            <tr>
+              <td class="tdright">{{user}}</td> 
+              <td>:</td> 
+              <td class="tdright">طباعة بواسطة</td>
+            </tr>
+            {{/if}}
+            {{#if toDate}}
+            <tr>
+             <td class="tdright">{{toDate}}</td> 
+             <td>:</td>  
+             <td class="tdright">حتى الآن</td>
+            </tr>
+            {{/if}}
+            {{#if color}}
+            <tr>
+              <td class="tdright">{{color}}</td>
+              <td>:</td>
+              <td class="tdright">اللون</td>
+            </tr>
+            {{/if}}
+            {{#if inventsizeid}}
+              <tr>                  
+                <td class="tdright">{{inventsizeid}}</td>
+                <td>:</td>
+                <td class="tdright">بحجم</td>                  
+              </tr>
+              {{/if}}
+              {{#if transType}}
+              <tr>       
+                <td class="tdright">{{transType}}</td>  
+                <td>:</td>
+                <td class="tdright">نوع العابر</td>
+              </tr>
+              {{/if}}
+
+          </table>
+        </td>  
+        <td valign="top" style="width:50%">
           <table align="right">
               {{#if user}}
               <tr>
@@ -197,6 +207,13 @@ table#headertbl th{
                   <td class="tdright">تاريخ الطباعة</td>
               </tr>
               {{/if}}  
+              {{#if fromDate}}
+              <tr>
+                  <td class="tdright">{{fromDate}}</td>
+                  <td>:</td>
+                  <td class="tdright">من التاريخ</td>
+              </tr>
+              {{/if}}
               {{#if product}}
               <tr>                 
                 <td class="tdright">{{product}}</td>
@@ -210,7 +227,20 @@ table#headertbl th{
                 <td>:</td>
                 <td class="tdright">رقم الحزمة</td>
               </tr>
-              {{/if}}         
+              {{/if}}     
+              {{#if wareHouseNameEn}}
+              <tr>                       
+                <td class="tdright">{{wareHouseNameEn}}</td>
+                <td>:</td>
+                <td class="tdright" valign="top">مستودع</td>
+              </tr>
+              {{else}}
+              <tr>    
+                <td class="tdright">{{wareHouseNameAr}}</td>  
+                <td>:</td>
+                <td class="tdright" valign="top">مستودع</td>                
+              </tr>
+              {{/if}}     
           </table>
       </td>
     </tr>

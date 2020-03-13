@@ -5,14 +5,32 @@ var moment = require("moment-business-days");
 // import localization from 'moment/locale/fr';
 var Calender = /** @class */ (function () {
     function Calender() {
-        // moment.locale("ar_SA");
+        moment.locale("ar_SA");
         moment.updateLocale("en", {
             workingWeekdays: [1, 2, 3, 4, 5, 6]
         });
-        moment.updateLocale("ar_SA", {
-            workingWeekdays: [0, 1, 2, 3, 4]
-        });
+        // moment.updateLocale("ar_SA", {
+        //   workingWeekdays: [0, 1, 2, 3, 4]
+        // });
     }
+    Calender.prototype.setWorkingDays = function (locale, workingWeekdays, holidays) {
+        var obj = {};
+        obj.workingWeekdays = workingWeekdays;
+        if (holidays) {
+            obj.holidays = holidays,
+                obj.holidayFormat = 'YYYY-MM-DD';
+        }
+        moment.updateLocale(locale, obj);
+    };
+    Calender.prototype.setHolidaysList = function (locale, holidays) {
+        moment.updateLocale(locale, {
+            holidays: holidays,
+            holidayFormat: 'YYYY-MM-DD'
+        });
+    };
+    Calender.prototype.getMomentDateForHolidays = function (date) {
+        return moment(date, "MM/DD");
+    };
     Calender.prototype.getMomentDate = function (date) {
         return moment(date, "YYYY-MM-DD hh:mm;ss");
     };
@@ -43,7 +61,7 @@ var Calender = /** @class */ (function () {
         return moment(date).format("YYYY-MM-DD");
     };
     Calender.prototype.isBusinessDay = function (date) {
-        return moment(date, "DD-MM-YYYY").isBusinessDay();
+        return moment(date, "YYYY-MM-DD").isBusinessDay();
     };
     Calender.prototype.getPreviousDate = function (date) {
         console.log(moment(new Date()).month());

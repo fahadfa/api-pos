@@ -45,6 +45,8 @@ var App_1 = require("../../utils/App");
 var SalesLineDAO_1 = require("../repos/SalesLineDAO");
 var InventtableDAO_1 = require("../repos/InventtableDAO");
 var InventoryOnhandDAO_1 = require("../repos/InventoryOnhandDAO");
+var WorkDaysDAO_1 = require("../repos/WorkDaysDAO");
+var HolidaysListDAO_1 = require("../repos/HolidaysListDAO");
 var SalestargetService = /** @class */ (function () {
     function SalestargetService() {
         this.sessionInfo = { id: "SYSTEM", vid: "OWN" };
@@ -53,6 +55,8 @@ var SalestargetService = /** @class */ (function () {
         this.saleslineRepository = new SalesLineDAO_1.SalesLineDAO();
         this.inventtableRepository = new InventtableDAO_1.InventtableDAO();
         this.onHandInventoryRepository = new InventoryOnhandDAO_1.InventoryOnhandDAO();
+        this.workDaysDAO = new WorkDaysDAO_1.WorkDaysDAO();
+        this.holidaysListDAO = new HolidaysListDAO_1.HolidaysListDAO();
         this.calender = new Calendar_1.Calender();
     }
     SalestargetService.prototype.save = function (item) {
@@ -83,22 +87,51 @@ var SalestargetService = /** @class */ (function () {
     };
     SalestargetService.prototype.search = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var day, week, month, year, error_2;
+            var workWeeks, dayNos, holidays, holidaysList, day, week, month, year, error_2;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
-                        return [4 /*yield*/, this.getDayTargetStatus(data)];
+                        _a.trys.push([0, 7, , 8]);
+                        return [4 /*yield*/, this.workDaysDAO.search({
+                                storeCode: data.inventlocationid,
+                                year: new Date().getFullYear()
+                            })];
                     case 1:
+                        workWeeks = _a.sent();
+                        dayNos = workWeeks.map(function (item) {
+                            return item.dayNo;
+                        });
+                        console.log("*******************  workweeks **********************");
+                        console.log(dayNos);
+                        console.log("*******************************************");
+                        return [4 /*yield*/, this.holidaysListDAO.searchNot({
+                                type: "WEEkend"
+                            })];
+                    case 2:
+                        holidays = _a.sent();
+                        holidaysList = holidays.map(function (item) {
+                            return _this.calender.getMomentDate(new Date(item.date)).format("YYYY-MM-DD");
+                        });
+                        console.log("***************** Holidays ************************");
+                        console.log(holidaysList);
+                        console.log("*****************************************");
+                        this.calender.setWorkingDays("ar_SA", dayNos, holidaysList);
+                        this.calender.setWorkingDays("en", dayNos, holidaysList);
+                        this.calender.setHolidaysList("ar_SA", holidaysList);
+                        this.calender.setHolidaysList("en", holidaysList);
+                        console.log(this.calender.isBusinessDay(holidaysList[0]));
+                        return [4 /*yield*/, this.getDayTargetStatus(data)];
+                    case 3:
                         day = _a.sent();
                         return [4 /*yield*/, this.getWeekTargetStatus(data)];
-                    case 2:
+                    case 4:
                         week = _a.sent();
                         return [4 /*yield*/, this.getMonthTargetStatus(data)];
-                    case 3:
+                    case 5:
                         month = _a.sent();
                         return [4 /*yield*/, this.getYearTargetStatus(data)];
-                    case 4:
+                    case 6:
                         year = _a.sent();
                         return [2 /*return*/, {
                                 day: day,
@@ -106,11 +139,23 @@ var SalestargetService = /** @class */ (function () {
                                 month: month,
                                 year: year
                             }];
-                    case 5:
+                    case 7:
                         error_2 = _a.sent();
                         throw error_2;
-                    case 6: return [2 /*return*/];
+                    case 8: return [2 /*return*/];
                 }
+            });
+        });
+    };
+    SalestargetService.prototype.getWorkingWeekdays = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                try {
+                }
+                catch (error) {
+                    throw error;
+                }
+                return [2 /*return*/];
             });
         });
     };
@@ -123,7 +168,9 @@ var SalestargetService = /** @class */ (function () {
                         _c.trys.push([0, 10, , 11]);
                         if (!(data.unittime && data.inventlocationid)) return [3 /*break*/, 9];
                         dates = this.getDatesFromUnitTime(data.unittime);
+                        console.log("dates================", dates);
                         previousdates = this.getDatesFromUnitTime(data.unittime, true);
+                        console.log("Previous===================", previousdates);
                         if (!(dates.from && dates.to)) return [3 /*break*/, 8];
                         return [4 /*yield*/, this.saleslineRepository.findTop20FromToDate(data.inventlocationid, dates.from, dates.to)];
                     case 1:
@@ -235,7 +282,8 @@ var SalestargetService = /** @class */ (function () {
                         return [4 /*yield*/, this.getCurrentMonthTargetAmount(data.inventlocationid, prevoiusDateYear, previusDateMonth)];
                     case 2:
                         previousMonthTaget = _a.sent();
-                        currentDayTarget = this.calender.isBusinessDay(currentDate)
+                        console.log("================ is today working ===============", currentDate, "===============", this.calender.isBusinessDay(currentDate));
+                        currentDayTarget = this.calender.isBusinessDay(new Date())
                             ? this.getTargetAmont(currentMonthTaget, currentDateMonthWorkingDays)
                             : 0;
                         previousDayTarget = this.calender.isBusinessDay(previousDate)
@@ -251,7 +299,7 @@ var SalestargetService = /** @class */ (function () {
                         console.log(todaySales, " yesterday ", yesterdaySale);
                         console.log("=============================================");
                         currentPercentage = currentDayTarget ? ((todaySales - currentDayTarget) / currentDayTarget) * 100 : 0;
-                        previousPercentage = todaySales ? ((yesterdaySale - todaySales) / todaySales) * 100 : 0;
+                        previousPercentage = todaySales ? ((yesterdaySale - todaySales) / todaySales) * 100 : (todaySales == 0 ? 100 : 0);
                         salesStatus = new SalesStatus_1.SalesStatus();
                         salesStatus.currentSale = todaySales;
                         salesStatus.previousSale = yesterdaySale;

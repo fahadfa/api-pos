@@ -192,7 +192,7 @@ var SalesLineDAO = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = " select \n    salesline.itemid ,\n    sum(salesline.lineamount- salesline.linetotaldisc + salesline.vatamount ) as amount \n    from salesline as salesline \n    inner join salestable st on st.salesid = salesline.salesid\n    where (salesline.lastmodifieddate::date >= '" + from + "' \n    and salesline.lastmodifieddate::date <= '" + to + "' ) \n    and salesline.inventlocationid='" + inventlocationid + "'     \n    and st.transkind = 'SALESORDER' \n    and st.status IN('POSTED', 'PAID')\n     group by salesline.itemid  \n     order by amount desc limit  20\n    ";
+                        query = " select \n    salesline.itemid ,\n    sum(salesline.lineamount- salesline.linetotaldisc+ coalesce(salesline.colorantprice, 0) * salesline.salesqty + salesline.vatamount ) as amount \n    from salesline as salesline \n    inner join salestable st on st.salesid = salesline.salesid\n    where salesline.salesid in (\n      select salesid from salestable st\n      where st.transkind = 'SALESORDER'\n      and st.status IN('POSTED', 'PAID')\n      and st.lastmodifieddate ::date>='" + from + "'\n      and st.lastmodifieddate ::date<='" + to + "'\n      and st.inventlocationid='" + inventlocationid + "'     \n      )\n      group by salesline.itemid  order by amount desc limit 20\n     \n    ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }

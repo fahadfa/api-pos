@@ -54,6 +54,15 @@ var RawQuery_1 = require("../app/common/RawQuery");
 var App = /** @class */ (function () {
     function App() {
     }
+    App.UniqueCode = function () {
+        var time = new Date().getTime();
+        if (this.uniqueId == time) {
+            while (new Date().getTime() < 1 + time) { }
+            time = new Date().getTime();
+        }
+        this.uniqueId = time;
+        return time.toString(36).toUpperCase();
+    };
     App.UniqueNumber = function () {
         var time = new Date().getTime();
         if (this.uniqueId == time) {
