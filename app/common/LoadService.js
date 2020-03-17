@@ -93,7 +93,7 @@ var LoadService = /** @class */ (function () {
                         if (param.type == "DESIGNERSERVICE") {
                             query += " and paymtermid = 'CASH' ";
                         }
-                        query += " and (" + (param.customergroup.length > 0 ? "custgroup in (" + param.customergroup + ")" : "") + " " + (param.customergroup.length > 0 ? "OR" : "") + "  " + (param.additionalcustomer.length > 0 ? "accountnum in (" + param.additionalcustomer + ")" : "") + " " + (param.additionalcustomer.length > 0 ? "OR" : "") + " " + (param.sabiccustomers.length > 0 ? "accountnum in (" + param.sabiccustomers + ")" : "") + " " + (param.sabiccustomers.length > 0 ? "OR" : "") + " " + ("accountnum='" + this.sessionInfo.defaultcustomerid + "'") + " or walkincustomer = true) and deleted = false and dataareaid='" + this.sessionInfo.dataareaid + "' " + (param.type == "DESIGNERSERVICE" ? " and accountnum!='" + this.sessionInfo.defaultcustomerid + "'" : "") + " limit 15";
+                        query += " and (" + (param.customergroup.length > 0 ? "custgroup in (" + param.customergroup + ")" : "") + " " + (param.customergroup.length > 0 ? "OR" : "") + "  " + (param.additionalcustomer.length > 0 ? "accountnum in (" + param.additionalcustomer + ")" : "") + " " + (param.additionalcustomer.length > 0 ? "OR" : "") + " " + (param.sabiccustomers.length > 0 ? "accountnum in (" + param.sabiccustomers + ")" : "") + " " + (param.sabiccustomers.length > 0 ? "OR" : "") + " " + ("accountnum='" + this.sessionInfo.defaultcustomerid + "'") + " or walkincustomer = true) and deleted = false and lower(dataareaid)='" + this.sessionInfo.dataareaid.toLowerCase() + "' " + (param.type == "DESIGNERSERVICE" ? " and accountnum!='" + this.sessionInfo.defaultcustomerid + "'" : "") + " limit 15";
                         return [4 /*yield*/, this.db.query(query)];
                     case 2:
                         data = _a.sent();
@@ -846,7 +846,7 @@ var LoadService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select distinct\n        c.name as \"nameEn\", \n        c.name as \"nameAr\",\n        c.configid as configid,\n        c.hexcode as \"hex\"\n        from configtable c where c.configid Ilike '%" + param.param + "%' or c.name Ilike '%" + param.param + "%' or c.name Ilike '%" + param.param + "%' limit 15";
+                        query = "select distinct\n        c.name as \"nameEn\", \n        c.name as \"nameAr\",\n        c.configid as configid,\n        c.hexcode as \"hex\"\n        from configtable c where (c.configid Ilike '%" + param.param + "%' or c.name Ilike '%" + param.param + "%' or c.name Ilike '%" + param.param + "%') and itemid = '" + param.itemid + "' limit 15";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
@@ -859,7 +859,7 @@ var LoadService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select distinct\n        s.description as \"nameEn\", \n        s.name as \"nameAr\",\n        s.inventsizeid as inventsizeid\n        from inventsize s where s.inventsizeid Ilike '%" + param.param + "%' or s.description Ilike '%" + param.param + "%' or s.name Ilike '%" + param.param + "%' limit 15";
+                        query = "select distinct\n        s.description as \"nameEn\", \n        s.name as \"nameAr\",\n        s.inventsizeid as inventsizeid\n        from inventsize s where (s.inventsizeid Ilike '%" + param.param + "%' or s.description Ilike '%" + param.param + "%' or s.name Ilike '%" + param.param + "%' )and itemid = '" + param.itemid + "' limit 15";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
@@ -872,7 +872,7 @@ var LoadService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select distinct\n        i.inventbatchid as \"batchNo\", \n        i.itemid as \"itemId\"\n        from inventbatch i \n         where  i.inventbatchid Ilike '%" + param.param + "%' limit 15";
+                        query = "select distinct\n        i.inventbatchid as \"batchNo\", \n        i.itemid as \"itemId\"\n        from inventbatch i \n         where  i.inventbatchid Ilike '%" + param.param + "%' and itemid = '" + param.itemid + "' limit 15";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
@@ -1360,12 +1360,13 @@ var LoadService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.db.query("select nocolorantcheckgroup, blocklistedbasecolor from usergroupconfig where id = '" + this.sessionInfo.usergroupconfigid + "'")];
+                        return [4 /*yield*/, this.db.query("select nocolorantcheckgroup, blocklistedbasecolor, special_products_for_colorant_option as specialproductsforcolorantoption from usergroupconfig where id = '" + this.sessionInfo.usergroupconfigid + "'")];
                     case 1:
                         data = _a.sent();
                         data = data.length > 0 ? data[0] : {};
                         data.nocolorantcheckgroup = data.nocolorantcheckgroup ? data.nocolorantcheckgroup.split(",") : [];
                         data.blocklistedbasecolor = data.blocklistedbasecolor ? data.blocklistedbasecolor.split(",") : [];
+                        data.specialproductsforcolorantoption = data.specialproductsforcolorantoption ? data.specialproductsforcolorantoption.split(',') : [];
                         return [2 /*return*/, data];
                     case 2:
                         error_12 = _a.sent();

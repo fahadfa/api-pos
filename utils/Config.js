@@ -4,7 +4,7 @@ require("reflect-metadata");
 exports.dbOptions = {
     name: "default",
     type: "postgres",
-    host: "localhost",
+    host: "locahost",
     port: 5432,
     username: "postgres",
     password: "Mpos1234",

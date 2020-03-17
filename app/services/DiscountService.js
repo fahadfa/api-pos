@@ -58,7 +58,7 @@ var DiscountService = /** @class */ (function () {
                         discountBlockItems = void 0;
                         reqData.grossTotal = 0;
                         reqData.selectedItems.map(function (v) {
-                            reqData.grossTotal += parseFloat(v.price) * parseFloat(v.quantity);
+                            reqData.grossTotal += (parseFloat(v.price) + parseFloat(v.colorantprice)) * parseFloat(v.quantity);
                         });
                         if (!!reqData.custaccount) return [3 /*break*/, 2];
                         return [4 /*yield*/, this.custtableDAO.entity(this.sessionInfo.defaultcustomerid)];
@@ -590,9 +590,9 @@ var DiscountService = /** @class */ (function () {
                         _i++;
                         return [3 /*break*/, 13];
                     case 16:
-                        reqData.total = total.toFixed(4);
-                        reqData.grossTotal = grossTotal.toFixed(4);
-                        reqData.totalBeforeVat = totalBeforeVat.toFixed(4);
+                        reqData.total = total;
+                        reqData.grossTotal = grossTotal;
+                        reqData.totalBeforeVat = totalBeforeVat;
                         reqData.isVoucherApplied = isVoucherApplied;
                         if (isVoucherApplied) {
                             message = "You Saved " + reqData.voucherdiscamt + " from this Voucher";
@@ -786,9 +786,9 @@ var DiscountService = /** @class */ (function () {
                         _i++;
                         return [3 /*break*/, 2];
                     case 5:
-                        reqData.total = total.toFixed(4);
-                        reqData.grossTotal = grossTotal.toFixed(4);
-                        reqData.totalBeforeVat = totalBeforeVat.toFixed(4);
+                        reqData.total = total;
+                        reqData.grossTotal = grossTotal;
+                        reqData.totalBeforeVat = totalBeforeVat;
                         reqData.isVoucherApplied = false;
                         reqData.message = "For Aramko And Thahakom Customers Other Discounts Will Not Apply";
                         return [2 /*return*/, reqData];
@@ -887,8 +887,8 @@ var DiscountService = /** @class */ (function () {
                         _i++;
                         return [3 /*break*/, 1];
                     case 5:
-                        reqData.total = total.toFixed(4);
-                        reqData.grossTotal = grossTotal.toFixed(4);
+                        reqData.total = total;
+                        reqData.grossTotal = grossTotal;
                         reqData.totalBeforeVat = totalBeforeVat;
                         reqData.isVoucherApplied = false;
                         reqData.message = "For Sabic Customers Other Discounts Will Not Apply";
@@ -968,16 +968,16 @@ var DiscountService = /** @class */ (function () {
             ele.lineamount = (ele.price + ele.colorantprice) * ele.quantity + ele.vatamount - ele.lineTotalDisc;
             ele.priceAfterdiscount = ele.priceAfterdiscount;
             ele.lineamountafterdiscount = ele.lineamountafterdiscount;
-            ele.vatamount = ele.vatamount;
+            ele.vatamount = Math.round((ele.vatamount + Number.EPSILON) * 100) / 100;
             ele.priceAfterVat = ele.priceAfterVat;
-            ele.lineTotalDisc = ele.lineTotalDisc;
-            ele.instantdiscamt = ele.instantdiscamt;
-            ele.lineamount = ele.lineamount;
+            ele.lineTotalDisc = Math.round((ele.lineTotalDisc + Number.EPSILON) * 100) / 100;
+            ele.lineamount = Math.round((ele.lineamount + Number.EPSILON) * 100) / 100;
+            ele.netAmount = Math.round((ele.netAmount + Number.EPSILON) * 100) / 100;
         }
-        reqData.discount = reqData.discount;
-        reqData.totalBeforeVat = reqData.totalBeforeVat;
-        reqData.total = reqData.total;
-        reqData.grossTotal = reqData.grossTotal;
+        reqData.discount = Math.round((reqData.discount + Number.EPSILON) * 100) / 100;
+        reqData.totalBeforeVat = Math.round((reqData.totalBeforeVat + Number.EPSILON) * 100) / 100;
+        reqData.total = Math.round((reqData.total + Number.EPSILON) * 100) / 100;
+        reqData.grossTotal = Math.round((reqData.grossTotal + Number.EPSILON) * 100) / 100;
     };
     DiscountService.prototype.allocateData = function (reqData) {
         reqData.selectedItems.forEach(function (ele) {
