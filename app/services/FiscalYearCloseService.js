@@ -110,11 +110,11 @@ var FiscalYearCloseService = /** @class */ (function () {
                             date = item.endingDate.toLocaleDateString().split("/");
                             this.rawQuery.updateFiscalYearClose(item.yearNo, date);
                         }
-                        returnData = { id: item.id, message: 'SAVED_SUCCESSFULLY' };
+                        returnData = { id: item.id, message: "SAVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
                     case 3:
                         if (cond == "Duplicate") {
-                            throw { message: 'DUPLICATE_RECORD' };
+                            throw { message: "DUPLICATE_RECORD" };
                         }
                         else if (cond == "notClosed") {
                             throw { message: "BALANCES_ARE_NOT_EQUAL" };
@@ -143,11 +143,11 @@ var FiscalYearCloseService = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         if (!data)
-                            throw { message: 'RECORD_NOT_FOUND' };
+                            throw { message: "RECORD_NOT_FOUND" };
                         return [4 /*yield*/, this.fiscalyearcloseRepository.delete(data)];
                     case 2:
                         result = _a.sent();
-                        returnData = { id: id, message: 'REMOVED' };
+                        returnData = { id: id, message: "REMOVED" };
                         return [2 /*return*/, returnData];
                     case 3:
                         error_4 = _a.sent();
@@ -159,26 +159,29 @@ var FiscalYearCloseService = /** @class */ (function () {
     };
     FiscalYearCloseService.prototype.validate = function (item) {
         return __awaiter(this, void 0, void 0, function () {
-            var previousItem, previousData, filterData, month;
+            var previousItem, cond, previousData, filterData, month;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         previousItem = null;
-                        if (this.rawQuery.financialYearCloseCondition(this.sessionInfo.dataareaid)) {
+                        return [4 /*yield*/, this.rawQuery.financialYearCloseCondition(this.sessionInfo.dataareaid)];
+                    case 1:
+                        cond = _a.sent();
+                        if (cond) {
                             return [2 /*return*/, "notClosed"];
                         }
-                        if (!(!item.id || item.id.toString() == "" || item.id.toString() == "0")) return [3 /*break*/, 1];
+                        if (!(!item.id || item.id.toString() == "" || item.id.toString() == "0")) return [3 /*break*/, 2];
                         item.id = null;
-                        return [3 /*break*/, 3];
-                    case 1: return [4 /*yield*/, this.fiscalyearcloseRepository.entity(item.id)];
-                    case 2:
+                        return [3 /*break*/, 4];
+                    case 2: return [4 /*yield*/, this.fiscalyearcloseRepository.entity(item.id)];
+                    case 3:
                         previousItem = _a.sent();
-                        _a.label = 3;
-                    case 3: return [4 /*yield*/, this.fiscalyearcloseRepository.search({
+                        _a.label = 4;
+                    case 4: return [4 /*yield*/, this.fiscalyearcloseRepository.search({
                             yearNo: item.yearNo,
                             endingDate: App_1.App.DaysBack(new Date(item.yearNo, item.endingDate, 1), 1)
                         })];
-                    case 4:
+                    case 5:
                         previousData = _a.sent();
                         if (!item.id) {
                             if (previousData.length > 0) {

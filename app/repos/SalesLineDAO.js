@@ -47,18 +47,12 @@ var SalesLineDAO = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log(data);
+                        console.log("===================", data);
                         return [4 /*yield*/, this.dao
                                 .createQueryBuilder("salesline")
-                                .leftJoinAndSelect("salesline.colors", "colors")
-                                .leftJoin("salesline.baseSizes", "baseSizes")
-                                .leftJoin("baseSizes.sizes", "sizes")
-                                .leftJoin("baseSizes.base", "base")
-                                .leftJoin("base.products", "products")
-                                .addSelect("baseSizes.id")
-                                .addSelect(["base.id", "base.code"])
-                                .addSelect(["products.id", "products.code"])
-                                .addSelect(["sizes.id", "sizes.nameEn", "sizes.nameAr", "sizes.code"])
+                                .leftJoinAndSelect("salesline.color", "color")
+                                .leftJoin("salesline.size", "size")
+                                .leftJoin("size.product", "product")
                                 .where(data)
                                 .getMany()];
                     case 1: return [2 /*return*/, _a.sent()];
@@ -71,33 +65,12 @@ var SalesLineDAO = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log(data);
+                        console.log("=========================", data);
                         return [4 /*yield*/, this.dao
                                 .createQueryBuilder("salesline")
-                                .leftJoin("salesline.colors", "colors")
-                                .leftJoin("salesline.baseSizes", "baseSizes")
-                                .leftJoin("baseSizes.sizes", "sizes")
-                                .leftJoin("baseSizes.base", "base")
-                                .leftJoin("base.products", "products")
-                                .addSelect("baseSizes.id")
-                                .addSelect("sizes.id")
-                                .addSelect("sizes.code")
-                                .addSelect("sizes.nameEn")
-                                .addSelect("sizes.nameAr")
-                                .addSelect("base.id")
-                                .addSelect("base.code")
-                                .addSelect("base.nameEn")
-                                .addSelect("base.nameAr")
-                                .addSelect("colors.code")
-                                .addSelect("colors.id")
-                                .addSelect("colors.nameEnglish")
-                                .addSelect("colors.nameArabic")
-                                .addSelect("colors.hexCode")
-                                .addSelect("colors.code")
-                                .addSelect("products.id")
-                                .addSelect("products.nameEnglish")
-                                .addSelect("products.nameArabic")
-                                .addSelect("products.code")
+                                .leftJoinAndSelect("salesline.color", "color")
+                                .leftJoinAndSelect("salesline.size", "size")
+                                .leftJoinAndSelect("size.product", "product")
                                 .where(data)
                                 .getMany()];
                     case 1: return [2 /*return*/, _a.sent()];

@@ -153,7 +153,7 @@ var GeneralJournalService = /** @class */ (function () {
                         if (!(_i < _a.length)) return [3 /*break*/, 11];
                         item = _a[_i];
                         legderData = {
-                            accountNum: item.accountNum,
+                            accountNum: item.accountNumber.accountNum,
                             transDate: item.transdDate,
                             txt: item.txt,
                             region: item.region,
@@ -177,7 +177,7 @@ var GeneralJournalService = /** @class */ (function () {
                             accountpltype: item.accounttype,
                             dataareaid: item.dataareaid
                         };
-                        return [4 /*yield*/, this.ledgerTrasDAO.search({ accountNum: item.accountNum, journalNum: item.journalNum })];
+                        return [4 /*yield*/, this.ledgerTrasDAO.search({ accountNum: item.accountNumber.accountNum, journalNum: item.journalNum })];
                     case 8:
                         deleteData = _b.sent();
                         return [4 /*yield*/, this.ledgerTrasDAO.delete(deleteData)];
@@ -199,7 +199,7 @@ var GeneralJournalService = /** @class */ (function () {
                         return [3 /*break*/, 15];
                     case 14:
                         error_3 = _b.sent();
-                        throw error_3;
+                        throw { message: "SERVER_SIDE_ERROR" };
                     case 15: return [2 /*return*/];
                 }
             });
@@ -247,7 +247,7 @@ var GeneralJournalService = /** @class */ (function () {
                         if (error_4 == {}) {
                             error_4 = { message: 'TECHNICAL_ISSUE,_PLEASE_CONTACT_YOUR_TECHNICAL_TEAM' };
                         }
-                        throw error_4;
+                        throw { message: "SERVER_SIDE_ERROR" };
                     case 7: return [2 /*return*/];
                 }
             });

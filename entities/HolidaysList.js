@@ -50,7 +50,7 @@ var HolidaysList = /** @class */ (function () {
         __metadata("design:type", Date)
     ], HolidaysList.prototype, "updatedOn", void 0);
     __decorate([
-        typeorm_1.Column({ name: "storeCode" }),
+        typeorm_1.Column({ name: "store_code" }),
         __metadata("design:type", String)
     ], HolidaysList.prototype, "storeCode", void 0);
     HolidaysList = __decorate([

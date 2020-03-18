@@ -120,6 +120,7 @@ var FixedAssetTableService = /** @class */ (function () {
                         cond = _a.sent();
                         console.log(cond);
                         if (!(cond == true || cond == "updated")) return [3 /*break*/, 3];
+                        item.dataareaid = this.sessionInfo.dataareaid;
                         return [4 /*yield*/, this.fixedassettableRepository.save(item)];
                     case 2:
                         fixedassettableData = _a.sent();

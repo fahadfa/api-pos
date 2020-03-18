@@ -1,4 +1,4 @@
-/transferorderfromaxapta/{id}:
+/purchaseorderfromaxapta/{id}:
     get:
         tags:
             - Orders From Axapta

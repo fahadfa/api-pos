@@ -47,7 +47,7 @@ var FixedAssetTableDAO = /** @class */ (function () {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.dao
                             .createQueryBuilder("FixedAssetTable")
-                            .innerJoin("FixedAssetTable.fixedAssetGroup", "fixedAssetGroup")
+                            .leftJoin("FixedAssetTable.fixedAssetGroup", "fixedAssetGroup")
                             .addSelect("fixedAssetGroup.name")
                             .addSelect("fixedAssetGroup.nameAlias")
                             .where(data)

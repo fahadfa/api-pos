@@ -34,7 +34,7 @@ var WorkDays = /** @class */ (function () {
         __metadata("design:type", String)
     ], WorkDays.prototype, "year", void 0);
     __decorate([
-        typeorm_1.Column({ name: "storeCode" }),
+        typeorm_1.Column({ name: "store_code" }),
         __metadata("design:type", String)
     ], WorkDays.prototype, "storeCode", void 0);
     __decorate([

@@ -381,6 +381,10 @@ var Usergroupconfig = /** @class */ (function () {
         typeorm_1.Column({ name: "special_products_for_colorant_option" }),
         __metadata("design:type", String)
     ], Usergroupconfig.prototype, "specialproductsforcolorantoption", void 0);
+    __decorate([
+        typeorm_1.Column({ name: "report_warehouses" }),
+        __metadata("design:type", String)
+    ], Usergroupconfig.prototype, "reportwarehouses", void 0);
     Usergroupconfig = __decorate([
         typeorm_1.Entity("usergroupconfig")
     ], Usergroupconfig);

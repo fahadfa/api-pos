@@ -264,7 +264,7 @@ var SalestargetService = /** @class */ (function () {
     };
     SalestargetService.prototype.getDayTargetStatus = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var currentDate, previousDate, currentDateMonth, previusDateMonth, currentDateYear, prevoiusDateYear, currentDateMonthWorkingDays, previousDateMonthWorkingDays, currentMonthTaget, previousMonthTaget, currentDayTarget, previousDayTarget, todaySales, yesterdaySale, currentPercentage, previousPercentage, salesStatus;
+            var currentDate, previousDate, currentDateMonth, previusDateMonth, currentDateYear, prevoiusDateYear, currentDateMonthWorkingDays, previousDateMonthWorkingDays, currentMonthTaget, previousMonthTaget, currentDayTarget, previousDayTarget, todaySales, yesterdaySale, currentPercentage, previousPercentageDecimal, previousPercentage, salesStatus;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -299,7 +299,8 @@ var SalestargetService = /** @class */ (function () {
                         console.log(todaySales, " yesterday ", yesterdaySale);
                         console.log("=============================================");
                         currentPercentage = currentDayTarget ? ((todaySales - currentDayTarget) / currentDayTarget) * 100 : 0;
-                        previousPercentage = todaySales ? ((yesterdaySale - todaySales) / todaySales) * 100 : (todaySales == 0 ? 100 : 0);
+                        previousPercentageDecimal = todaySales == 0 ? Infinity : ((yesterdaySale - todaySales) / todaySales);
+                        previousPercentage = previousPercentageDecimal == Infinity ? 0 : previousPercentageDecimal;
                         salesStatus = new SalesStatus_1.SalesStatus();
                         salesStatus.currentSale = todaySales;
                         salesStatus.previousSale = yesterdaySale;

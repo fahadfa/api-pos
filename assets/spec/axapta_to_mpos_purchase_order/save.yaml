@@ -1,4 +1,4 @@
-/transferorderfromaxapta:
+/purchaseorderfromaxapta:
     put:
         tags:
             - Orders From Axapta
