@@ -741,6 +741,7 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.checkItems(this.sessionInfo.inventlocationid, items, colors, sizes)];
                     case 2:
                         itemsInStock = _a.sent();
+                        console.log("==========================", itemsInStock);
                         itemString = "";
                         salesData.salesLine.map(function (v) {
                             var index = itemsInStock.findIndex(function (value) {

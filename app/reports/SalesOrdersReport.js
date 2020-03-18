@@ -43,7 +43,7 @@ var SalesOrdersReport = /** @class */ (function () {
     }
     SalesOrdersReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, query, warehouseQuery, regionalWarehouses, inQueryStr_1, error_1;
+            var data, query, warehouseQuery, regionalWarehouses, inQueryStr_1, resData_1, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -91,10 +91,30 @@ var SalesOrdersReport = /** @class */ (function () {
                     case 4:
                         data = _a.sent();
                         data.map(function (v) {
+                            v.grossAmount = v.grossAmount ? v.grossAmount : 0;
                             v.discount = v.discount ? v.discount : 0;
+                            v.vatAmount = v.vatAmount ? v.vatAmount : 0;
+                            v.netAmount = v.netAmount ? v.netAmount : 0;
                         });
-                        // console.log("salesorders  ", data);
-                        return [2 /*return*/, data];
+                        resData_1 = {
+                            grossAmount: 0,
+                            discount: 0,
+                            vatAmount: 0,
+                            netAmount: 0
+                        };
+                        data.map(function (v) {
+                            resData_1.grossAmount += parseFloat(v.grossAmount);
+                            resData_1.discount += parseFloat(v.discount);
+                            resData_1.vatAmount += parseFloat(v.vatAmount);
+                            resData_1.netAmount += parseFloat(v.netAmount);
+                        });
+                        resData_1.grossAmount = resData_1.grossAmount.toFixed(2);
+                        resData_1.discount = resData_1.discount.toFixed(2);
+                        resData_1.vatAmount = resData_1.vatAmount.toFixed(2);
+                        resData_1.netAmount = resData_1.netAmount.toFixed(2);
+                        console.log("salesorders  ", data);
+                        resData_1.data = data;
+                        return [2 /*return*/, resData_1];
                     case 5:
                         error_1 = _a.sent();
                         throw error_1;
@@ -120,33 +140,13 @@ var SalesOrdersReport = /** @class */ (function () {
     };
     SalesOrdersReport.prototype.report = function (result, params) {
         return __awaiter(this, void 0, void 0, function () {
-            var renderData, file;
+            var file;
             return __generator(this, function (_a) {
-                renderData = {
-                    printDate: new Date().toLocaleString(),
-                    fromDate: params.fromDate,
-                    toDate: params.toDate,
-                    status: params.status,
-                    user: params.user
-                };
-                // renderData.total = 0;
-                renderData.grossAmount = 0;
-                renderData.discount = 0;
-                renderData.vatAmount = 0;
-                renderData.netAmount = 0;
-                result.map(function (v) {
-                    renderData.grossAmount += parseFloat(v.grossAmount);
-                    renderData.discount += parseFloat(v.discount);
-                    renderData.vatAmount += parseFloat(v.vatAmount);
-                    renderData.netAmount += parseFloat(v.netAmount);
-                });
-                renderData.grossAmount = renderData.grossAmount.toFixed(2);
-                renderData.discount = renderData.discount.toFixed(2);
-                renderData.vatAmount = renderData.vatAmount.toFixed(2);
-                renderData.netAmount = renderData.netAmount.toFixed(2);
-                // console.log(result.salesLine[0].product.nameEnglish);
-                renderData.data = result;
-                console.log(renderData);
+                result.printDate = new Date().toLocaleString(),
+                    result.fromDate = params.fromDate,
+                    result.toDate = params.toDate,
+                    result.status = params.status,
+                    result.user = params.user;
                 if (params.type == "excel") {
                     file = params.lang == "en" ? "salesorder-excel" : "salesorder-excel-ar";
                 }
@@ -154,7 +154,7 @@ var SalesOrdersReport = /** @class */ (function () {
                     file = params.lang == "en" ? "salesorder-report" : "salesorder-report-ar";
                 }
                 try {
-                    return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];
+                    return [2 /*return*/, App_1.App.HtmlRender(file, result)];
                 }
                 catch (error) {
                     throw error;
