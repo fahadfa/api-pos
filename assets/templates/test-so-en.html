@@ -176,7 +176,7 @@
 
   <body>
     <div id="bg__watermark">
-      <p id="bg__text__watermark">Only for testing</p>
+      <p id="bg__text__watermark">Only for testing1</p>
     </div>
 
     {{#each salesLine}}
@@ -217,7 +217,7 @@
               <td class="textboldtd">Receiving Vat No</td>
               <td>:</td>
               <td>
-                {{this.cvatNum}}
+                {{this.cvatNum}} 
               </td>
             </tr>
             <tr class="billing">
@@ -267,6 +267,17 @@
                 {{this.lastmodifieddate}}
               </td>
             </tr>
+ 
+            {{#if this.voucherdiscchecked}}
+            <tr class="billing">
+              <td class="textboldtd">Voucher No</td>
+              <td>:</td>
+              <td class="quotation-date">
+                {{this.vouchernum}}
+              </td>
+            </tr>
+            {{/if}}
+            
             <tr class="billing">
               <td class="textboldtd">Supplier Vat No</td>
               <td>:</td>

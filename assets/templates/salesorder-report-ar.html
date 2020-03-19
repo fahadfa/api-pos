@@ -181,6 +181,7 @@
                 <th width="5%">اسم</th>
                 <th width="5%">كود العميل</th>
                 <th width="5%">طريقة الدفع أو الدفع</th>
+                <th width="5%">فاتورة</th>
                 <th width="5%">اكتب</th>
                 <th width="5%">الحالة</th>
                 <th width="10%">المبلغ الإجمالي</th>
@@ -207,6 +208,13 @@
                 <td class="tdcenter">{{ this.custaccount }}</td>
                 {{/ if}}
                 <td class="tdcenter">{{ this.paymentMode }}</td>
+                <td class="tdcenter">
+                    {{#if voucherdiscchecked}}
+                      {{ this.vouchernum }}
+                    {{else}}
+                    ---
+                    {{/if}}
+                  </td>
                 <td class="tdcenter">{{ this.type }}</td>
                 <td class="tdcenter">{{ this.status }}</td>
                 <td class="tdright">{{ this.grossAmount }}</td>

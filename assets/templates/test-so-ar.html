@@ -183,7 +183,7 @@
 
 <body>
     <div id="bg__watermark">
-        <p id="bg__text__watermark">Only for testing</p>
+        <p id="bg__text__watermark">فقط للاختبار</p>
     </div>
 
 
@@ -363,8 +363,17 @@
                     <tr>
                         <td class="textboldtd">تاريخ الفاتورة</td>
                         <td>:</td>
-                        <td class="quotation-date">{{createddatetime}}</td>
+                        <td class="quotation-date">{{lastmodifieddate}}</td>
                     </tr>
+                    {{#if this.voucherdiscchecked}}
+                    <tr class="billing">
+                        <td class="textboldtd">رقم القسيمة</td>
+                        <td>:</td>
+                        <td class="quotation-date">
+                            {{this.vouchernum}}
+                        </td>
+                    </tr>
+                    {{/if}}
                     <tr>
                         <td class="textboldtd">الرقم الضريبي للشركة </td>
                         <td>:</td>

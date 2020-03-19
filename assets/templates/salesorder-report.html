@@ -117,7 +117,7 @@
 
   <body>
     <div id="bg__watermark">
-      <p id="bg__text__watermark">Only for testing1</p>
+      <p id="bg__text__watermark">Only for testing</p>
     </div>
 
     <div class="mainheading">Sales Report</div>
@@ -175,6 +175,7 @@
           <th width="15%">Customer Name</th>
           <th width="5%">Customer Code</th>
           <th width="5%">Payment Mode</th>
+          <th width="5%">Voucher</th>
           <th width="5%">Type</th>
           <th width="5%">Status</th>
           <th width="10%">Gross Amount</th>
@@ -197,6 +198,13 @@
           <td class="tdcenter">{{ this.custaccount }}</td>
           {{/ if}}
           <td class="tdcenter">{{ this.paymentMode }}</td>
+          <td class="tdcenter">
+            {{#if voucherdiscchecked}}
+              {{ this.vouchernum }}
+            {{else}}
+            ---
+            {{/if}}
+          </td>
           <td class="tdcenter">{{ this.type }}</td>
           <td class="tdcenter">{{ this.status }}</td>
           <td class="tdright">{{ this.grossAmount }}</td>
