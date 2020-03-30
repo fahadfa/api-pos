@@ -190,7 +190,7 @@ var UpdateInventoryService = /** @class */ (function () {
                         console.log("==========updateInventoryOnhandData=================", inventoryOnHandData);
                         inventoryOnHandData.qtyReserved = inventoryOnHandData.qtyReserved - Math.abs(reqData.qty);
                         inventoryOnHandData.updatedOn = new Date();
-                        inventoryOnHandData.updatedBy = this.sessionInfo.userName;
+                        inventoryOnHandData.updatedBy = this.sessionInfo ? this.sessionInfo.userName : "SYSTEM";
                         return [4 /*yield*/, this.inventoryOnhandDAO.save(inventoryOnHandData)];
                     case 2:
                         _a.sent();

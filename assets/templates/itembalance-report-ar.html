@@ -175,6 +175,44 @@
     <table class="dash" width="100%" cellpadding="0" cellspacing="0">
         <thead>
             <tr>
+                <th>بند</th>
+                <th>بحجم</th>
+                <th>اللون</th>
+                <th>دفعة</th>
+                <th>موقعك</th>
+                <!-- <th>Op. Balance</th>
+                <th>Qty In</th>
+                <th>Qty Out</th> -->
+                <th>توازن</th>
+                <!-- <th>%</th>
+                <th>Actual Stock</th> -->
+            </tr>
+        </thead>
+        <tbody>
+            {{#each data}}
+            <tr class="textbold">
+                <td colspan="11">{{this.itemid}} - {{this.WareHouseNameEn}}</td>
+            </tr>
+            <tr>
+                <td class="tdleft">&nbsp;</td>
+                <td class="tdleft">{{this.sizeNameEn}}</td>
+                <td class="tdcenter">{{this.configid}}</td>
+                <td class="tdcenter">{{this.batchno}}</td>
+                <th>{{this.location}}</th>
+                <!-- <th>Op. Balance</th>
+                <th>Qty In</th>
+                <th>Qty Out</th> -->
+                <td class="tdright">{{this.availability}}</td>
+                <!-- <th>%</th>
+                <th>Actual Stock</th> -->               
+            </tr>
+            {{/each}}
+            <tr class="textbold">
+                <td colspan="11">&nbsp;</td>
+            </tr>
+        </tbody>
+        <!-- <thead>
+            <tr>
                 <th>الرقم التسلسلي</th>
                 <th>المستودع</th>
                 <th>المنتج</th>
@@ -203,7 +241,7 @@
             <tr class="textbold">
                 <td colspan="9">&nbsp;</td>
             </tr>
-        </tbody>
+        </tbody> -->
     </table>
 </body>
 

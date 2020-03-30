@@ -143,10 +143,10 @@ var InventtransService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.getSelectedBatches(params)];
                     case 1:
                         data = _a.sent();
+                        console.log(data);
                         result = this.groupBy(data, function (item) {
                             return [item.itemid, item.batchno, item.configid, item.inventsizeid, item.isItemFree, item.colorantId];
                         });
-                        console.log(result);
                         new_data_1 = [];
                         result.forEach(function (groupitem) {
                             var qty = groupitem.reduce(function (res, item) { return res + parseInt(item.qty); }, 0);

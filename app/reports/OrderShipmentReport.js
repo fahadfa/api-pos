@@ -115,6 +115,10 @@ var OrderShipmentReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 // console.log(result.salesLine[0].product.nameEnglish);
                 renderData = result;
+                renderData.printDate = new Date(params.printDate)
+                    .toISOString()
+                    .replace(/T/, " ")
+                    .replace(/\..+/, "");
                 console.log(params.lang);
                 file = params.lang == "en" ? "os-en" : "os-ar";
                 try {

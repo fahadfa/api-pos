@@ -175,10 +175,12 @@
     <table class="dash" width="100%" cellpadding="0" cellspacing="0">
         <thead>
             <tr>
-                <th>Transaction ID</th>
-                <th>Colorant</th>
+                <th>Sales ID</th>
+                <th>Color</th>
                 <th>Size</th>
-                <th>Colorant Price</th>
+                <th>Batch</th>
+                <!-- <th>Location</th> -->
+                <th>Sales Price</th>
                 <th>Quantity</th>
                 <th>Total Amount</th>
             </tr>
@@ -189,13 +191,15 @@
                 <td>{{ this.salesId }}</td>
                 <td>{{ this.colorant }}</td>
                 <td>{{ this.inventsizeid }}</td>
+                <td>{{ this.batchno }}</td>
+                <!-- <td>{{ this.wareHouseNameEn }}</td> -->
                 <td class="tdright">{{ this.price }}</td>
                 <td class="tdright">{{ this.quantity }}</td>
                 <td class="tdright">{{ this.totalAmount }}</td>
             </tr>
             {{/each}}
             <tr class="textbold">
-                <td class="tdright" colspan="4">Total</td>
+                <td class="tdright" colspan="5">Total</td>
                 <td class="tdright">{{ totalQuantity }}</td>
                 <td class="tdright">{{ totalAmount }}</td>
             </tr>

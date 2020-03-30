@@ -29,6 +29,7 @@
         padding: 0px;
         font-weight: normal !important;
     }
+    h2, h4{margin:0px; padding: 0px;}
 
     table {
         page-break-inside: auto;
@@ -121,10 +122,40 @@
         <p id="bg__text__watermark">Only for testing</p>
     </div>
 
-    <div class="mainheading">Account Statement</div>
+    <!-- <div class="mainheading">Account Statement</div> -->
 
-    <table id="headertbl" width="98%">
+    <table id="headertbl" width="98%" border="0">
         <tr>
+            <td width="20%">&nbsp;</td>
+            <td width="50%" class="tdcenter">
+                <h2>Ledger Account: </h2>
+            </td>
+        </tr>
+        <tr>
+            <td width="20%">&nbsp;</td>
+            <td width="50%" class="tdcenter"><h4>Account Statement</h4></td>
+            <td width="30%" class="tdright">
+                {{#if printDate}}
+                    Print Date: {{printDate}}
+                {{/if}}
+            </td>
+        </tr>
+        <tr>
+            <td width="20%">&nbsp;</td>
+            <td width="50%" class="tdcenter">
+                <table align="center">                    
+                    {{#if fromDate}}
+                    <tr>
+                        <td>{{fromDate}}</td>
+                        <td>To</td>
+                        <td>{{toDate}}</td>
+                    </tr>
+                    {{/if}}                    
+                </table>
+            </td>
+        </tr>
+        
+        <!-- <tr>
             <td valign="top" style="width:50%">
                 <table align="left">
                     {{#if ledgerAccount}}
@@ -174,14 +205,14 @@
                     {{/if}}
                 </table>
             </td>
-        </tr>
+        </tr> -->
     </table>
     <table class="dash" width="100%" cellpadding="0" cellspacing="0">
         <thead>
             <tr>
                 <th>Journal Date</th>
                 <th>Journal Number</th>
-                <th class='th'>Account Name</th>
+                <!-- <th class='th'>Account Name</th> -->
                 <th>Transaction Text</th>
                 <th>Amount</th>
                 <th>Accumulated</th>
@@ -192,8 +223,8 @@
             <tr>
                 <td class="tdcenter">{{ this.journalDate }}</td>
                 <td class="td">{{ this.journalNum }}</td>
-                <td class="tdcenter">{{this.nameEn}}</td>
-                <td class="tdcenter">{{ this.transactionText }}</td>
+                <!-- <td class="tdcenter">{{this.nameEn}}</td> -->
+                <td class="tdleft">{{ this.transactionText }}</td>
                 <td class="tdright">{{ this.amount }}</td>
                 <td class="tdright">{{ this.accumulated }}</td>
             </tr>

@@ -11,10 +11,12 @@ var Props = /** @class */ (function () {
     Props.REDEEM_CLIENT_SECRET = "N7ef3rqHvY6rvJM";
     Props.REDEEM_URL = "http://pos.al-jazeerapaints.com:200/api/Authenticate";
     Props.AXAPTA_URL = "http://pos.al-jazeerapaints.com:200/api/";
-    Props.DAY = 'day';
-    Props.WEEK = 'week';
-    Props.MONTH = 'month';
-    Props.YEAR = 'year';
+    //public static ECOMMERCE_PAYMENT_URL = "https://qa.jazeerapaints.com/jpos_orders/";
+    Props.ECOMMERCE_PAYMENT_URL = "https://pre-prod.jazeerapaints.com/jpos_orders/";
+    Props.DAY = "day";
+    Props.WEEK = "week";
+    Props.MONTH = "month";
+    Props.YEAR = "year";
     Props.TOKEN_MESSAGE = "PLEASE_ENTER_THE_TOKEN";
     Props.SAVED_SUCCESSFULLY = "SAVED_SUCCESSFULLY";
     Props.REQUESTED_SUCCESSFULLY = "REQUESTED";
@@ -145,8 +147,16 @@ var Props = /** @class */ (function () {
         PENDINGDSNRAPPROVAL: ["PENDINGDSNRAPPROVAL", "Pending for Designer approval", "بانتظار موافقة مهندس التصميم"],
         APPROVEDBYDSNR: ["APPROVEDBYDSNR", "Approved by Designer", "تمت موافقة مهندس التصميم"],
         REJECTEDBYDSNR: ["REJECTEDBYDSNR", "Rejected by Designer", "مرفوضة من قبل مهندس التصميم"],
-        PENDINGRMAPPROVAL: ["PENDINGRMAPPROVAL", "Pending for Regional Manager approval", "بانتظار موافقة مدير مبيعات المنطقة"],
-        PENDINGRAAPPROVAL: ["PENDINGRAAPPROVAL", "Pending for Regional Accountant approval", "بانتظار موافقة محاسب المنطقة"],
+        PENDINGRMAPPROVAL: [
+            "PENDINGRMAPPROVAL",
+            "Pending for Regional Manager approval",
+            "بانتظار موافقة مدير مبيعات المنطقة"
+        ],
+        PENDINGRAAPPROVAL: [
+            "PENDINGRAAPPROVAL",
+            "Pending for Regional Accountant approval",
+            "بانتظار موافقة محاسب المنطقة"
+        ],
         REJECTEDBYRM: ["REJECTEDBYRM", "Rejected by Regional Manager", "تم رفضها من قبل مدير مبيعات المنطقة"],
         APPROVEDBYRA: ["APPROVEDBYRA", "Approved by Regional Accountant", "تمت الموافقة من قبل محاسب المنطقة"],
         APPROVEDBYRM: ["APPROVEDBYRM", "Approved by Regional Manager", "تمت الموافقة من قبل مدير المنطقة"],

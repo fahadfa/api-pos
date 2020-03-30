@@ -184,8 +184,42 @@ var SalesTableController = /** @class */ (function () {
                 }
             });
         }); });
+        this.router.get("/search/customersreferedbypaniter", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
+            var params, id, result, reqData, error_5;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 5, , 6]);
+                        params = request.params;
+                        id = params.id;
+                        // const id: any = request.params.id;
+                        this.service.sessionInfo = request.body.sessionInfo;
+                        result = null;
+                        reqData = request.query ? request.query : {};
+                        App_1.App.PrintLog(this.constructor.name, "Search", this.service.sessionInfo);
+                        console.log(reqData);
+                        return [4 /*yield*/, App_1.App.ValildateUserAccess(this.service.sessionInfo, this.componentName, Props_1.Props.ACCESS_READ)];
+                    case 1:
+                        if (!_a.sent()) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.service.searchPainters(reqData)];
+                    case 2:
+                        result = _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3: throw this.service.sessionInfo ? this.service.sessionInfo : { message: Props_1.Props.TOKEN_MESSAGE };
+                    case 4:
+                        response.send({ status: 1, data: result });
+                        return [3 /*break*/, 6];
+                    case 5:
+                        error_5 = _a.sent();
+                        console.log(error_5);
+                        response.send({ status: 0, error: error_5 });
+                        return [3 /*break*/, 6];
+                    case 6: return [2 /*return*/];
+                }
+            });
+        }); });
         this.router.post("/paginate/:id", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
-            var params, result, id, reqData, error_5;
+            var params, result, id, reqData, error_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -236,16 +270,16 @@ var SalesTableController = /** @class */ (function () {
                         response.send({ status: 1, data: result });
                         return [3 /*break*/, 6];
                     case 5:
-                        error_5 = _a.sent();
-                        console.log(error_5);
-                        response.send({ status: 0, error: error_5 });
+                        error_6 = _a.sent();
+                        console.log(error_6);
+                        response.send({ status: 0, error: error_6 });
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
                 }
             });
         }); });
         this.router.put("/", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
-            var reqData, result, error_6;
+            var reqData, result, error_7;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -255,9 +289,11 @@ var SalesTableController = /** @class */ (function () {
                         this.service.sessionInfo = request.body.sessionInfo;
                         App_1.App.PrintLog(this.moduleName(), "Save", this.service.sessionInfo);
                         reqData = request.body ? request.body.data : {};
+                        console.log("=============================sales order");
                         return [4 /*yield*/, App_1.App.ValildateUserAccess(this.service.sessionInfo, this.moduleName(), Props_1.Props.ACCESS_WRITE)];
                     case 1:
                         if (!_a.sent()) return [3 /*break*/, 3];
+                        reqData.authToken = request.headers["authorization"];
                         return [4 /*yield*/, this.service.save(reqData)];
                     case 2:
                         result = _a.sent();
@@ -267,16 +303,16 @@ var SalesTableController = /** @class */ (function () {
                         response.send({ status: 1, data: result });
                         return [3 /*break*/, 6];
                     case 5:
-                        error_6 = _a.sent();
-                        console.log(error_6);
-                        response.send({ status: 0, error: error_6 });
+                        error_7 = _a.sent();
+                        console.log(error_7);
+                        response.send({ status: 0, error: error_7 });
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
                 }
             });
         }); });
         this.router.put("/returnorder", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
-            var reqData, result, error_7;
+            var reqData, result, error_8;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -298,16 +334,16 @@ var SalesTableController = /** @class */ (function () {
                         response.send({ status: 1, data: result });
                         return [3 /*break*/, 6];
                     case 5:
-                        error_7 = _a.sent();
-                        console.log(error_7);
-                        response.send({ status: 0, error: error_7 });
+                        error_8 = _a.sent();
+                        console.log(error_8);
+                        response.send({ status: 0, error: error_8 });
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
                 }
             });
         }); });
         this.router.put("/converttosalesorder", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
-            var reqData, result, error_8;
+            var reqData, result, error_9;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -329,16 +365,16 @@ var SalesTableController = /** @class */ (function () {
                         response.send({ status: 1, data: result });
                         return [3 /*break*/, 6];
                     case 5:
-                        error_8 = _a.sent();
-                        console.log(error_8);
-                        response.send({ status: 0, error: error_8 });
+                        error_9 = _a.sent();
+                        console.log(error_9);
+                        response.send({ status: 0, error: error_9 });
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
                 }
             });
         }); });
         this.router.put("/convertpurchaseordertosalesorder", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
-            var reqData, result, error_9;
+            var reqData, result, error_10;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -360,16 +396,16 @@ var SalesTableController = /** @class */ (function () {
                         response.send({ status: 1, data: result });
                         return [3 /*break*/, 6];
                     case 5:
-                        error_9 = _a.sent();
-                        console.log(error_9);
-                        response.send({ status: 0, error: error_9 });
+                        error_10 = _a.sent();
+                        console.log(error_10);
+                        response.send({ status: 0, error: error_10 });
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
                 }
             });
         }); });
         this.router.put("/convertpurchasereturntoreturnorder", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
-            var reqData, result, error_10;
+            var reqData, result, error_11;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -391,16 +427,16 @@ var SalesTableController = /** @class */ (function () {
                         response.send({ status: 1, data: result });
                         return [3 /*break*/, 6];
                     case 5:
-                        error_10 = _a.sent();
-                        console.log(error_10);
-                        response.send({ status: 0, error: error_10 });
+                        error_11 = _a.sent();
+                        console.log(error_11);
+                        response.send({ status: 0, error: error_11 });
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
                 }
             });
         }); });
         this.router.put("/converttopurchaseorder", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
-            var reqData, result, error_11;
+            var reqData, result, error_12;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -422,16 +458,16 @@ var SalesTableController = /** @class */ (function () {
                         response.send({ status: 1, data: result });
                         return [3 /*break*/, 6];
                     case 5:
-                        error_11 = _a.sent();
-                        console.log(error_11);
-                        response.send({ status: 0, error: error_11 });
+                        error_12 = _a.sent();
+                        console.log(error_12);
+                        response.send({ status: 0, error: error_12 });
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
                 }
             });
         }); });
         this.router.post("/requestfortransfororder", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
-            var reqData, result, error_12;
+            var reqData, result, error_13;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -453,16 +489,16 @@ var SalesTableController = /** @class */ (function () {
                         response.send({ status: 1, data: result });
                         return [3 /*break*/, 6];
                     case 5:
-                        error_12 = _a.sent();
-                        console.log(error_12);
-                        response.send({ status: 0, error: error_12 });
+                        error_13 = _a.sent();
+                        console.log(error_13);
+                        response.send({ status: 0, error: error_13 });
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
                 }
             });
         }); });
         this.router.post("/rejecttransferorder", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
-            var reqData, result, error_13;
+            var reqData, result, error_14;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -484,16 +520,16 @@ var SalesTableController = /** @class */ (function () {
                         response.send({ status: 1, data: result });
                         return [3 /*break*/, 6];
                     case 5:
-                        error_13 = _a.sent();
-                        console.log(error_13);
-                        response.send({ status: 0, error: error_13 });
+                        error_14 = _a.sent();
+                        console.log(error_14);
+                        response.send({ status: 0, error: error_14 });
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
                 }
             });
         }); });
         this.router.delete("/unreserve/:id", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
-            var reqData, result, params, id, error_14;
+            var reqData, result, params, id, error_15;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -518,9 +554,9 @@ var SalesTableController = /** @class */ (function () {
                         response.send({ status: 1, data: result });
                         return [3 /*break*/, 6];
                     case 5:
-                        error_14 = _a.sent();
-                        console.log(error_14);
-                        response.send({ status: 0, error: error_14 });
+                        error_15 = _a.sent();
+                        console.log(error_15);
+                        response.send({ status: 0, error: error_15 });
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
                 }

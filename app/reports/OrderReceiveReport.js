@@ -57,7 +57,7 @@ var OrderReceiveReport = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 5, , 6]);
                         id = params.salesId;
-                        query = "\n            select \n            st.salesid as \"salesId\",\n            st.custaccount as \"custAccount\",\n            st.status as status,\n            st.transkind as transkind,\n            st.vatamount as vatamount,\n            st.netamount as \"netAmount\",\n            st.disc as disc,\n            amount as amount,\n            to_char(st.createddatetime, 'DD-MM-YYYY') as createddatetime,\n            st.originalprinted as \"originalPrinted\",\n            st.inventlocationid as \"inventLocationId\",\n            fw.namealias as fwnamealias,\n            fw.name as fwname,\n            tw.namealias as twnamealias,\n            tw.name as twname,\n            st.intercompanyoriginalsalesid as \"interCompanyOriginalSalesId\",\n            (select intercompanyoriginalsalesid from salestable where salesid = st.intercompanyoriginalsalesid limit 1) as transferid\n            from salestable st \n            left join inventlocation fw on fw.inventlocationid = st.custaccount\n            left join inventlocation tw on tw.inventlocationid = st.inventlocationid\n            where salesid='" + id + "'\n            ";
+                        query = "\n            select \n            st.salesid as \"salesId\",\n            st.custaccount as \"custAccount\",\n            st.status as status,\n            st.transkind as transkind,\n            als.en as \"statusEn\",\n            als.ar as \"statusAr\",\n            alt.en as \"transkindEn\",\n            alt.ar as \"transkindAr\",\n            st.vatamount as vatamount,\n            st.netamount as \"netAmount\",\n            st.disc as disc,\n            amount as amount,\n            to_char(st.createddatetime, 'DD-MM-YYYY') as createddatetime,\n            st.originalprinted as \"originalPrinted\",\n            st.inventlocationid as \"inventLocationId\",\n            fw.namealias as fwnamealias,\n            fw.name as fwname,\n            tw.namealias as twnamealias,\n            tw.name as twname,\n            st.intercompanyoriginalsalesid as \"interCompanyOriginalSalesId\",\n            (select intercompanyoriginalsalesid from salestable where salesid = st.intercompanyoriginalsalesid limit 1) as transferid\n            from salestable st \n            left join inventlocation fw on fw.inventlocationid = st.custaccount\n            left join inventlocation tw on tw.inventlocationid = st.inventlocationid\n            left join app_lang als on als.id = st.status\n            left join app_lang alt on alt.id = st.transkind\n            where salesid='" + id + "'\n            ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data_1 = _a.sent();
@@ -130,6 +130,10 @@ var OrderReceiveReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 // console.log(result.salesLine[0].product.nameEnglish);
                 renderData = result;
+                renderData.printDate = new Date(params.printDate)
+                    .toISOString()
+                    .replace(/T/, " ")
+                    .replace(/\..+/, "");
                 console.log(params.lang);
                 file = params.lang == "en" ? "or-en" : "or-ar";
                 try {

@@ -49,7 +49,7 @@ var ColorantReport = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 5, , 6]);
                         data = void 0;
-                        query = "\n            select \n                sl.salesid as \"salesId\",\n                sl.colorantid as colorant,\n                sl.base_size_id as basesizeid,\n                sl.colorid,\n                sl.colorantprice  as price,\n                to_char(sl.salesprice,  'FM999999999.00') as \"salesPrice\",\n                to_char(sl.salesqty, 'FM999999990') as quantity,\n                to_char((sl.salesqty * sl.colorantprice), 'FM999999990.00') as \"totalAmount\",\n                sl.inventsizeid as inventsizeid,\n                sz.description as \"sizeNameEn\",\n                sz.\"name\" as \"sizeNameAr\",\n                w.name as \"wareHouseNameAr\",\n                w.namealias as \"wareHouseNameEn\"\n                from salesline sl\n                left join inventlocation w on w.inventlocationid=sl.inventlocationid\n                left join inventsize sz on sz.inventsizeid = sl.inventsizeid and sz.itemid = sl.itemid \n                left join salestable st on st.salesid = sl.salesid\n                where sl.createddatetime >= '" + params.fromDate + "' ::date\n                and  sl.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval)\n                and st.transkind != 'SALESQUOTATION' AND st.transkind != 'TRANSFERORDER' and (st.status = 'POSTED' or st.status = 'PAID') AND sl.colorantprice > 0\n           ";
+                        query = "\n            select \n                sl.salesid as \"salesId\",\n                sl.colorantid as colorant,\n                sl.base_size_id as basesizeid,\n                sl.colorid,\n                sl.colorantprice  as price,\n                to_char(sl.salesprice,  'FM999999999.00') as \"salesPrice\",\n                to_char(sl.salesqty, 'FM999999990') as quantity,\n                to_char((sl.salesqty * sl.colorantprice), 'FM999999990.00') as \"totalAmount\",\n                sl.inventsizeid as inventsizeid,\n                sz.description as \"sizeNameEn\",\n                sz.\"name\" as \"sizeNameAr\",\n                w.name as \"wareHouseNameAr\",\n                w.namealias as \"wareHouseNameEn\",\n                i.batchno as batchno\n                from salesline sl\n                left join inventlocation w on w.inventlocationid=sl.inventlocationid\n                left join inventtrans i on i.invoiceid=sl.salesid \n                left join inventsize sz on sz.inventsizeid = sl.inventsizeid and sz.itemid = sl.itemid \n                left join salestable st on st.salesid = sl.salesid\n                where sl.createddatetime >= '" + params.fromDate + "' ::date\n                and  sl.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval)\n                and st.transkind != 'SALESQUOTATION' AND st.transkind != 'TRANSFERORDER' and (st.status = 'POSTED' or st.status = 'PAID') AND sl.colorantprice > 0\n           ";
                         if (params.inventlocationid != "ALL") {
                             query += "  and sl.inventlocationid = '" + params.inventlocationid + "' ";
                         }
@@ -129,6 +129,10 @@ var ColorantReport = /** @class */ (function () {
                         warehouse = _a.sent();
                         result.warehouseNameEn = warehouse.namealias;
                         result.warehouseNameAr = warehouse.name;
+                        result.printDate = new Date(params.printDate)
+                            .toISOString()
+                            .replace(/T/, " ")
+                            .replace(/\..+/, "");
                         if (params.type == "excel") {
                             file = params.lang == "en" ? "colorant-excel" : "colorant-excel-ar";
                         }

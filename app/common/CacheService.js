@@ -87,19 +87,22 @@ var CacheService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 4, , 5]);
-                        return [4 /*yield*/, CacheService.Cache("app_lang")];
+                        param == "Reload";
+                        _a.label = 1;
                     case 1:
+                        _a.trys.push([1, 5, , 6]);
+                        return [4 /*yield*/, CacheService.Cache("app_lang")];
+                    case 2:
                         cacheData = _a.sent();
                         length_1 = cacheData ? cacheData.length : -1;
                         if (param == "Reload") {
                             CacheService.Cache("app_lang", []);
                             length_1 = -1;
                         }
-                        if (!(length_1 == -1)) return [3 /*break*/, 3];
+                        if (!(length_1 == -1)) return [3 /*break*/, 4];
                         query = "select id, en, ar from app_lang order by id asc";
                         return [4 /*yield*/, this.db.query(query)];
-                    case 2:
+                    case 3:
                         data = _a.sent();
                         returnData_1 = {};
                         obj = void 0;
@@ -107,12 +110,12 @@ var CacheService = /** @class */ (function () {
                             returnData_1[element.id] = { en: element.en, ar: element.ar };
                         });
                         CacheService.Cache("app_lang", returnData_1);
-                        _a.label = 3;
-                    case 3: return [2 /*return*/, CacheService.Cache("app_lang")];
-                    case 4:
+                        _a.label = 4;
+                    case 4: return [2 /*return*/, CacheService.Cache("app_lang")];
+                    case 5:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 5: return [2 /*return*/];
+                    case 6: return [2 /*return*/];
                 }
             });
         });

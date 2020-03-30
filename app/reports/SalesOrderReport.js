@@ -57,7 +57,7 @@ var SalesOrderReport = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 4, , 5]);
                         id = params.salesId;
-                        query = "\n            select \n            st.salesid as \"salesId\",\n            st.custaccount as \"custAccount\",\n            st.status as status,\n            st.transkind as transkind,\n            st.salesname as customername,\n            st.mobileno as custmobilenumber,\n            to_char(st.vatamount, 'FM999999999990.00')  as vatamount,\n            to_char(st.netamount, 'FM999999999990.00')  as \"netAmount\",\n            to_char(st.disc, 'FM999999999990.00')  as disc,\n            to_char(st.amount , 'FM999999999990.00') as amount,\n            st.salesname as cname,\n            st.salesname as \"cnamealias\",\n            st.voucherdiscchecked as \"voucherdiscchecked\",\n            st.vouchernum as \"vouchernum\",\n            p.description as \"paymentType\",\n            c.phone as \"cphone\",\n            to_char(st.createddatetime, 'DD-MM-YYYY') as createddatetime,\n            to_char(st.lastmodifieddate, 'DD-MM-YYYY') as lastmodifieddate,\n            st.originalprinted as \"originalPrinted\",\n            st.inventlocationid as \"inventLocationId\",\n            w.namealias as wnamealias,\n            w.name as wname,\n            st.createdby,\n            coalesce(st.deliveryaddress, ' ') || (' ') || coalesce(st.citycode, ' ') || (' ') || coalesce(st.districtcode, ' ') || (' ') || coalesce(st.country_code, ' ') as deliveryaddress,\n            d.description as salesman,\n            to_char(st.deliverydate, 'DD-MM-YYYY') as \"deliveryDate\"\n            from salestable st \n            left join inventlocation w on w.inventlocationid = st.inventlocationid\n            left join custtable c on c.accountnum = st.custaccount\n            left join dimensions d on d.num = st.dimension6_\n            left join paymterm p on p.paymtermid = st.payment\n            where salesid='" + id + "'\n            ";
+                        query = "\n            select \n            st.salesid as \"salesId\",\n            st.custaccount as \"custAccount\",\n            st.status as status,\n            st.transkind as transkind,\n            st.salesname as customername,\n            st.mobileno as custmobilenumber,\n            to_char(st.vatamount, 'FM999999999990.00')  as vatamount,\n            to_char(st.netamount, 'FM999999999990.00')  as \"netAmount\",\n            to_char(st.disc, 'FM999999999990.00')  as disc,\n            to_char(st.amount , 'FM999999999990.00') as amount,\n            to_char(st.shipping_amount, 'FM999999999990.00') as \"shippingAmount\",\n            st.salesname as cname,\n            st.salesname as \"cnamealias\",\n            st.voucherdiscchecked as \"voucherdiscchecked\",\n            st.vouchernum as \"vouchernum\",\n            st.payment_type as \"paymentType\",\n            c.phone as \"cphone\",\n            to_char(st.createddatetime, 'DD-MM-YYYY') as createddatetime,\n            to_char(st.lastmodifieddate, 'DD-MM-YYYY') as lastmodifieddate,\n            st.originalprinted as \"originalPrinted\",\n            st.inventlocationid as \"inventLocationId\",\n            w.namealias as wnamealias,\n            w.name as wname,\n            st.createdby,\n            coalesce(st.deliveryaddress, ' ') || (' ') || coalesce(st.citycode, ' ') || (' ') || coalesce(st.districtcode, ' ') || (' ') || coalesce(st.country_code, ' ') as deliveryaddress,\n            d.description as salesman,\n            to_char(st.deliverydate, 'DD-MM-YYYY') as \"deliveryDate\"\n            from salestable st \n            left join inventlocation w on w.inventlocationid = st.inventlocationid\n            left join custtable c on c.accountnum = st.custaccount\n            left join dimensions d on d.num = st.dimension6_\n            left join paymterm p on p.paymtermid = st.payment\n            where salesid='" + id + "'\n            ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data_1 = _a.sent();
@@ -82,12 +82,14 @@ var SalesOrderReport = /** @class */ (function () {
                         sNo_1 = 1;
                         quantity_1 = 0;
                         list_1.map(function (val) {
+                            val.colorantid = val.colorantid ? val.colorantid : "-";
                             var lines = {
                                 amount: parseFloat(data_1.amount).toFixed(2),
                                 quantity: 0,
                                 netAmount: parseFloat(data_1.netAmount).toFixed(2),
                                 disc: parseFloat(data_1.disc).toFixed(2),
                                 vatamount: parseFloat(data_1.vatAmount).toFixed(2),
+                                shippingamount: parseFloat(data_1.shippingAmount).toFixed(2),
                                 page: 1,
                                 totalPages: list_1.length,
                                 voucherdiscchecked: data_1.voucherdiscchecked,
@@ -114,11 +116,12 @@ var SalesOrderReport = /** @class */ (function () {
                                 isbreak: data_1.isbreak,
                                 vatGrand: data_1.vatamount,
                                 paymentType: data_1.paymentType,
-                                lines: []
+                                lines: [],
                             };
                             data_1.isbreak = val.length > 5 ? true : false;
                             val.map(function (v) {
                                 lines.quantity += parseInt(v.salesQty);
+                                v.colorantid = val.colorantid;
                                 v.sNo = sNo_1;
                                 lines.lines.push(v);
                                 sNo_1 += 1;

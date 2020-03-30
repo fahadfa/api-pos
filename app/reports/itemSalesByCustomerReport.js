@@ -43,29 +43,34 @@ var itemSalesByCustomerReport = /** @class */ (function () {
     }
     itemSalesByCustomerReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, query, warehouseQuery, regionalWarehouses, inQueryStr_1, totalQuantity_1, totalLineAmount_1, price_1, queryCustomer, userData, renderData, error_1;
+            var data, query, warehouseQuery, regionalWarehouses, inQueryStr_1, totalQuantity_1, totalLineAmount_1, colorantPrice_1, price_1, vatAmount_1, totalDisc_1, queryCustomer, userData, renderData, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 6, , 7]);
+                        console.log('================Params===============');
+                        console.log(params);
+                        console.log('================Params===============');
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 7, , 8]);
                         data = void 0;
-                        query = "\n            select \n            i.itemid, \n            i.name, \n            i.nameAlias as \"nameAlias\", \n            i.customername as \"customerName\",\n            to_char(sum(i.quantity), 'FM999,999,999,999D') as \"quantity\", \n            to_char(sum(i.price), 'FM999999999990.00') as price, \n            to_char(sum(i.vatAmount), 'FM999999999990.00') as \"vatAmount\",\n            to_char(sum(i.lineAmount), 'FM999999999990.00') as \"lineAmount\",\n            i.wareHouseNameAr as \"wareHouseNameAr\", i.wareHouseNameEn as \"wareHouseNameEn\",\n            i.sizeNameEn as \"sizeNameEn\", i.sizeNameAr as \"sizeNameAr\",\n            i.nameEn as \"nameEn\", i.nameAr as \"nameAr\", i.configId as \"configId\", i.inventsizeid as \"inventsizeid\"\n            from( select \n            distinct\n            s.inventlocationid as inventlocationid,\n            s.custaccount as custaccount,\n            s.salesname as customername,\n            to_char(s.createddatetime, 'DD-MM-YYYY') as createdDateTime,\n            to_char(s.lastmodifieddate, 'DD-MM-YYYY') as lastModifiedDate,\n            sl.salesqty as quantity,\n            sl.salesprice as price,\n            sl.vatamount as vatAmount,\n            sl.linetotaldisc as totalDisc,\n            sl.itemid as itemid,\n            ((sl.lineamount - linetotaldisc + sl.vatamount)* sl.salesqty) as lineAmount,\n            c.name as name,\n            c.namealias as nameAlias,\n            w.name as wareHouseNameAr,\n            w.namealias as wareHouseNameEn,\n            c.paymmode as paymentMode,\n            sz.description as sizeNameEn,\n            sz.name as sizeNameAr,\n            sz.inventsizeid as inventsizeid,\n            bs.namealias as nameEn,\n            bs.itemname as nameAr,\n            col.configid as configid\n            from salesline sl\n            inner join salestable s on s.salesid = sl.salesid\n            left join inventlocation w on w.inventlocationid=s.inventlocationid\n            left join custtable c on c.accountnum=s.custaccount\n            left join inventtrans i on i.invoiceid=s.salesid\n            left join configtable col on sl.configid = col.configid\n            left join inventsize sz on  sz.itemid = sl.itemid and sz.inventsizeid = sl.inventsizeid\n            left join inventtable bs on bs.itemid = sl.itemid\n            where s.transkind = 'SALESORDER' and s.status in ('PAID', 'POSTED')\n            and s.createddatetime >= '" + params.fromDate + "' ::date\n            AND  s.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval) \n            ";
-                        if (!(params.inventlocationid == "ALL")) return [3 /*break*/, 2];
+                        query = "\n            select \n                i.itemid, \n                i.name, \n                i.nameAlias as \"nameAlias\", \n                i.customername as \"customerName\",\n                i.colorantprice as \"colorantPrice\",\n                to_char(sum(i.quantity), 'FM999,999,999,999D') as \"quantity\", \n                to_char(sum(i.price), 'FM999999999990.00') as price, \n                to_char(sum(i.vatAmount), 'FM999999999990.00') as \"vatAmount\",\n                to_char(sum(i.lineAmount), 'FM999999999990.00') as \"lineAmount\",\n                to_char(sum(i.totalDisc), 'FM999999999990.00') as \"totalDisc\",\n                i.wareHouseNameAr as \"wareHouseNameAr\", i.wareHouseNameEn as \"wareHouseNameEn\",\n                i.sizeNameEn as \"sizeNameEn\", i.sizeNameAr as \"sizeNameAr\",\n                i.nameEn as \"nameEn\", i.nameAr as \"nameAr\", i.configId as \"configId\", i.inventsizeid as \"inventsizeid\"\n            from( select \n                distinct\n                    s.inventlocationid as inventlocationid,\n                    s.custaccount as custaccount,\n                    s.salesname as customername,\n                    to_char(s.createddatetime, 'DD-MM-YYYY') as createdDateTime,\n                    to_char(s.lastmodifieddate, 'DD-MM-YYYY') as lastModifiedDate,\n                    sl.salesqty as quantity,\n                    sl.salesprice as price,\n                    sl.vatamount as vatAmount,\n                    sl.linetotaldisc as totalDisc,\n                    sl.itemid as itemid,\n                    sl.colorantprice as colorantprice,\n                    ((sl.lineamount - sl.linetotaldisc * sl.salesqty) + (sl.colorantprice * sl.salesqty) + sl.vatamount ) as lineAmount,\n                    c.name as name,\n                    c.namealias as nameAlias,\n                    w.name as wareHouseNameAr,\n                    w.namealias as wareHouseNameEn,\n                    c.paymmode as paymentMode,\n                    sz.description as sizeNameEn,\n                    sz.name as sizeNameAr,\n                    sz.inventsizeid as inventsizeid,\n                    bs.namealias as nameEn,\n                    bs.itemname as nameAr,\n                    col.configid as configid\n                from salesline sl\n                inner join salestable s on s.salesid = sl.salesid\n                left join inventlocation w on w.inventlocationid=s.inventlocationid\n                left join custtable c on c.accountnum=s.custaccount\n                left join inventtrans i on i.invoiceid=s.salesid\n                left join configtable col on sl.configid = col.configid\n                left join inventsize sz on  sz.itemid = sl.itemid and sz.inventsizeid = sl.inventsizeid\n                left join inventtable bs on bs.itemid = sl.itemid\n                where s.transkind = 'SALESORDER' and s.status in ('PAID', 'POSTED')\n                and s.createddatetime >= '" + params.fromDate + "' ::date\n                AND  s.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval) \n            ";
+                        if (!(params.inventlocationid == "ALL")) return [3 /*break*/, 3];
                         warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
                         return [4 /*yield*/, this.db.query(warehouseQuery)];
-                    case 1:
+                    case 2:
                         regionalWarehouses = _a.sent();
                         inQueryStr_1 = "";
-                        regionalWarehouses[0].regionalwarehouse.split(",").map(function (item) {
+                        regionalWarehouses[0].regionalwarehouse.inventtranssplit(",").map(function (item) {
                             inQueryStr_1 += "'" + item + "',";
                         });
                         inQueryStr_1 += "'" + params.key + "',";
                         query += " and i.inventlocationid in (" + inQueryStr_1.substr(0, inQueryStr_1.length - 1) + ") ";
-                        return [3 /*break*/, 3];
-                    case 2:
-                        query += " and i.inventlocationid='" + params.inventlocationid + "' ";
-                        _a.label = 3;
+                        return [3 /*break*/, 4];
                     case 3:
+                        query += " and i.inventlocationid='" + params.inventlocationid + "' ";
+                        _a.label = 4;
+                    case 4:
                         if (params.configid) {
                             query += " and  sl.configid = '" + params.configid + "' ";
                         }
@@ -84,21 +89,27 @@ var itemSalesByCustomerReport = /** @class */ (function () {
                         if (params.inventsizeid) {
                             query += " and  i.inventsizeid = '" + params.inventsizeid + "' ";
                         }
-                        query += ") as i \n            group by i.name, i.nameAlias, i.wareHouseNameAr , \n           i.wareHouseNameEn , i.sizeNameEn, i.sizeNameAr , i.customerName,\n           i.nameEn , i.nameAr , i.configId, i.itemid, i.inventsizeid ";
+                        query += ") as i \n            group by i.name, i.nameAlias, i.wareHouseNameAr , \n           i.wareHouseNameEn , i.sizeNameEn, i.sizeNameAr , i.customerName,\n           i.nameEn , i.nameAr , i.configId, i.itemid, i.inventsizeid, i.colorantprice ";
                         return [4 /*yield*/, this.db.query(query)];
-                    case 4:
+                    case 5:
                         data = _a.sent();
                         totalQuantity_1 = 0;
                         totalLineAmount_1 = 0;
+                        colorantPrice_1 = 0;
                         price_1 = 0;
+                        vatAmount_1 = 0;
+                        totalDisc_1 = 0;
                         data.forEach(function (v) {
                             totalQuantity_1 += v.quantity ? parseInt(v.quantity) : 0;
                             totalLineAmount_1 += v.lineAmount ? parseFloat(v.lineAmount) : 0;
+                            colorantPrice_1 += v.colorantPrice ? parseFloat(v.colorantPrice) : 0;
                             price_1 += v.price ? parseFloat(v.price) : 0;
+                            vatAmount_1 += v.vatAmount ? parseFloat(v.vatAmount) : 0;
+                            totalDisc_1 += v.totalDisc ? parseFloat(v.totalDisc) : 0;
                         });
                         queryCustomer = " select namealias as \"nameEn\", name as \"nameAr\" from custtable where accountnum =  '" + params.accountnum + "'";
                         return [4 /*yield*/, this.db.query(queryCustomer)];
-                    case 5:
+                    case 6:
                         userData = _a.sent();
                         console.log(userData);
                         renderData = {
@@ -113,15 +124,18 @@ var itemSalesByCustomerReport = /** @class */ (function () {
                             customerNameAr: params.accountnum ? (userData[0].nameAr) : 'ALL',
                             totalQuantity: totalQuantity_1,
                             totalLineAmount: totalLineAmount_1.toFixed(2),
+                            colorantPrice: colorantPrice_1.toFixed(2),
+                            vatAmount: vatAmount_1.toFixed(2),
+                            totalDisc: totalDisc_1.toFixed(2),
                             user: params.user,
                             price: price_1.toFixed(2)
                         };
                         renderData.data = data;
                         return [2 /*return*/, renderData];
-                    case 6:
+                    case 7:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 7: return [2 /*return*/];
+                    case 8: return [2 /*return*/];
                 }
             });
         });
@@ -145,6 +159,10 @@ var itemSalesByCustomerReport = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var file;
             return __generator(this, function (_a) {
+                result.printDate = new Date(params.printDate)
+                    .toISOString()
+                    .replace(/T/, " ")
+                    .replace(/\..+/, "");
                 // console.log(result.salesLine[0].product.nameEnglish);
                 console.log(result);
                 if (params.type == "excel") {

@@ -176,10 +176,11 @@
     <table class="dash" width="100%" cellpadding="0" cellspacing="0">
         <thead>
             <tr>
-                <th>رقم المعاملة</th>
-                <th>تلوين</th>
+                <th>معرف المبيعات</th>
+                <th>اللون</th>
                 <th>بحجم</th>
-                <th>تلوين السعر</th>
+                <th>دفعة</th>
+                <th>سعر المبيعات</th>
                 <th>كمية</th>
                 <th>المبلغ الإجمالي</th>
             </tr>
@@ -190,13 +191,14 @@
                 <td>{{ this.salesId }}</td>
                 <td class="tdcenter">{{ this.colorant }}</td>
                 <td>{{ this.inventsizeid }}</td>
+                <th>{{ this.batchno }}</th>
                 <td class="tdright">{{ this.price }}</td>
                 <td class="tdright">{{ this.quantity }}</td>
                 <td class="tdright">{{ this.totalAmount }}</td>
             </tr>
             {{/each}}
             <tr class="textbold">
-                <td class="tdleft" colspan="4">مجموع</td>
+                <td class="tdleft" colspan="5">مجموع</td>
                 <td class="tdright">{{ totalQuantity }}</td>
                 <td class="tdright">{{ totalAmount }}</td>
             </tr>

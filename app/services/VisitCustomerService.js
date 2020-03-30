@@ -42,10 +42,12 @@ var Props_1 = require("../../constants/Props");
 var typeorm_1 = require("typeorm");
 var RawQuery_1 = require("../common/RawQuery");
 var UsergroupconfigDAO_1 = require("../repos/UsergroupconfigDAO");
+var SalesTableDAO_1 = require("../repos/SalesTableDAO");
 var VisitCustomerService = /** @class */ (function () {
     function VisitCustomerService() {
         this.db = typeorm_1.getManager();
         this.visitCustomerDAO = new VisitCustomerDAO_1.VisitCustomerDAO();
+        this.salesTableDAO = new SalesTableDAO_1.SalesTableDAO();
         this.visitCustomer = new VisitCustomer_1.VisitCustomer();
         this.rawQuery = new RawQuery_1.RawQuery();
         this.usergroupconfigDAO = new UsergroupconfigDAO_1.UsergroupconfigDAO();
@@ -89,9 +91,28 @@ var VisitCustomerService = /** @class */ (function () {
             });
         });
     };
+    VisitCustomerService.prototype.searchVisitors = function (item) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, error_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.salesTableDAO.searchVisitors(item)];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, data];
+                    case 2:
+                        error_3 = _a.sent();
+                        throw error_3;
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
     VisitCustomerService.prototype.save = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var userGroupConfigData, cond, visitor, error_3;
+            var userGroupConfigData, cond, visitor, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -120,8 +141,8 @@ var VisitCustomerService = /** @class */ (function () {
                         }
                         return [3 /*break*/, 6];
                     case 5:
-                        error_3 = _a.sent();
-                        throw error_3;
+                        error_4 = _a.sent();
+                        throw error_4;
                     case 6: return [2 /*return*/];
                 }
             });
@@ -209,7 +230,7 @@ var VisitCustomerService = /** @class */ (function () {
     };
     VisitCustomerService.prototype.paginate = function (item) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, error_4;
+            var data, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -222,8 +243,8 @@ var VisitCustomerService = /** @class */ (function () {
                         });
                         return [2 /*return*/, { count: data.count, data: data.data }];
                     case 2:
-                        error_4 = _a.sent();
-                        throw error_4;
+                        error_5 = _a.sent();
+                        throw error_5;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -231,7 +252,7 @@ var VisitCustomerService = /** @class */ (function () {
     };
     VisitCustomerService.prototype.mobilepaginate = function (item) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, error_5;
+            var data, error_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -244,8 +265,8 @@ var VisitCustomerService = /** @class */ (function () {
                         });
                         return [2 /*return*/, data];
                     case 2:
-                        error_5 = _a.sent();
-                        throw error_5;
+                        error_6 = _a.sent();
+                        throw error_6;
                     case 3: return [2 /*return*/];
                 }
             });

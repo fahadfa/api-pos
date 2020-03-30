@@ -85,7 +85,10 @@ var AccountStatementReport = /** @class */ (function () {
             var renderData, file;
             return __generator(this, function (_a) {
                 renderData = {
-                    printDate: new Date().toLocaleString(),
+                    printDate: new Date(params.printDate)
+                        .toISOString()
+                        .replace(/T/, " ")
+                        .replace(/\..+/, ""),
                     ledgerAccount: params.ledgerAccount,
                     fromDate: params.fromDate,
                     toDate: params.toDate,

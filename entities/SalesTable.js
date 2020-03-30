@@ -67,7 +67,7 @@ var SalesTable = /** @class */ (function () {
     __decorate([
         typeorm_1.Column({ name: "languageid" }),
         __metadata("design:type", String)
-    ], SalesTable.prototype, "languageId", void 0);
+    ], SalesTable.prototype, "lang", void 0);
     __decorate([
         typeorm_1.Column({ name: "payment" }),
         __metadata("design:type", String)
@@ -388,6 +388,30 @@ var SalesTable = /** @class */ (function () {
         typeorm_1.Column({ name: "jazeerawarehouse" }),
         __metadata("design:type", String)
     ], SalesTable.prototype, "jazeeraWarehouse", void 0);
+    __decorate([
+        typeorm_1.Column({ name: "card_amount" }),
+        __metadata("design:type", Number)
+    ], SalesTable.prototype, "cardAmount", void 0);
+    __decorate([
+        typeorm_1.Column({ name: "cash_amount" }),
+        __metadata("design:type", Number)
+    ], SalesTable.prototype, "cashAmount", void 0);
+    __decorate([
+        typeorm_1.Column({ name: "online_amount" }),
+        __metadata("design:type", Number)
+    ], SalesTable.prototype, "onlineAmount", void 0);
+    __decorate([
+        typeorm_1.Column({ name: "cust_email" }),
+        __metadata("design:type", Number)
+    ], SalesTable.prototype, "custEmail", void 0);
+    __decorate([
+        typeorm_1.Column({ name: "shipping_amount" }),
+        __metadata("design:type", Number)
+    ], SalesTable.prototype, "shippingAmount", void 0);
+    __decorate([
+        typeorm_1.Column({ name: "payment_type" }),
+        __metadata("design:type", String)
+    ], SalesTable.prototype, "paymentType", void 0);
     __decorate([
         typeorm_1.OneToMany(function (type) { return SalesLine_1.SalesLine; }, function (salesLine) { return salesLine.salestable; }),
         __metadata("design:type", Array)

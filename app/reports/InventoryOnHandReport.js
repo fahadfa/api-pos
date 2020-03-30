@@ -68,7 +68,7 @@ var InventoryOnHandReport = /** @class */ (function () {
                         _a.label = 3;
                     case 3:
                         if (params.itemId) {
-                            query = query + (" and i.itemid = '" + params.itemId + "'");
+                            query = query + (" and LOWER(i.itemid) = LOWER('" + params.itemId + "')");
                         }
                         if (params.configId) {
                             query = query + (" and LOWER(i.configid)=LOWER('" + params.configId + "')");
@@ -115,9 +115,12 @@ var InventoryOnHandReport = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var renderData, file;
             return __generator(this, function (_a) {
-                // console.log(result.salesLine[0].product.nameEnglish);
+                console.log(params);
                 renderData = result;
-                console.log(params.lang);
+                renderData.printDate = new Date(params.printDate).toISOString().
+                    replace(/T/, ' '). // replace T with a space
+                    replace(/\..+/, ''),
+                    console.log(params.lang);
                 if (params.type == "excel") {
                     file = params.lang == "en" ? "onhandinventory-excel" : "onhandinventory-excel-ar";
                 }

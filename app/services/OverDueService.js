@@ -109,7 +109,7 @@ var OverDueService = /** @class */ (function () {
                             item.invoicedate = new Date(item.invoicedate).toISOString().substr(0, 10);
                             result.usedCredit += item.invoiceAmount;
                         });
-                        result.availableCredit = result.creditLimit - result.usedCredit;
+                        result.availableCredit = result.creditLimit > 0 ? result.creditLimit - result.usedCredit : 0;
                         result.invoices = overDue;
                         return [2 /*return*/, result];
                 }

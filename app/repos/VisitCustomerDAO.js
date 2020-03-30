@@ -52,6 +52,19 @@ var VisitCustomerDAO = /** @class */ (function () {
             });
         });
     };
+    VisitCustomerDAO.prototype.searchInventLocationId = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "select v.* \n        from visitcustomer v inner join usergroupconfig ucg \n        on v.usergroupid =ucg.usergroupid where ucg.inventlocationid ='" + data.inventlocationid + "'\n        and v.dateofvisit >= current_date - interval '15' day";
+                        return [4 /*yield*/, this.dao.query(query)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
     VisitCustomerDAO.prototype.save = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {

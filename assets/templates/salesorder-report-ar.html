@@ -216,7 +216,7 @@
                     {{/if}}
                   </td>
                 <td class="tdcenter">{{ this.type }}</td>
-                <td class="tdcenter">{{ this.status }}</td>
+                <td class="tdcenter">{{ this.statusAr }}</td>
                 <td class="tdright">{{ this.grossAmount }}</td>
                 <td class="tdright">{{ this.discount }}</td>
                 <td class="tdright">{{ this.vatAmount }}</td>
@@ -224,7 +224,7 @@
             </tr>
             {{/each}}
             <tr class="textbold">
-                <td colspan="6">&nbsp;</td>
+                <td colspan="7">&nbsp;</td>
                 <td class="tdleft">مجموع</td>
                 <td class="tdright">{{ grossAmount }}</td>
                 <td class="tdright">{{ discount }}</td>

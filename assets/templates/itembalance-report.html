@@ -121,7 +121,7 @@
         <p id="bg__text__watermark">Only for testing</p>
     </div>
 
-    <div class="mainheading">Item Balance</div>
+    <div class="mainheading">Item Balance Report</div>
 
     <table id="headertbl" width="98%">
         <tr>
@@ -180,33 +180,51 @@
     <table class="dash" width="100%" cellpadding="0" cellspacing="0">
         <thead>
             <tr>
-                <th>S.No</th>
-                <th>Warehouse</th>
+                <!-- <th>S.No</th> -->
+                <th>Item</th>
+                <th>Size</th>
+                <th>Color</th>
+                <th>Batch</th>
+                <th>Location</th>
+                <!-- <th>Op. Balance</th>
+                <th>Qty In</th>
+                <th>Qty Out</th> -->
+                <th>Balance</th>
+                <!-- <th>%</th>
+                <th>Actual Stock</th> -->
+                <!-- <th>Warehouse</th>
                 <th>Product</th>
                 <th>ItemId</th>
-                <th>Color</th>
-                <th>Size</th>
-                <th>Batch</th>
-                <th>qty</th>
-                <th>Expiry Date</th>
+                <th>Expiry Date</th> -->
             </tr>
         </thead>
         <tbody>
             {{#each data}}
+            <tr class="textbold">
+                <td colspan="11">{{this.itemid}} - {{this.WareHouseNameEn}}</td>
+            </tr>
             <tr>
-                <td class="tdcenter">{{this.sNo}}</td>
-                <td class="tdcenter">{{this.WareHouseNameEn}}</td>
-                <td class="tdcenter">{{this.nameen}}</td>
-                <td class="tdcenter">{{this.itemid}}</td>
+                <!-- <td class="tdcenter">{{this.sNo}}</td> -->
+                <td class="tdleft">&nbsp;</td>
+                <td class="tdleft">{{this.sizeNameEn}}</td>
                 <td class="tdcenter">{{this.configid}}</td>
-                <td class="tdcenter">{{this.sizeNameEn}} </td>
-                <td class="tdcenter">{{this.batchno}} </td>
+                <td class="tdcenter">{{this.batchno}}</td>
+                <th>{{this.location}}</th>
+                <!-- <th>Op. Balance</th>
+                <th>Qty In</th>
+                <th>Qty Out</th> -->
                 <td class="tdright">{{this.availability}}</td>
-                <td>{{this.batchexpdate}}</td>
+                <!-- <th>%</th>
+                <th>Actual Stock</th> -->
+
+                <!-- <td class="tdcenter">{{this.WareHouseNameEn}}</td>
+                <td class="tdcenter">{{this.nameen}}</td>
+                <td class="tdcenter">{{this.itemid}}</td>                
+                <td>{{this.batchexpdate}}</td> -->
             </tr>
             {{/each}}
             <tr class="textbold">
-                <td colspan="9">&nbsp;</td>
+                <td colspan="11">&nbsp;</td>
             </tr>
         </tbody>
     </table>

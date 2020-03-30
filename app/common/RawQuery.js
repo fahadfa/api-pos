@@ -216,7 +216,7 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select distinct\n        i.itemid as itemid,\n        bs.namealias as nameEn,\n        bs.itemname as nameAr,\n        (i.qty_in-i.qty_out-i.qty_reserved) as availabilty,\n        i.configid as configid,\n        i.inventsizeid as inventsizeid,\n        i.batchno as batchno,\n        to_char(b.expdate, 'yyyy-MM-dd') as batchexpdate,\n        sz.description as \"sizeNameEn\",\n        sz.\"name\" as \"sizeNameAr\",\n        i.qty_reserved as \"reservedQuantity\",\n        (i.qty_in-i.qty_out) as \"totalAvailable\"\n        from inventory_onhand as i\n        left join inventbatch b on i.batchno = b.inventbatchid\n        left join inventtable bs on i.itemid = bs.itemid\n        left join inventsize sz on sz.inventsizeid = i.inventsizeid and sz.itemid = i.itemid\n        where i.inventlocationid='" + reqData.inventlocationid + "' and (i.qty_in-i.qty_out)>0 \n        ";
+                        query = "select distinct\n        i.itemid as itemid,\n        bs.namealias as nameEn,\n        bs.itemname as nameAr,\n        (i.qty_in-i.qty_out-i.qty_reserved) as availabilty,\n        i.configid as configid,\n        i.inventsizeid as inventsizeid,\n        i.batchno as batchno,\n        to_char(b.expdate, 'yyyy-MM-dd') as batchexpdate,\n        sz.description as \"sizeNameEn\",\n        sz.\"name\" as \"sizeNameAr\",\n        i.qty_reserved as \"reservedQuantity\",\n        (i.qty_in-i.qty_out) as \"totalAvailable\"\n        from inventory_onhand as i\n        left join inventbatch b on i.batchno = b.inventbatchid and i.itemid = b.itemid\n        left join inventtable bs on i.itemid = bs.itemid\n        left join inventsize sz on sz.inventsizeid = i.inventsizeid and sz.itemid = i.itemid\n        where i.inventlocationid='" + reqData.inventlocationid + "' and (i.qty_in-i.qty_out)>0 \n        ";
                         if (reqData.itemId) {
                             query = query + (" and LOWER(i.itemid) = LOWER('" + reqData.itemId + "')");
                             if (reqData.configid) {
@@ -272,7 +272,7 @@ var RawQuery = /** @class */ (function () {
                             query = "\n                select \n                sl.itemid as itemid,\n                sl.salesid as invoiceid,\n                sl.salesqty as qty,\n                sl.configid as configid,\n                sl.inventsizeid as inventsizeid,\n                dp.name_en as nameEn,\n                dp.name_ar as nameAr\n                from salesline sl \n                left join designer_products dp on dp.code = sl.itemid\n                where salesid= '" + reqData.salesid + "'\n                ";
                         }
                         else {
-                            query = "\n                select \n                distinct\n                i.itemid as itemid,\n                bs.namealias as nameEn,\n                bs.itemname as nameAr,\n                i.qty as qty,\n                i.configid as configid,\n                i.inventsizeid as inventsizeid,\n                i.invoiceid as invoiceid,\n                i.transrefid as transrefid,\n                s.\"name\" as sizenameen,\n                s.description as sizenamear,\n                i.batchno as batchno,\n                b.expdate as batchExpDate,\n                i.sales_line_id as \"salesLineId\",\n                sl.is_item_free  as \"isItemFree\",\n                sl.link_id as \"linkId\",\n                sl.colorantid as \"colorantId\",\n                c.hexcode as hexcode\n            from inventtrans  i\n            left join salesline sl on sl.id = i.sales_line_id\n            left join inventbatch b on i.batchno = b.inventbatchid\n            left join inventtable bs on i.itemid = bs.itemid\n            left join inventsize s on s.inventsizeid = i.inventsizeid and s.itemid = i.itemid\n            left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n             ";
+                            query = "\n                select \n                distinct\n                i.itemid as itemid,\n                bs.namealias as nameEn,\n                bs.itemname as nameAr,\n                i.qty as qty,\n                i.configid as configid,\n                i.inventsizeid as inventsizeid,\n                i.invoiceid as invoiceid,\n                i.transrefid as transrefid,\n                s.\"name\" as sizenameen,\n                s.description as sizenamear,\n                i.batchno as batchno,\n                b.expdate as batchExpDate,\n                i.sales_line_id as \"salesLineId\",\n                sl.is_item_free  as \"isItemFree\",\n                sl.link_id as \"linkId\",\n                sl.colorantid as \"colorantId\",\n                c.hexcode as hexcode\n            from inventtrans  i\n            left join salesline sl on sl.id = i.sales_line_id\n            left join inventbatch b on i.batchno = b.inventbatchid and b.itemid = i.itemid and b.configid = i.configid\n            left join inventtable bs on i.itemid = bs.itemid\n            left join inventsize s on s.inventsizeid = i.inventsizeid and s.itemid = i.itemid\n            left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n             ";
                             if (reqData.salesid) {
                                 if (reqData.type == "RETURNORDER" ||
                                     reqData.type == "INVENTORYMOVEMENT" ||
@@ -791,7 +791,7 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select\n        sum(i.qty) as availabilty\n        from inventtrans  i\n        where i.inventlocationid='" + data.inventlocationid + "' and transactionclosed = true \n        and i.itemid = '" + data.itemid + "' and i.configid='" + data.configid + "' and \n        i.inventsizeid='" + data.inventsizeid + "' and i.batchno = '" + data.batchno + "'\n        GROUP BY i.itemid,  i.configid, i.inventsizeid, i.batchno\n        ";
+                        query = "select\n        sum(i.qty_in-i.qty_out-i.qty_reserved) as availabilty\n        from inventory_onhand  i\n        where i.inventlocationid='" + data.inventlocationid + "'\n        and i.itemid = '" + data.itemid + "' and i.configid='" + data.configid + "' and \n        i.inventsizeid='" + data.inventsizeid + "' and i.batchno = '" + data.batchno + "'\n        GROUP BY i.itemid,  i.configid, i.inventsizeid, i.batchno\n        ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         result = _a.sent();
@@ -1116,6 +1116,36 @@ var RawQuery = /** @class */ (function () {
                         query = "select itemid, configid, inventsizeid,  sum(qty_in-qty_out-qty_reserved) as qty from inventory_onhand  \n    where lower(itemid) in (" + items + ")\n    and lower(configid) in (" + colors + ")\n    and lower(inventsizeid) in (" + sizes + ")\n    and inventlocationid = '" + inventlocationid + "'\n    group by itemid, configid, inventsizeid ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    RawQuery.prototype.getSalesToken = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "select auth_token as \"authToken\" from salesorder_tokens where order_id = '" + id + "'";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, data.length > 0 ? data[0] : {}];
+                }
+            });
+        });
+    };
+    RawQuery.prototype.checkSalesStatus = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "select status from salestable where salesid = '" + id + "'";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, data.length > 0 ? data[0] : {}];
                 }
             });
         });

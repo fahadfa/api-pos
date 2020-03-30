@@ -402,6 +402,7 @@
                 <th class="th">تاريخ الشحن</th>
                 <th class="th">الكمية</th>
                 <th class="th">السعر</th>
+                <th class="th">تلوين</th>
                 <th class="th">سعر اللون</th>
                 <th class="th">الخصم</th>
                 <th class="th">الاجمالي</th>
@@ -452,6 +453,9 @@
                     {{this.salesprice}}
                 </td>
                 <td class="tdright">
+                    {{this.colorantid}}
+                </td>
+                <td class="tdright">
                     {{this.colorantprice}}
                 </td>
                 <td class="tdright">
@@ -485,7 +489,13 @@
             </td>
         </tr>
         <tr class="tdright">
-            <td rowspan="3">&nbsp;</td>
+            <td rowspan="4">&nbsp;</td>
+            <td colspan="2" class="tdleft">رسوم الشحن</td>
+            <td>
+              {{this.shippingamount}}
+            </td>
+          </tr>  
+        <tr class="tdright">
             <td colspan="2" class="tdleft">الخصم</td>
             <td>
                 {{this.disc}}

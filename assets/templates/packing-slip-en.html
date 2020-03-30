@@ -266,9 +266,9 @@
                   </table>
                 </td>
                 <td style="width:30%;" align="center">
-                  <!-- {{#if originalPrinted}} -->
-                  <!-- <span class="copy-text">COPY</span> -->
-                  <!-- {{/if}}  -->
+                  {{#if originalPrinted}}
+                  <span class="copy-text">COPY</span>
+                  {{/if}} 
                   <br>
                   <table style="text-align:center;border:1px dotted #ccc">
 
@@ -317,6 +317,8 @@
                 <th class="th">Item Name</th>
                 <th class="th">Color</th>
                 <th class="th">Size</th>
+                <th class="th">Batch</th>
+                <th class="th">Colorant</th>
                 <th class="th">Qty</th>
 
               </tr>
@@ -345,6 +347,16 @@
 
                   {{this.inventsizeid}}
                 </td>
+
+                <td class="td">
+
+                  {{this.batchno}}
+                </td>
+                <td class="td">
+
+                  {{this.colorantid}}
+                </td>
+
                 <td class="td">
 
                   {{this.salesQty}}

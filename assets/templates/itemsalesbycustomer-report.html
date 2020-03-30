@@ -194,6 +194,9 @@
                 <th>Size</th>
                 <th>Quantity</th>
                 <th>Price</th>
+                <th>Discount</th>
+                <th>Colorant Price</th>
+                <th>Vat Amount</th>
                 <th>Line Amount</th>
             </tr>
         </thead>
@@ -205,6 +208,9 @@
                 <td class="tdcenter">{{ this.inventsizeid }}</td>
                 <td class="tdright">{{ this.quantity }}</td>
                 <td class="tdright">{{ this.price }}</td>
+                <td class="tdright">{{ this.totalDisc }}</td>
+                <td class="tdright">{{ this.colorantPrice }}</td>                
+                <td class="tdright">{{ this.vatAmount }}</td>
                 <td class="tdright">{{ this.lineAmount }}</td>
             </tr>
             {{/each}}
@@ -212,6 +218,9 @@
                 <td class="tdright" colspan="3">Total</td>
                 <td class="tdright">{{ totalQuantity }}</td>
                 <td class="tdright">{{ price }}</td>
+                <td class="tdright">{{ totalDisc }}</td>
+                <td class="tdright">{{ colorantPrice }}</td>                
+                <td class="tdright">{{ vatAmount }}</td>
                 <td class="tdright">{{ totalLineAmount }}</td>
             </tr>
         </tbody>

@@ -196,12 +196,15 @@
     <table class="dash" width="100%" cellpadding="0" cellspacing="0">
         <thead>
             <tr>
-                <th>Item Name</th>
-                <th>Color</th>
-                <th>Size</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Line Amount</th>
+                <th>اسم العنصر</th>
+                <th>اللون</th>
+                <th>بحجم</th>
+                <th>كمية</th>
+                <th>السعر</th>
+                <th>خصم</th>
+                <th>سعر التلوين</th>
+                <th>ضريبة القيمة المضافة</th>
+                <th>مبلغ الخط</th>
             </tr>
         </thead>
         <tbody>
@@ -212,6 +215,9 @@
                 <td class="tdcenter">{{ this.inventsizeid }}</td>
                 <td class="tdright">{{ this.quantity }}</td>
                 <td class="tdright">{{ this.price }}</td>
+                <td class="tdright">{{ this.totalDisc }}</td>
+                <td class="tdright">{{ this.colorantPrice }}</td>                
+                <td class="tdright">{{ this.vatAmount }}</td>
                 <td class="tdright">{{ this.lineAmount }}</td>
             </tr>
             {{/each}}
@@ -219,9 +225,13 @@
                 <td class="tdleft" colspan="3">مجموع</td>
                 <td class="tdright">{{ totalQuantity }}</td>
                 <td class="tdright">{{ price }}</td>
+                <td class="tdright">{{ totalDisc }}</td>
+                <td class="tdright">{{ colorantPrice }}</td>                
+                <td class="tdright">{{ vatAmount }}</td>
                 <td class="tdright">{{ totalLineAmount }}</td>
             </tr>
         </tbody>
+        
     </table>
 </body>
 

@@ -125,6 +125,10 @@ var SalesByCustomerReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 // console.log(result.salesLine[0].product.nameEnglish);
                 renderData = result;
+                renderData.printDate = new Date(params.printDate)
+                    .toISOString()
+                    .replace(/T/, " ")
+                    .replace(/\..+/, "");
                 console.log(params.lang);
                 file = params.lang == "en" ? "sales-by-customer-en" : "sales-by-customer-ar";
                 try {
@@ -143,7 +147,7 @@ var SalesByCustomerReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        sql = "\n      select\n        st.salesname as customername,\n        to_char(sum(st.vatamount), 'FM999999999990.00') as vatamount,\n        to_char(sum(st.netamount), 'FM999999999990.00') as \"netamount\",\n        to_char(sum(st.disc), 'FM999999999990.00') as disc,\n        to_char(sum(st.amount) , 'FM999999999990.00') as amount,\n        w.namealias as wnamealias,\n        w.name as wname,\n        d.description as salesman\n      from\n        salestable st\n      left join inventlocation w on\n        w.inventlocationid = st.inventlocationid\n      inner join dimensions d on\n        d.num = st.dimension6_\n      where\n        1 = 1\n        and st.status not in ('RESERVED')\n        and st.deliverydate between '" + params.fromDate + "' and ('" + params.toDate + "'::date + '2 day'::interval)\n        and st.inventlocationid = '" + params.inventlocationid + "'\n  ";
+                        sql = "\n      select\n        st.salesname as customername,\n        als.en as \"statusEn\",\n        als.ar as \"statusAr\",\n        alt.en as \"transkindEn\",\n        alt.ar as \"transkindAr\",\n        to_char(sum(st.vatamount), 'FM999999999990.00') as vatamount,\n        to_char(sum(st.netamount), 'FM999999999990.00') as \"netamount\",\n        to_char(sum(st.disc), 'FM999999999990.00') as disc,\n        to_char(sum(st.amount) , 'FM999999999990.00') as amount,\n        w.namealias as wnamealias,\n        w.name as wname,\n        d.description as salesman\n      from\n        salestable st\n      left join inventlocation w on\n        w.inventlocationid = st.inventlocationid\n      inner join dimensions d on\n        d.num = st.dimension6_\n      left join app_lang als on als.id = st.status\n      left join app_lang alt on alt.id = st.transkind\n      where\n        1 = 1\n        and st.status not in ('RESERVED')\n        and st.deliverydate between '" + params.fromDate + "' and ('" + params.toDate + "'::date + '2 day'::interval)\n        and st.inventlocationid = '" + params.inventlocationid + "'\n  ";
                         if (params.salesmanid) {
                             sql = sql + (" and d.num = '" + params.salesmanid + "' ");
                         }

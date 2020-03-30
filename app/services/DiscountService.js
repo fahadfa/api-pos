@@ -313,8 +313,7 @@ var DiscountService = /** @class */ (function () {
                                                 for (j in freeItems) {
                                                     i = reqData.selectedItems.indexOf(freeItems[j]);
                                                     promotionalDiscountAmount +=
-                                                        (parseFloat(reqData.selectedItems[i].price) + parseFloat(reqData.selectedItems[i].colorantprice)) *
-                                                            parseFloat(reqData.selectedItems[i].quantity);
+                                                        parseFloat(reqData.selectedItems[i].price) * parseFloat(reqData.selectedItems[i].quantity);
                                                     reqData.selectedItems[i].priceAfterdiscount =
                                                         (parseFloat(reqData.selectedItems[i].price) + parseFloat(reqData.selectedItems[i].colorantprice)) *
                                                             reqData.selectedItems[i].quantity -
@@ -369,7 +368,7 @@ var DiscountService = /** @class */ (function () {
                                             freeItems = reqData.selectedItems.filter(function (v) { return v.linkId == item.linkId && v.isItemFree == true; });
                                             for (j in freeItems) {
                                                 i = reqData.selectedItems.indexOf(freeItems[j]);
-                                                itemDiscount = (parseFloat(reqData.selectedItems[i].price) + parseFloat(reqData.selectedItems[i].colorantprice)) / 2;
+                                                itemDiscount = parseFloat(reqData.selectedItems[i].price) / 2;
                                                 buy_one_get_one += parseFloat(itemDiscount) * parseInt(reqData.selectedItems[i].quantity);
                                                 reqData.selectedItems[i].buyOneGetOneDiscount =
                                                     parseFloat(itemDiscount) * parseInt(reqData.selectedItems[i].quantity);

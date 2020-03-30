@@ -176,7 +176,7 @@
 
   <body>
     <div id="bg__watermark">
-      <p id="bg__text__watermark">Only for testing1</p>
+      <p id="bg__text__watermark">Only for testing</p>
     </div>
 
     {{#each salesLine}}
@@ -309,6 +309,7 @@
           <th class="th">Shipping Date</th>
           <th class="th">Qty</th>
           <th class="th">Price</th>
+          <th class="th">Colorant</th>
           <th class="th">Colarant Price</th>
           <th class="th">Discount</th>
           <th class="th">Net Amnt Before VAT</th>
@@ -359,6 +360,10 @@
             {{this.salesprice}}
           </td>
           <td class="tdright">
+            {{this.colorantid}}
+          </td>
+          
+          <td class="tdright">
             {{this.colorantprice}}
           </td>
           <td class="tdright">
@@ -391,6 +396,7 @@
           {{this.amount}}
         </td>
       </tr>
+     
       <!-- <tr class="tdright">
             <td rowspan="4">&nbsp;</td>
             <td class="tdright">Total Quantity</td>
@@ -399,8 +405,14 @@
                 {{this.quantity}}
             </td>
         </tr> -->
+        <tr class="tdright">
+          <td rowspan="4">&nbsp;</td>
+          <td colspan="2" class="tdright">Shipping Charges</td>
+          <td>
+            {{this.shippingamount}}
+          </td>
+        </tr>  
       <tr class="tdright">
-        <td rowspan="3">&nbsp;</td>
         <td colspan="2" class="tdright">Discount</td>
         <td>
           {{this.disc}}

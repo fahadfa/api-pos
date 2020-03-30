@@ -121,17 +121,17 @@
         <p id="bg__text__watermark">Only for testing</p>
     </div>
 
-    <div class="mainheading">Account Statement</div>
+    <div class="mainheading">Expired Products</div>
 
     <table id="headertbl" width="98%">
         <tr>
             <td valign="top" style="width:50%">
                 <table align="left">
-                    {{#if warehouseNameEn}}
+                    {{#if inventlocationid}}
                     <tr class="billing">
                         <td width="25%" valign="top">Warehouse</td>
                         <td width="5%" valign="top">:</td>
-                        <td width="70%" valign="top">{{warehouseNameEn}}</td>
+                        <td width="70%" valign="top">{{inventlocationid}}</td>
                     </tr>
                     {{/if}}
                     {{#if fromDate}}
@@ -153,9 +153,11 @@
             </td>
             <td valign="top" style="width:50%">
                 <table align="right">
-                    {{#if warehouseNameEn}}
-                    <tr class="billing">
-                        <td colspan="3">&nbsp;</td>
+                    {{#if date}}
+                    <tr>
+                        <td>Till Date</td>
+                        <td>:</td>
+                        <td>{{date}}</td>
                     </tr>
                     {{/if}}
                     {{#if toDate}}
@@ -179,26 +181,34 @@
     <table class="dash" width="100%" cellpadding="0" cellspacing="0">
         <thead>
             <tr>
-                <th>Item Code - Item Name</th>
-                <th>Color</th>
-                <th>Size</th>
-                <th>Batch</th>
-                <th>Expiry Date</th>
-                <th>Expiry Days</th>
-                <th>Qty In</th>
-                <th>Qty Out</th>
-                <th>Balance</th>
+                <th width="5%">Item</th>
+                <th width="5%">Color</th>
+                <th width="5%">Size</th>
+                <th width="10%">Batch</th>
+                <th width="15%">Location</th>
+                <th width="5%">Expiry Days</th>
+                <th width="10%">Expiry Date</th>
+                <th width="5%">Qty In</th>
+                <th width="5%">Qty Out</th>
+                <th width="5%">Balance</th>
             </tr>
         </thead>
         <tbody>
             {{#each data}}
             <tr>
-                <td class="td">{{ this.itemid }} - {{this.nameEn }}</td>
+                <td colspan="10" class="tdleft" class="textbold">
+                    {{ this.itemid }} - {{this.nameEn }}
+                </td>
+            </tr>
+            <tr>
+                <!-- <td class="td">{{ this.itemid }} - {{this.nameEn }}</td> -->
+                <td class="tdcenter">&nbsp;</td>
                 <td class="tdcenter">{{ this.configid }}</td>
                 <td class="td">{{ this.sizeNameEn }}</td>
                 <td class="td">{{ this.batchno }}</td>
-                <td class="td">{{ this.expDate }}</td>
+                <td class="td">{{ this.locationNameEn }}</td>
                 <td class="tdright">{{ this.expDays }}</td>
+                <td class="td">{{ this.expDate }}</td>
                 <td class="tdright">{{ this.qtyIn}}</td>
                 <td class="tdright">{{ this.qtyOut}}</td>
                 <td class="tdright">{{ this.balance}}</td>
