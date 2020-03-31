@@ -153,7 +153,7 @@ var SalesByCustomerReport = /** @class */ (function () {
                         }
                         sql =
                             sql +
-                                " \n    group by st.salesname, w.namealias, w.name, d.description \n    order by customername";
+                                " \n    group by st.salesname, w.namealias, w.name, d.description, als.en, als.ar, alt.en, alt.ar \n    order by customername";
                         return [4 /*yield*/, this.db.query(sql)];
                     case 1:
                         rows = _a.sent();

@@ -182,52 +182,52 @@ var InventsizeService = /** @class */ (function () {
     };
     InventsizeService.prototype.getPrices = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var defaultcustomer, queryData, _i, _a, size, amount;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var defaultcustomer, queryData, _i, _a, size, prices, _loop_1, _b, _c, size;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
                     case 0:
                         if (!!reqData.pricegroup) return [3 /*break*/, 2];
                         return [4 /*yield*/, this.rawQuery.getCustomer(this.sessionInfo.defaultcustomerid)];
                     case 1:
-                        defaultcustomer = _b.sent();
+                        defaultcustomer = _d.sent();
                         reqData.pricegroup = defaultcustomer.pricegroup;
                         reqData.currency = defaultcustomer.currency;
-                        _b.label = 2;
+                        _d.label = 2;
                     case 2:
                         queryData = {
                             custaccount: reqData.custaccount,
                             itemid: reqData.itemid,
                             pricegroup: reqData.pricegroup,
                             configid: reqData.configid,
-                            currency: "SAR"
+                            currency: "SAR",
+                            inventsizeids: []
                         };
-                        _i = 0, _a = reqData.sizes;
-                        _b.label = 3;
+                        for (_i = 0, _a = reqData.sizes; _i < _a.length; _i++) {
+                            size = _a[_i];
+                            queryData.inventsizeids.push(size.code);
+                        }
+                        queryData.inventsizeids = queryData.inventsizeids.map(function (d) { return "'" + d + "'"; }).join(",");
+                        return [4 /*yield*/, this.rawQuery.allSizePrices(queryData)];
                     case 3:
-                        if (!(_i < _a.length)) return [3 /*break*/, 8];
-                        size = _a[_i];
-                        queryData.inventsizeid = size.code;
-                        return [4 /*yield*/, this.rawQuery.getCustomerSpecificPrice(queryData)];
-                    case 4:
-                        amount = _b.sent();
-                        if (!(amount.length <= 0)) return [3 /*break*/, 6];
-                        return [4 /*yield*/, this.rawQuery.sizePrices(queryData)];
-                    case 5:
-                        // console.log(amount)
-                        amount = _b.sent();
-                        _b.label = 6;
-                    case 6:
-                        if (amount.length > 0) {
-                            size.price = parseFloat(amount[0].price);
+                        prices = _d.sent();
+                        _loop_1 = function (size) {
+                            var amount = prices.filter(function (v) { return v.inventsizeid == size.code && v.accountrelation == queryData.custaccount; });
+                            if (amount.length <= 0) {
+                                amount = prices.filter(function (v) { return v.inventsizeid == size.code && v.accountrelation == queryData.pricegroup; });
+                            }
+                            if (amount.length > 0) {
+                                size.price = parseFloat(amount[0].price);
+                            }
+                            else {
+                                size.price = 0;
+                            }
+                        };
+                        // console.log(prices);
+                        for (_b = 0, _c = reqData.sizes; _b < _c.length; _b++) {
+                            size = _c[_b];
+                            _loop_1(size);
                         }
-                        else {
-                            size.price = 0;
-                        }
-                        _b.label = 7;
-                    case 7:
-                        _i++;
-                        return [3 /*break*/, 3];
-                    case 8: return [2 /*return*/, reqData.sizes];
+                        return [2 /*return*/, reqData.sizes];
                 }
             });
         });

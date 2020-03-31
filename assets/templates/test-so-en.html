@@ -217,7 +217,7 @@
               <td class="textboldtd">Receiving Vat No</td>
               <td>:</td>
               <td>
-                {{this.cvatNum}} 
+                {{this.cvatNum}}
               </td>
             </tr>
             <tr class="billing">
@@ -231,7 +231,7 @@
               <td class="textboldtd">Payment Type</td>
               <td>:</td>
               <td>
-                {{this.paymentType}}
+                {{this.paymentMode}}
               </td>
             </tr>
           </table>
@@ -267,7 +267,7 @@
                 {{this.lastmodifieddate}}
               </td>
             </tr>
- 
+
             {{#if this.voucherdiscchecked}}
             <tr class="billing">
               <td class="textboldtd">Voucher No</td>
@@ -277,7 +277,7 @@
               </td>
             </tr>
             {{/if}}
-            
+
             <tr class="billing">
               <td class="textboldtd">Supplier Vat No</td>
               <td>:</td>
@@ -362,7 +362,7 @@
           <td class="tdright">
             {{this.colorantid}}
           </td>
-          
+
           <td class="tdright">
             {{this.colorantprice}}
           </td>
@@ -396,7 +396,7 @@
           {{this.amount}}
         </td>
       </tr>
-     
+
       <!-- <tr class="tdright">
             <td rowspan="4">&nbsp;</td>
             <td class="tdright">Total Quantity</td>
@@ -405,13 +405,13 @@
                 {{this.quantity}}
             </td>
         </tr> -->
-        <tr class="tdright">
-          <td rowspan="4">&nbsp;</td>
-          <td colspan="2" class="tdright">Shipping Charges</td>
-          <td>
-            {{this.shippingamount}}
-          </td>
-        </tr>  
+      <tr class="tdright">
+        <td rowspan="4">&nbsp;</td>
+        <td colspan="2" class="tdright">Shipping Charges</td>
+        <td>
+          {{this.shippingamount}}
+        </td>
+      </tr>
       <tr class="tdright">
         <td colspan="2" class="tdright">Discount</td>
         <td>

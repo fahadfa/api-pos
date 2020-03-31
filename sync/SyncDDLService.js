@@ -88,7 +88,7 @@ var SyncDDLService = /** @class */ (function () {
     };
     SyncDDLService.prototype.syncDDL = function (sync, currentTime) {
         return __awaiter(this, void 0, void 0, function () {
-            var e_1, _a, params, sql, stageDb, localDb, syncResults, syncResults_1, syncResults_1_1, res, syncDDLval, index, err_1, e_1_1, err_2;
+            var e_1, _a, params, sql, stageDb, localDb, syncResults, syncResults_1, syncResults_1_1, res, err_1, syncDDLval, index, err_2, e_1_1, err_3;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -98,7 +98,7 @@ var SyncDDLService = /** @class */ (function () {
                         localDb = SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions();
                         _b.label = 1;
                     case 1:
-                        _b.trys.push([1, 20, , 21]);
+                        _b.trys.push([1, 24, , 25]);
                         params = "";
                         sync.sync_ddl.map(function (ele) {
                             params = params + "'" + ele + "',";
@@ -114,19 +114,31 @@ var SyncDDLService = /** @class */ (function () {
                             throw Props_1.Props.RECORD_NOT_FOUND;
                         _b.label = 3;
                     case 3:
-                        _b.trys.push([3, 13, 14, 19]);
+                        _b.trys.push([3, 17, 18, 23]);
                         syncResults_1 = __asyncValues(syncResults);
                         _b.label = 4;
                     case 4: return [4 /*yield*/, syncResults_1.next()];
                     case 5:
-                        if (!(syncResults_1_1 = _b.sent(), !syncResults_1_1.done)) return [3 /*break*/, 12];
+                        if (!(syncResults_1_1 = _b.sent(), !syncResults_1_1.done)) return [3 /*break*/, 16];
                         res = syncResults_1_1.value;
                         _b.label = 6;
                     case 6:
-                        _b.trys.push([6, 9, , 11]);
-                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(localDb, [res.summary])];
+                        _b.trys.push([6, 13, , 15]);
+                        _b.label = 7;
                     case 7:
+                        _b.trys.push([7, 9, , 11]);
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(localDb, [res.summary])];
+                    case 8:
                         _b.sent();
+                        return [3 /*break*/, 11];
+                    case 9:
+                        err_1 = _b.sent();
+                        Log_1.slog.error(err_1);
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ErrorMessage("DDL", err_1)];
+                    case 10:
+                        _b.sent();
+                        return [3 /*break*/, 11];
+                    case 11:
                         syncDDLval = sync.sync_ddl;
                         index = syncDDLval.indexOf(res.id);
                         if (index > -1)
@@ -138,40 +150,40 @@ var SyncDDLService = /** @class */ (function () {
                             sql = "UPDATE sync_source SET  sync_ddl= '{" + syncDDLval + "}' WHERE id='" + sync.id + "'";
                         }
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(stageDb, [sql])];
-                    case 8:
+                    case 12:
                         _b.sent();
-                        return [3 /*break*/, 11];
-                    case 9:
-                        err_1 = _b.sent();
-                        Log_1.slog.error(err_1);
-                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ErrorMessage("DDL", err_1)];
-                    case 10:
-                        _b.sent();
-                        return [3 /*break*/, 11];
-                    case 11: return [3 /*break*/, 4];
-                    case 12: return [3 /*break*/, 19];
+                        return [3 /*break*/, 15];
                     case 13:
-                        e_1_1 = _b.sent();
-                        e_1 = { error: e_1_1 };
-                        return [3 /*break*/, 19];
-                    case 14:
-                        _b.trys.push([14, , 17, 18]);
-                        if (!(syncResults_1_1 && !syncResults_1_1.done && (_a = syncResults_1.return))) return [3 /*break*/, 16];
-                        return [4 /*yield*/, _a.call(syncResults_1)];
-                    case 15:
-                        _b.sent();
-                        _b.label = 16;
-                    case 16: return [3 /*break*/, 18];
-                    case 17:
-                        if (e_1) throw e_1.error;
-                        return [7 /*endfinally*/];
-                    case 18: return [7 /*endfinally*/];
-                    case 19: return [3 /*break*/, 21];
-                    case 20:
                         err_2 = _b.sent();
                         Log_1.slog.error(err_2);
-                        return [3 /*break*/, 21];
-                    case 21: return [2 /*return*/];
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ErrorMessage("DDL", err_2)];
+                    case 14:
+                        _b.sent();
+                        return [3 /*break*/, 15];
+                    case 15: return [3 /*break*/, 4];
+                    case 16: return [3 /*break*/, 23];
+                    case 17:
+                        e_1_1 = _b.sent();
+                        e_1 = { error: e_1_1 };
+                        return [3 /*break*/, 23];
+                    case 18:
+                        _b.trys.push([18, , 21, 22]);
+                        if (!(syncResults_1_1 && !syncResults_1_1.done && (_a = syncResults_1.return))) return [3 /*break*/, 20];
+                        return [4 /*yield*/, _a.call(syncResults_1)];
+                    case 19:
+                        _b.sent();
+                        _b.label = 20;
+                    case 20: return [3 /*break*/, 22];
+                    case 21:
+                        if (e_1) throw e_1.error;
+                        return [7 /*endfinally*/];
+                    case 22: return [7 /*endfinally*/];
+                    case 23: return [3 /*break*/, 25];
+                    case 24:
+                        err_3 = _b.sent();
+                        Log_1.slog.error(err_3);
+                        return [3 /*break*/, 25];
+                    case 25: return [2 /*return*/];
                 }
             });
         });

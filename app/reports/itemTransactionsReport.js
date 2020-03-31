@@ -162,25 +162,51 @@ var itemTransactionsReport = /** @class */ (function () {
     };
     itemTransactionsReport.prototype.report = function (result, params) {
         return __awaiter(this, void 0, void 0, function () {
-            var file;
+            var file, query, data;
             return __generator(this, function (_a) {
-                if (params.type == "excel") {
-                    file = params.lang == "en" ? "itemtransactions-excel" : "itemtransactions-excel-ar";
+                switch (_a.label) {
+                    case 0:
+                        if (params.type == "excel") {
+                            file = params.lang == "en" ? "itemtransactions-excel" : "itemtransactions-excel-ar";
+                        }
+                        else {
+                            file = params.lang == "en" ? "itemtransactions-report" : "itemtransactions-report-ar";
+                        }
+                        result.printDate = new Date(params.printDate)
+                            .toISOString()
+                            .replace(/T/, " ")
+                            .replace(/\..+/, "");
+                        if (!(result.batchno == "ALL" ||
+                            result.product === "ALL" ||
+                            result.color === "ALL" ||
+                            result.inventsizeid === "ALL")) return [3 /*break*/, 2];
+                        query = "select * from app_lang ap where ap.id = 'ALL' limit 1";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        if (result.batchno == "ALL") {
+                            result.batchno = params.lang == "en" ? data[0].en : data[0].ar;
+                        }
+                        if (result.product == "ALL") {
+                            result.product = params.lang == "en" ? data[0].en : data[0].ar;
+                        }
+                        if (result.color == "ALL") {
+                            result.color = params.lang == "en" ? data[0].en : data[0].ar;
+                        }
+                        if (result.inventsizeid == "ALL") {
+                            result.inventsizeid = params.lang == "en" ? data[0].en : data[0].ar;
+                        }
+                        _a.label = 2;
+                    case 2:
+                        console.log(result);
+                        try {
+                            return [2 /*return*/, App_1.App.HtmlRender(file, result)];
+                        }
+                        catch (error) {
+                            throw error;
+                        }
+                        return [2 /*return*/];
                 }
-                else {
-                    file = params.lang == "en" ? "itemtransactions-report" : "itemtransactions-report-ar";
-                }
-                result.printDate = new Date(params.printDate)
-                    .toISOString()
-                    .replace(/T/, " ")
-                    .replace(/\..+/, "");
-                try {
-                    return [2 /*return*/, App_1.App.HtmlRender(file, result)];
-                }
-                catch (error) {
-                    throw error;
-                }
-                return [2 /*return*/];
             });
         });
     };

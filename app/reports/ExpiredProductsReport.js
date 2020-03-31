@@ -99,7 +99,7 @@ var ExpiredProductsReport = /** @class */ (function () {
     };
     ExpiredProductsReport.prototype.report = function (result, params) {
         return __awaiter(this, void 0, void 0, function () {
-            var warehouse, renderData, file;
+            var warehouse, renderData, query, data, file;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.warehouseName(params.inventlocationid)];
@@ -113,9 +113,17 @@ var ExpiredProductsReport = /** @class */ (function () {
                                 .replace(/T/, " ")
                                 .replace(/\..+/, ""),
                             date: params.date,
-                            inventlocationid: params.inventlocationid,
+                            // inventlocationid: params.inventlocationid,
                             user: params.user
                         };
+                        if (!(params.inventlocationid === "ALL")) return [3 /*break*/, 3];
+                        query = "select * from app_lang ap where ap.id = '" + params.inventlocationid + "' limit 1";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 2:
+                        data = _a.sent();
+                        renderData.inventlocationid = params.lang == "en" ? data[0].en : data[0].ar;
+                        _a.label = 3;
+                    case 3:
                         // console.log(result.salesLine[0].product.nameEnglish);
                         renderData.warehouseNameEn = warehouse.namealias;
                         renderData.warehouseNameAr = warehouse.name;
