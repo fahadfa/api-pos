@@ -27,6 +27,7 @@
       background: #fff;
       padding: 0px;
       font-weight: normal !important;
+      direction: rtl;
     }
 
     table {
@@ -117,49 +118,61 @@
 
   <body>
     <div id="bg__watermark">
-      <p id="bg__text__watermark">Only for testing</p>
+      <p id="bg__text__watermark">فقط للاختبار</p>
     </div>
 
-    <div class="mainheading">Sales Report</div>
+    <div class="mainheading">تم الاستلام</div>
 
     <table id="headertbl" width="98%">
       <tr>
-        <td valign="top" style="width:50%">
-          <table align="left">
+        <td style="width:50%">
+          <table align="right">
             {{#if fromDate}}
-            <tr>
-              <td>From Date</td>
+            <tr class="billing">
+              <td>من التاريخ</td>
               <td>:</td>
               <td>{{fromDate}}</td>
             </tr>
+            {{/if}} {{#if fromWareHouseId}}
+            <tr class="billing">
+              <td>من المستودع</td>
+              <td>:</td>
+              <td>{{fromWareHouseId}}</td>
+            </tr>
             {{/if}} {{#if printDate}}
-            <tr>
-              <td>Print Date</td>
+            <tr class="billing">
+              <td>تاريخ الطباعة</td>
               <td>:</td>
               <td>{{printDate}}</td>
             </tr>
             {{/if}}
           </table>
         </td>
-        <td valign="top" style="width:50%">
-          <table align="right">
+        <td style="width:50%">
+          <table align="left">
             {{#if toDate}}
-            <tr>
-              <td>To Date</td>
+            <tr class="billing">
+              <td>حتى الآن</td>
               <td>:</td>
               <td>{{toDate}}</td>
             </tr>
-            {{/if}} {{#if status}}
+            {{/if}} {{#if toWareHouseId}}
             <tr class="billing">
-              <td>Status</td>
+              <td>إلى المستودع</td>
               <td>:</td>
-              <td>{{status}}</td>
+              <td>{{toWareHouseId}}</td>
             </tr>
             {{/if}} {{#if user}}
             <tr class="billing">
-              <td>Print By</td>
+              <td>طباعة بواسطة</td>
               <td>:</td>
               <td>{{user}}</td>
+            </tr>
+            {{/if}} {{#if status}}
+            <tr class="billing">
+              <td>الحالة</td>
+              <td>:</td>
+              <td>{{status}}</td>
             </tr>
             {{/if}}
           </table>
@@ -170,56 +183,32 @@
     <table class="dash" width="100%" cellpadding="0" cellspacing="0">
       <thead>
         <tr>
-          <th width="20%">Sales Id</th>
-          <th width="5%">Last Modified Date</th>
-          <th width="15%">Customer Name</th>
-          <th width="5%">Customer Code</th>
-          <th width="5%">Payment Mode</th>
-          <th width="5%">Voucher</th>
-          <th width="5%">Type</th>
-          <th width="5%">Status</th>
-          <th width="10%">Gross Amount</th>
-          <th width="10%">Discount</th>
-          <th width="10%">VAT</th>
-          <th width="10%">Net Amount</th>
+          <th class="th">رقم الفاتورة</th>
+          <th class="th">من المستودع</th>
+          <th class="th">إلى المستودع</th>
+          <th class="th">كمية</th>
+          <th class="th">آخر تعديل</th>
+          <th class="th">الحالة</th>
         </tr>
       </thead>
       <tbody>
         {{#each data}}
-        <tr>
-          <td>{{ this.salesId }}</td>
-          <td class="tdcenter">{{ this.lastmodifieddate }}</td>
-          <td class="tdcenter">{{ this.nameAlias }}</td>
-          {{# if this.walkincustomer}} {{# if this.phone}}
-          <td class="tdcenter">{{ this.phone }}</td>
-          {{else}}
-          <td class="tdcenter">{{ this.custaccount }}</td>
-          {{/if}} {{else}}
-          <td class="tdcenter">{{ this.custaccount }}</td>
-          {{/ if}}
-          <td class="tdcenter">{{ this.paymentMode }}</td>
-          <td class="tdcenter">
-            {{#if voucherdiscchecked}}
-              {{ this.vouchernum }}
-            {{else}}
-            ---
-            {{/if}}
-          </td>
-          <td class="tdcenter">{{ this.transkindEn }}</td>
-          <td class="tdcenter">{{ this.statusEn }}</td>
-          <td class="tdright">{{ this.grossAmount }}</td>
-          <td class="tdright">{{ this.discount }}</td>
-          <td class="tdright">{{this.vatAmount}}</td>
-          <td class="tdright">{{ this.netAmount }}</td>
+        <tr class="tab-data">
+          <td width="20%">{{this.salesId}}</td>
+          <td>{{this.fromWareHouseNameAr}}</td>
+          <td>{{this.toWareHouseNameAr}}</td>
+          <td class="tdright">{{this.quantity}}</td>
+          <td class="tdcenter">{{this.lastmodifieddate}}</td>
+          <td class="tdcenter">{{this.status}}</td>
         </tr>
         {{/each}}
         <tr class="textbold">
-          <td colspan="7">&nbsp;</td>
-          <td class="tdright">Total</td>
-          <td class="tdright">{{ grossAmount }}</td>
-          <td class="tdright">{{ discount }}</td>
-          <td class="tdright">{{vatAmount}}</td>
-          <td class="tdright">{{ netAmount }}</td>
+          <td class="tdleft" colspan="3">مجموع</td>
+          <td class="tdright">
+            {{ total }}
+          </td>
+          <td class="tdright">&nbsp;</td>
+          <td class="tdright">&nbsp;</td>
         </tr>
       </tbody>
     </table>

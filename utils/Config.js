@@ -54,10 +54,10 @@ exports.mssqlDbOptions = {
 exports.stageDbOptions = {
     name: "stage",
     type: "postgres",
-    host: "mposdb-preprod.cw34ebrphxxg.eu-central-1.rds.amazonaws.com",
+    host: "jpos.cw34ebrphxxg.eu-central-1.rds.amazonaws.com",
     port: 5432,
-    username: "mposdb",
-    password: "mdbmpfpp",
+    username: "jpos",
+    password: "Mpfrdsjposdb",
     database: "jpos_qa"
 };
 exports.localDbOptions = {

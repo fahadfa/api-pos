@@ -123,7 +123,7 @@
         <p id="bg__text__watermark">فقط للاختبار</p>
     </div>
 
-    <div class="mainheading">أوامر نقل</div>
+    <div class="mainheading">تقرير استلام الطلب</div>
 
     <table id="headertbl" width="98%">
         <tr>
@@ -192,6 +192,7 @@
                 <th class="th">رقم الفاتورة</th>
                 <th class="th">من المستودع</th>
                 <th class="th">إلى المستودع</th>
+                <th>تاريخ التسليم او الوصول</th>
                 <th class="th">كمية</th>
                 <th class="th">آخر تعديل</th>
                 <th class="th">الحالة</th>
@@ -203,13 +204,14 @@
                 <td width="20%">{{this.salesId}}</td>
                 <td>{{this.fromWareHouseNameAr}}</td>
                 <td>{{this.toWareHouseNameAr}}</td>
+                <td class="tdcenter">{{this.deliverydate}}</td>
                 <td class="tdright">{{this.quantity}}</td>
                 <td class="tdcenter">{{this.lastmodifieddate}}</td>
-                <td class="tdcenter">{{this.status}}</td>
+                <td class="tdcenter">{{this.statusAr}}</td>
             </tr>
             {{/each}}
             <tr class="textbold">
-                <td class="tdleft" colspan="3">مجموع</td>
+                <td class="tdleft" colspan="4">مجموع</td>
                 <td class="tdright">
                     {{ total }}
                 </td>

@@ -123,7 +123,7 @@
         <p id="bg__text__watermark">Only for testing</p>
     </div>
 
-    <div class="mainheading">Transfer Orders</div>
+    <div class="mainheading">Order Received Report</div>
 
     <table id="headertbl" width="98%">
         <tr>
@@ -193,6 +193,7 @@
                 <th>Sales Id</th>
                 <th>From Warehouse</th>
                 <th>To Warehouse</th>
+                <th>Delivery Date</th>
                 <th>Quantity</th>
                 <th>Last Modified Date</th>
                 <th>Status</th>
@@ -204,13 +205,14 @@
                 <td width="20%">{{this.salesId}}</td>
                 <td>{{this.fromWareHouseNameEn}}</td>
                 <td class="tdcenter">{{this.toWareHouseNameEn}}</td>
+                <td class="tdcenter">{{this.deliverydate}}</td>
                 <td class="tdright">{{this.quantity}}</td>
                 <td class="tdcenter">{{this.lastmodifieddate}}</td>
-                <td class="tdcenter">{{this.status}}</td>
+                <td class="tdcenter">{{this.statusEn}}</td>
             </tr>
             {{/each}}
             <tr class="textbold">
-                <td class="tdright" colspan="3">Total</td>
+                <td class="tdright" colspan="4">Total</td>
                 <td class="tdright">
                     {{ total }}
                 </td>

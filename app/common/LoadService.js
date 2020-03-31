@@ -45,8 +45,7 @@ var LoadService = /** @class */ (function () {
     }
     LoadService.prototype.customer = function (param) {
         return __awaiter(this, void 0, void 0, function () {
-            var additionalcustomer, customergroup, sabicCustomers, query, data, error_1;
-            var _this = this;
+            var query, data, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -54,53 +53,61 @@ var LoadService = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        additionalcustomer = this.sessionInfo.additionalcustomer
-                            ? this.sessionInfo.additionalcustomer.split(",")
-                            : [];
-                        customergroup = this.sessionInfo.customergroup ? this.sessionInfo.customergroup.split(",") : [];
-                        sabicCustomers = this.sessionInfo.sabiccustomers ? this.sessionInfo.sabiccustomers.trim().split(",") : [];
-                        //   param.additionalcustomer = "";
-                        //   param.customergroup = "";
-                        //   param.sabiccustomers = "";
-                        param.additionalcustomer = additionalcustomer.map(function (d) { return "'" + d + "'"; }).join(",");
-                        param.customergroup = customergroup.map(function (d) { return "'" + d + "'"; }).join(",");
-                        param.sabiccustomers = sabicCustomers.map(function (d) { return "'" + d + "'"; }).join(",");
-                        //   additionalcustomer.forEach((element: any) => {
-                        //     param.additionalcustomer += additionalcustomer.indexOf(element) == additionalcustomer.length - 1 ? "'" + element + "'" : "'" + element + "' ,";
-                        //   });
-                        //   customergroup.forEach((element: any) => {
-                        //     param.customergroup += customergroup.indexOf(element) == customergroup.length - 1 ? "'" + element + "'" : "'" + element + "' ,";
-                        //   });
-                        //   sabicCustomers.forEach((element: any) => {
-                        //     param.sabiccustomers += sabicCustomers.indexOf(element) == sabicCustomers.length - 1 ? "'" + element + "'" : "'" + element + "' ,";
-                        //   });
-                        //   param.customergroup.replace(/,\s*$/, "")
-                        //   param.additionalcustomer.replace(/,\s*$/, "")
-                        //   param.sabiccustomers.replace(/,\s*$/, "")
+                        param.additionalcustomer = this.sessionInfo.additionalcustomer
+                            ? this.sessionInfo.additionalcustomer
+                                .split(",")
+                                .map(function (d) { return "'" + d + "'"; })
+                                .join(",")
+                            : null;
+                        param.customergroup = this.sessionInfo.customergroup
+                            ? this.sessionInfo.customergroup
+                                .split(",")
+                                .map(function (d) { return "'" + d + "'"; })
+                                .join(",")
+                            : null;
+                        param.sabiccustomers = this.sessionInfo.sabiccustomers
+                            ? this.sessionInfo.sabiccustomers
+                                .trim()
+                                .split(",")
+                                .map(function (d) { return "'" + d + "'"; })
+                                .join(",")
+                            : null;
                         console.log(param);
-                        query = "select \n            accountnum, \n            name, \n            namealias, \n            address, \n            phone,\n            districtcode,\n            citycode, \n            rcusttype, \n            pricegroup,\n            inventlocation,\n            dataareaid,\n            walkincustomer,\n            custgroup,\n            cashdisc,\n            salesgroup,\n            currency,\n            vendaccount,\n            vatnum,\n            countryregionid,\n            inventlocation,\n            email,\n            url,\n            blocked,\n            taxgroup,\n            paymmode,\n            paymtermid,\n            creditmax,\n            bankaccount,\n            namealias,\n            invoiceaddress,\n            incltax,\n            numbersequencegroup,\n            city,\n            custclassificationid,\n            identificationnumber,\n            modifieddatetime,\n            createddatetime,\n            dataareaid,\n            recversion,\n            recid,\n            custtype,\n            walkincustomer,\n            lastmodifiedby,\n            lastmodifieddate,\n            createdby,\n            dimension as regionid,\n            dimension2_ as departmentid,\n            dimension3_ as costcenterid,\n            dimension4_ as employeeid,\n            dimension5_ as projectid,\n            dimension6_ as salesmanid,\n            dimension7_ as brandid,\n            dimension8_ as productlineid\n           from custtable ";
+                        query = "select \n            c.accountnum, \n            c.name as name, \n            c.namealias, \n            c.address, \n            c.phone,\n            c.districtcode,\n            c.citycode, \n            c.rcusttype, \n            c.pricegroup,\n            c.inventlocation,\n            c.walkincustomer,\n            c.custgroup,\n            c.cashdisc,\n            c.salesgroup,\n            c.currency,\n            c.vendaccount,\n            c.vatnum,\n            c.countryregionid,\n            c.inventlocation,\n            c.email,\n            c.blocked,\n            c.taxgroup,\n            c.paymmode,\n            c.paymtermid,\n            c.creditmax,\n            c.bankaccount,\n            c.invoiceaddress,\n            c.city,\n            c.custtype,\n            c.walkincustomer,\n            c.dimension as regionid,\n            c.dimension2_ as departmentid,\n            c.dimension3_ as costcenterid,\n            c.dimension4_ as employeeid,\n            c.dimension5_ as projectid,\n            (CASE \n              WHEN c.dimension6_!='' THEN concat(d.num,' - ', d.description)\n              ELSE '" + this.sessionInfo.salesmanid[0] + "'\n          END\n           ) as salesmanid,\n           c.dimension7_ as brandid,\n           c.dimension8_ as productlineid\n           from custtable c\n           left join dimensions d on c.dimension6_ = d.num ";
                         if (param.key == "customer") {
-                            query += "where (name ILike '%" + param.param + "%' or namealias ILike '%" + param.param + "%' or accountnum ILike '%" + param.param + "%' or phone ILike '%" + param.param + "%') and dataareaid='" + this.sessionInfo.dataareaid + "' ";
+                            query += "where (c.name ILike '%" + param.param + "%' or c.namealias ILike '%" + param.param + "%' or c.accountnum ILike '%" + param.param + "%' or c.phone ILike '%" + param.param + "%') and c.dataareaid='" + this.sessionInfo.dataareaid + "' ";
                         }
                         else if (param.key == "painter") {
-                            query += "where (name ILike '%" + param.param + "%' or namealias ILike '%" + param.param + "%'  or accountnum ILike '%" + param.param + "%' or phone ILike '%" + param.param + "%') and dataareaid='" + this.sessionInfo.dataareaid + "' and rcusttype = 2";
+                            query += "where (c.name ILike '%" + param.param + "%' or c.namealias ILike '%" + param.param + "%'  or c.accountnum ILike '%" + param.param + "%' or c.phone ILike '%" + param.param + "%') and c.dataareaid='" + this.sessionInfo.dataareaid + "' and c.rcusttype = 2";
                         }
                         else if (param.key == "mobile") {
-                            query += "where phone ILike '%" + param.param + "%'";
+                            query += "where c.phone ILike '%" + param.param + "%'";
                             // } else {
                             //     query += `where dataareaid='${this.sessionInfo.dataareaid}' `;
                         }
                         if (param.type == "DESIGNERSERVICE") {
-                            query += " and paymtermid = 'CASH' ";
+                            query += " and c.paymtermid = 'CASH' ";
                         }
-                        query += " and (" + (param.customergroup.length > 0 ? "custgroup in (" + param.customergroup + ")" : "") + " " + (param.customergroup.length > 0 ? "OR" : "") + "  " + (param.additionalcustomer.length > 0 ? "accountnum in (" + param.additionalcustomer + ")" : "") + " " + (param.additionalcustomer.length > 0 ? "OR" : "") + " " + (param.sabiccustomers.length > 0 ? "accountnum in (" + param.sabiccustomers + ")" : "") + " " + (param.sabiccustomers.length > 0 ? "OR" : "") + " " + ("accountnum='" + this.sessionInfo.defaultcustomerid + "'") + " or walkincustomer = true) and deleted = false and lower(dataareaid)='" + this.sessionInfo.dataareaid.toLowerCase() + "' " + (param.type == "DESIGNERSERVICE" ? " and accountnum!='" + this.sessionInfo.defaultcustomerid + "'" : "") + " limit 15";
+                        if (param.custgroup || param.additionalcustomer || param.sabiccustomers) {
+                            query += "and ( c.walkincustomer = true ";
+                            if (param.customergroup) {
+                                query += " or c.custgroup in (" + param.customergroup + ") ";
+                            }
+                            if (param.additionalcustomer) {
+                                query += " or c.accountnum in (" + param.additionalcustomer + ") ";
+                            }
+                            if (param.sabiccustomers) {
+                                query += " or c.accountnum in (" + param.sabiccustomers + ") ";
+                            }
+                            query += " ) ";
+                        }
+                        else {
+                            query += " or c.walkincustomer = true ";
+                        }
+                        query += "  and c.deleted = false and lower(c.dataareaid)='" + this.sessionInfo.dataareaid.toLowerCase() + "' " + (param.type == "DESIGNERSERVICE" ? " and c.accountnum!='" + this.sessionInfo.defaultcustomerid + "'" : "") + " limit 15";
                         return [4 /*yield*/, this.db.query(query)];
                     case 2:
                         data = _a.sent();
-                        // console.log(data);
-                        data.map(function (v) {
-                            v.salesmanid = v.salesmanid == "" || !v.salesmanid ? _this.sessionInfo.salesmanid[0] : v.salesmanid;
-                        });
                         return [2 /*return*/, data];
                     case 3:
                         error_1 = _a.sent();

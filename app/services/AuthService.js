@@ -51,24 +51,32 @@ var AuthService = /** @class */ (function () {
     };
     AuthService.prototype.reteriveUserDetails = function (accountObj) {
         return __awaiter(this, void 0, void 0, function () {
-            var responseData, menuList, wareHouse, wareHouseNamear, wareHouseNameEn, error_1;
+            var responseData, menuList, salesmanids, wareHouse, wareHouseNamear, wareHouseNameEn, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
+                        _a.trys.push([0, 7, , 8]);
                         responseData = {};
                         return [4 /*yield*/, this.menuGroupRepository.search({ group: { groupid: accountObj.groupid }, active: true })];
                     case 1:
                         menuList = _a.sent();
+                        salesmanids = [];
                         return [4 /*yield*/, this.unflatten(menuList)];
                     case 2:
                         menuList = _a.sent();
-                        if (!(accountObj.userGroupConfig && accountObj.userGroupConfig.inventlocationid)) return [3 /*break*/, 4];
+                        if (!(accountObj.userGroupConfig && accountObj.userGroupConfig.inventlocationid)) return [3 /*break*/, 6];
                         return [4 /*yield*/, this.rawQuery.getWareHouseDetails(accountObj.userGroupConfig.inventlocationid)];
                     case 3:
                         wareHouse = _a.sent();
-                        _a.label = 4;
+                        if (!(accountObj.userGroupConfig.salesmanid && accountObj.userGroupConfig.salesmanid !== "")) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.rawQuery.salesmanList(accountObj.userGroupConfig.salesmanid)];
                     case 4:
+                        salesmanids = _a.sent();
+                        return [3 /*break*/, 6];
+                    case 5:
+                        salesmanids = [];
+                        _a.label = 6;
+                    case 6:
                         wareHouseNamear = wareHouse && wareHouse.length > 0 ? wareHouse[0].name : "";
                         wareHouseNameEn = wareHouse && wareHouse.length > 0 ? wareHouse[0].namealias : "";
                         if (accountObj != null) {
@@ -98,7 +106,7 @@ var AuthService = /** @class */ (function () {
                             responseData.user.sabiccustomers = accountObj.userGroupConfig.sabiccustomers;
                             responseData.user.customergroup = accountObj.userGroupConfig.customergroup;
                             responseData.user.workflowcustomers = accountObj.userGroupConfig.workflowcustomers;
-                            responseData.user.salesmanid = accountObj.userGroupConfig.salesmanid && accountObj.userGroupConfig.salesmanid !== "" ? accountObj.userGroupConfig.salesmanid.split(",") : [];
+                            responseData.user.salesmanid = salesmanids;
                             responseData.identity = {};
                             responseData.identity = responseData.user;
                             delete responseData.user;
@@ -110,10 +118,10 @@ var AuthService = /** @class */ (function () {
                                 })];
                         }
                         return [2 /*return*/, Promise.resolve(responseData)];
-                    case 5:
+                    case 7:
                         error_1 = _a.sent();
                         return [2 /*return*/, Promise.reject(error_1)];
-                    case 6: return [2 /*return*/];
+                    case 8: return [2 /*return*/];
                 }
             });
         });
@@ -148,7 +156,7 @@ var AuthService = /** @class */ (function () {
                     case 1:
                         profileObj = _a.sent();
                         if (profileObj == null) {
-                            return [2 /*return*/, Promise.reject({ message: 'INVALID_PASSWORD' })];
+                            return [2 /*return*/, Promise.reject({ message: "INVALID_PASSWORD" })];
                         }
                         else {
                             auth = false;
@@ -160,13 +168,13 @@ var AuthService = /** @class */ (function () {
                                 }
                                 else {
                                     return [2 /*return*/, Promise.reject({
-                                            message: 'ACCOUNT_DEACTIVATED,_PLEASE_CONTACT_ADMIN'
+                                            message: "ACCOUNT_DEACTIVATED_PLEASE_CONTACT_ADMIN"
                                         })];
                                 }
                             }
                             else {
                                 return [2 /*return*/, Promise.reject({
-                                        message: 'INVALID_PASSWORD'
+                                        message: "INVALID_PASSWORD"
                                     })];
                             }
                         }
@@ -206,8 +214,8 @@ var AuthService = /** @class */ (function () {
                     case 5:
                         _a.sent();
                         return [3 /*break*/, 7];
-                    case 6: throw 'INVALID_USERNAME';
-                    case 7: return [2 /*return*/, { message: 'PASSWORD_RESET_TOKEN_SENT_TO_MAIL' }];
+                    case 6: throw "INVALID_USERNAME";
+                    case 7: return [2 /*return*/, { message: "PASSWORD_RESET_TOKEN_SENT_TO_MAIL" }];
                     case 8:
                         error_2 = _a.sent();
                         throw error_2;
@@ -243,8 +251,8 @@ var AuthService = /** @class */ (function () {
                     case 4:
                         _a.sent();
                         return [3 /*break*/, 6];
-                    case 5: throw { message: 'INVALID_TOKEN' };
-                    case 6: return [2 /*return*/, { message: 'PASSWORD_UPDATED' }];
+                    case 5: throw { message: "INVALID_TOKEN" };
+                    case 6: return [2 /*return*/, { message: "PASSWORD_UPDATED" }];
                     case 7:
                         error_3 = _a.sent();
                         throw error_3;

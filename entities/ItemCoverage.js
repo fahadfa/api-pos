@@ -61,6 +61,10 @@ var ItemCoverage = /** @class */ (function () {
         typeorm_1.Column({ name: "updated_on" }),
         __metadata("design:type", Date)
     ], ItemCoverage.prototype, "updatedOn", void 0);
+    __decorate([
+        typeorm_1.Column({ name: "lead_time" }),
+        __metadata("design:type", Number)
+    ], ItemCoverage.prototype, "leadTime", void 0);
     ItemCoverage = __decorate([
         typeorm_1.Entity("item_coverage")
     ], ItemCoverage);

@@ -1150,6 +1150,28 @@ var RawQuery = /** @class */ (function () {
             });
         });
     };
+    RawQuery.prototype.salesmanList = function (reqData) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, ids, query, new_data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        ids = reqData
+                            .split(",")
+                            .map(function (d) { return "'" + d + "'"; })
+                            .join(",");
+                        query = "select concat(num,' - ', description) as salesmanid\n    from dimensions where num in(" + ids + ")";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        return [4 /*yield*/, data.map(function (v) { return v.salesmanid; })];
+                    case 2:
+                        new_data = _a.sent();
+                        return [2 /*return*/, new_data];
+                }
+            });
+        });
+    };
     return RawQuery;
 }());
 exports.RawQuery = RawQuery;

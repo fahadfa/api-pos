@@ -122,7 +122,7 @@
         <p id="bg__text__watermark">فقط للاختبار</p>
     </div>
 
-    <div class="mainheading">البند اشترى من قبل العملاء</div>
+    <div class="mainheading">تقرير عنصر العميل</div>
 
     <table id="headertbl" width="98%">
         <tr>
@@ -199,6 +199,7 @@
                 <th>اسم العنصر</th>
                 <th>اللون</th>
                 <th>بحجم</th>
+                <th>دفعة</th>
                 <th>كمية</th>
                 <th>السعر</th>
                 <th>خصم</th>
@@ -213,6 +214,7 @@
                 <td class="td">{{ this.nameAr }}</td>
                 <td class="tdcenter">{{ this.configId }}</td>
                 <td class="tdcenter">{{ this.inventsizeid }}</td>
+                <td class="tdcenter">{{ this.batchno }}</td>
                 <td class="tdright">{{ this.quantity }}</td>
                 <td class="tdright">{{ this.price }}</td>
                 <td class="tdright">{{ this.totalDisc }}</td>
@@ -222,7 +224,7 @@
             </tr>
             {{/each}}
             <tr class="textbold">
-                <td class="tdleft" colspan="3">مجموع</td>
+                <td class="tdleft" colspan="4">مجموع</td>
                 <td class="tdright">{{ totalQuantity }}</td>
                 <td class="tdright">{{ price }}</td>
                 <td class="tdright">{{ totalDisc }}</td>

@@ -188,13 +188,14 @@
     <table class="dash" width="100%" cellpadding="0" cellspacing="0">
         <thead>
             <tr>
-                <th>رقم الطلب المرتجع</th>
+                <th>معرف المبيعات</th>
+                <th>تاريخ</th>
                 <th>العملاء</th>
                 <th>كود العميل</th>
                 <th>طريقة الدفع أو الدفع</th>
                 <th>اكتب</th>
                 <th>الحالة</th>
-                <th>المبلغ الإجمالي</th>
+                <th>المبلغ</th>
                 <th>خصم</th>
                 <th>ضريبة القيمة المضافة</th>
                 <th>كمية</th>
@@ -204,6 +205,7 @@
             {{#each data}}
             <tr>
                 <td>{{ this.salesId }}</td>
+                <td class="tdcenter">{{ this.lastmodifieddate }}</td>
                 <td class="tdcenter">{{ this.nameAlias }}</td>
                 {{# if this.walkincustomer}}
                 {{# if this.phone}}
@@ -214,9 +216,9 @@
                 {{else}}
                 <td class="tdcenter">{{ this.custaccount }}</td>
                 {{/ if}}
-                <td class="tdcenter">{{ this.paymentMode }}</td>
-                <td class="tdcenter">{{ this.type }}</td>
-                <td class="tdcenter">{{ this.status }}</td>
+                <td class="tdcenter">{{ this.paymentModeAr }}</td>
+                <td class="tdcenter">{{ this.transkindAr }}</td>
+                <td class="tdcenter">{{ this.statusAr }}</td>
                 <td class="tdright">{{ this.netAmount  }}</td>
                 <td class="tdright">{{ this.discount }}</td>
                 <td class="tdright">{{ this.vatAmount  }}</td>
@@ -224,7 +226,7 @@
             </tr>
             {{/each}}
             <tr class="textbold">
-                <td colspan="6" class="tdleft">مجموع</td>
+                <td colspan="7" class="tdleft">مجموع</td>
                 <td class="tdright">{{ netAmount }}</td>
                 <td class="tdright">{{ discount }}</td>
                 <td class="tdright">{{vatAmount}}</td>
