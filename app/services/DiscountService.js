@@ -285,7 +285,7 @@ var DiscountService = /** @class */ (function () {
                                         if (reqData.discountType == "voucherDiscount" && isValidVoucher) {
                                             isValidVoucher = vouchers.voucher_type == "ALL_ITEMS" ? true : voucherDiscountedItems.includes(item.itemid);
                                         }
-                                        condition = reqData.discountType == "voucherDiscount" || reqData.discountType == "instantDiscount"
+                                        condition = reqData.discountType == ("voucherDiscount" && isValidVoucher) || reqData.discountType == "instantDiscount"
                                             ? "true"
                                             : "!item.isItemFree";
                                         condition = eval(condition);
@@ -300,7 +300,7 @@ var DiscountService = /** @class */ (function () {
                                         isPromotionDiscount = false;
                                         isBuyOneGetOneDiscount = false;
                                         buyOneGetOneDiscountDetails = void 0;
-                                        if (!(reqData.discountType != "voucherDiscount" && reqData.discountType != "instantDiscount")) return [3 /*break*/, 5];
+                                        if (!((reqData.discountType != "voucherDiscount" && isValidVoucher) && reqData.discountType != "instantDiscount")) return [3 /*break*/, 5];
                                         promotionalDiscountDetails = promotionalDiscountDetails.length > 0 ? promotionalDiscountDetails[0] : null;
                                         selectedQuantity = reqData.selectedItems
                                             .filter(function (v) { return v.itemid == v.itemid && v.inventsizeid == v.inventsizeid; })

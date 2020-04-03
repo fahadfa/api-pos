@@ -225,7 +225,7 @@ var SalesTableDAO = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select s.salesname ,sl.salesqty ,s.mobileno ,\n        sl.itemid,c.cityname ,c.citynamearb ,it.int_ext,s.lastmodifieddate from salestable s\n        inner join salesline sl on sl.salesid =s.salesid \n        inner join inventtable it on sl.itemid =it.itemid \n        inner join citymast c on c.cityname =s.citycode \n        where s.inventlocationid ='" + data.inventlocationid + "' \n        and it.int_ext != 0\n        and transkind in ('SALESORDER') \n        and s.lastmodifieddate >= current_date - interval '15' day \n        order by s.lastmodifieddate ;";
+                        query = "select s.salesname ,sl.salesqty ,s.mobileno ,s.amount,\n        sl.itemid,c.cityname ,c.citynamearb as citynamear,it.int_ext,s.lastmodifieddate from salestable s\n        inner join salesline sl on sl.salesid =s.salesid \n        inner join inventtable it on sl.itemid =it.itemid \n        inner join citymast c on c.cityname =s.citycode \n        where s.inventlocationid ='" + data.inventlocationid + "' \n        and it.int_ext != 0\n        and transkind in ('SALESORDER') \n        and s.lastmodifieddate >= current_date - interval '15' day \n        order by s.lastmodifieddate ;";
                         return [4 /*yield*/, this.dao.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }

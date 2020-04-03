@@ -121,7 +121,8 @@ var ExpiredProductsReport = /** @class */ (function () {
                         return [4 /*yield*/, this.db.query(query)];
                     case 2:
                         data = _a.sent();
-                        renderData.inventlocationid = params.lang == "en" ? data[0].en : data[0].ar;
+                        data = data.length > 0 ? data[0] : {};
+                        renderData.inventlocationid = params.lang == "en" ? data.en : data.ar;
                         _a.label = 3;
                     case 3:
                         // console.log(result.salesLine[0].product.nameEnglish);

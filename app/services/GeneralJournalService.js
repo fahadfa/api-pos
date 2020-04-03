@@ -277,7 +277,7 @@ var GeneralJournalService = /** @class */ (function () {
                         mdata = _b.sent();
                         _b.label = 5;
                     case 5:
-                        if (!!item.journalNum) return [3 /*break*/, 7];
+                        if (!(item.journalNum == "null")) return [3 /*break*/, 7];
                         _a = item;
                         return [4 /*yield*/, this.getaccountNum()];
                     case 6:

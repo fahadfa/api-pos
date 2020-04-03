@@ -47,9 +47,9 @@ var itemSalesByCustomerReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log('================Params===============');
+                        console.log("================Params===============");
                         console.log(params);
-                        console.log('================Params===============');
+                        console.log("================Params===============");
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 7, , 8]);
@@ -120,8 +120,8 @@ var itemSalesByCustomerReport = /** @class */ (function () {
                             transType: params.transType,
                             color: params.color,
                             product: params.product,
-                            customerName: params.accountnum ? (userData[0].nameEn) : 'ALL',
-                            customerNameAr: params.accountnum ? (userData[0].nameAr) : 'ALL',
+                            customerName: params.accountnum ? userData[0].nameEn : "ALL",
+                            customerNameAr: params.accountnum ? userData[0].nameAr : "ALL",
                             totalQuantity: totalQuantity_1,
                             totalLineAmount: totalLineAmount_1.toFixed(2),
                             colorantPrice: colorantPrice_1.toFixed(2),
@@ -150,7 +150,7 @@ var itemSalesByCustomerReport = /** @class */ (function () {
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
-                        return [2 /*return*/, data ? data[0] : {}];
+                        return [2 /*return*/, data.length > 0 ? data[0] : {}];
                 }
             });
         });

@@ -104,7 +104,7 @@ var OrderShipmentReport = /** @class */ (function () {
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
-                        return [2 /*return*/, data ? data[0] : {}];
+                        return [2 /*return*/, data.length > 0 ? data[0] : {}];
                 }
             });
         });

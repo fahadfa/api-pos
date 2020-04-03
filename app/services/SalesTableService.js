@@ -2790,7 +2790,7 @@ var SalesTableService = /** @class */ (function () {
                         _a.trys.push([0, 4, , 5]);
                         console.log(item);
                         if (!item.inventlocationid) return [3 /*break*/, 2];
-                        query = "select st.salesid ,ct.accountnum ,ct.\"name\" ,ct.namealias ,ct.rcusttype from salestable  st inner join custtable ct \n        on st.custaccount = ct.accountnum \n        where st.transkind ='SALESORDER'\n        and ct.rcusttype = 2\n        and st.inventlocationid ='" + item.inventlocationid + "';";
+                        query = "select st.salesid ,st.salesname as customer,st.amount,st.lastmodifieddate,\n        ct.accountnum ,ct.\"name\" as  painterAr,ct.namealias as painterEn,ct.rcusttype from salestable  st inner join custtable ct \n        on st.custaccount = ct.accountnum \n        where st.transkind ='SALESORDER'\n        and ct.rcusttype = 2\n        and st.inventlocationid ='" + item.inventlocationid + "';";
                         return [4 /*yield*/, this.salestableDAO.getDAO().query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2: throw { message: Props_1.Props.INVALID_DATA };

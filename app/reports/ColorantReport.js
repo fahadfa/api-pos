@@ -112,7 +112,7 @@ var ColorantReport = /** @class */ (function () {
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
-                        return [2 /*return*/, data ? data[0] : {}];
+                        return [2 /*return*/, data.length > 0 ? data[0] : {}];
                 }
             });
         });
@@ -122,9 +122,7 @@ var ColorantReport = /** @class */ (function () {
             var warehouse, file;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        console.log(result);
-                        return [4 /*yield*/, this.warehouseName(params.inventlocationid)];
+                    case 0: return [4 /*yield*/, this.warehouseName(params.inventlocationid)];
                     case 1:
                         warehouse = _a.sent();
                         result.warehouseNameEn = warehouse.namealias;

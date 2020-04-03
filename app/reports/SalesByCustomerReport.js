@@ -61,7 +61,6 @@ var SalesByCustomerReport = /** @class */ (function () {
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        console.log(params);
                         result = {};
                         result.headers = {};
                         result.data = [];
@@ -69,9 +68,21 @@ var SalesByCustomerReport = /** @class */ (function () {
                         return [4 /*yield*/, this.salesData(params)];
                     case 1:
                         rows = _c.sent();
+                        // console.log("--------------sssss--------");
+                        // console.log(params);
+                        // console.log("------------sssss----------");
                         if (rows && rows[0]) {
                             result.headers.wnamealias = rows[0].wnamealias;
                             result.headers.wname = rows[0].wname;
+                            result.headers.fromDate = params.fromDate;
+                            result.headers.toDate = params.toDate;
+                            result.headers.salesman = params.salesmanid ? rows[0].salesman : "ALL";
+                            result.headers.printtime = moment().format("HH:mm:ss");
+                            result.headers.printdate = moment().format("DD-MM-YY");
+                        }
+                        else {
+                            result.headers.wnamealias = params.inventlocationid;
+                            // result.headers.wname = params.viewType;
                             result.headers.fromDate = params.fromDate;
                             result.headers.toDate = params.toDate;
                             result.headers.salesman = params.salesmanid ? rows[0].salesman : "ALL";

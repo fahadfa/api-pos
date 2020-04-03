@@ -184,17 +184,18 @@ var itemTransactionsReport = /** @class */ (function () {
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
+                        data = data.length > 0 ? data[0] : {};
                         if (result.batchno == "ALL") {
-                            result.batchno = params.lang == "en" ? data[0].en : data[0].ar;
+                            result.batchno = params.lang == "en" ? data.en : data.ar;
                         }
                         if (result.product == "ALL") {
-                            result.product = params.lang == "en" ? data[0].en : data[0].ar;
+                            result.product = params.lang == "en" ? data.en : data.ar;
                         }
                         if (result.color == "ALL") {
-                            result.color = params.lang == "en" ? data[0].en : data[0].ar;
+                            result.color = params.lang == "en" ? data.en : data.ar;
                         }
                         if (result.inventsizeid == "ALL") {
-                            result.inventsizeid = params.lang == "en" ? data[0].en : data[0].ar;
+                            result.inventsizeid = params.lang == "en" ? data.en : data.ar;
                         }
                         _a.label = 2;
                     case 2:

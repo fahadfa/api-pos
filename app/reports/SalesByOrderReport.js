@@ -78,6 +78,15 @@ var SalesByOrderReport = /** @class */ (function () {
                             result.headers.printtime = moment().format("HH:mm:ss");
                             result.headers.printdate = moment().format("DD-MM-YY");
                         }
+                        else {
+                            result.headers.wnamealias = params.inventlocationid;
+                            // result.headers.wname = params.viewType;
+                            result.headers.fromDate = params.fromDate;
+                            result.headers.toDate = params.toDate;
+                            result.headers.salesman = params.salesmanid ? rows[0].salesman : "ALL";
+                            result.headers.printtime = moment().format("HH:mm:ss");
+                            result.headers.printdate = moment().format("DD-MM-YY");
+                        }
                         _loop_1 = function (item) {
                             saleslist = result.data.find(function (ele) { return ele.salesgroup.salesman == item.salesman; });
                             if (saleslist) {
@@ -136,7 +145,8 @@ var SalesByOrderReport = /** @class */ (function () {
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
-                        renderData.headers.salesman = params.lang == "en" ? data[0].en : data[0].ar;
+                        data = data.length > 0 ? data[0] : {};
+                        renderData.headers.salesman = params.lang == "en" ? data.en : data.ar;
                         _a.label = 2;
                     case 2:
                         renderData.printDate = new Date(params.printDate)
@@ -162,7 +172,7 @@ var SalesByOrderReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log('My params', params);
+                        console.log("My params", params);
                         sql = "\n      select\n        st.salesid as \"salesid\" ,\n        st.custaccount as \"custaccount\",\n        st.status as status,\n        als.en as \"statusEn\",\n        als.ar as \"statusAr\",\n        alt.en as \"transkindEn\",\n        alt.ar as \"transkindAr\",\n        st.transkind as transkind,\n        st.salesname as customername,\n        st.mobileno as custmobilenumber,\n        to_char(st.vatamount, 'FM999999999990.00') as vatamount,\n        to_char(st.netamount, 'FM999999999990.00') as \"netamount\",\n        to_char(st.disc, 'FM999,999999990.00') as disc,\n        to_char(st.amount , 'FM999999999990.00') as amount,\n        w.namealias as wnamealias,\n        w.name as wname,\n        d.description as salesman,\n        d.num as \"salesmanId\",\n\n        to_char(st.deliverydate, 'DD-MM-YYYY') as \"deliverydate\"\n      from\n        salestable st\n      left join inventlocation w on\n        w.inventlocationid = st.inventlocationid\n      inner join dimensions d on\n        d.num = st.dimension6_\n      left join app_lang als on als.id = st.status\n      left join app_lang alt on alt.id = st.transkind  \n      where\n        1 = 1\n        and st.status not in ('RESERVED')\n        and st.deliverydate between '" + params.fromDate + "' and ('" + params.toDate + "'::date + '2 day'::interval)\n        and st.inventlocationid = '" + params.inventlocationid + "'\n  ";
                         if (params.salesmanid) {
                             sql = sql + (" and d.num = '" + params.salesmanid + "' ");
