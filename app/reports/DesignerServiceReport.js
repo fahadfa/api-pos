@@ -55,7 +55,7 @@ var DesignerServiceReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
+                        _a.trys.push([0, 4, , 5]);
                         id = params.salesId;
                         query = "\n            select \n            st.salesid as \"salesId\",\n            st.custaccount as \"custAccount\",\n            st.status as status,\n            als.en as \"statusEn\",\n            als.ar as \"statusAr\",\n            alt.en as \"transkindEn\",\n            alt.ar as \"transkindAr\",\n            st.transkind as transkind,\n            to_char(st.vatamount, 'FM999999999990.00')  as vatamount,\n            to_char(st.netamount, 'FM999999999990.00')  as \"netAmount\",\n            to_char(coalesce(st.disc, 0), 'FM999999999990.00')  as disc,\n            to_char(st.amount , 'FM999999999990.00') as amount,\n            c.name as cname,\n            c.namealias as \"cnamealias\",\n            c.phone as \"cphone\",\n            to_char(st.createddatetime, 'DD-MM-YYYY') as createddatetime,\n            st.originalprinted as \"originalPrinted\",\n            st.inventlocationid as \"inventLocationId\",\n            w.namealias as wnamealias,\n            w.name as wname,\n            coalesce(st.deliveryaddress, ' ') || (' ') || coalesce(st.citycode, ' ') || (' ') || coalesce(st.districtcode, ' ') || (' ') || coalesce(st.country_code, ' ') as deliveryaddress,\n            d.\"name\" as salesman,\n            to_char(st.deliverydate, 'DD-MM-YYYY') as \"deliveryDate\"\n            from salestable st \n            left join inventlocation w on w.inventlocationid = st.inventlocationid\n            left join custtable c on c.accountnum = st.custaccount\n            left join dimensions d on d.num = st.dimension6_\n            left join app_lang als on als.id = st.status\n            left join app_lang alt on alt.id = st.transkind\n            where salesid='" + id + "'\n            ";
                         return [4 /*yield*/, this.db.query(query)];
@@ -63,10 +63,12 @@ var DesignerServiceReport = /** @class */ (function () {
                         data_1 = _a.sent();
                         data_1 = data_1.length >= 1 ? data_1[0] : {};
                         data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
-                        this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED");
+                        return [4 /*yield*/, this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED")];
+                    case 2:
+                        _a.sent();
                         salesQuery = "\n            select\n            ROW_NUMBER()  OVER (ORDER BY  ln.salesid) As \"sNo\",\n            ln.itemid as itemid,\n            cast(ln.salesqty as INTEGER) as \"salesQty\",\n            ln.configid as configid,\n            to_char(ln.salesprice , 'FM999,999,999,990D00') as salesprice,\n            to_char(ln.linetotaldisc , 'FM999,999,999,990D00') as \"lineTotalDisc\",\n            to_char(ln.vat , 'FM999,999,999,990D00') as vat,\n            to_char(ln.vatamount, 'FM999,999,990d00') as \"vatAmount\",\n            to_char(ln.salesprice- ln.linetotaldisc +ln.vatamount, 'FM999,999,999,990D00') as \"lineAmount\",\n            to_char(ln.salesprice- ln.linetotaldisc, 'FM999,999,999,990D00') as \"lineAmountBeforeVat\",\n            dp.name_en as inventsizeid\n            from salesline ln\n            left join designer_products dp on dp.code = ln.itemid\n            where ln.salesid='" + id + "'\n            ";
                         return [4 /*yield*/, this.db.query(salesQuery)];
-                    case 2:
+                    case 3:
                         salesLine = _a.sent();
                         // salesLine = salesLine.length > 0 ? salesLine : [];
                         data_1.salesLine = salesLine;
@@ -76,10 +78,10 @@ var DesignerServiceReport = /** @class */ (function () {
                         });
                         console.log(data_1);
                         return [2 /*return*/, data_1];
-                    case 3:
+                    case 4:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 4: return [2 /*return*/];
+                    case 5: return [2 /*return*/];
                 }
             });
         });

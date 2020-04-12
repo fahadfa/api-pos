@@ -68,6 +68,7 @@ var OrderShipmentReport = /** @class */ (function () {
                     case 2:
                         salesLine = _a.sent();
                         // salesLine = salesLine.length > 0 ? salesLine : [];
+                        console.log(salesLine);
                         data_1.salesLine = salesLine;
                         data_1.quantity = 0;
                         salesLine.map(function (v) {
@@ -115,10 +116,7 @@ var OrderShipmentReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 // console.log(result.salesLine[0].product.nameEnglish);
                 renderData = result;
-                renderData.printDate = new Date(params.printDate)
-                    .toISOString()
-                    .replace(/T/, " ")
-                    .replace(/\..+/, "");
+                renderData.printDate = new Date(params.printDate).toISOString().replace(/T/, " ").replace(/\..+/, "");
                 console.log(params.lang);
                 file = params.lang == "en" ? "os-en" : "os-ar";
                 try {

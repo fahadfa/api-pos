@@ -2119,6 +2119,7 @@ var SalesTableService = /** @class */ (function () {
                     case 10:
                         if (!(_a < _b.length)) return [3 /*break*/, 13];
                         batches_7 = _b[_a];
+                        delete batches_7.id;
                         batches_7.itemid = item.itemid;
                         batches_7.transrefid = reqData.interCompanyOriginalSalesId;
                         batches_7.invoiceid = reqData.salesId;
@@ -2154,6 +2155,7 @@ var SalesTableService = /** @class */ (function () {
                         if (!(_c < _d.length)) return [3 /*break*/, 18];
                         batches_8 = _d[_c];
                         if (!(batches_8.quantity > 0)) return [3 /*break*/, 17];
+                        delete batches_8.id;
                         batches_8.itemid = item.itemid;
                         batches_8.transrefid = reqData.interCompanyOriginalSalesId
                             ? reqData.interCompanyOriginalSalesId
