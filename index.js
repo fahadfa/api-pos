@@ -129,7 +129,7 @@ try {
     Store_1.StoreInIt();
     sync();
     cron.schedule("*/10 * * * *", function () {
-        lastSyncDate_1 = Store_1.getItem("syncdate");
+        lastSyncDate_1 = Store_1.getItem("syncdate", "index -> cron");
         Log_1.log.warn(lastSyncDate_1);
         lastSyncDate_1 = new Date(lastSyncDate_1);
         diff_1 = (new Date().getTime() - lastSyncDate_1.getTime()) / 60000;

@@ -48,7 +48,7 @@ var ItemBalanceReport = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 5, , 6]);
-                        query = "\n            select\n            i.itemid as itemid,\n            bs.namealias as nameEn,\n            bs.itemname as nameAr,\n            to_char(SUM(i.qty), 'FM999,999,999D') as availability,\n            i.configid as configid,\n            i.inventsizeid as inventsizeid,\n            i.batchno as batchno,\n            case when qty>0 then abs(qty) else 0 end as \"qtyIn\",\n            case when qty<0 then abs(qty) else 0 end as \"qtyOut\",\n            i.inventlocationid as inventlocationid,\n            i.location as location,\n            w.name as \"WareHouseNameAr\", \n            w.namealias as \"WareHouseNameEn\",\n            to_char(b.expdate, 'yyyy-MM-dd') as batchexpdate,\n            sz.description as \"sizeNameEn\",\n            sz.name as \"sizeNameAr\"\n        from inventtrans  i\n        inner join inventlocation w on w.inventlocationid=i.inventlocationid\n        left join inventbatch b on i.batchno = b.inventbatchid\n        left join inventtable bs on i.itemid = bs.itemid\n        left join inventsize sz on sz.inventsizeid = i.inventsizeid and sz.itemid = i.itemid\n        where i.dateinvent >= '" + params.fromDate + "' ::date\n        AND  i.dateinvent < ('" + params.toDate + "' ::date + '1 day'::interval)";
+                        query = "\n      select * from (\n            select\n            i.itemid as itemid,\n            bs.namealias as nameEn,\n            bs.itemname as nameAr,\n            (select\n              SUM(i.qty) \n              from inventtrans j where j.itemid = i.itemid and \n              j.configid = i.configid and \n              j.inventsizeid = i.inventsizeid and \n              j.batchno = i.batchno and \n              j.inventlocationid = i.inventlocationid\n              group by j.itemid,  j.configid, j.inventsizeid, j.batchno, j.inventlocationid\n              ) as availability,\n            i.configid as configid,\n            i.inventsizeid as inventsizeid,\n            i.batchno as batchno,\n            case when qty>0 then abs(qty) else 0 end as \"qtyIn\",\n            case when qty<0 then abs(qty) else 0 end as \"qtyOut\",\n            i.inventlocationid as inventlocationid,\n            i.location as location,\n            w.name as \"WareHouseNameAr\", \n            w.namealias as \"WareHouseNameEn\",\n            to_char(b.expdate, 'yyyy-MM-dd') as batchexpdate,\n            sz.description as \"sizeNameEn\",\n            sz.name as \"sizeNameAr\"\n        from inventtrans  i\n        inner join inventlocation w on w.inventlocationid=i.inventlocationid\n        left join inventbatch b on i.batchno = b.inventbatchid\n        left join inventtable bs on i.itemid = bs.itemid\n        left join inventsize sz on sz.inventsizeid = i.inventsizeid and sz.itemid = i.itemid\n        where i.dateinvent >= '" + params.fromDate + "' ::date\n        AND  i.dateinvent < ('" + params.toDate + "' ::date + '1 day'::interval)";
                         if (!(params.key == "ALL")) return [3 /*break*/, 2];
                         warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.inventlocationid + "' limit 1";
                         return [4 /*yield*/, this.db.query(warehouseQuery)];
@@ -59,10 +59,10 @@ var ItemBalanceReport = /** @class */ (function () {
                             inQueryStr_1 += "'" + item + "',";
                         });
                         inQueryStr_1 += "'" + params.inventlocationid + "',";
-                        query += " and i.inventlocationid in (" + inQueryStr_1.substr(0, inQueryStr_1.length - 1) + ") and (transactionclosed = true or transactionclosed is NULL) ";
+                        query += " and i.inventlocationid in (" + inQueryStr_1.substr(0, inQueryStr_1.length - 1) + ") and (transactionclosed = true) ";
                         return [3 /*break*/, 3];
                     case 2:
-                        query += " and i.inventlocationid='" + params.key + "' and (transactionclosed = true or transactionclosed is NULL) ";
+                        query += " and i.inventlocationid='" + params.key + "' and (transactionclosed = true) ";
                         _a.label = 3;
                     case 3:
                         if (params.itemId) {
@@ -79,21 +79,23 @@ var ItemBalanceReport = /** @class */ (function () {
                         }
                         query =
                             query +
-                                " GROUP BY\n                    i.itemid,  i.configid, i.inventsizeid, i.batchno, i.qty, b.expdate, bs.namealias, bs.itemname, sz.name, sz.description, i.inventlocationid, w.name, w.namealias, i.location";
+                                " GROUP BY\n                    i.itemid,  i.configid, i.inventsizeid, i.batchno, i.qty, b.expdate, bs.namealias, bs.itemname, sz.name, sz.description, i.inventlocationid, w.name, w.namealias, i.location\n                    ) as v where availability > 0";
                         return [4 /*yield*/, this.db.query(query)];
                     case 4:
                         data = _a.sent();
                         i = 1;
-                        data = data.filter(function (item) { return item.availability > 0; });
                         for (_i = 0, data_1 = data; _i < data_1.length; _i++) {
                             item = data_1[_i];
                             item.sNo = i;
+                            item.availability = parseInt(item.availability);
+                            item.qtyIn = parseInt(item.qtyIn);
+                            item.qtyOut = parseInt(item.qtyOut);
                             i += 1;
                         }
                         result = {
-                            printDate: new Date().toLocaleString(),
+                            // printDate: new Date().toLocaleString(),
                             data: data,
-                            user: params.user
+                            user: params.user,
                         };
                         return [2 /*return*/, result];
                     case 5:
@@ -128,6 +130,7 @@ var ItemBalanceReport = /** @class */ (function () {
                 renderData.fromDate = params.fromDate;
                 renderData.toDate = params.toDate;
                 renderData.inventlocationid = params.inventlocationid;
+                renderData.printDate = new Date(params.printDate).toISOString().replace(/T/, " ").replace(/\..+/, "");
                 if (params.type == "excel") {
                     file = params.lang == "en" ? "itembalance-excel" : "itembalance-excel-ar";
                 }

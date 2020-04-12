@@ -98,7 +98,8 @@ var UserinfoDAO = /** @class */ (function () {
                             .createQueryBuilder("UserInfo")
                             .leftJoinAndSelect("UserInfo.userGroupConfig", "userGroupConfig")
                             .leftJoinAndSelect("UserInfo.userGroup", "userGroup")
-                            .where(data)
+                            .where({})
+                            .andWhere("LOWER(UserInfo.userName) = LOWER('" + data.userName + "')")
                             .getOne()];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
@@ -111,8 +112,8 @@ var UserinfoDAO = /** @class */ (function () {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.dao
                             .createQueryBuilder("UserInfo")
-                            .andWhere("LOWER(user_name) = LOWER(:username)", {
-                            username: data.userName
+                            .andWhere("LOWER(user_name) = LOWER(:username) and (UserInfo.deleted =false or UserInfo.deleted is NULL)", {
+                            username: data.userName,
                         })
                             .getMany()];
                     case 1: return [2 /*return*/, _a.sent()];

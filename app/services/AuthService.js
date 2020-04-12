@@ -114,8 +114,15 @@ var AuthService = /** @class */ (function () {
                         }
                         else {
                             return [2 /*return*/, Promise.reject({
-                                    message: "INVALID_USERNAME/PASSWORD"
+                                    message: "INVALID_USERNAME/PASSWORD",
                                 })];
+                        }
+                        if (process && process.env && process.env.ENV_STORE_ID) {
+                            if (responseData && responseData.user && responseData.user.inventlocationid != process.env.ENV_STORE_ID) {
+                                return [2 /*return*/, Promise.reject({
+                                        message: "User not releated to this store."
+                                    })];
+                            }
                         }
                         return [2 /*return*/, Promise.resolve(responseData)];
                     case 7:
@@ -168,13 +175,13 @@ var AuthService = /** @class */ (function () {
                                 }
                                 else {
                                     return [2 /*return*/, Promise.reject({
-                                            message: "ACCOUNT_DEACTIVATED_PLEASE_CONTACT_ADMIN"
+                                            message: "ACCOUNT_DEACTIVATED_PLEASE_CONTACT_ADMIN",
                                         })];
                                 }
                             }
                             else {
                                 return [2 /*return*/, Promise.reject({
-                                        message: "INVALID_PASSWORD"
+                                        message: "INVALID_PASSWORD",
                                     })];
                             }
                         }
@@ -209,7 +216,7 @@ var AuthService = /** @class */ (function () {
                         _a.sent();
                         return [4 /*yield*/, App_1.App.SendMail(profileObj.email, "Jaz Sales account activation for '" + profileObj.userName, "ForgotPassword", {
                                 name: profileObj.userName,
-                                securitytoken: profileObj.resetkey
+                                securitytoken: profileObj.resetkey,
                             })];
                     case 5:
                         _a.sent();

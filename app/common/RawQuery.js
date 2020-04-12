@@ -291,6 +291,7 @@ var RawQuery = /** @class */ (function () {
                                 else {
                                     query += "where  i.transrefid = '" + reqData.salesid + "' and transactionclosed=" + transactionclosed + " and i.inventlocationid = '" + reqData.inventlocationid + "'";
                                 }
+                                query += " order by sl.link_id ";
                                 // query +=
                                 //     reqData.type == "RETURNORDER" || reqData.type == "INVENTORYMOVEMENT" || reqData.type == "PURCHASEORDER"
                                 //         ? ` and i.invoiceid = '${reqData.salesid}'`
@@ -1085,6 +1086,14 @@ var RawQuery = /** @class */ (function () {
                         console.log(data);
                         console.log("userInfo: " + userInfo.userName, " groupid location:" + data.inventlocationid, " inventlocationid: " + userInfo.inventlocationid);
                         if (data.groupid == userInfo.groupid) {
+                            if (process && process.env && process.env.ENV_STORE_ID) {
+                                if (userInfo.inventlocationid == process.env.ENV_STORE_ID) {
+                                    return [2 /*return*/, true];
+                                }
+                                else {
+                                    return [2 /*return*/, false];
+                                }
+                            }
                             return [2 /*return*/, true];
                         }
                         else {
@@ -1165,7 +1174,7 @@ var RawQuery = /** @class */ (function () {
     };
     RawQuery.prototype.salesmanList = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, ids, query, new_data;
+            var data, ids, query;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -1173,14 +1182,26 @@ var RawQuery = /** @class */ (function () {
                             .split(",")
                             .map(function (d) { return "'" + d + "'"; })
                             .join(",");
-                        query = "select concat(num,' - ', description) as salesmanid\n    from dimensions where num in(" + ids + ")";
+                        query = "select concat(num,' - ', description) as salesman, num as salesmanid\n    from dimensions where num in(" + ids + ")";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
-                        return [4 /*yield*/, data.map(function (v) { return v.salesmanid; })];
-                    case 2:
-                        new_data = _a.sent();
-                        return [2 /*return*/, new_data];
+                        return [2 /*return*/, data];
+                }
+            });
+        });
+    };
+    RawQuery.prototype.salesman = function (salesmanId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, query;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "select concat(num,' - ', description) as salesman\n    from dimensions where num = '" + salesmanId + "'";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, data.length > 0 ? data[0].salesman : null];
                 }
             });
         });

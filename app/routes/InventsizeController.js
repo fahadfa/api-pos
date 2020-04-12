@@ -72,7 +72,7 @@ var InventsizeController = /** @class */ (function () {
                         result = _a.sent();
                         return [3 /*break*/, 7];
                     case 3:
-                        if (!(id = 'sizeswithnoprice')) return [3 /*break*/, 5];
+                        if (!(id = "sizeswithnoprice")) return [3 /*break*/, 5];
                         reqData = request.query ? request.query : {};
                         return [4 /*yield*/, this.service.searchSizesWithNoPrice(reqData)];
                     case 4:
@@ -83,9 +83,7 @@ var InventsizeController = /** @class */ (function () {
                         result = _a.sent();
                         _a.label = 7;
                     case 7: return [3 /*break*/, 9];
-                    case 8: throw this.service.sessionInfo
-                        ? this.service.sessionInfo
-                        : { message: Props_1.Props.TOKEN_MESSAGE };
+                    case 8: throw this.service.sessionInfo ? this.service.sessionInfo : { message: Props_1.Props.TOKEN_MESSAGE };
                     case 9:
                         response.send({ status: 1, data: result });
                         return [3 /*break*/, 11];
@@ -117,9 +115,7 @@ var InventsizeController = /** @class */ (function () {
                     case 2:
                         result = _a.sent();
                         return [3 /*break*/, 4];
-                    case 3: throw this.service.sessionInfo
-                        ? this.service.sessionInfo
-                        : { message: Props_1.Props.TOKEN_MESSAGE };
+                    case 3: throw this.service.sessionInfo ? this.service.sessionInfo : { message: Props_1.Props.TOKEN_MESSAGE };
                     case 4:
                         response.send({ status: 1, data: result });
                         return [3 /*break*/, 6];

@@ -77,8 +77,8 @@ var SalesByCustomerReport = /** @class */ (function () {
                             result.headers.fromDate = params.fromDate;
                             result.headers.toDate = params.toDate;
                             result.headers.salesman = params.salesmanid ? rows[0].salesman : "ALL";
-                            result.headers.printtime = moment().format("HH:mm:ss");
-                            result.headers.printdate = moment().format("DD-MM-YY");
+                            // result.headers.printtime = moment().format("HH:mm:ss");
+                            // result.headers.printdate = moment().format("DD-MM-YY");
                         }
                         else {
                             result.headers.wnamealias = params.inventlocationid;
@@ -86,8 +86,8 @@ var SalesByCustomerReport = /** @class */ (function () {
                             result.headers.fromDate = params.fromDate;
                             result.headers.toDate = params.toDate;
                             result.headers.salesman = params.salesmanid ? rows[0].salesman : "ALL";
-                            result.headers.printtime = moment().format("HH:mm:ss");
-                            result.headers.printdate = moment().format("DD-MM-YY");
+                            // result.headers.printtime = moment().format("HH:mm:ss");
+                            // result.headers.printdate = moment().format("DD-MM-YY");
                         }
                         _loop_1 = function (item) {
                             saleslist = result.data.find(function (ele) { return ele.salesgroup.salesman == item.salesman; });
@@ -158,7 +158,7 @@ var SalesByCustomerReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        sql = "\n      select\n        st.salesname as customername,\n        als.en as \"statusEn\",\n        als.ar as \"statusAr\",\n        alt.en as \"transkindEn\",\n        alt.ar as \"transkindAr\",\n        to_char(sum(st.vatamount), 'FM999999999990.00') as vatamount,\n        to_char(sum(st.netamount), 'FM999999999990.00') as \"netamount\",\n        to_char(sum(st.disc), 'FM999999999990.00') as disc,\n        to_char(sum(st.amount) , 'FM999999999990.00') as amount,\n        w.namealias as wnamealias,\n        w.name as wname,\n        d.description as salesman\n      from\n        salestable st\n      left join inventlocation w on\n        w.inventlocationid = st.inventlocationid\n      inner join dimensions d on\n        d.num = st.dimension6_\n      left join app_lang als on als.id = st.status\n      left join app_lang alt on alt.id = st.transkind\n      where\n        1 = 1\n        and st.status not in ('RESERVED')\n        and st.deliverydate between '" + params.fromDate + "' and ('" + params.toDate + "'::date + '2 day'::interval)\n        and st.inventlocationid = '" + params.inventlocationid + "'\n  ";
+                        sql = "\n      select\n        st.salesname as customername,\n        als.en as \"statusEn\",\n        als.ar as \"statusAr\",\n        alt.en as \"transkindEn\",\n        alt.ar as \"transkindAr\",\n        to_char(sum(st.vatamount), 'FM999999999990.00') as vatamount,\n        to_char(sum(st.netamount), 'FM999999999990.00') as \"netamount\",\n        to_char(sum(st.disc), 'FM999999999990.00') as disc,\n        to_char(sum(st.amount) , 'FM999999999990.00') as amount,\n        w.namealias as wnamealias,\n        w.name as wname,\n        d.description as salesman\n      from\n        salestable st\n      left join inventlocation w on\n        w.inventlocationid = st.inventlocationid\n      inner join dimensions d on\n        d.num = st.dimension6_\n      left join app_lang als on als.id = st.status\n      left join app_lang alt on alt.id = st.transkind\n      where\n        1 = 1\n        and st.status not in ('RESERVED')\n        and st.lastmodifieddate between '" + params.fromDate + "' and ('" + params.toDate + "'::date + '2 day'::interval)\n        and st.inventlocationid = '" + params.inventlocationid + "'\n  ";
                         if (params.salesmanid) {
                             sql = sql + (" and d.num = '" + params.salesmanid + "' ");
                         }

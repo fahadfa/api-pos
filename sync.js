@@ -89,7 +89,7 @@ var UpdateSyncService = function () {
     }
     cron.schedule("* * * * *", function () {
         try {
-            Store_1.setItem("syncdate", new Date().toISOString());
+            Store_1.setItem("syncdate", new Date().toISOString(), "sync -> cron");
             autoupdater.fire("check");
         }
         catch (error) {
@@ -137,7 +137,7 @@ var UpdateService = function () {
 };
 var main = function () {
     Log_1.ulog.info("Update Started ... ");
-    Store_1.setItem("syncdate", new Date().toISOString());
+    Store_1.setItem("syncdate", new Date().toISOString(), "sync -> main");
     CallSync();
     UpdateSyncService();
 };

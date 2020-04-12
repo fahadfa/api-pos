@@ -90,8 +90,8 @@ var WorkflowService = /** @class */ (function () {
                             item.createdDateTime = new Date(item.createdDateTime).toLocaleDateString();
                             // item.inventoryType = item.SalesTable.movementType.movementType;
                             // item.inventoryTypeAr = item.SalesTable.movementType.movementArabic;
-                            item.inventoryType = item.SalesTable.movementType;
-                            item.inventoryTypeAr = item.SalesTable.movementType;
+                            item.inventoryType = item.SalesTable ? item.SalesTable.movementType : null;
+                            item.inventoryTypeAr = item.SalesTable ? item.SalesTable.movementType : null;
                             delete item.SalesTable;
                         });
                         return [2 /*return*/, data];
@@ -304,7 +304,7 @@ var WorkflowService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.usergroupconfigDAO.findOne({
-                            groupid: this.sessionInfo.groupid
+                            groupid: this.sessionInfo.groupid,
                         })];
                     case 1:
                         usergroupconfig = _a.sent();
@@ -314,14 +314,8 @@ var WorkflowService = /** @class */ (function () {
                         data = _a.sent();
                         if (!(data && data.format)) return [3 /*break*/, 4];
                         hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);
-                        prevYear = new Date(data.lastmodifieddate)
-                            .getFullYear()
-                            .toString()
-                            .substr(2, 2);
-                        year = new Date()
-                            .getFullYear()
-                            .toString()
-                            .substr(2, 2);
+                        prevYear = new Date(data.lastmodifieddate).getFullYear().toString().substr(2, 2);
+                        year = new Date().getFullYear().toString().substr(2, 2);
                         data.nextrec = prevYear == year ? data.nextrec : 1;
                         id = data.format.replace(hashString, data.nextrec) + "-" + year;
                         console.log(id);

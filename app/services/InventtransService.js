@@ -117,7 +117,7 @@ var InventtransService = /** @class */ (function () {
                                 inventsizeid: ele.inventsizeid,
                                 batchNo: ele.batchno,
                                 configid: ele.configid,
-                                quantity: Math.abs(ele.qty)
+                                quantity: Math.abs(ele.qty),
                             };
                             new_result.push(batch);
                         }
@@ -145,7 +145,15 @@ var InventtransService = /** @class */ (function () {
                         data = _a.sent();
                         console.log(data);
                         result = this.groupBy(data, function (item) {
-                            return [item.itemid, item.batchno, item.configid, item.inventsizeid, item.isItemFree, item.colorantId];
+                            return [
+                                item.itemid,
+                                item.batchno,
+                                item.configid,
+                                item.inventsizeid,
+                                item.isItemFree,
+                                item.colorantId,
+                                item.linkId,
+                            ];
                         });
                         new_data_1 = [];
                         result.forEach(function (groupitem) {

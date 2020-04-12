@@ -11,7 +11,7 @@ exports.dbOptions = {
     database: "mpos_db",
     logging: true,
     synchronize: false,
-    entities: [__dirname + "/../entities/**/*{.ts,.js}"]
+    entities: [__dirname + "/../entities/**/*{.ts,.js}"],
 };
 // ============MS SQL CONNECTION=============
 exports.mssqlDbOptions = {
@@ -19,7 +19,7 @@ exports.mssqlDbOptions = {
     password: "binjzrpos",
     host: "localhost",
     database: "DAX",
-    port: 1433
+    port: 1433,
 };
 //============== QA DATABASE ================
 // export let dbOptions: any = {
@@ -58,7 +58,7 @@ exports.stageDbOptions = {
     port: 5432,
     username: "jpos",
     password: "Mpfrdsjposdb",
-    database: "jpos_qa"
+    database: "jpos_qa",
 };
 exports.localDbOptions = {
     name: "local",
@@ -70,7 +70,7 @@ exports.localDbOptions = {
     database: "mpos_db",
     logging: true,
     synchronize: false,
-    entities: [__dirname + "/../entities/**/*{.ts,.js}"]
+    entities: [__dirname + "/../entities/**/*{.ts,.js}"],
 };
 //============ PRE PROD_DB DATABASE ==========
 // export let dbOptions: any = {
@@ -101,8 +101,8 @@ exports.localDbOptions = {
 exports.mailOptions = {
     host: "smtp.gmail.com",
     port: 465,
-    user: "jpos@jazeerapaints.com",
-    pass: "12345678"
+    user: "jazsales1@gmail.com",
+    pass: "Jazeera@4321",
 };
 exports.setEnvConfig = function () {
     var envData = process.env.ENV_JPOS;

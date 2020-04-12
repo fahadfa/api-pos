@@ -226,7 +226,7 @@ var App = /** @class */ (function () {
                             return [2 /*return*/, true];
                         }
                         else {
-                            throw { message: "User infomation is changed please log in again." };
+                            throw { message: "User not releated to this store." };
                         }
                         _a.label = 6;
                     case 6: return [3 /*break*/, 8];

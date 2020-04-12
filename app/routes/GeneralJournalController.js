@@ -72,7 +72,8 @@ var GeneralJournalController = /** @class */ (function () {
                         data = _a.sent();
                         count = request.query.count ? request.query.count : 10;
                         pageCount = Math.ceil(data.length / count);
-                        page = parseInt(request.query.page);
+                        page = request.query.page;
+                        page = parseInt(page);
                         if (!page) {
                             page = 1;
                         }
@@ -82,7 +83,7 @@ var GeneralJournalController = /** @class */ (function () {
                         response.json({
                             page: page,
                             pageCount: pageCount,
-                            customers: data.slice(page * count - count, page * count)
+                            customers: data.slice(page * count - count, page * count),
                         });
                         return [3 /*break*/, 4];
                     case 3: throw this.service.sessionInfo ? this.service.sessionInfo : { message: Props_1.Props.TOKEN_MESSAGE };

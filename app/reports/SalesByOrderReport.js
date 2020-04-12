@@ -149,10 +149,7 @@ var SalesByOrderReport = /** @class */ (function () {
                         renderData.headers.salesman = params.lang == "en" ? data.en : data.ar;
                         _a.label = 2;
                     case 2:
-                        renderData.printDate = new Date(params.printDate)
-                            .toISOString()
-                            .replace(/T/, " ")
-                            .replace(/\..+/, "");
+                        renderData.printDate = new Date(params.printDate).toISOString().replace(/T/, " ").replace(/\..+/, "");
                         console.log(renderData);
                         file = params.lang == "en" ? "sales-by-order-en" : "sales-by-order-ar";
                         try {
@@ -173,11 +170,11 @@ var SalesByOrderReport = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         console.log("My params", params);
-                        sql = "\n      select\n        st.salesid as \"salesid\" ,\n        st.custaccount as \"custaccount\",\n        st.status as status,\n        als.en as \"statusEn\",\n        als.ar as \"statusAr\",\n        alt.en as \"transkindEn\",\n        alt.ar as \"transkindAr\",\n        st.transkind as transkind,\n        st.salesname as customername,\n        st.mobileno as custmobilenumber,\n        to_char(st.vatamount, 'FM999999999990.00') as vatamount,\n        to_char(st.netamount, 'FM999999999990.00') as \"netamount\",\n        to_char(st.disc, 'FM999,999999990.00') as disc,\n        to_char(st.amount , 'FM999999999990.00') as amount,\n        w.namealias as wnamealias,\n        w.name as wname,\n        d.description as salesman,\n        d.num as \"salesmanId\",\n\n        to_char(st.deliverydate, 'DD-MM-YYYY') as \"deliverydate\"\n      from\n        salestable st\n      left join inventlocation w on\n        w.inventlocationid = st.inventlocationid\n      inner join dimensions d on\n        d.num = st.dimension6_\n      left join app_lang als on als.id = st.status\n      left join app_lang alt on alt.id = st.transkind  \n      where\n        1 = 1\n        and st.status not in ('RESERVED')\n        and st.deliverydate between '" + params.fromDate + "' and ('" + params.toDate + "'::date + '2 day'::interval)\n        and st.inventlocationid = '" + params.inventlocationid + "'\n  ";
+                        sql = "\n      select\n        st.salesid as \"salesid\" ,\n        st.custaccount as \"custaccount\",\n        st.status as status,\n        als.en as \"statusEn\",\n        als.ar as \"statusAr\",\n        alt.en as \"transkindEn\",\n        alt.ar as \"transkindAr\",\n        st.transkind as transkind,\n        st.salesname as customername,\n        st.mobileno as custmobilenumber,\n        to_char(st.vatamount, 'FM999999999990.00') as vatamount,\n        to_char(st.netamount, 'FM999999999990.00') as \"netamount\",\n        to_char(st.disc, 'FM999,999999990.00') as disc,\n        to_char(st.amount , 'FM999999999990.00') as amount,\n        w.namealias as wnamealias,\n        w.name as wname,\n        d.description as salesman,\n        d.num as \"salesmanId\",\n\n        to_char(st.lastmodifieddate, 'DD-MM-YYYY') as \"deliverydate\"\n      from\n        salestable st\n      left join inventlocation w on\n        w.inventlocationid = st.inventlocationid\n      inner join dimensions d on\n        d.num = st.dimension6_\n      left join app_lang als on als.id = st.status\n      left join app_lang alt on alt.id = st.transkind  \n      where\n        1 = 1\n        and st.status not in ('RESERVED')\n        and st.lastmodifieddate between '" + params.fromDate + "' and ('" + params.toDate + "'::date + '2 day'::interval)\n        and st.inventlocationid = '" + params.inventlocationid + "'\n  ";
                         if (params.salesmanid) {
                             sql = sql + (" and d.num = '" + params.salesmanid + "' ");
                         }
-                        sql = sql + " order by st.deliverydate  ";
+                        sql = sql + " order by st.lastmodifieddate  ";
                         return [4 /*yield*/, this.db.query(sql)];
                     case 1:
                         rows = _a.sent();

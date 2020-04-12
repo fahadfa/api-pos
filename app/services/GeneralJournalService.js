@@ -61,21 +61,25 @@ var GeneralJournalService = /** @class */ (function () {
                         data = _a.sent();
                         data.status = data.posted == 0 ? "OPEN" : "POSTED";
                         data.createdDatetime = data.createdDatetime ? data.createdDatetime.toLocaleDateString() : data.createdDatetime;
-                        data.lastModifiedDate = data.lastModifiedDate ? data.lastModifiedDate.toLocaleDateString() : data.lastModifiedDate;
+                        data.lastModifiedDate = data.lastModifiedDate
+                            ? data.lastModifiedDate.toLocaleDateString()
+                            : data.lastModifiedDate;
                         if (!data) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.legerJournalTrasDAO.search({ journalNum: id })];
                     case 2:
                         legerJournalTras = _a.sent();
                         legerJournalTras.map(function (ele) {
                             ele.createDateTime = ele.createDateTime ? ele.createDateTime.toISOString().substr(0, 10) : ele.createDateTime;
-                            ele.lastModifiedDate = ele.lastModifiedDate ? ele.lastModifiedDate.toISOString().substr(0, 10) : ele.lastModifiedDate;
+                            ele.lastModifiedDate = ele.lastModifiedDate
+                                ? ele.lastModifiedDate.toISOString().substr(0, 10)
+                                : ele.lastModifiedDate;
                             ele.transdDate = ele.transdDate ? ele.transdDate.toISOString().substr(0, 10) : ele.transdDate;
                             ele.amountCurCredit = Math.ceil(ele.amountCurCredit);
                             ele.amountCurDebit = Math.ceil(ele.amountCurDebit);
                         });
                         data.legerJournalTras = legerJournalTras;
                         return [2 /*return*/, data];
-                    case 3: throw { message: 'RECORD_NOT_FOUND' };
+                    case 3: throw { message: "RECORD_NOT_FOUND" };
                     case 4: return [3 /*break*/, 6];
                     case 5:
                         error_1 = _a.sent();
@@ -175,9 +179,12 @@ var GeneralJournalService = /** @class */ (function () {
                             recid: item.recid,
                             recversion: item.recversion,
                             accountpltype: item.accounttype,
-                            dataareaid: item.dataareaid
+                            dataareaid: item.dataareaid,
                         };
-                        return [4 /*yield*/, this.ledgerTrasDAO.search({ accountNum: item.accountNumber.accountNum, journalNum: item.journalNum })];
+                        return [4 /*yield*/, this.ledgerTrasDAO.search({
+                                accountNum: item.accountNumber.accountNum,
+                                journalNum: item.journalNum,
+                            })];
                     case 8:
                         deleteData = _b.sent();
                         return [4 /*yield*/, this.ledgerTrasDAO.delete(deleteData)];
@@ -191,10 +198,10 @@ var GeneralJournalService = /** @class */ (function () {
                     case 11: return [4 /*yield*/, this.ledgerTrasDAO.save(ledgerTransData)];
                     case 12:
                         ledgerTrasfer = _b.sent();
-                        return [2 /*return*/, { id: reqData.journalNum, message: 'SAVED_SUCCESSFULLY' }];
+                        return [2 /*return*/, { id: reqData.journalNum, message: "SAVED_SUCCESSFULLY" }];
                     case 13:
                         if (cond == "journalNum") {
-                            throw { message: 'RECORD_ALREADY_EXISTS' };
+                            throw { message: "RECORD_ALREADY_EXISTS" };
                         }
                         return [3 /*break*/, 15];
                     case 14:
@@ -213,7 +220,7 @@ var GeneralJournalService = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 6, , 7]);
                         return [4 /*yield*/, this.usergroupconfigDAO.findOne({
-                                inventlocationid: this.sessionInfo.inventlocationid
+                                inventlocationid: this.sessionInfo.inventlocationid,
                             })];
                     case 1:
                         usergroupconfig = _a.sent();
@@ -224,14 +231,8 @@ var GeneralJournalService = /** @class */ (function () {
                         data = _a.sent();
                         console.log(data);
                         if (!data) return [3 /*break*/, 4];
-                        prevYear = new Date(data.lastmodifieddate)
-                            .getFullYear()
-                            .toString()
-                            .substr(2, 2);
-                        year = new Date()
-                            .getFullYear()
-                            .toString()
-                            .substr(2, 2);
+                        prevYear = new Date(data.lastmodifieddate).getFullYear().toString().substr(2, 2);
+                        year = new Date().getFullYear().toString().substr(2, 2);
                         data.nextrec = prevYear == year ? data.nextrec : 1;
                         hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);
                         salesId = data.format.replace(hashString, data.nextrec) + "-" + year;
@@ -240,14 +241,17 @@ var GeneralJournalService = /** @class */ (function () {
                     case 3:
                         _a.sent();
                         return [2 /*return*/, salesId];
-                    case 4: throw { message: 'CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE' };
+                    case 4: throw { message: "CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE" };
                     case 5: return [3 /*break*/, 7];
                     case 6:
                         error_4 = _a.sent();
                         if (error_4 == {}) {
-                            error_4 = { message: 'TECHNICAL_ISSUE,_PLEASE_CONTACT_YOUR_TECHNICAL_TEAM' };
+                            error_4 = { message: "TECHNICAL_ISSUE,_PLEASE_CONTACT_YOUR_TECHNICAL_TEAM" };
                         }
-                        throw { message: "SERVER_SIDE_ERROR" };
+                        else {
+                            throw { message: "SERVER_SIDE_ERROR" };
+                        }
+                        return [3 /*break*/, 7];
                     case 7: return [2 /*return*/];
                 }
             });
@@ -277,7 +281,7 @@ var GeneralJournalService = /** @class */ (function () {
                         mdata = _b.sent();
                         _b.label = 5;
                     case 5:
-                        if (!(item.journalNum == "null")) return [3 /*break*/, 7];
+                        if (!(item.journalNum == "null" || !item.journalNum)) return [3 /*break*/, 7];
                         _a = item;
                         return [4 /*yield*/, this.getaccountNum()];
                     case 6:
@@ -324,13 +328,13 @@ var GeneralJournalService = /** @class */ (function () {
                             entity.deleted = true;
                         }
                         else {
-                            throw { message: 'RECORD_NOT_FOUND' };
+                            throw { message: "RECORD_NOT_FOUND" };
                         }
                         entity.deletedby = this.sessionInfo.userName;
                         return [4 /*yield*/, this.generalJournalDAO.save(entity)];
                     case 2:
                         _a.sent();
-                        return [2 /*return*/, { id: entity.journalNum, message: 'REMOVED' }];
+                        return [2 /*return*/, { id: entity.journalNum, message: "REMOVED" }];
                     case 3:
                         error_5 = _a.sent();
                         throw error_5;

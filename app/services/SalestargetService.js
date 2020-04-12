@@ -299,7 +299,7 @@ var SalestargetService = /** @class */ (function () {
                         console.log(todaySales, " yesterday ", yesterdaySale);
                         console.log("=============================================");
                         currentPercentage = currentDayTarget ? ((todaySales - currentDayTarget) / currentDayTarget) * 100 : 0;
-                        previousPercentageDecimal = todaySales == 0 ? Infinity : ((yesterdaySale - todaySales) / todaySales);
+                        previousPercentageDecimal = todaySales == 0 ? Infinity : ((yesterdaySale - todaySales) / todaySales) * 100;
                         previousPercentage = previousPercentageDecimal == Infinity ? 0 : previousPercentageDecimal;
                         salesStatus = new SalesStatus_1.SalesStatus();
                         salesStatus.currentSale = todaySales;
@@ -311,8 +311,16 @@ var SalestargetService = /** @class */ (function () {
                         salesStatus.previousSalesPercent = previousPercentage ? previousPercentage : 0;
                         salesStatus.previousSalesPercentStatus = salesStatus.previousSalesPercent >= 0 ? "up" : "down";
                         salesStatus.currentSalesPercentStatus = salesStatus.currentSalesPercent >= 0 ? "up" : "down";
-                        salesStatus.currentSalesPercent = Math.round(Math.abs(salesStatus.currentSalesPercent));
-                        salesStatus.previousSalesPercent = Math.round(Math.abs(salesStatus.previousSalesPercent));
+                        console.log("=======================DAY Before  percent ======================");
+                        console.log(salesStatus.previousSalesPercent);
+                        console.log(Math.abs(salesStatus.previousSalesPercent));
+                        console.log(Math.round(Math.abs(salesStatus.previousSalesPercent)));
+                        console.log("=============================================");
+                        salesStatus.currentSalesPercent = (Math.abs(salesStatus.currentSalesPercent));
+                        salesStatus.previousSalesPercent = (Math.abs(salesStatus.previousSalesPercent));
+                        console.log("=======================DAY percent ======================");
+                        console.log(salesStatus.currentSalesPercent, " yesterday percent ", salesStatus.previousSalesPercent);
+                        console.log("=============================================");
                         salesStatus.currentTarget = currentDayTarget;
                         return [2 /*return*/, salesStatus];
                 }
@@ -353,8 +361,8 @@ var SalestargetService = /** @class */ (function () {
                         salesStatus.previousSalesPercent = previousPercentage ? previousPercentage : 0;
                         salesStatus.previousSalesPercentStatus = salesStatus.previousSalesPercent >= 0 ? "up" : "down";
                         salesStatus.currentSalesPercentStatus = salesStatus.currentSalesPercent >= 0 ? "up" : "down";
-                        salesStatus.currentSalesPercent = Math.round(Math.abs(salesStatus.currentSalesPercent));
-                        salesStatus.previousSalesPercent = Math.round(Math.abs(salesStatus.previousSalesPercent));
+                        salesStatus.currentSalesPercent = (Math.abs(salesStatus.currentSalesPercent));
+                        salesStatus.previousSalesPercent = (Math.abs(salesStatus.previousSalesPercent));
                         salesStatus.currentTarget = currentTargetAmount;
                         return [2 /*return*/, salesStatus];
                 }
@@ -396,8 +404,8 @@ var SalestargetService = /** @class */ (function () {
                         salesStatus.previousSalesPercent = previousPercentage ? previousPercentage : 0;
                         salesStatus.previousSalesPercentStatus = salesStatus.previousSalesPercent >= 0 ? "up" : "down";
                         salesStatus.currentSalesPercentStatus = salesStatus.currentSalesPercent >= 0 ? "up" : "down";
-                        salesStatus.currentSalesPercent = Math.round(Math.abs(salesStatus.currentSalesPercent));
-                        salesStatus.previousSalesPercent = Math.round(Math.abs(salesStatus.previousSalesPercent));
+                        salesStatus.currentSalesPercent = (Math.abs(salesStatus.currentSalesPercent));
+                        salesStatus.previousSalesPercent = (Math.abs(salesStatus.previousSalesPercent));
                         salesStatus.currentTarget = currentTargetAmount;
                         return [2 /*return*/, salesStatus];
                 }
@@ -418,7 +426,7 @@ var SalestargetService = /** @class */ (function () {
                         return [4 /*yield*/, this.getSalesFromToDate(data, previousMonthDates)];
                     case 2:
                         previousMonthSales = _a.sent();
-                        console.log("===============currentMonthSales===================", currentMonthSales);
+                        console.log("===============currentYearSales===================", currentMonthSales);
                         console.log("===============previousYearSales===================", previousMonthSales);
                         return [4 /*yield*/, this.getTargetAmountsBasedOnDates(data, currentMonthDates, true)];
                     case 3:
@@ -426,6 +434,8 @@ var SalestargetService = /** @class */ (function () {
                         return [4 /*yield*/, this.getTargetAmountsBasedOnDates(data, previousMonthDates, true)];
                     case 4:
                         previousTargetAmount = _a.sent();
+                        console.log("===============currentTargetAmount===================", currentTargetAmount);
+                        console.log("===============previousTargetAmount===================", previousTargetAmount);
                         currentPercentage = currentTargetAmount
                             ? ((currentMonthSales - currentTargetAmount) / currentTargetAmount) * 100
                             : 0;
@@ -440,8 +450,8 @@ var SalestargetService = /** @class */ (function () {
                         salesStatus.previousSalesPercent = previousPercentage ? previousPercentage : 0;
                         salesStatus.previousSalesPercentStatus = salesStatus.previousSalesPercent >= 0 ? "up" : "down";
                         salesStatus.currentSalesPercentStatus = salesStatus.currentSalesPercent >= 0 ? "up" : "down";
-                        salesStatus.currentSalesPercent = Math.round(Math.abs(salesStatus.currentSalesPercent));
-                        salesStatus.previousSalesPercent = Math.round(Math.abs(salesStatus.previousSalesPercent));
+                        salesStatus.currentSalesPercent = (Math.abs(salesStatus.currentSalesPercent));
+                        salesStatus.previousSalesPercent = (Math.abs(salesStatus.previousSalesPercent));
                         salesStatus.currentTarget = currentTargetAmount;
                         return [2 /*return*/, salesStatus];
                 }
@@ -449,7 +459,8 @@ var SalestargetService = /** @class */ (function () {
         });
     };
     SalestargetService.prototype.getTargetAmont = function (amount, days) {
-        return amount / days;
+        amount = (amount / days);
+        return amount ? amount : 0;
     };
     SalestargetService.prototype.getTargetAmountsBasedOnDates = function (data, dates, onlyYear) {
         return __awaiter(this, void 0, void 0, function () {
@@ -464,12 +475,15 @@ var SalestargetService = /** @class */ (function () {
                         return [4 /*yield*/, this.getCurrentMonthTargetAmount(data.inventlocationid, dates.fromYear, !onlyYear ? dates.fromMonth : null)];
                     case 1:
                         currentMonthTaget = _a.sent();
+                        console.log("currentMonthTaget   in ", currentMonthTaget);
                         currentMonthTagetSegmentedTarget = 0;
                         currentDateMonthSegmentedWorkingDays = 0;
                         currentDayTarget = this.getTargetAmont(currentMonthTaget, currentDateMonthWorkingDays);
+                        console.log("currentDayTarget   in ", currentDayTarget);
                         currentTarget = !onlyYear
                             ? currentDayTarget * dates.workingDays
                             : currentDayTarget * currentDateMonthWorkingDays;
+                        console.log("currentTarget   in ", currentTarget);
                         if (!(!onlyYear && dates.fromMonth != dates.toMonth)) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.getCurrentMonthTargetAmount(data.inventlocationid, dates.toYear, !onlyYear ? dates.toMonth : null)];
                     case 2:
@@ -479,7 +493,9 @@ var SalestargetService = /** @class */ (function () {
                         currentSegmentedTarget = currentDayTargetSegmented * dates.workingDaysSeg;
                         currentTarget += currentSegmentedTarget;
                         _a.label = 3;
-                    case 3: return [2 /*return*/, currentTarget];
+                    case 3:
+                        console.log("currentTarget between dates ===== ", currentTarget);
+                        return [2 /*return*/, currentTarget];
                 }
             });
         });
@@ -526,9 +542,10 @@ var SalestargetService = /** @class */ (function () {
                         if (targetItem && month) {
                             target = targetItem["month" + (month + 1)];
                         }
-                        else if (targetItem && targetItem.hasOwnProperty("yearTarget")) {
+                        else if (targetItem && targetItem.hasOwnProperty("yearTarget") && targetItem["yearTarget"]) {
                             target = targetItem.yearTarget;
                         }
+                        console.log("=======================", target);
                         return [2 /*return*/, target];
                 }
             });

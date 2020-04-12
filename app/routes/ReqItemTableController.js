@@ -45,7 +45,7 @@ var ReqItemTableController = /** @class */ (function () {
     ReqItemTableController.prototype.getRouter = function () {
         var _this = this;
         this.router.get("/search", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
-            var result, error_1;
+            var result, query, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -59,7 +59,8 @@ var ReqItemTableController = /** @class */ (function () {
                         return [3 /*break*/, 4];
                     case 2:
                         console.log(request.query);
-                        return [4 /*yield*/, this.service.search(request.query)];
+                        query = request.query;
+                        return [4 /*yield*/, this.service.search(query)];
                     case 3:
                         result = _a.sent();
                         _a.label = 4;

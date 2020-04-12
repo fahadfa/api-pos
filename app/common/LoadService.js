@@ -73,7 +73,7 @@ var LoadService = /** @class */ (function () {
                                 .join(",")
                             : null;
                         console.log(param);
-                        query = "select \n            c.accountnum, \n            c.name as name, \n            c.namealias, \n            c.address, \n            c.phone,\n            c.districtcode,\n            c.citycode, \n            c.rcusttype, \n            c.pricegroup,\n            c.inventlocation,\n            c.walkincustomer,\n            c.custgroup,\n            c.cashdisc,\n            c.salesgroup,\n            c.currency,\n            c.vendaccount,\n            c.vatnum,\n            c.countryregionid,\n            c.inventlocation,\n            c.email,\n            c.blocked,\n            c.taxgroup,\n            c.paymmode,\n            c.paymtermid,\n            c.creditmax,\n            c.bankaccount,\n            c.invoiceaddress,\n            c.city,\n            c.custtype,\n            c.walkincustomer,\n            c.dimension as regionid,\n            c.dimension2_ as departmentid,\n            c.dimension3_ as costcenterid,\n            c.dimension4_ as employeeid,\n            c.dimension5_ as projectid,\n            (CASE \n              WHEN c.dimension6_!='' THEN concat(d.num,' - ', d.description)\n              ELSE '" + this.sessionInfo.salesmanid[0] + "'\n          END\n           ) as salesmanid,\n           c.dimension7_ as brandid,\n           c.dimension8_ as productlineid\n           from custtable c\n           left join dimensions d on c.dimension6_ = d.num ";
+                        query = "select \n            c.accountnum, \n            c.name as name, \n            c.namealias, \n            c.address, \n            c.phone,\n            c.districtcode,\n            c.citycode, \n            c.rcusttype, \n            c.pricegroup,\n            c.inventlocation,\n            c.walkincustomer,\n            c.custgroup,\n            c.cashdisc,\n            c.salesgroup,\n            c.currency,\n            c.vendaccount,\n            c.vatnum,\n            c.countryregionid,\n            c.inventlocation,\n            c.email,\n            c.blocked,\n            c.taxgroup,\n            c.paymmode,\n            c.paymtermid,\n            c.creditmax,\n            c.bankaccount,\n            c.invoiceaddress,\n            c.city,\n            c.custtype,\n            c.walkincustomer,\n            c.dimension as regionid,\n            c.dimension2_ as departmentid,\n            c.dimension3_ as costcenterid,\n            c.dimension4_ as employeeid,\n            c.dimension5_ as projectid,\n            (CASE \n              WHEN c.dimension6_!='' THEN concat(d.num,' - ', d.description)\n              ELSE '" + (this.sessionInfo.salesmanid.length > 0 ? this.sessionInfo.salesmanid[0].salesman : null) + "'\n          END\n           ) as salesman,\n           (CASE \n            WHEN c.dimension6_!='' THEN concat(d.num)\n            ELSE '" + (this.sessionInfo.salesmanid.length > 0 ? this.sessionInfo.salesmanid[0].salesmanid : null) + "'\n        END\n         ) as salesmanid,\n           c.dimension7_ as brandid,\n           c.dimension8_ as productlineid\n           from custtable c\n           left join dimensions d on c.dimension6_ = d.num ";
                         if (param.key == "customer") {
                             query += "where (c.name ILike '%" + param.param + "%' or c.namealias ILike '%" + param.param + "%' or c.accountnum ILike '%" + param.param + "%' or c.phone ILike '%" + param.param + "%') and c.dataareaid='" + this.sessionInfo.dataareaid + "' ";
                         }
@@ -541,48 +541,48 @@ var LoadService = /** @class */ (function () {
             {
                 custtype: 1,
                 custypenameen: "Individual",
-                custtypenamear: "أفراد"
+                custtypenamear: "أفراد",
             },
             {
                 custtype: 2,
                 custypenameen: "Painters",
-                custtypenamear: "دهان"
+                custtypenamear: "دهان",
             },
             {
                 custtype: 3,
                 custypenameen: "Paints Contractor",
-                custtypenamear: "دهان مقاول - مؤسسات"
+                custtypenamear: "دهان مقاول - مؤسسات",
             },
             {
                 custtype: 4,
                 custypenameen: "Interior Designer",
-                custtypenamear: "مصمم داخلي"
+                custtypenamear: "مصمم داخلي",
             },
             {
                 custtype: 5,
                 custypenameen: "Decoration Shops",
-                custtypenamear: "محلات الديكور"
+                custtypenamear: "محلات الديكور",
             },
             {
                 custtype: 6,
                 custypenameen: "Family",
-                custtypenamear: "عوائل"
+                custtypenamear: "عوائل",
             },
             {
                 custtype: 7,
                 custypenameen: "Real Estate",
-                custtypenamear: "العقاريون"
+                custtypenamear: "العقاريون",
             },
             {
                 custtype: 8,
                 custypenameen: "Tile Workers",
-                custtypenamear: "مبلطين"
+                custtypenamear: "مبلطين",
             },
             {
                 custtype: 9,
                 custypenameen: "ISOLATION",
-                custtypenamear: "عوازل"
-            }
+                custtypenamear: "عوازل",
+            },
         ];
         return data;
     };
@@ -843,8 +843,8 @@ var LoadService = /** @class */ (function () {
                             {
                                 inventlocationid: "ALL",
                                 name: "الكل",
-                                namealias: "All"
-                            }
+                                namealias: "All",
+                            },
                         ];
                         data.sort(function (a, b) {
                             var nameA = a.name;
@@ -932,40 +932,49 @@ var LoadService = /** @class */ (function () {
                 accountType = [
                     {
                         accountType: 0,
-                        accountTypeName: "Profit And Loss"
+                        accountTypeName: "Profit And Loss",
+                        accountTypeNameAr: "الربح والخسارة",
                     },
                     {
                         accountType: 1,
-                        accountTypeName: "Revenue"
+                        accountTypeName: "Revenue",
+                        accountTypeNameAr: "إيرادات",
                     },
                     {
                         accountType: 2,
-                        accountTypeName: "Cost"
+                        accountTypeName: "Cost",
+                        accountTypeNameAr: "كلفة",
                     },
                     {
                         accountType: 3,
-                        accountTypeName: "Balance"
+                        accountTypeName: "Balance",
+                        accountTypeNameAr: "توازن",
                     },
                     {
                         accountType: 4,
-                        accountTypeName: "Asset"
+                        accountTypeName: "Asset",
+                        accountTypeNameAr: "الأصل",
                     },
                     {
                         accountType: 5,
-                        accountTypeName: "Liability"
+                        accountTypeName: "Liability",
+                        accountTypeNameAr: "مسؤولية",
                     },
                     {
                         accountType: 6,
-                        accountTypeName: "Header"
+                        accountTypeName: "Header",
+                        accountTypeNameAr: "العنوان",
                     },
                     {
                         accountType: 9,
-                        accountTypeName: "Total"
+                        accountTypeName: "Total",
+                        accountTypeNameAr: "مجموع",
                     },
                     {
                         accountType: 10,
-                        accountTypeName: "Group Total"
-                    }
+                        accountTypeName: "Group Total",
+                        accountTypeNameAr: "إجمالي المجموعة",
+                    },
                 ];
                 return [2 /*return*/, accountType];
             });
@@ -975,20 +984,24 @@ var LoadService = /** @class */ (function () {
         var options = [
             {
                 value: 0,
-                text: "Optional"
+                text: "Optional",
+                textAr: "اختياري",
             },
             {
                 value: 1,
-                text: "ToBeFilledIn"
+                text: "ToBeFilledIn",
+                textAr: "المراد شغلها في",
             },
             {
                 value: 2,
-                text: "List"
+                text: "List",
+                textAr: "قائمة",
             },
             {
                 value: 3,
-                text: "Fixed"
-            }
+                text: "Fixed",
+                textAr: "ثابت",
+            },
         ];
         return options;
     };
@@ -1012,18 +1025,18 @@ var LoadService = /** @class */ (function () {
                         {
                             id: 0,
                             name: "Fixed Asset",
-                            nameArabic: "Fixed Asset"
+                            nameArabic: "أصل ثابت",
                         },
                         {
                             id: 1,
                             name: "Continue Property",
-                            nameArabic: "Continue Property"
+                            nameArabic: "تواصل الملكية",
                         },
                         {
                             id: 2,
                             name: "Other",
-                            nameArabic: "Other"
-                        }
+                            nameArabic: "آخر",
+                        },
                     ]];
             });
         });
@@ -1035,33 +1048,33 @@ var LoadService = /** @class */ (function () {
                         {
                             id: 0,
                             name: "Tangible",
-                            nameArabic: "Tangible"
+                            nameArabic: "ملموس",
                         },
                         {
                             id: 1,
                             name: "Intangible",
-                            nameArabic: "Intangible"
+                            nameArabic: "غير الملموسة",
                         },
                         {
                             id: 2,
                             name: "Financial",
-                            nameArabic: "Financial"
+                            nameArabic: "الأمور المالية",
                         },
                         {
                             id: 3,
                             name: "Land and Building",
-                            nameArabic: "Land and Building"
+                            nameArabic: "الأرض والبناء",
                         },
                         {
                             id: 4,
                             name: "Goodwill",
-                            nameArabic: "Goodwill"
+                            nameArabic: "نية حسنة",
                         },
                         {
                             id: 5,
                             name: "Other",
-                            nameArabic: "Other"
-                        }
+                            nameArabic: "آخر",
+                        },
                     ]];
             });
         });
@@ -1123,40 +1136,40 @@ var LoadService = /** @class */ (function () {
         return [
             {
                 value: "USABLE",
-                text: "Usable"
+                text: "Usable",
             },
             {
                 value: "NOTUSABLE",
-                text: "Not Usable"
+                text: "Not Usable",
             },
             {
                 value: "SOLD",
-                text: "Sold"
+                text: "Sold",
             },
             {
                 value: "WRITEOFF",
-                text: "WriteOff"
-            }
+                text: "WriteOff",
+            },
         ];
     };
     LoadService.prototype.periodfreequency = function () {
         return [
             {
                 value: 12,
-                text: "Monthly"
+                text: "Monthly",
             },
             {
                 value: 3,
-                text: "Quarterly"
+                text: "Quarterly",
             },
             {
                 value: 2,
-                text: "Half Yearly"
+                text: "Half Yearly",
             },
             {
                 value: 1,
-                text: "Yearly"
-            }
+                text: "Yearly",
+            },
         ];
     };
     LoadService.prototype.years = function () {
@@ -1164,7 +1177,7 @@ var LoadService = /** @class */ (function () {
         var currentYear = new Date().getFullYear();
         for (var i = 0; i < 99; i++) {
             data.push({
-                yearNo: currentYear
+                yearNo: currentYear,
             });
             currentYear += 1;
         }
@@ -1174,52 +1187,52 @@ var LoadService = /** @class */ (function () {
         var data = [
             {
                 month: "January",
-                value: 1
+                value: 1,
             },
             {
                 month: "February",
-                value: 2
+                value: 2,
             },
             {
                 month: "March",
-                value: 3
+                value: 3,
             },
             {
                 month: "April",
-                value: 4
+                value: 4,
             },
             {
                 month: "May",
-                value: 5
+                value: 5,
             },
             {
                 month: "June",
-                value: 6
+                value: 6,
             },
             {
                 month: "July",
-                value: 7
+                value: 7,
             },
             {
                 month: "August",
-                value: 8
+                value: 8,
             },
             {
                 month: "Sepetember",
-                value: 9
+                value: 9,
             },
             {
                 month: "October",
-                value: 10
+                value: 10,
             },
             {
                 month: "November",
-                value: 12
+                value: 12,
             },
             {
                 month: "December",
-                value: 13
-            }
+                value: 13,
+            },
         ];
         return data;
     };
@@ -1237,7 +1250,7 @@ var LoadService = /** @class */ (function () {
                         result = [];
                         data.forEach(function (ele) {
                             result.push({
-                                name: ele
+                                name: ele,
                             });
                         });
                         return [2 /*return*/, result];
@@ -1348,7 +1361,7 @@ var LoadService = /** @class */ (function () {
                         data.push({
                             batchno: "-",
                             itemid: "-",
-                            configid: "-"
+                            configid: "-",
                         });
                         return [2 /*return*/, data];
                 }
@@ -1463,7 +1476,8 @@ var LoadService = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.db.query("select istantdiscountexclude from usergroupconfig where id = '" + this.sessionInfo.usergroupconfigid + "'")];
                     case 1:
                         data = _a.sent();
-                        data = data.length > 0 ? data[0].istantdiscountexclude.split(",") : [];
+                        console.log(data);
+                        data = data[0].istantdiscountexclude ? data[0].istantdiscountexclude.split(",") : [];
                         return [2 /*return*/, data];
                 }
             });
@@ -1489,6 +1503,19 @@ var LoadService = /** @class */ (function () {
                     case 4: return [3 /*break*/, 6];
                     case 5: return [2 /*return*/, false];
                     case 6: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    LoadService.prototype.checkfordesignerservicereturn = function (param) {
+        return __awaiter(this, void 0, void 0, function () {
+            var receiveOrderData;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.db.query("select salesid, custaccount,transkind, inventlocationid from salestable where intercompanyoriginalsalesid = '" + param.key + "' and transkind = 'DESIGNERSERVICERETURN'")];
+                    case 1:
+                        receiveOrderData = _a.sent();
+                        return [2 /*return*/, receiveOrderData.length > 0 ? false : true];
                 }
             });
         });

@@ -102,7 +102,7 @@ var UsergroupDAO = /** @class */ (function () {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.dao
                             .createQueryBuilder("Usergroup")
-                            .andWhere("LOWER(groupname) = LOWER(:groupname)", {
+                            .andWhere("LOWER(groupname) = LOWER(:groupname) and (deleted=false or deleted IS NULL)", {
                             groupname: data.groupname
                         })
                             .getMany()];

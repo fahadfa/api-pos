@@ -49,7 +49,7 @@ var SalesReturnReport = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 5, , 6]);
                         data = void 0;
-                        query = "\n            select \n                distinct\n                s.salesid as \"salesId\",\n                s.inventlocationid as \"fromWareHouse\",\n                s.custaccount as \"custaccount\",\n                to_char(s.createddatetime, 'DD-MM-YYYY') as createdDateTime,\n                to_char(s.lastmodifieddate, 'DD-MM-YYYY') as lastModifiedDate,\n                to_char(coalesce(s.disc, 0) , 'FM999999999990.00') as \"discount\",\n                to_char(s.amount , 'FM999999999990.00') as \"netAmount\",\n                to_char(s.netamount , 'FM999999999990.00') as \"grossAmount\",\n                to_char(s.vatamount , 'FM999999999990.00') as \"vatAmount\",\n                s.status as status,\n                als.en as \"statusEn\",\n                als.ar as \"statusAr\",\n                s.salesname as name,\n                s.salesname as \"nameAlias\",\n                to_char(s.amount, 'FM999999999990.00') as \"netAmount\",\n                to_char(s.netamount,'FM999999999990.00')  as \"grossAmount\",\n                s.transkind as type,\n                alt.en as \"transkindEn\",\n\t              alt.ar as \"transkindAr\",\n                w.name as \"wareHouseNameAr\",\n                w.namealias as \"wareHouseNameEn\",\n                c.paymtermid as \"paymentMode\",\n                alp.en as \"paymentModeEn\",\n                alp.ar as \"paymentModeAr\",\n                c.walkincustomer as \"walkincustomer\",\n                c.phone as phone\n            from salestable s\n              left join inventlocation w on w.inventlocationid=s.inventlocationid\n              left join custtable c on c.accountnum=s.custaccount\n              left join app_lang als on als.id = s.status\n              left join app_lang alt on alt.id = s.transkind\n              left join app_lang alp on alp.id = s.payment\n            where s.transkind in ('RETURNORDER', 'DESIGNERSERVICERETURN')  \n            and s.createddatetime >= '" + params.fromDate + "' ::date\n            AND  s.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval) \n            ";
+                        query = "\n            select \n                distinct\n                s.salesid as \"salesId\",\n                s.inventlocationid as \"fromWareHouse\",\n                s.custaccount as \"custaccount\",\n                to_char(s.createddatetime, 'DD-MM-YYYY') as createdDateTime,\n                to_char(s.lastmodifieddate, 'DD-MM-YYYY') as lastModifiedDate,\n                to_char(coalesce(s.disc, 0) , 'FM999999999990.00') as \"discount\",\n                to_char(s.amount , 'FM999999999990.00') as \"netAmount\",\n                to_char(s.netamount , 'FM999999999990.00') as \"grossAmount\",\n                to_char(s.vatamount , 'FM999999999990.00') as \"vatAmount\",\n                s.status as status,\n                als.en as \"statusEn\",\n                als.ar as \"statusAr\",\n                s.salesname as name,\n                s.salesname as \"nameAlias\",\n                to_char(s.amount, 'FM999999999990.00') as \"netAmount\",\n                to_char(s.netamount,'FM999999999990.00')  as \"grossAmount\",\n                s.transkind as type,\n                alt.en as \"transkindEn\",\n\t              alt.ar as \"transkindAr\",\n                w.name as \"wareHouseNameAr\",\n                w.namealias as \"wareHouseNameEn\",\n                c.paymtermid as \"paymentMode\",\n                alp.en as \"paymentModeEn\",\n                alp.ar as \"paymentModeAr\",\n                c.walkincustomer as \"walkincustomer\",\n                c.phone as phone\n            from salestable s\n              left join inventlocation w on w.inventlocationid=s.inventlocationid\n              left join custtable c on c.accountnum=s.custaccount\n              left join app_lang als on als.id = s.status\n              left join app_lang alt on alt.id = s.transkind\n              left join app_lang alp on alp.id = s.payment\n            where s.transkind in ('RETURNORDER', 'DESIGNERSERVICERETURN')  \n            and s.createddatetime >= '" + params.fromDate + "' ::date\n            AND  s.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval) \n            AND s.status in ('POSTED')\n            ";
                         if (!(params.inventlocationid == "ALL")) return [3 /*break*/, 2];
                         warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
                         return [4 /*yield*/, this.db.query(warehouseQuery)];
@@ -66,9 +66,9 @@ var SalesReturnReport = /** @class */ (function () {
                         query += " and s.inventlocationid='" + params.inventlocationid + "' ";
                         _a.label = 3;
                     case 3:
-                        if (params.status && params.status != "ALL") {
-                            query += " and  s.status = '" + params.status + "' ";
-                        }
+                        // if (params.status && params.status != "ALL") {
+                        //   query += ` and  s.status = '${params.status}' `;
+                        // }
                         if (params.accountnum) {
                             query += " and s.custaccount = '" + params.accountnum + "'";
                         }
@@ -114,7 +114,7 @@ var SalesReturnReport = /** @class */ (function () {
                             fromDate: params.fromDate,
                             toDate: params.toDate,
                             status: params.status,
-                            user: params.user
+                            user: params.user,
                         };
                         console.log(renderData.printDate);
                         return [4 /*yield*/, this.warehouseName(params.inventlocationid)];

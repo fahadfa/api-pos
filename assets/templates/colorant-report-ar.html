@@ -180,6 +180,7 @@
                 <th>اللون</th>
                 <th>بحجم</th>
                 <th>دفعة</th>
+                <th>موقعك</th>
                 <th>سعر المبيعات</th>
                 <th>كمية</th>
                 <th>المبلغ الإجمالي</th>
@@ -192,13 +193,14 @@
                 <td class="tdcenter">{{ this.colorant }}</td>
                 <td>{{ this.inventsizeid }}</td>
                 <th>{{ this.batchno }}</th>
+                <td>{{ this.wareHouseNameAr }}</td>
                 <td class="tdright">{{ this.price }}</td>
                 <td class="tdright">{{ this.quantity }}</td>
                 <td class="tdright">{{ this.totalAmount }}</td>
             </tr>
             {{/each}}
             <tr class="textbold">
-                <td class="tdleft" colspan="5">مجموع</td>
+                <td class="tdleft" colspan="6">مجموع</td>
                 <td class="tdright">{{ totalQuantity }}</td>
                 <td class="tdright">{{ totalAmount }}</td>
             </tr>

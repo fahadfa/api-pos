@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var UserInfo_1 = require("../../entities/UserInfo");
 var UsergroupconfigDAO_1 = require("../repos/UsergroupconfigDAO");
+var UsergroupDAO_1 = require("../repos/UsergroupDAO");
 var typeorm_1 = require("typeorm");
 var RawQuery_1 = require("../common/RawQuery");
 var uuid = require("uuid");
@@ -44,6 +45,7 @@ var UsergroupConfigService = /** @class */ (function () {
     function UsergroupConfigService() {
         this.db = typeorm_1.getManager();
         this.usergroupconfigDAO = new UsergroupconfigDAO_1.UsergroupconfigDAO();
+        this.usergroupDAO = new UsergroupDAO_1.UsergroupDAO();
         this.userInfo = new UserInfo_1.UserInfo();
         this.rawQuery = new RawQuery_1.RawQuery();
     }
@@ -105,7 +107,7 @@ var UsergroupConfigService = /** @class */ (function () {
     };
     UsergroupConfigService.prototype.save = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var sequenceGroupList, itemsNotInNumSeq, _i, sequenceGroupList_1, seq, numberSeq, cond, user, returnData, error_3;
+            var sequenceGroupList, itemsNotInNumSeq, _i, sequenceGroupList_1, seq, numberSeq, cond, promiseList, returnData, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -120,7 +122,7 @@ var UsergroupConfigService = /** @class */ (function () {
                             "ordershipmentsequencegroup",
                             "orderreceivesequencegroup",
                             "purchaserequestsequencegroup",
-                            "purchaseordersequencegroup"
+                            "purchaseordersequencegroup",
                         ];
                         itemsNotInNumSeq = [];
                         _i = 0, sequenceGroupList_1 = sequenceGroupList;
@@ -142,7 +144,7 @@ var UsergroupConfigService = /** @class */ (function () {
                     case 4:
                         console.log(itemsNotInNumSeq);
                         if (itemsNotInNumSeq.length > 0) {
-                            throw { message: 'CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE' };
+                            throw { message: "CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE" };
                         }
                         return [4 /*yield*/, this.validate(reqData)];
                     case 5:
@@ -150,23 +152,43 @@ var UsergroupConfigService = /** @class */ (function () {
                         console.log(cond);
                         if (!(cond == true)) return [3 /*break*/, 7];
                         reqData.lastmodifieddate = new Date();
-                        return [4 /*yield*/, this.usergroupconfigDAO.save(reqData)];
+                        promiseList = [];
+                        promiseList.push(this.usergroupconfigDAO.save(reqData));
+                        promiseList.push(this.update_user_group(reqData));
+                        return [4 /*yield*/, Promise.all(promiseList)];
                     case 6:
-                        user = _a.sent();
-                        returnData = { id: reqData.id, message: 'SAVED_SUCCESSFULLY' };
+                        _a.sent();
+                        returnData = { id: reqData.id, message: "SAVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
                     case 7:
                         if (cond == "groupname") {
-                            throw { message: 'RECORD_ALREADY_EXISTS' };
+                            throw { message: "RECORD_ALREADY_EXISTS" };
                         }
                         else {
-                            throw { message: 'INVALID_DATA' };
+                            throw { message: "INVALID_DATA" };
                         }
                         return [3 /*break*/, 9];
                     case 8:
                         error_3 = _a.sent();
                         throw error_3;
                     case 9: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    UsergroupConfigService.prototype.update_user_group = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var group;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.usergroupDAO.entity(data.groupid)];
+                    case 1:
+                        group = _a.sent();
+                        group.lastmodifieddate = new Date();
+                        return [4 /*yield*/, this.usergroupDAO.save(group)];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/];
                 }
             });
         });
@@ -240,7 +262,7 @@ var UsergroupConfigService = /** @class */ (function () {
                         return [4 /*yield*/, this.usergroupconfigDAO.save(usergroupconfig)];
                     case 5:
                         _a.sent();
-                        return [2 /*return*/, { id: usergroupconfig.groupid, message: 'REMOVED' }];
+                        return [2 /*return*/, { id: usergroupconfig.groupid, message: "REMOVED" }];
                     case 6:
                         error_4 = _a.sent();
                         throw error_4;

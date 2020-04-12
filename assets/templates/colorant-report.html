@@ -179,7 +179,7 @@
                 <th>Color</th>
                 <th>Size</th>
                 <th>Batch</th>
-                <!-- <th>Location</th> -->
+                <th>Location</th>
                 <th>Sales Price</th>
                 <th>Quantity</th>
                 <th>Total Amount</th>
@@ -192,14 +192,14 @@
                 <td>{{ this.colorant }}</td>
                 <td>{{ this.inventsizeid }}</td>
                 <td>{{ this.batchno }}</td>
-                <!-- <td>{{ this.wareHouseNameEn }}</td> -->
+                <td>{{ this.wareHouseNameEn }}</td>
                 <td class="tdright">{{ this.price }}</td>
                 <td class="tdright">{{ this.quantity }}</td>
                 <td class="tdright">{{ this.totalAmount }}</td>
             </tr>
             {{/each}}
             <tr class="textbold">
-                <td class="tdright" colspan="5">Total</td>
+                <td class="tdright" colspan="6">Total</td>
                 <td class="tdright">{{ totalQuantity }}</td>
                 <td class="tdright">{{ totalAmount }}</td>
             </tr>

@@ -40,7 +40,7 @@ var App_1 = require("../../utils/App");
 var Props_1 = require("../../constants/Props");
 var BaseSizeColorsService_1 = require("../services/BaseSizeColorsService");
 var csv = require("csvtojson");
-var excelToJson = require('convert-excel-to-json');
+var excelToJson = require("convert-excel-to-json");
 var BaseSizeColorsController = /** @class */ (function () {
     function BaseSizeColorsController() {
         this.router = express_1.Router();
@@ -102,7 +102,7 @@ var BaseSizeColorsController = /** @class */ (function () {
                         result = _a.sent();
                         return [3 /*break*/, 6];
                     case 2:
-                        if (!(reqData = 'getcolorprices')) return [3 /*break*/, 4];
+                        if (!(reqData = "getcolorprices")) return [3 /*break*/, 4];
                         params_2 = request.query ? request.query : {};
                         if (!params_2.skip) {
                             params_2.skip = 0;
@@ -147,31 +147,27 @@ var BaseSizeColorsController = /** @class */ (function () {
                         id = params.id;
                         reqData = request.files ? request.files : null;
                         list = void 0;
-                        if (!(reqData["file"].mimetype == 'text/csv')) return [3 /*break*/, 2];
-                        return [4 /*yield*/, csv().fromString(reqData["file"].data.toString())
-                            // console.log(list)
-                        ];
+                        if (!(reqData["file"].mimetype == "text/csv")) return [3 /*break*/, 2];
+                        return [4 /*yield*/, csv().fromString(reqData["file"].data.toString())];
                     case 1:
                         list = _a.sent();
                         return [3 /*break*/, 5];
                     case 2:
-                        if (!(reqData["file"].mimetype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) return [3 /*break*/, 3];
+                        if (!(reqData["file"].mimetype == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) return [3 /*break*/, 3];
                         // list = 'excel list'
                         list = excelToJson({
                             source: reqData["file"].data,
                             header: {
-                                rows: 1
+                                rows: 1,
                             },
                             columnToKey: {
-                                '*': '{{columnHeader}}'
-                            }
+                                "*": "{{columnHeader}}",
+                            },
                         });
                         keys = Object.keys(list);
                         list = list[keys[0]];
                         return [3 /*break*/, 5];
-                    case 3: return [4 /*yield*/, csv().fromString(reqData["file"].data.toString())
-                        // console.log(list)
-                    ];
+                    case 3: return [4 /*yield*/, csv().fromString(reqData["file"].data.toString())];
                     case 4:
                         list = _a.sent();
                         _a.label = 5;

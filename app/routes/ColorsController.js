@@ -172,11 +172,11 @@ var ColorsController = /** @class */ (function () {
                             list = excelToJson({
                                 source: reqData["file"].data,
                                 header: {
-                                    rows: 1
+                                    rows: 1,
                                 },
                                 columnToKey: {
-                                    "*": "{{columnHeader}}"
-                                }
+                                    "*": "{{columnHeader}}",
+                                },
                             });
                             keys = Object.keys(list);
                             list = list[keys[0]];

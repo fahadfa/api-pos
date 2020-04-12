@@ -76,9 +76,7 @@ var ConfigtableController = /** @class */ (function () {
                         result = _a.sent();
                         _a.label = 5;
                     case 5: return [3 /*break*/, 7];
-                    case 6: throw this.service.sessionInfo
-                        ? this.service.sessionInfo
-                        : { message: Props_1.Props.TOKEN_MESSAGE };
+                    case 6: throw this.service.sessionInfo ? this.service.sessionInfo : { message: Props_1.Props.TOKEN_MESSAGE };
                     case 7:
                         response.send({ status: 1, data: result });
                         return [3 /*break*/, 9];
@@ -110,9 +108,7 @@ var ConfigtableController = /** @class */ (function () {
                     case 2:
                         result = _a.sent();
                         return [3 /*break*/, 4];
-                    case 3: throw this.service.sessionInfo
-                        ? this.service.sessionInfo
-                        : { message: Props_1.Props.TOKEN_MESSAGE };
+                    case 3: throw this.service.sessionInfo ? this.service.sessionInfo : { message: Props_1.Props.TOKEN_MESSAGE };
                     case 4:
                         response.send({ status: 1, data: result });
                         return [3 /*break*/, 6];
