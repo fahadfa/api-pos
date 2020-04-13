@@ -43,65 +43,50 @@ var ItemBalanceReport = /** @class */ (function () {
     }
     ItemBalanceReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var query, warehouseQuery, regionalWarehouses, inQueryStr_1, data, i, _i, data_1, item, result, error_1;
+            var data, i, resData, saleslist, _loop_1, _i, data_1, item, result, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
-                        query = "\n      select * from (\n            select\n            i.itemid as itemid,\n            bs.namealias as nameEn,\n            bs.itemname as nameAr,\n            (select\n              SUM(i.qty) \n              from inventtrans j where j.itemid = i.itemid and \n              j.configid = i.configid and \n              j.inventsizeid = i.inventsizeid and \n              j.batchno = i.batchno and \n              j.inventlocationid = i.inventlocationid\n              group by j.itemid,  j.configid, j.inventsizeid, j.batchno, j.inventlocationid\n              ) as availability,\n            i.configid as configid,\n            i.inventsizeid as inventsizeid,\n            i.batchno as batchno,\n            case when qty>0 then abs(qty) else 0 end as \"qtyIn\",\n            case when qty<0 then abs(qty) else 0 end as \"qtyOut\",\n            i.inventlocationid as inventlocationid,\n            i.location as location,\n            w.name as \"WareHouseNameAr\", \n            w.namealias as \"WareHouseNameEn\",\n            to_char(b.expdate, 'yyyy-MM-dd') as batchexpdate,\n            sz.description as \"sizeNameEn\",\n            sz.name as \"sizeNameAr\"\n        from inventtrans  i\n        inner join inventlocation w on w.inventlocationid=i.inventlocationid\n        left join inventbatch b on i.batchno = b.inventbatchid\n        left join inventtable bs on i.itemid = bs.itemid\n        left join inventsize sz on sz.inventsizeid = i.inventsizeid and sz.itemid = i.itemid\n        where i.dateinvent >= '" + params.fromDate + "' ::date\n        AND  i.dateinvent < ('" + params.toDate + "' ::date + '1 day'::interval)";
-                        if (!(params.key == "ALL")) return [3 /*break*/, 2];
-                        warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.inventlocationid + "' limit 1";
-                        return [4 /*yield*/, this.db.query(warehouseQuery)];
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.data_from_db(params)];
                     case 1:
-                        regionalWarehouses = _a.sent();
-                        inQueryStr_1 = "";
-                        regionalWarehouses[0].regionalwarehouse.split(",").map(function (item) {
-                            inQueryStr_1 += "'" + item + "',";
-                        });
-                        inQueryStr_1 += "'" + params.inventlocationid + "',";
-                        query += " and i.inventlocationid in (" + inQueryStr_1.substr(0, inQueryStr_1.length - 1) + ") and (transactionclosed = true) ";
-                        return [3 /*break*/, 3];
-                    case 2:
-                        query += " and i.inventlocationid='" + params.key + "' and (transactionclosed = true) ";
-                        _a.label = 3;
-                    case 3:
-                        if (params.itemId) {
-                            query = query + (" and i.itemid = '" + params.itemId + "'");
-                        }
-                        if (params.configId) {
-                            query = query + (" and i.configid='" + params.configId + "'");
-                        }
-                        if (params.inventsizeid) {
-                            query = query + (" and i.inventsizeid='" + params.inventsizeid + "'");
-                        }
-                        if (params.batchno) {
-                            query = query + (" and i.batchno='" + params.batchno + "'");
-                        }
-                        query =
-                            query +
-                                " GROUP BY\n                    i.itemid,  i.configid, i.inventsizeid, i.batchno, i.qty, b.expdate, bs.namealias, bs.itemname, sz.name, sz.description, i.inventlocationid, w.name, w.namealias, i.location\n                    ) as v where availability > 0";
-                        return [4 /*yield*/, this.db.query(query)];
-                    case 4:
                         data = _a.sent();
                         i = 1;
-                        for (_i = 0, data_1 = data; _i < data_1.length; _i++) {
-                            item = data_1[_i];
+                        resData = [];
+                        saleslist = { salesgroup: {}, salesdata: [] };
+                        _loop_1 = function (item) {
                             item.sNo = i;
                             item.availability = parseInt(item.availability);
                             item.qtyIn = parseInt(item.qtyIn);
                             item.qtyOut = parseInt(item.qtyOut);
                             i += 1;
+                            saleslist = resData.find(function (ele) { return ele.salesgroup.itemid == item.itemid; });
+                            if (saleslist) {
+                                saleslist.salesdata.push(item);
+                            }
+                            else {
+                                saleslist = { salesgroup: {}, salesdata: [] };
+                                saleslist.salesgroup.itemid = item.itemid;
+                                saleslist.salesgroup.nameEn = item.nameEn;
+                                saleslist.salesgroup.nameAr = item.nameAr;
+                                saleslist.salesdata.push(item);
+                                resData.push(saleslist);
+                            }
+                        };
+                        for (_i = 0, data_1 = data; _i < data_1.length; _i++) {
+                            item = data_1[_i];
+                            _loop_1(item);
                         }
                         result = {
                             // printDate: new Date().toLocaleString(),
-                            data: data,
+                            data: resData,
                             user: params.user,
                         };
                         return [2 /*return*/, result];
-                    case 5:
+                    case 2:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 6: return [2 /*return*/];
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -144,6 +129,52 @@ var ItemBalanceReport = /** @class */ (function () {
                     throw error;
                 }
                 return [2 /*return*/];
+            });
+        });
+    };
+    ItemBalanceReport.prototype.data_from_db = function (params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, warehouseQuery, regionalWarehouses, inQueryStr_1, data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "\n    select * from (\n          select\n          i.itemid as itemid,\n          bs.namealias as \"nameEn\",\n          bs.itemname as \"nameAr\",\n          (select\n            SUM(j.qty) \n            from inventtrans j where j.itemid = i.itemid and \n            j.configid = i.configid and \n            j.inventsizeid = i.inventsizeid and \n            j.batchno = i.batchno and \n            j.inventlocationid = i.inventlocationid and\n            j.transactionclosed = true\n            group by j.itemid,  j.configid, j.inventsizeid, j.batchno, j.inventlocationid\n            ) as availability,\n          i.configid as configid,\n          i.inventsizeid as inventsizeid,\n          i.batchno as batchno,\n          case when qty>0 then abs(qty) else 0 end as \"qtyIn\",\n          case when qty<0 then abs(qty) else 0 end as \"qtyOut\",\n          i.inventlocationid as inventlocationid,\n          i.location as location,\n          w.name as \"WareHouseNameAr\", \n          w.namealias as \"WareHouseNameEn\",\n          to_char(b.expdate, 'yyyy-MM-dd') as batchexpdate,\n          sz.description as \"sizeNameEn\",\n          sz.name as \"sizeNameAr\"\n      from inventtrans  i\n      inner join inventlocation w on w.inventlocationid=i.inventlocationid\n      left join inventbatch b on i.batchno = b.inventbatchid\n      left join inventtable bs on i.itemid = bs.itemid\n      left join inventsize sz on sz.inventsizeid = i.inventsizeid and sz.itemid = i.itemid\n      where i.dateinvent >= '" + params.fromDate + "' ::date\n      AND  i.dateinvent < ('" + params.toDate + "' ::date + '1 day'::interval)";
+                        if (!(params.key == "ALL")) return [3 /*break*/, 2];
+                        warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.inventlocationid + "' limit 1";
+                        return [4 /*yield*/, this.db.query(warehouseQuery)];
+                    case 1:
+                        regionalWarehouses = _a.sent();
+                        inQueryStr_1 = "";
+                        regionalWarehouses[0].regionalwarehouse.split(",").map(function (item) {
+                            inQueryStr_1 += "'" + item + "',";
+                        });
+                        inQueryStr_1 += "'" + params.inventlocationid + "',";
+                        query += " and i.inventlocationid in (" + inQueryStr_1.substr(0, inQueryStr_1.length - 1) + ") and (transactionclosed = true) ";
+                        return [3 /*break*/, 3];
+                    case 2:
+                        query += " and i.inventlocationid='" + params.key + "' and (transactionclosed = true) ";
+                        _a.label = 3;
+                    case 3:
+                        if (params.itemId) {
+                            query = query + (" and i.itemid = '" + params.itemId + "'");
+                        }
+                        if (params.configId) {
+                            query = query + (" and i.configid='" + params.configId + "'");
+                        }
+                        if (params.inventsizeid) {
+                            query = query + (" and i.inventsizeid='" + params.inventsizeid + "'");
+                        }
+                        if (params.batchno) {
+                            query = query + (" and i.batchno='" + params.batchno + "'");
+                        }
+                        query =
+                            query +
+                                " GROUP BY\n                  i.itemid,  i.configid, i.inventsizeid, i.batchno, i.qty, b.expdate, bs.namealias, bs.itemname, sz.name, sz.description, i.inventlocationid, w.name, w.namealias, i.location\n                  ) as v ";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 4:
+                        data = _a.sent();
+                        return [2 /*return*/, data];
+                }
             });
         });
     };

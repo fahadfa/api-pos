@@ -101,8 +101,8 @@ exports.localDbOptions = {
 exports.mailOptions = {
     host: "smtp.gmail.com",
     port: 465,
-    user: "jazsales1@gmail.com",
-    pass: "Jazeera@4321",
+    user: "jpos@jazeerapaints.com",
+    pass: "12345678",
 };
 exports.setEnvConfig = function () {
     var envData = process.env.ENV_JPOS;

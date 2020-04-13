@@ -124,7 +124,7 @@
 
     <table id="headertbl" width="98%">
       <tr>
-        <td valign="top" style="width:50%">
+        <td valign="top" style="width: 50%;">
           <table align="left">
             {{#if fromDate}}
             <tr>
@@ -147,7 +147,7 @@
             {{/if}}
           </table>
         </td>
-        <td valign="top" style="width:50%">
+        <td valign="top" style="width: 50%;">
           <table align="right">
             {{#if toDate}}
             <tr>
@@ -197,8 +197,9 @@
       <tbody>
         {{#each data}}
         <tr class="textbold">
-          <td colspan="11">{{this.itemid}}</td>
+          <td colspan="11">{{this.salesgroup.itemid}} - {{this.salesgroup.nameEn}}</td>
         </tr>
+        {{#each salesdata}}
         <tr>
           <!-- <td class="tdcenter">{{this.sNo}}</td> -->
           <td class="tdleft">&nbsp;</td>
@@ -206,19 +207,11 @@
           <td class="tdcenter">{{this.configid}}</td>
           <td class="tdcenter">{{this.batchno}}</td>
           <th>{{this.WareHouseNameEn}}</th>
-          <!-- <th>Op. Balance</th> -->
-                <th>{{this.qtyIn}}</th>
-                <th>{{this.qtyOut}}</th>
+          <th>{{this.qtyIn}}</th>
+          <th>{{this.qtyOut}}</th>
           <td class="tdright">{{this.availability}}</td>
-          <!-- <th>%</th>
-                <th>Actual Stock</th> -->
-
-          <!-- <td class="tdcenter">{{this.WareHouseNameEn}}</td>
-                <td class="tdcenter">{{this.nameen}}</td>
-                <td class="tdcenter">{{this.itemid}}</td>                
-                <td>{{this.batchexpdate}}</td> -->
         </tr>
-        {{/each}}
+        {{/each}} {{/each}}
         <tr class="textbold">
           <td colspan="11">&nbsp;</td>
         </tr>

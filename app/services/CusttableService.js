@@ -41,6 +41,7 @@ var CusttableDAO_1 = require("../repos/CusttableDAO");
 var Props_1 = require("../../constants/Props");
 var typeorm_1 = require("typeorm");
 var RawQuery_1 = require("../common/RawQuery");
+var UsergroupconfigDAO_1 = require("../repos/UsergroupconfigDAO");
 var CacheService_1 = require("../common/CacheService");
 var CusttableService = /** @class */ (function () {
     function CusttableService() {
@@ -49,6 +50,7 @@ var CusttableService = /** @class */ (function () {
         this.custTable = new Custtable_1.Custtable();
         this.rawQuery = new RawQuery_1.RawQuery();
         this.cacheService = new CacheService_1.CacheService();
+        this.usergroupconfigDAO = new UsergroupconfigDAO_1.UsergroupconfigDAO();
     }
     CusttableService.prototype.entity = function (id) {
         return __awaiter(this, void 0, void 0, function () {
@@ -127,29 +129,38 @@ var CusttableService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        additionalcustomer_1 = this.sessionInfo.additionalcustomer ? this.sessionInfo.additionalcustomer.split(",") : [];
+                        additionalcustomer_1 = this.sessionInfo.additionalcustomer
+                            ? this.sessionInfo.additionalcustomer.split(",")
+                            : [];
                         customergroup_1 = this.sessionInfo.customergroup ? this.sessionInfo.customergroup.split(",") : [];
                         sabicCustomers_1 = this.sessionInfo.sabiccustomers ? this.sessionInfo.sabiccustomers.trim().split(",") : [];
                         item.additionalcustomer = "";
                         item.sabiccustomers = "";
                         item.customergroup = "";
                         additionalcustomer_1.forEach(function (element) {
-                            item.additionalcustomer += additionalcustomer_1.indexOf(element) == additionalcustomer_1.length - 1 ? "'" + element + "'" : "'" + element + "', ";
+                            item.additionalcustomer +=
+                                additionalcustomer_1.indexOf(element) == additionalcustomer_1.length - 1
+                                    ? "'" + element + "'"
+                                    : "'" + element + "', ";
                         });
                         customergroup_1.forEach(function (element) {
-                            item.customergroup += customergroup_1.indexOf(element) == customergroup_1.length - 1 ? "'" + element + "'" : "'" + element + "', ";
+                            item.customergroup +=
+                                customergroup_1.indexOf(element) == customergroup_1.length - 1 ? "'" + element + "'" : "'" + element + "', ";
                         });
                         sabicCustomers_1.forEach(function (element) {
                             console.log(element);
-                            item.sabiccustomers += sabicCustomers_1.indexOf(element) == sabicCustomers_1.length - 1 ? "'" + element + "'" : "'" + element + "', ";
+                            item.sabiccustomers +=
+                                sabicCustomers_1.indexOf(element) == sabicCustomers_1.length - 1 ? "'" + element + "'" : "'" + element + "', ";
                         });
                         item.defaultcustomerid = this.sessionInfo.defaultcustomerid;
                         return [4 /*yield*/, this.custtableDAO.pagination(item)];
                     case 1:
                         data = _a.sent();
                         data.data.forEach(function (element) {
-                            element.rcusttypeen = element.rcusttype && Props_1.Props.RCUSTTYPE[element.rcusttype] ? Props_1.Props.RCUSTTYPE[element.rcusttype][1] : null;
-                            element.rcusttypear = element.rcusttype && Props_1.Props.RCUSTTYPE[element.rcusttype] ? Props_1.Props.RCUSTTYPE[element.rcusttype][2] : null;
+                            element.rcusttypeen =
+                                element.rcusttype && Props_1.Props.RCUSTTYPE[element.rcusttype] ? Props_1.Props.RCUSTTYPE[element.rcusttype][1] : null;
+                            element.rcusttypear =
+                                element.rcusttype && Props_1.Props.RCUSTTYPE[element.rcusttype] ? Props_1.Props.RCUSTTYPE[element.rcusttype][2] : null;
                             element.phone = !element.phone || element.phone.length <= 1 ? "N/A" : element.phone;
                         });
                         if (item.filter && item.filter != "null") {
@@ -171,7 +182,9 @@ var CusttableService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        additionalcustomer = this.sessionInfo.additionalcustomer ? this.sessionInfo.additionalcustomer.split(",") : [];
+                        additionalcustomer = this.sessionInfo.additionalcustomer
+                            ? this.sessionInfo.additionalcustomer.split(",")
+                            : [];
                         customergroup = this.sessionInfo.customergroup ? this.sessionInfo.customergroup.split(",") : [];
                         sabicCustomers = this.sessionInfo.sabiccustomers ? this.sessionInfo.sabiccustomers.trim().split(",") : [];
                         additionalcustomer = additionalcustomer ? additionalcustomer : [];
@@ -179,17 +192,19 @@ var CusttableService = /** @class */ (function () {
                         item.additionalcustomer = "";
                         item.customergroup = "";
                         item.sabiccustomers = "";
-                        item.additionalcustomer = additionalcustomer.map(function (d) { return "'" + d + "'"; }).join(',');
-                        item.customergroup = customergroup.map(function (d) { return "'" + d + "'"; }).join(',');
-                        item.sabiccustomers = sabicCustomers.map(function (d) { return "'" + d + "'"; }).join(',');
+                        item.additionalcustomer = additionalcustomer.map(function (d) { return "'" + d + "'"; }).join(",");
+                        item.customergroup = customergroup.map(function (d) { return "'" + d + "'"; }).join(",");
+                        item.sabiccustomers = sabicCustomers.map(function (d) { return "'" + d + "'"; }).join(",");
                         item.defaultcustomerid = this.sessionInfo.defaultcustomerid;
                         item.dataareaid = this.sessionInfo.dataareaid;
                         return [4 /*yield*/, this.custtableDAO.mobile_pagination(item)];
                     case 1:
                         data = _a.sent();
                         data.forEach(function (element) {
-                            element.rcusttypeen = element.rcusttype && Props_1.Props.RCUSTTYPE[element.rcusttype] ? Props_1.Props.RCUSTTYPE[element.rcusttype][1] : null;
-                            element.rcusttypear = element.rcusttype && Props_1.Props.RCUSTTYPE[element.rcusttype] ? Props_1.Props.RCUSTTYPE[element.rcusttype][2] : null;
+                            element.rcusttypeen =
+                                element.rcusttype && Props_1.Props.RCUSTTYPE[element.rcusttype] ? Props_1.Props.RCUSTTYPE[element.rcusttype][1] : null;
+                            element.rcusttypear =
+                                element.rcusttype && Props_1.Props.RCUSTTYPE[element.rcusttype] ? Props_1.Props.RCUSTTYPE[element.rcusttype][2] : null;
                             element.phone = !element.phone || element.phone.length <= 1 ? "N/A" : element.phone;
                         });
                         return [2 /*return*/, data];
@@ -219,17 +234,17 @@ var CusttableService = /** @class */ (function () {
                         return [4 /*yield*/, this.custtableDAO.save(reqData)];
                     case 2:
                         customer = _a.sent();
-                        returnData = { id: customer.accountnum, message: 'SAVED_SUCCESSFULLY' };
+                        returnData = { id: customer.accountnum, message: "SAVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
                     case 3:
                         if (cond == "updated") {
-                            throw { message: 'UPDATED' };
+                            throw { message: "UPDATED" };
                         }
                         if (cond == "phone") {
-                            throw { message: 'RECORD_ALREADY_EXISTS' };
+                            throw { message: "RECORD_ALREADY_EXISTS" };
                         }
                         else {
-                            throw { message: 'INVALID_DATA' };
+                            throw { message: "INVALID_DATA" };
                         }
                         return [3 /*break*/, 5];
                     case 4:
@@ -260,31 +275,38 @@ var CusttableService = /** @class */ (function () {
                         _b.label = 3;
                     case 3:
                         item.lastmodifiedby = this.sessionInfo.userName;
+                        mdata = [];
+                        if (!item.phone) return [3 /*break*/, 5];
                         return [4 /*yield*/, this.custtableDAO.findAll({ phone: item.phone })];
                     case 4:
                         mdata = _b.sent();
-                        if (!!item.accountnum) return [3 /*break*/, 8];
-                        if (!(mdata.length > 0)) return [3 /*break*/, 5];
-                        return [2 /*return*/, "phone"];
+                        return [3 /*break*/, 6];
                     case 5:
+                        mdata = [];
+                        _b.label = 6;
+                    case 6:
+                        if (!!item.accountnum) return [3 /*break*/, 10];
+                        if (!(mdata.length > 0)) return [3 /*break*/, 7];
+                        return [2 /*return*/, "phone"];
+                    case 7:
                         _a = item;
                         return [4 /*yield*/, this.getAccountNum()];
-                    case 6:
+                    case 8:
                         _a.accountnum = _b.sent();
                         item.inventlocation = this.sessionInfo.inventlocationid;
                         item.createdDateTime = new Date(App_1.App.dateNow());
                         item.createdby = this.sessionInfo.userName;
-                        _b.label = 7;
-                    case 7: return [3 /*break*/, 9];
-                    case 8:
+                        _b.label = 9;
+                    case 9: return [3 /*break*/, 11];
+                    case 10:
                         // console.log(item.accountnum);
                         if (item.phone != previousData.phone) {
                             if (mdata.length > 0) {
                                 return [2 /*return*/, "phone"];
                             }
                         }
-                        _b.label = 9;
-                    case 9:
+                        _b.label = 11;
+                    case 11:
                         item.lastmodifieddate = new Date(App_1.App.dateNow());
                         item.lastmodifiedby = this.sessionInfo.userName;
                         return [2 /*return*/, true];
@@ -294,26 +316,25 @@ var CusttableService = /** @class */ (function () {
     };
     CusttableService.prototype.getAccountNum = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var data, hashString, prevYear, year, accountNum;
+            var userGroupConfigData, regionNumber, showroomId, data, hashString, prevYear, year, accountNum;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.rawQuery.getNumberSequence("WC_ER18")];
+                    case 0: return [4 /*yield*/, this.usergroupconfigDAO.findOne({ groupid: this.sessionInfo.groupid })];
                     case 1:
+                        userGroupConfigData = _a.sent();
+                        regionNumber = userGroupConfigData.regionId;
+                        showroomId = userGroupConfigData.costCenterId;
+                        return [4 /*yield*/, this.rawQuery.getNumberSequence("WC_ER18")];
+                    case 2:
                         data = _a.sent();
                         hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);
-                        prevYear = new Date(data.lastmodifieddate)
-                            .getFullYear()
-                            .toString()
-                            .substr(2, 2);
-                        year = new Date()
-                            .getFullYear()
-                            .toString()
-                            .substr(2, 2);
+                        prevYear = new Date(data.lastmodifieddate).getFullYear().toString().substr(2, 2);
+                        year = new Date().getFullYear().toString().substr(2, 2);
                         data.nextrec = prevYear == year ? data.nextrec : 1;
-                        accountNum = data.format.replace(hashString, data.nextrec) + "-" + year;
+                        accountNum = data.format.replace(hashString, regionNumber + "-" + showroomId + "-" + year + "-" + data.nextrec);
                         console.log(accountNum);
                         return [4 /*yield*/, this.rawQuery.updateNumberSequence("WC_ER18", data.nextrec)];
-                    case 2:
+                    case 3:
                         _a.sent();
                         return [2 /*return*/, accountNum];
                 }
@@ -341,7 +362,7 @@ var CusttableService = /** @class */ (function () {
                     case 4: return [4 /*yield*/, this.custtableDAO.save(customer)];
                     case 5:
                         _a.sent();
-                        return [2 /*return*/, { id: customer.accountnum, message: 'REMOVED_SUCCESSFULLY' }];
+                        return [2 /*return*/, { id: customer.accountnum, message: "REMOVED_SUCCESSFULLY" }];
                     case 6:
                         error_6 = _a.sent();
                         throw error_6;
