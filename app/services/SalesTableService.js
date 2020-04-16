@@ -690,6 +690,7 @@ var SalesTableService = /** @class */ (function () {
                     case 5:
                         item.lastModifiedBy = this.sessionInfo.userName;
                         item.lastModifiedDate = new Date(App_1.App.DateNow());
+                        console.log(item.lastModifiedDate.toISOString());
                         return [2 /*return*/, true];
                 }
             });
@@ -1224,6 +1225,7 @@ var SalesTableService = /** @class */ (function () {
                         item.createddatetime = new Date(App_1.App.DateNow());
                         item.createdBy = this.sessionInfo.userName;
                         item.numberSequenceGroupId = this.seqNum;
+                        item.lastModifiedDate = new Date(App_1.App.DateNow());
                         return [4 /*yield*/, this.salesLineDAO.save(item)];
                     case 7:
                         salesline = _a.sent();
@@ -1370,6 +1372,7 @@ var SalesTableService = /** @class */ (function () {
                         item.createddatetime = new Date(App_1.App.DateNow());
                         item.createdBy = this.sessionInfo.userName;
                         item.numberSequenceGroupId = this.seqNum;
+                        item.lastModifiedDate = new Date(App_1.App.DateNow());
                         if (!(item.batches && item.batches.length > 0)) return [3 /*break*/, 7];
                         item.batches = item.batches.filter(function (v) { return v.quantity > 0; });
                         _i = 0, _a = item.batches;
@@ -1639,6 +1642,7 @@ var SalesTableService = /** @class */ (function () {
                         reqData.warehouse.inventLocationId = this.sessionInfo.inventlocationid;
                         reqData.url = reqData.onlineAmount > 0 ? Props_1.Props.ECOMMERCE_PAYMENT_URL + reqData.salesId : null;
                         reqData.paymentType = "OFFLINE";
+                        console.log(reqData.lastModifiedDate.toISOString());
                         return [4 /*yield*/, this.salestableDAO.save(reqData)];
                     case 4:
                         salesTable_1 = _a.sent();
@@ -1746,7 +1750,7 @@ var SalesTableService = /** @class */ (function () {
                                 return __generator(this, function (_a) {
                                     try {
                                         salesTable_1.vatamount = salesTable_1.vatamount.toFixed(2);
-                                        salesTable_1.lastModifiedDate = new Date(App_1.App.DateNow()).toLocaleDateString();
+                                        salesTable_1.lastModifiedDate = new Date(App_1.App.DateNow());
                                         for (_i = 0, salesLine_6 = salesLine; _i < salesLine_6.length; _i++) {
                                             item = salesLine_6[_i];
                                             if (reqData.status != "PAID") {
@@ -1992,6 +1996,7 @@ var SalesTableService = /** @class */ (function () {
                         item.createddatetime = moment().format();
                         item.createdBy = this.sessionInfo.userName;
                         item.numberSequenceGroupId = this.seqNum;
+                        item.lastModifiedDate = new Date(App_1.App.DateNow());
                         item.batch = [];
                         if (!(item.batches && item.batches.length > 0)) return [3 /*break*/, 10];
                         _a = 0, _b = item.batches;
@@ -2109,7 +2114,8 @@ var SalesTableService = /** @class */ (function () {
                         delete item.id;
                         item.id = uuid();
                         item.salesId = reqData.salesId;
-                        item.createddatetime = moment().format();
+                        item.createddatetime = new Date(App_1.App.DateNow());
+                        item.lastModifiedDate = new Date(App_1.App.DateNow());
                         item.createdBy = this.sessionInfo.userName;
                         item.numberSequenceGroupId = this.seqNum;
                         item.batch = [];
@@ -2132,7 +2138,7 @@ var SalesTableService = /** @class */ (function () {
                         batches_7.custvendac = reqData.custAccount;
                         batches_7.reserveStatus = reqData.status;
                         batches_7.transactionClosed = false;
-                        batches_7.dateinvent = moment().format();
+                        batches_7.dateinvent = new Date(App_1.App.DateNow());
                         batches_7.salesLineId = item.id;
                         item.batch.push({
                             batchNo: batches_7.batchNo,
@@ -2170,7 +2176,7 @@ var SalesTableService = /** @class */ (function () {
                         batches_8.custvendac = reqData.custAccount;
                         batches_8.reserveStatus = reqData.status;
                         batches_8.transactionClosed = false;
-                        batches_8.dateinvent = moment().format();
+                        batches_8.dateinvent = new Date(App_1.App.DateNow());
                         batches_8.salesLineId = item.id;
                         item.batch.push({
                             batchNo: batches_8.batchNo,
@@ -2275,6 +2281,7 @@ var SalesTableService = /** @class */ (function () {
                         item.id = uuid();
                         item.salesId = reqData.salesId;
                         item.createddatetime = new Date(App_1.App.DateNow());
+                        item.lastModifiedDate = new Date(App_1.App.DateNow());
                         item.createdBy = this.sessionInfo.userName;
                         item.numberSequenceGroupId = this.seqNum;
                         item.batch = [];
@@ -2473,7 +2480,7 @@ var SalesTableService = /** @class */ (function () {
                                 batch.transactionClosed = status == "PAID" || status == "RESERVED" ? true : false;
                                 batch.qty = -batch.quantity;
                                 batch.reserveStatus = status;
-                                batch.dateinvent = moment().format();
+                                batch.dateinvent = new Date(App_1.App.DateNow());
                                 // this.inventTransDAO.save(batche);
                                 batches.push(batch);
                                 // await this.updateInventoryService.updateInventtransTable(batche, true);

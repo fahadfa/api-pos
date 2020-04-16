@@ -258,7 +258,9 @@ var WorkflowService = /** @class */ (function () {
                         return [4 /*yield*/, this.workflowDAO.save(item)];
                     case 18:
                         data = _a.sent();
-                        return [4 /*yield*/, this.rawQuery.updateSalesTableWorkFlowStatus(salesData.salesId, item.statusId)];
+                        salesData.status = item.statusId;
+                        salesData.lastModifiedDate = new Date(App_1.App.DateNow());
+                        return [4 /*yield*/, this.salesTableDAO.save(salesData)];
                     case 19:
                         _a.sent();
                         return [2 /*return*/, { id: item.id, status: status_1, message: "SAVED_SUCCESSFULLY" }];
