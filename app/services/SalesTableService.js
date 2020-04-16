@@ -681,7 +681,7 @@ var SalesTableService = /** @class */ (function () {
                         item.deleted = false;
                         item.inventLocationId = this.sessionInfo.inventlocationid;
                         item.createdby = this.sessionInfo.userName;
-                        item.createddatetime = new Date();
+                        item.createddatetime = new Date(App_1.App.DateNow());
                         return [4 /*yield*/, this.getSalesid(item.transkind)];
                     case 4:
                         uid = _a.sent();
@@ -689,7 +689,7 @@ var SalesTableService = /** @class */ (function () {
                         _a.label = 5;
                     case 5:
                         item.lastModifiedBy = this.sessionInfo.userName;
-                        item.lastModifiedDate = new Date();
+                        item.lastModifiedDate = new Date(App_1.App.DateNow());
                         return [2 /*return*/, true];
                 }
             });
@@ -811,7 +811,7 @@ var SalesTableService = /** @class */ (function () {
                         console.log(date);
                         console.log(data);
                         prevYear = new Date(data.lastmodifieddate).getFullYear().toString().substr(2, 2);
-                        year = new Date().getFullYear().toString().substr(2, 2);
+                        year = new Date(App_1.App.DateNow()).getFullYear().toString().substr(2, 2);
                         data.nextrec = prevYear == year ? data.nextrec : "000001";
                         salesId = data.format.replace(hashString, data.nextrec) + "-" + year;
                         //console.log(salesId);
@@ -1153,7 +1153,7 @@ var SalesTableService = /** @class */ (function () {
                         item = batches_2[_i];
                         item.reserveStatus = salesData.status;
                         item.transactionClosed = false;
-                        item.dateinvent = new Date(App_1.App.dateNow());
+                        item.dateinvent = new Date(App_1.App.DateNow());
                         return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(item)];
                     case 4:
                         _a.sent();
@@ -1221,7 +1221,7 @@ var SalesTableService = /** @class */ (function () {
                         item = salesLine_4[_i];
                         item.id = uuid();
                         item.salesId = reqData.salesId;
-                        item.createddatetime = new Date(App_1.App.dateNow());
+                        item.createddatetime = new Date(App_1.App.DateNow());
                         item.createdBy = this.sessionInfo.userName;
                         item.numberSequenceGroupId = this.seqNum;
                         return [4 /*yield*/, this.salesLineDAO.save(item)];
@@ -1244,9 +1244,9 @@ var SalesTableService = /** @class */ (function () {
                             selectedforsettle: 0,
                             approvalstatus: reqData.approvalstatus,
                             createdby: this.sessionInfo.userName,
-                            createddatetime: new Date(),
+                            createddatetime: new Date(App_1.App.DateNow()),
                             lastmodifiedby: this.sessionInfo.userName,
-                            lastmodifieddate: new Date(),
+                            lastmodifieddate: new Date(App_1.App.DateNow()),
                             customer: {
                                 accountnum: reqData.custAccount,
                             },
@@ -1275,7 +1275,7 @@ var SalesTableService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         if (!(reqData.transkind == "PAID")) return [3 /*break*/, 2];
-                        reqData.invoiceDate = new Date();
+                        reqData.invoiceDate = new Date(App_1.App.DateNow());
                         canConvert_2 = true;
                         colors_2 = [];
                         items_2 = [];
@@ -1367,7 +1367,7 @@ var SalesTableService = /** @class */ (function () {
                         if (!(item.salesQty > 0)) return [3 /*break*/, 9];
                         item.id = reqData.paymentType == "ONLINE" ? item.id : uuid();
                         item.salesId = reqData.salesId;
-                        item.createddatetime = new Date(App_1.App.dateNow());
+                        item.createddatetime = new Date(App_1.App.DateNow());
                         item.createdBy = this.sessionInfo.userName;
                         item.numberSequenceGroupId = this.seqNum;
                         if (!(item.batches && item.batches.length > 0)) return [3 /*break*/, 7];
@@ -1406,7 +1406,7 @@ var SalesTableService = /** @class */ (function () {
                         batch.dataareaid = this.sessionInfo.dataareaid;
                         batch.transactionClosed = reqData.status == "PAID" || reqData.status == "RESERVED" ? true : false;
                         batch.salesLineId = item.id;
-                        batch.dateinvent = new Date(App_1.App.dateNow());
+                        batch.dateinvent = new Date(App_1.App.DateNow());
                         batches.push(batch);
                         _c.label = 5;
                     case 5:
@@ -1517,8 +1517,8 @@ var SalesTableService = /** @class */ (function () {
                     case 1:
                         paymTerDays = _a.sent();
                         days = paymTerDays[0].numofdays;
-                        now = new Date();
-                        dueDate = new Date(App_1.App.dateNow());
+                        now = new Date(App_1.App.DateNow());
+                        dueDate = new Date(App_1.App.DateNow());
                         dueDate.setDate(dueDate.getDate() + days);
                         overDue = new Overdue_1.Overdue();
                         overDue.accountNum = reqData.custAccount;
@@ -1560,9 +1560,9 @@ var SalesTableService = /** @class */ (function () {
                             selectedforsettle: 0,
                             approvalstatus: reqData.approvalstatus,
                             createdby: this.sessionInfo.userName,
-                            createddatetime: new Date(),
+                            createddatetime: new Date(App_1.App.DateNow()),
                             lastmodifiedby: this.sessionInfo.userName,
-                            lastmodifieddate: new Date(),
+                            lastmodifieddate: new Date(App_1.App.DateNow()),
                             customer: {
                                 accountnum: reqData.designerServiceCustAccount,
                             },
@@ -1720,7 +1720,7 @@ var SalesTableService = /** @class */ (function () {
                                         email: reqData.custEmail,
                                         authToken: reqData.authToken,
                                         updatedBy: this.sessionInfo.userName,
-                                        updatedOn: new Date(),
+                                        updatedOn: new Date(App_1.App.DateNow()),
                                     };
                                     return [2 /*return*/, this.saveSalesorderToken(tokenData)];
                                 });
@@ -1746,7 +1746,7 @@ var SalesTableService = /** @class */ (function () {
                                 return __generator(this, function (_a) {
                                     try {
                                         salesTable_1.vatamount = salesTable_1.vatamount.toFixed(2);
-                                        salesTable_1.lastModifiedDate = new Date().toLocaleDateString();
+                                        salesTable_1.lastModifiedDate = new Date(App_1.App.DateNow()).toLocaleDateString();
                                         for (_i = 0, salesLine_6 = salesLine; _i < salesLine_6.length; _i++) {
                                             item = salesLine_6[_i];
                                             if (reqData.status != "PAID") {
@@ -1887,10 +1887,10 @@ var SalesTableService = /** @class */ (function () {
                         delete item.id;
                         item.id = uuid();
                         item.salesId = reqData.salesId;
-                        item.createddatetime = new Date(App_1.App.dateNow());
+                        item.createddatetime = new Date(App_1.App.DateNow());
                         item.createdBy = this.sessionInfo.userName;
                         item.numberSequenceGroupId = this.seqNum;
-                        item.lastModifiedDate = new Date(App_1.App.dateNow());
+                        item.lastModifiedDate = new Date(App_1.App.DateNow());
                         if (!(item.batches && item.batches.length > 0)) return [3 /*break*/, 14];
                         _a = 0, _b = item.batches;
                         _c.label = 11;
@@ -1909,7 +1909,7 @@ var SalesTableService = /** @class */ (function () {
                         batches.inventlocationid = this.sessionInfo.inventlocationid;
                         batches.reserveStatus = reqData.transkind;
                         batches.transactionClosed = false;
-                        batches.dateinvent = new Date();
+                        batches.dateinvent = new Date(App_1.App.DateNow());
                         batches.salesLineId = item.id;
                         // await this.inventTransDAO.save(batches);
                         item.batch.push({
@@ -2274,7 +2274,7 @@ var SalesTableService = /** @class */ (function () {
                         delete item.id;
                         item.id = uuid();
                         item.salesId = reqData.salesId;
-                        item.createddatetime = new Date();
+                        item.createddatetime = new Date(App_1.App.DateNow());
                         item.createdBy = this.sessionInfo.userName;
                         item.numberSequenceGroupId = this.seqNum;
                         item.batch = [];
@@ -2298,7 +2298,7 @@ var SalesTableService = /** @class */ (function () {
                         batches_11.dataareaid = this.sessionInfo.dataareaid;
                         batches_11.reserveStatus = reqData.transkind;
                         batches_11.transactionClosed = transactionClosed;
-                        batches_11.dateinvent = new Date();
+                        batches_11.dateinvent = new Date(App_1.App.DateNow());
                         batches_11.salesLineId = item.id;
                         //console.log(batches);
                         if (reqData.isMovementIn) {
@@ -2344,7 +2344,7 @@ var SalesTableService = /** @class */ (function () {
                         batch.transactionClosed = transactionClosed;
                         batch.inventlocationid = this.sessionInfo.inventlocationid;
                         batch.qty = reqData.isMovementIn ? Math.abs(batch.qty) : -Math.abs(batch.qty);
-                        batch.dateinvent = new Date();
+                        batch.dateinvent = new Date(App_1.App.DateNow());
                         // this.inventTransDAO.save(batch);
                         item.batch.push({
                             batchNo: batch.batchNo,
@@ -2514,7 +2514,7 @@ var SalesTableService = /** @class */ (function () {
                                 inventlocationid: batch.inventlocationid,
                                 batchno: i.batchno,
                                 transactionclosed: status == "PAID" || status == "RESERVED" ? true : false,
-                                dateinvent: new Date(),
+                                dateinvent: new Date(App_1.App.DateNow()),
                                 reserveStatus: status,
                             };
                             if (i.availabilty >= val_1) {
@@ -2657,7 +2657,7 @@ var SalesTableService = /** @class */ (function () {
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        reqData.date = new Date().toLocaleDateString();
+                        reqData.date = new Date(App_1.App.DateNow()).toLocaleDateString();
                         reqData.paymentType = reqData.lang == "en" ? "ONLINE" : "عبر الانترنت";
                         reports = {
                             salesTable: reqData,

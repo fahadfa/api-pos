@@ -35,6 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var App_1 = require("../../utils/App");
 var Props_1 = require("../../constants/Props");
 var AppLangRepository_1 = require("../repos/AppLangRepository");
 var CacheService_1 = require("../common/CacheService");
@@ -148,7 +149,7 @@ var AppLangService = /** @class */ (function () {
                 }
                 item.id = item.id.toUpperCase().replace(/\s/g, "_");
                 item.updatedBy = this.sessionInfo.id;
-                item.updatedOn = new Date();
+                item.updatedOn = new Date(App_1.App.DateNow());
                 return [2 /*return*/, true];
             });
         });

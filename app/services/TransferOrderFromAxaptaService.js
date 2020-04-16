@@ -35,6 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var App_1 = require("../../utils/App");
 var Props_1 = require("../../constants/Props");
 var SalesTable_1 = require("../../entities/SalesTable");
 var SalesLine_1 = require("../../entities/SalesLine");
@@ -103,8 +104,8 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                             salesData.invoiceDate = data.shipdate;
                             salesData.shippingDateConfirmed = data.shipdate;
                             salesData.dataareaid = data.data_area_id;
-                            salesData.lastModifiedDate = new Date();
-                            salesData.createddatetime = new Date();
+                            salesData.lastModifiedDate = new Date(App_1.App.DateNow());
+                            salesData.createddatetime = new Date(App_1.App.DateNow());
                             salesData.salesType = 4;
                             // await this.salesTableDAO.save(salesData);
                             // let salesLines = await this.salesLineDAO.findAll({ salesId: salesData.salesId });
@@ -125,8 +126,8 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                                 salesLine.batchNo = v.batch_no;
                                 // salesLine.colors = await this.colorsDAO.findOne({ code: v.config_id });
                                 // salesLine.baseSizes = await this.baseSizeDAO.findOneforaxaptadata({ base: { code: v.item_id }, sizes: { code: v.invent_size_id } });
-                                salesLine.lastModifiedDate = new Date();
-                                salesLine.createddatetime = new Date();
+                                salesLine.lastModifiedDate = new Date(App_1.App.DateNow());
+                                salesLine.createddatetime = new Date(App_1.App.DateNow());
                                 batches = {};
                                 batches.qty = v.shipped_qty;
                                 batches.itemid = salesLine.itemid;
@@ -138,7 +139,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                                 batches.inventlocationid = salesLine.inventLocationId;
                                 batches.dataareaid = salesLine.dataareaid;
                                 batches.transactionClosed = false;
-                                batches.dateinvent = new Date();
+                                batches.dateinvent = new Date(App_1.App.DateNow());
                                 salesLine.batches = batches;
                                 // await this.updateInventoryService.updateInventtransTable(batches);
                                 salesData.salesLines.push(salesLine);

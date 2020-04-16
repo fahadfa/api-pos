@@ -73,8 +73,8 @@ var App = /** @class */ (function () {
         return time.toString(36).toUpperCase();
     };
     App.uuidv4 = function () {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+            var r = (Math.random() * 16) | 0, v = c == "x" ? r : (r & 0x3) | 0x8;
             return v.toString(16);
         });
     };
@@ -91,7 +91,9 @@ var App = /** @class */ (function () {
         return str.toUpperCase();
     };
     App.DateNow = function () {
-        return new Date().toISOString();
+        var d1 = new Date();
+        var d3 = new Date(d1.getUTCFullYear(), d1.getUTCMonth(), d1.getUTCDate(), d1.getUTCHours(), d1.getUTCMinutes(), d1.getUTCSeconds(), d1.getUTCMilliseconds());
+        return d3.toISOString();
     };
     App.Send = function (req, res, promise) {
         var respObj = {};
@@ -193,8 +195,8 @@ var App = /** @class */ (function () {
             requireTLS: true,
             auth: {
                 user: Config.mailOptions.user,
-                pass: Config.mailOptions.pass
-            }
+                pass: Config.mailOptions.pass,
+            },
         });
     };
     App.ValildateUserAccess = function (data, component, access) {
@@ -205,9 +207,7 @@ var App = /** @class */ (function () {
                     case 0:
                         Log_1.log.info(data);
                         if (!data) return [3 /*break*/, 7];
-                        if (!(data.name &&
-                            data.message &&
-                            data.name.lowercase().indexOf("error") > -1)) return [3 /*break*/, 1];
+                        if (!(data.name && data.message && data.name.lowercase().indexOf("error") > -1)) return [3 /*break*/, 1];
                         return [2 /*return*/, false];
                     case 1:
                         isValid = false;
@@ -284,8 +284,8 @@ var App = /** @class */ (function () {
                     to: to,
                     subject: subject,
                     html: App.HtmlRender(htmlPage, {
-                        data: renderData
-                    })
+                        data: renderData,
+                    }),
                 };
                 return [2 /*return*/, new Promise(function (reslove, reject) {
                         transporter.sendMail(Options, function (err, info) {
@@ -294,7 +294,7 @@ var App = /** @class */ (function () {
                                 reject(err);
                             }
                             reslove({
-                                message: "Mail sent successfully"
+                                message: "Mail sent successfully",
                             });
                         });
                     })];

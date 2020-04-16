@@ -43,7 +43,7 @@ var itemSalesByCustomerReport = /** @class */ (function () {
     }
     itemSalesByCustomerReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, query, warehouseQuery, regionalWarehouses, inQueryStr_1, totalQuantity_1, totalLineAmount_1, colorantPrice_1, price_1, vatAmount_1, totalDisc_1, queryCustomer, userData, renderData, error_1;
+            var data, query, warehouseQuery, regionalWarehouses, inQueryStr_1, totalQuantity_1, totalLineAmount_1, colorantPrice_1, price_1, vatAmount_1, totalDisc_1, renderData, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -52,7 +52,7 @@ var itemSalesByCustomerReport = /** @class */ (function () {
                         console.log("================Params===============");
                         _a.label = 1;
                     case 1:
-                        _a.trys.push([1, 7, , 8]);
+                        _a.trys.push([1, 6, , 7]);
                         data = void 0;
                         query = "\n            select \n                i.itemid, \n                i.name, \n                i.nameAlias as \"nameAlias\", \n                i.customername as \"customerName\",\n                i.colorantprice as \"colorantPrice\",\n                to_char(sum(i.quantity), 'FM999,999,999,999D') as \"quantity\", \n                to_char(sum(i.price), 'FM999999999990.00') as price, \n                to_char(sum(i.vatAmount), 'FM999999999990.00') as \"vatAmount\",\n                to_char(sum(i.lineAmount), 'FM999999999990.00') as \"lineAmount\",\n                to_char(sum(i.totalDisc), 'FM999999999990.00') as \"totalDisc\",\n                i.wareHouseNameAr as \"wareHouseNameAr\", i.wareHouseNameEn as \"wareHouseNameEn\",\n                i.sizeNameEn as \"sizeNameEn\", \n                i.sizeNameAr as \"sizeNameAr\",\n                i.nameEn as \"nameEn\", \n                i.nameAr as \"nameAr\", \n                i.configId as \"configId\", \n                i.inventsizeid as \"inventsizeid\",\n                i.batchno as batchno\n            from( select \n                distinct\n                    s.inventlocationid as inventlocationid,\n                    s.custaccount as custaccount,\n                    s.salesname as customername,\n                    to_char(s.createddatetime, 'DD-MM-YYYY') as createdDateTime,\n                    to_char(s.lastmodifieddate, 'DD-MM-YYYY') as lastModifiedDate,\n                    sl.salesqty as quantity,\n                    sl.salesprice as price,\n                    sl.vatamount as vatAmount,\n                    sl.linetotaldisc as totalDisc,\n                    sl.itemid as itemid,\n                    sl.colorantprice as colorantprice,\n                    ((sl.lineamount - sl.linetotaldisc * sl.salesqty) + (sl.colorantprice * sl.salesqty) + sl.vatamount ) as lineAmount,\n                    c.name as name,\n                    c.namealias as nameAlias,\n                    w.name as wareHouseNameAr,\n                    w.namealias as wareHouseNameEn,\n                    c.paymmode as paymentMode,\n                    sz.description as sizeNameEn,\n                    sz.name as sizeNameAr,\n                    sz.inventsizeid as inventsizeid,\n                    i.batchno,\n                    bs.namealias as nameEn,\n                    bs.itemname as nameAr,\n                    col.configid as configid\n                from salesline sl\n                inner join salestable s on s.salesid = sl.salesid\n                left join inventlocation w on w.inventlocationid=s.inventlocationid\n                left join custtable c on c.accountnum=s.custaccount\n                left join inventtrans i on i.invoiceid=s.salesid\n                left join configtable col on sl.configid = col.configid\n                left join inventsize sz on  sz.itemid = sl.itemid and sz.inventsizeid = sl.inventsizeid\n                left join inventtable bs on bs.itemid = sl.itemid\n                where s.transkind = 'SALESORDER' and s.status in ('PAID', 'POSTED')\n                and s.createddatetime >= '" + params.fromDate + "' ::date\n                AND  s.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval) \n            ";
                         if (!(params.inventlocationid == "ALL")) return [3 /*break*/, 3];
@@ -84,7 +84,7 @@ var itemSalesByCustomerReport = /** @class */ (function () {
                             query += " and  i.batchno = '" + params.batchNo + "' ";
                         }
                         if (params.accountnum) {
-                            query += " and s.custaccount = '" + params.accountnum + "'";
+                            query += " and s.custaccount = '" + params.accountnum + "' or s.mobileno ='" + params.accountnum + "'";
                         }
                         if (params.inventsizeid) {
                             query += " and  i.inventsizeid = '" + params.inventsizeid + "' ";
@@ -107,11 +107,6 @@ var itemSalesByCustomerReport = /** @class */ (function () {
                             vatAmount_1 += v.vatAmount ? parseFloat(v.vatAmount) : 0;
                             totalDisc_1 += v.totalDisc ? parseFloat(v.totalDisc) : 0;
                         });
-                        queryCustomer = " select namealias as \"nameEn\", name as \"nameAr\" from custtable where accountnum =  '" + params.accountnum + "'";
-                        return [4 /*yield*/, this.db.query(queryCustomer)];
-                    case 6:
-                        userData = _a.sent();
-                        console.log(userData);
                         renderData = {
                             printDate: new Date().toLocaleString(),
                             fromDate: params.fromDate,
@@ -120,22 +115,22 @@ var itemSalesByCustomerReport = /** @class */ (function () {
                             transType: params.transType,
                             color: params.color,
                             product: params.product,
-                            customerName: params.accountnum ? userData[0].nameEn : "ALL",
-                            customerNameAr: params.accountnum ? userData[0].nameAr : "ALL",
+                            customerName: data.length > 0 ? data[0].customerName : "-",
+                            customerNameAr: data.length > 0 ? data[0].customerName : "-",
                             totalQuantity: totalQuantity_1,
                             totalLineAmount: totalLineAmount_1.toFixed(2),
                             colorantPrice: colorantPrice_1.toFixed(2),
                             vatAmount: vatAmount_1.toFixed(2),
                             totalDisc: totalDisc_1.toFixed(2),
                             user: params.user,
-                            price: price_1.toFixed(2)
+                            price: price_1.toFixed(2),
                         };
                         renderData.data = data;
                         return [2 /*return*/, renderData];
-                    case 7:
+                    case 6:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 8: return [2 /*return*/];
+                    case 7: return [2 /*return*/];
                 }
             });
         });
@@ -159,10 +154,7 @@ var itemSalesByCustomerReport = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var file;
             return __generator(this, function (_a) {
-                result.printDate = new Date(params.printDate)
-                    .toISOString()
-                    .replace(/T/, " ")
-                    .replace(/\..+/, "");
+                result.printDate = new Date(params.printDate).toISOString().replace(/T/, " ").replace(/\..+/, "");
                 // console.log(result.salesLine[0].product.nameEnglish);
                 console.log(result);
                 if (params.type == "excel") {

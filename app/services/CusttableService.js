@@ -294,7 +294,7 @@ var CusttableService = /** @class */ (function () {
                     case 8:
                         _a.accountnum = _b.sent();
                         item.inventlocation = this.sessionInfo.inventlocationid;
-                        item.createdDateTime = new Date(App_1.App.dateNow());
+                        item.createdDateTime = new Date(App_1.App.DateNow());
                         item.createdby = this.sessionInfo.userName;
                         _b.label = 9;
                     case 9: return [3 /*break*/, 11];
@@ -307,7 +307,7 @@ var CusttableService = /** @class */ (function () {
                         }
                         _b.label = 11;
                     case 11:
-                        item.lastmodifieddate = new Date(App_1.App.dateNow());
+                        item.lastmodifieddate = new Date(App_1.App.DateNow());
                         item.lastmodifiedby = this.sessionInfo.userName;
                         return [2 /*return*/, true];
                 }

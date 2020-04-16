@@ -176,7 +176,7 @@ var SyncSourceService = /** @class */ (function () {
                             // }
                         }
                         item.updatedBy = this.sessionInfo.id;
-                        item.updatedOn = new Date();
+                        item.updatedOn = new Date(App_1.App.DateNow());
                         return [2 /*return*/, true];
                 }
             });

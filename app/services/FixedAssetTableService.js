@@ -202,7 +202,7 @@ var FixedAssetTableService = /** @class */ (function () {
                         uid = _a.sent();
                         item.assetId = uid;
                         item.createdBy = this.sessionInfo.userName;
-                        item.createdDateTime = new Date(App_1.App.dateNow());
+                        item.createdDateTime = new Date(App_1.App.DateNow());
                         _a.label = 8;
                     case 8: return [3 /*break*/, 10];
                     case 9:
@@ -212,7 +212,7 @@ var FixedAssetTableService = /** @class */ (function () {
                         _a.label = 10;
                     case 10:
                         item.lastModifiedDate = this.sessionInfo.userName;
-                        item.lastModifiedDate = new Date(App_1.App.dateNow());
+                        item.lastModifiedDate = new Date(App_1.App.DateNow());
                         return [2 /*return*/, true];
                 }
             });

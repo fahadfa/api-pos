@@ -35,6 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var App_1 = require("../../utils/App");
 var typeorm_1 = require("typeorm");
 var WorkflowDAO_1 = require("../repos/WorkflowDAO");
 var Props_1 = require("../../constants/Props");
@@ -248,7 +249,9 @@ var WorkflowService = /** @class */ (function () {
                         _a.label = 16;
                     case 16:
                         item.lastModifiedBy = this.sessionInfo.userName;
-                        item.lastMOdifiedDate = new Date();
+                        // console.log(new Date());
+                        item.lastModifiedDate = new Date(App_1.App.DateNow());
+                        console.log("lastModifiedDate", item.lastModifiedDate);
                         return [4 /*yield*/, this.validate(item)];
                     case 17:
                         _a.sent();
@@ -336,7 +339,7 @@ var WorkflowService = /** @class */ (function () {
         item.orderLastModifiedBy = salesData.lastModifiedBy;
         item.orderLastModifiedDate = salesData.lastModifiedDate;
         item.createdBy = this.sessionInfo.userName;
-        item.createdDateTime = new Date();
+        item.createdDateTime = new Date(App_1.App.DateNow());
         item.inventLocationId = this.sessionInfo.inventlocationid;
     };
     return WorkflowService;

@@ -144,9 +144,9 @@ var GeneralJournalService = /** @class */ (function () {
                         reqData.legerJournalTras.map(function (item) {
                             item.journalNum = reqData.journalNum;
                             item.dataareaid = _this.sessionInfo.dataareaid;
-                            item.modifiedDateTime = new Date(App_1.App.dateNow());
+                            item.modifiedDateTime = new Date(App_1.App.DateNow());
                             item.lastModifiedBy = _this.sessionInfo.userName;
-                            item.lastModifiedDate = new Date(App_1.App.dateNow());
+                            item.lastModifiedDate = new Date(App_1.App.DateNow());
                         });
                         return [4 /*yield*/, this.legerJournalTrasDAO.save(reqData.legerJournalTras)];
                     case 6:
@@ -288,10 +288,10 @@ var GeneralJournalService = /** @class */ (function () {
                         _a.journalNum = _b.sent();
                         item.dataareaid = this.sessionInfo.dataareaid;
                         item.createdBy = this.sessionInfo.userName;
-                        item.createdDatetime = new Date(App_1.App.dateNow());
+                        item.createdDatetime = new Date(App_1.App.DateNow());
                         item.legerJournalTras.map(function (i) {
                             i.journalNum = item.journalNum;
-                            i.createDateTime = new Date(App_1.App.dateNow());
+                            i.createDateTime = new Date(App_1.App.DateNow());
                             i.createdBy = _this.sessionInfo.userName;
                         });
                         return [3 /*break*/, 8];
@@ -306,9 +306,9 @@ var GeneralJournalService = /** @class */ (function () {
                         }
                         _b.label = 8;
                     case 8:
-                        item.modifiedDatetime = new Date(App_1.App.dateNow());
+                        item.modifiedDatetime = new Date(App_1.App.DateNow());
                         item.lastModifiedBy = this.sessionInfo.userName;
-                        item.lastModifiedDate = new Date(App_1.App.dateNow());
+                        item.lastModifiedDate = new Date(App_1.App.DateNow());
                         return [2 /*return*/, true];
                 }
             });

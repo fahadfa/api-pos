@@ -42,6 +42,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// let sql = require("mssql");
+var App_1 = require("../../utils/App");
 var InventTrans_1 = require("../../entities/InventTrans");
 var InventTransDAO_1 = require("../repos/InventTransDAO");
 var InventoryOnhandDAO_1 = require("../repos/InventoryOnhandDAO");
@@ -152,8 +154,8 @@ var OpeningBalanceService = /** @class */ (function () {
                         item = chunkData_1[_i];
                         item.map(function (v) {
                             // v.id = v.recid ? v.recid.toString() : App.UniqueCode()
-                            v.dateinvent = new Date();
-                            v.datephysical = new Date();
+                            v.dateinvent = new Date(App_1.App.DateNow());
+                            v.datephysical = new Date(App_1.App.DateNow());
                             v.transactionClosed = true;
                             v.invoiceid = "OPEN_BALANCE";
                             v.inventlocationid = _this.sessionInfo.inventlocationid;
@@ -173,7 +175,7 @@ var OpeningBalanceService = /** @class */ (function () {
                         item.map(function (v) {
                             // v.id =v.recid ? v.recid.toString() : App.UniqueCode()
                             v.qtyIn = v.qty;
-                            v.updatedOn = new Date();
+                            v.updatedOn = new Date(App_1.App.DateNow());
                             v.updatedBy = _this.sessionInfo.userName;
                             v.name = "OPEN_BALANCE";
                             v.inventlocationid = _this.sessionInfo.inventlocationid;

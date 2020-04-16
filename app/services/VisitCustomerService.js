@@ -206,9 +206,9 @@ var VisitCustomerService = /** @class */ (function () {
                         return [4 /*yield*/, this.getVisitCustNum(item)];
                     case 5:
                         _a.visitorSequenceNumber = _b.sent();
-                        item.createdDateTime = new Date(App_1.App.dateNow());
+                        item.createdDateTime = new Date(App_1.App.DateNow());
                         item.createdBy = this.sessionInfo.userName;
-                        item.dateOfVisit = new Date(App_1.App.dateNow());
+                        item.dateOfVisit = new Date(App_1.App.DateNow());
                         return [3 /*break*/, 7];
                     case 6:
                         console.log(item.visitorSequenceNumber);
@@ -219,10 +219,10 @@ var VisitCustomerService = /** @class */ (function () {
                         }
                         _b.label = 7;
                     case 7:
-                        item.lastModifiedDate = new Date(App_1.App.dateNow());
+                        item.lastModifiedDate = new Date(App_1.App.DateNow());
                         // console.log("iso", App.dateNow());
                         // console.log("normal", new Date());
-                        // console.log("iso converted", new Date(App.dateNow()));
+                        // console.log("iso converted", new Date(App.DateNow()));
                         return [2 /*return*/, true];
                 }
             });

@@ -154,7 +154,7 @@ var PhoneVerificationService = /** @class */ (function () {
                     case 3:
                         // let condData = await this.menuRepository.search({ name: item.name });
                         if (!item.id) {
-                            item.createdDateTime = new Date();
+                            item.createdDateTime = new Date(App_1.App.DateNow());
                             // if (condData.length > 0) {
                             //     return "name";
                             // } else {
@@ -170,7 +170,7 @@ var PhoneVerificationService = /** @class */ (function () {
                                 return [2 /*return*/, "updated"];
                             }
                         }
-                        item.lastModifiedDate = new Date();
+                        item.lastModifiedDate = new Date(App_1.App.DateNow());
                         item.lastmodifiedBy = this.sessionInfo.userName;
                         return [2 /*return*/, true];
                 }
@@ -190,9 +190,9 @@ var PhoneVerificationService = /** @class */ (function () {
                         phoneVerification.customerId = item.customerId;
                         phoneVerification.dataareaid = this.sessionInfo.dataareaid;
                         phoneVerification.createdBy = this.sessionInfo.userName;
-                        phoneVerification.createdDateTime = new Date();
+                        phoneVerification.createdDateTime = new Date(App_1.App.DateNow());
                         phoneVerification.countryCode = item.countryCode ? item.countryCode : 966;
-                        phoneVerification.otpExpiryTime = new Date();
+                        phoneVerification.otpExpiryTime = new Date(App_1.App.DateNow());
                         return [4 /*yield*/, this.save(phoneVerification)];
                     case 1:
                         data = _a.sent();

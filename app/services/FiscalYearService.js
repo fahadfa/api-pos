@@ -174,8 +174,8 @@ var FiscalYearService = /** @class */ (function () {
                             return [2 /*return*/, "year"];
                         }
                         item.lastModifiedBy = this.sessionInfo.userName;
-                        item.lastModifiedDate = new Date(App_1.App.dateNow());
-                        item.createdDateTime = new Date(App_1.App.dateNow());
+                        item.lastModifiedDate = new Date(App_1.App.DateNow());
+                        item.createdDateTime = new Date(App_1.App.DateNow());
                         item.createdBy = this.sessionInfo.userName;
                         item.dataareaid = this.sessionInfo.dataareaid;
                         return [2 /*return*/, true];

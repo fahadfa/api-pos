@@ -1391,7 +1391,7 @@ var LoadService = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.rawQuery.checkInstantDiscount(param.key)];
                     case 1:
                         data = _a.sent();
-                        return [2 /*return*/, data.length > 0 ? { cond: true, amount: data[0].minamount } : { cond: false, amount: 0 }];
+                        return [2 /*return*/, data.length > 0 ? { cond: true, amount: parseInt(data[0].minamount) } : { cond: false, amount: 0 }];
                 }
             });
         });

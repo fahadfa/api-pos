@@ -141,7 +141,7 @@ var UsesrInfoService = /** @class */ (function () {
                         cond = _a.sent();
                         console.log(cond);
                         if (!(cond == true)) return [3 /*break*/, 3];
-                        reqData.lastmodifieddate = new Date();
+                        reqData.lastmodifieddate = new Date(App_1.App.DateNow());
                         reqData.lastmodifiedby = this.sessionInfo.userName;
                         reqData.userGroup = { groupid: reqData.groupid };
                         return [4 /*yield*/, this.userinfoDAO.save(reqData)];
@@ -198,7 +198,7 @@ var UsesrInfoService = /** @class */ (function () {
                             .toString(36)
                             .substring(7);
                         item.password = App_1.App.HashSync(item.normalPassword);
-                        item.createddatetime = new Date();
+                        item.createddatetime = new Date(App_1.App.DateNow());
                         item.createdby = this.sessionInfo.userName;
                         return [4 /*yield*/, App_1.App.SendMail(item.email, "Jaz Sales account activation for '" + item.userName, "User", { name: item.userName, password: item.normalPassword })];
                     case 6:
@@ -235,7 +235,7 @@ var UsesrInfoService = /** @class */ (function () {
                         user.userGroupConfig = user.userGroupConfig == null ? {} : user.userGroupConfig;
                         user.userGroup = user.userGroup == null ? {} : user.userGroup;
                         user.password = App_1.App.HashSync(reqData.newPassword);
-                        user.lastmodifieddate = new Date();
+                        user.lastmodifieddate = new Date(App_1.App.DateNow());
                         return [4 /*yield*/, this.userinfoDAO.save(user)];
                     case 2:
                         _a.sent();

@@ -45,6 +45,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Config = __importStar(require("../../utils/Config"));
 var SyncServiceHelper_1 = require("../../sync/SyncServiceHelper");
 var Log_1 = require("../../utils/Log");
+var App_1 = require("../../utils/App");
 // let mssqlDbOptions = {
 //   username: "SA",
 //   password: "Jazeera123",
@@ -239,7 +240,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                             item.inventlocationid = this.dateObj.inventlocationid;
                             item.invoicecreatedby = "SYSTEM";
                             item.lastmodifiedby = "SYSTEM";
-                            item.lastmodifieddate = new Date();
+                            item.lastmodifieddate = new Date(App_1.App.DateNow());
                             item.originalprinted = true;
                             item.iscash = item.payment == "CASH" ? true : false;
                             item.deliverytype = "self";

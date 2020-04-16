@@ -94,13 +94,13 @@ var ConfigtableService = /** @class */ (function () {
     };
     ConfigtableService.prototype.searchSalesOrderColors = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var t0, Items, data, t1, error_3;
+            var Items, data, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 5, , 6]);
                         if (!params.itemid) return [3 /*break*/, 3];
-                        t0 = new Date().getTime();
+                        // var t0 = new Date().getTime();
                         params.inventlocationid = this.sessionInfo.inventlocationid;
                         return [4 /*yield*/, this.rawQuery.getColorCodesInStock(params)];
                     case 1:
@@ -109,8 +109,8 @@ var ConfigtableService = /** @class */ (function () {
                     case 2:
                         data = _a.sent();
                         console.log(data.length);
-                        t1 = new Date().getTime();
-                        console.log("took " + (t1 - t0) / 1000 + " milliseconds.");
+                        // var t1 = new Date().getTime();
+                        // console.log("took " + (t1 - t0) / 1000 + " milliseconds.");
                         return [2 /*return*/, data];
                     case 3: throw "itemid Required";
                     case 4: return [3 /*break*/, 6];

@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
+var App_1 = require("../../utils/App");
 var moment = require("moment");
 var RawQuery = /** @class */ (function () {
     function RawQuery() {
@@ -961,7 +962,7 @@ var RawQuery = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.db.query("update salestable set status = '" + status + "' where salesid='" + salesId + "'")];
+                    case 0: return [4 /*yield*/, this.db.query("update salestable set status = '" + status + "', lastmodifieddate = '" + App_1.App.DateNow() + "' where salesid='" + salesId + "'")];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });

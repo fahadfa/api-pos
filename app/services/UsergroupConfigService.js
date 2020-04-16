@@ -35,6 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var App_1 = require("../../utils/App");
 var UserInfo_1 = require("../../entities/UserInfo");
 var UsergroupconfigDAO_1 = require("../repos/UsergroupconfigDAO");
 var UsergroupDAO_1 = require("../repos/UsergroupDAO");
@@ -151,7 +152,7 @@ var UsergroupConfigService = /** @class */ (function () {
                         cond = _a.sent();
                         console.log(cond);
                         if (!(cond == true)) return [3 /*break*/, 7];
-                        reqData.lastmodifieddate = new Date();
+                        reqData.lastmodifieddate = new Date(App_1.App.DateNow());
                         promiseList = [];
                         promiseList.push(this.usergroupconfigDAO.save(reqData));
                         promiseList.push(this.update_user_group(reqData));
@@ -184,7 +185,7 @@ var UsergroupConfigService = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.usergroupDAO.entity(data.groupid)];
                     case 1:
                         group = _a.sent();
-                        group.lastmodifieddate = new Date();
+                        group.lastmodifieddate = new Date(App_1.App.DateNow());
                         return [4 /*yield*/, this.usergroupDAO.save(group)];
                     case 2:
                         _a.sent();
@@ -233,7 +234,7 @@ var UsergroupConfigService = /** @class */ (function () {
                                 }
                             }
                         }
-                        item.lastmodifieddate = new Date();
+                        item.lastmodifieddate = new Date(App_1.App.DateNow());
                         return [2 /*return*/, true];
                 }
             });

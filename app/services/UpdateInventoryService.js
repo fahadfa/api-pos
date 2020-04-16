@@ -38,6 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var InventTransDAO_1 = require("../repos/InventTransDAO");
 var InventoryOnhandDAO_1 = require("../repos/InventoryOnhandDAO");
 var InventoryOnhand_1 = require("../../entities/InventoryOnhand");
+var App_1 = require("../../utils/App");
 var UpdateInventoryService = /** @class */ (function () {
     function UpdateInventoryService() {
         this.inventTransDAO = new InventTransDAO_1.InventorytransDAO();
@@ -87,7 +88,7 @@ var UpdateInventoryService = /** @class */ (function () {
                         if (!(reqData.reserveStatus == "RESERVED")) return [3 /*break*/, 4];
                         if (!update) return [3 /*break*/, 3];
                         inventoryOnHandData.qtyReserved = parseInt(inventoryOnHandData.qtyReserved) + Math.abs(reqData.qty);
-                        inventoryOnHandData.updatedOn = new Date();
+                        inventoryOnHandData.updatedOn = new Date(App_1.App.DateNow());
                         return [4 /*yield*/, this.inventoryOnhandDAO.save(inventoryOnHandData)];
                     case 2:
                         _a.sent();
@@ -96,7 +97,7 @@ var UpdateInventoryService = /** @class */ (function () {
                     case 4:
                         if (!(reqData.reserveStatus == "PAID")) return [3 /*break*/, 9];
                         if (!update) return [3 /*break*/, 8];
-                        inventoryOnHandData.updatedOn = new Date();
+                        inventoryOnHandData.updatedOn = new Date(App_1.App.DateNow());
                         if (!(parseInt(reqData.qty) < 0)) return [3 /*break*/, 6];
                         inventoryOnHandData.qtyOut = parseInt(inventoryOnHandData.qtyOut) + Math.abs(reqData.qty);
                         return [4 /*yield*/, this.inventoryOnhandDAO.save(inventoryOnHandData)];
@@ -114,7 +115,7 @@ var UpdateInventoryService = /** @class */ (function () {
                     case 9:
                         if (!(parseInt(reqData.qty) < 0)) return [3 /*break*/, 11];
                         inventoryOnHandData.qtyOut = parseInt(inventoryOnHandData.qtyOut) + Math.abs(reqData.qty);
-                        inventoryOnHandData.updatedOn = new Date();
+                        inventoryOnHandData.updatedOn = new Date(App_1.App.DateNow());
                         return [4 /*yield*/, this.inventoryOnhandDAO.save(inventoryOnHandData)];
                     case 10:
                         _a.sent();
@@ -122,7 +123,7 @@ var UpdateInventoryService = /** @class */ (function () {
                     case 11:
                         if (!(parseInt(reqData.qty) > 0)) return [3 /*break*/, 13];
                         inventoryOnHandData.qtyIn = parseInt(inventoryOnHandData.qtyIn) + Math.abs(reqData.qty);
-                        inventoryOnHandData.updatedOn = new Date();
+                        inventoryOnHandData.updatedOn = new Date(App_1.App.DateNow());
                         return [4 /*yield*/, this.inventoryOnhandDAO.save(inventoryOnHandData)];
                     case 12:
                         _a.sent();
@@ -136,7 +137,7 @@ var UpdateInventoryService = /** @class */ (function () {
                         inventoryOnHandData.batchno = reqData.batchno;
                         inventoryOnHandData.dataareaid = reqData.dataareaid;
                         inventoryOnHandData.inventlocationid = reqData.inventlocationid;
-                        inventoryOnHandData.updatedOn = new Date();
+                        inventoryOnHandData.updatedOn = new Date(App_1.App.DateNow());
                         if (parseInt(reqData.qty) < 0) {
                             inventoryOnHandData.qtyOut = Math.abs(reqData.qty);
                         }
@@ -162,7 +163,7 @@ var UpdateInventoryService = /** @class */ (function () {
                         inventoryOnHandData = _a.sent();
                         console.log("==========updateInventoryOnhandData=================", inventoryOnHandData);
                         inventoryOnHandData.qtyReserved = parseInt(inventoryOnHandData.qtyReserved) - Math.abs(reqData.qty);
-                        inventoryOnHandData.updatedOn = new Date();
+                        inventoryOnHandData.updatedOn = new Date(App_1.App.DateNow());
                         return [4 /*yield*/, this.inventoryOnhandDAO.save(inventoryOnHandData)];
                     case 19:
                         _a.sent();
@@ -189,7 +190,7 @@ var UpdateInventoryService = /** @class */ (function () {
                         inventoryOnHandData = _a.sent();
                         console.log("==========updateInventoryOnhandData=================", inventoryOnHandData);
                         inventoryOnHandData.qtyReserved = inventoryOnHandData.qtyReserved - Math.abs(reqData.qty);
-                        inventoryOnHandData.updatedOn = new Date();
+                        inventoryOnHandData.updatedOn = new Date(App_1.App.DateNow());
                         inventoryOnHandData.updatedBy = this.sessionInfo ? this.sessionInfo.userName : "SYSTEM";
                         return [4 /*yield*/, this.inventoryOnhandDAO.save(inventoryOnHandData)];
                     case 2:

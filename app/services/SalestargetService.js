@@ -95,7 +95,7 @@ var SalestargetService = /** @class */ (function () {
                         _a.trys.push([0, 7, , 8]);
                         return [4 /*yield*/, this.workDaysDAO.search({
                                 storeCode: data.inventlocationid,
-                                year: new Date().getFullYear()
+                                year: new Date(App_1.App.DateNow()).getFullYear()
                             })];
                     case 1:
                         workWeeks = _a.sent();
@@ -268,8 +268,8 @@ var SalestargetService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        currentDate = this.calender.getFormateDate(new Date());
-                        previousDate = this.calender.getPreviousDate(new Date());
+                        currentDate = this.calender.getFormateDate(new Date(App_1.App.DateNow()));
+                        previousDate = this.calender.getPreviousDate(new Date(App_1.App.DateNow()));
                         currentDateMonth = this.calender.getMonth(currentDate);
                         previusDateMonth = this.calender.getMonth(previousDate);
                         currentDateYear = this.calender.getYear(currentDate);
@@ -283,7 +283,7 @@ var SalestargetService = /** @class */ (function () {
                     case 2:
                         previousMonthTaget = _a.sent();
                         console.log("================ is today working ===============", currentDate, "===============", this.calender.isBusinessDay(currentDate));
-                        currentDayTarget = this.calender.isBusinessDay(new Date())
+                        currentDayTarget = this.calender.isBusinessDay(new Date(App_1.App.DateNow()))
                             ? this.getTargetAmont(currentMonthTaget, currentDateMonthWorkingDays)
                             : 0;
                         previousDayTarget = this.calender.isBusinessDay(previousDate)

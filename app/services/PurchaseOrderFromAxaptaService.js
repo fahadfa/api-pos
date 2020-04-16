@@ -35,6 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var App_1 = require("../../utils/App");
 var Props_1 = require("../../constants/Props");
 var SalesTable_1 = require("../../entities/SalesTable");
 var SalesLine_1 = require("../../entities/SalesLine");
@@ -97,11 +98,11 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                         salesData.transkind = "PURCHASEORDER";
                         salesData.saleStatus = "CREATED";
                         salesData.custAccount = data[0].vend_account;
-                        salesData.invoiceDate = new Date();
-                        salesData.shippingDateConfirmed = new Date();
+                        salesData.invoiceDate = new Date(App_1.App.DateNow());
+                        salesData.shippingDateConfirmed = new Date(App_1.App.DateNow());
                         salesData.dataareaid = data[0].data_area_id;
-                        salesData.lastModifiedDate = new Date();
-                        salesData.createddatetime = new Date();
+                        salesData.lastModifiedDate = new Date(App_1.App.DateNow());
+                        salesData.createddatetime = new Date(App_1.App.DateNow());
                         salesData.salesType = 4;
                         salesData.salesLines = [];
                         i = 1;
@@ -120,8 +121,8 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                             salesLine.inventLocationId = v.invent_location_id;
                             salesLine.batchNo = v.batch_no;
                             salesLine.custAccount = v.vend_account;
-                            salesLine.lastModifiedDate = new Date();
-                            salesLine.createddatetime = new Date();
+                            salesLine.lastModifiedDate = new Date(App_1.App.DateNow());
+                            salesLine.createddatetime = new Date(App_1.App.DateNow());
                             batches = {};
                             batches.qty = v.purch_qty;
                             batches.itemid = salesLine.itemid;
@@ -133,7 +134,7 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                             batches.inventlocationid = salesLine.inventLocationId;
                             batches.dataareaid = salesLine.dataareaid;
                             batches.transactionClosed = false;
-                            batches.dateinvent = new Date();
+                            batches.dateinvent = new Date(App_1.App.DateNow());
                             salesLine.batches = batches;
                             salesData.salesLines.push(salesLine);
                             i += 1;

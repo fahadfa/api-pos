@@ -35,6 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var App_1 = require("../../utils/App");
 var UserInfo_1 = require("../../entities/UserInfo");
 var UsergroupDAO_1 = require("../repos/UsergroupDAO");
 var typeorm_1 = require("typeorm");
@@ -123,7 +124,7 @@ var UserGroupService = /** @class */ (function () {
                         console.log(cond);
                         reqData.permissiondata = JSON.stringify(reqData.permissiondata);
                         if (!(cond == true)) return [3 /*break*/, 3];
-                        reqData.lastmodifieddate = new Date();
+                        reqData.lastmodifieddate = new Date(App_1.App.DateNow());
                         return [4 /*yield*/, this.usergroupDAO.save(reqData)];
                     case 2:
                         user = _a.sent();
@@ -166,14 +167,14 @@ var UserGroupService = /** @class */ (function () {
                         if (!(userGroupPreviousData.length == 0)) return [3 /*break*/, 4];
                         userGroupData.groupid = item.groupid;
                         userGroupData.lastmodifiedby = this.sessionInfo.userName;
-                        userGroupData.lastmodifieddate = new Date();
+                        userGroupData.lastmodifieddate = new Date(App_1.App.DateNow());
                         return [4 /*yield*/, this.userGroupConfigDAO.save(userGroupData)];
                     case 3:
                         _a.sent();
                         _a.label = 4;
                     case 4:
                         item.lastmodifiedby = this.sessionInfo.userName;
-                        item.lastmodifieddate = new Date();
+                        item.lastmodifieddate = new Date(App_1.App.DateNow());
                         return [4 /*yield*/, this.usergroupDAO.findAll({ groupname: item.groupname })];
                     case 5:
                         mdata = _a.sent();
@@ -184,7 +185,7 @@ var UserGroupService = /** @class */ (function () {
                         item.groupid = uuid();
                         // item.permissiondata = item.role == "ROLE_ADMIN" ? Props.GROUP_ADMIN_PERMISSIONS : Props.GROUP_NORMAL_PERMISSIONS;
                         item.deleted = false;
-                        item.createddatetime = new Date();
+                        item.createddatetime = new Date(App_1.App.DateNow());
                         item.createdby = this.sessionInfo.userName;
                         userGroupData.groupid = item.groupid;
                         userGroupData.lastmodifiedby = this.sessionInfo.userName;

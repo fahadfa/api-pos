@@ -39,6 +39,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var RawQuery_1 = require("../common/RawQuery");
 var CusttableDAO_1 = require("../repos/CusttableDAO");
 var typeorm_1 = require("typeorm");
+var App_1 = require("../../utils/App");
 var uuid = require("uuid");
 var DiscountService = /** @class */ (function () {
     function DiscountService() {
@@ -48,7 +49,7 @@ var DiscountService = /** @class */ (function () {
     }
     DiscountService.prototype.getDiscount = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var result, checkCustomer, discountBlockItems, checkCustomer_1, discountBlockItemsArray_1, sabicCustomers, ARAMKO_THAKAKOM_DISCOUNT, aramkoTahkomDiscounts, t0, error_1;
+            var result, checkCustomer, discountBlockItems, checkCustomer_1, discountBlockItemsArray_1, sabicCustomers, ARAMKO_THAKAKOM_DISCOUNT, aramkoTahkomDiscounts, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -112,7 +113,6 @@ var DiscountService = /** @class */ (function () {
                     case 8:
                         _a.sent();
                         if (!(reqData.selectedItems && reqData.selectedItems.length > 0)) return [3 /*break*/, 15];
-                        t0 = new Date().getTime();
                         if (!sabicCustomers) return [3 /*break*/, 10];
                         return [4 /*yield*/, this.sabicCustomersDiscount(reqData, discountBlockItemsArray_1)];
                     case 9:
@@ -227,7 +227,7 @@ var DiscountService = /** @class */ (function () {
                         });
                         if (vouchers.is_enabled == 1 ||
                             vouchers.allowed_numbers <= vouchers.used_numbers ||
-                            new Date(vouchers.expiry_date) < new Date()) {
+                            new Date(vouchers.expiry_date) < new Date(App_1.App.DateNow())) {
                             if (vouchers.is_enabled == 1) {
                                 isValidVoucher = false;
                                 message = "INVALID_VOUCHER";
@@ -236,7 +236,7 @@ var DiscountService = /** @class */ (function () {
                                 isValidVoucher = false;
                                 message = "ALREADY_USED";
                             }
-                            else if (new Date(vouchers.expiry_date) < new Date()) {
+                            else if (new Date(vouchers.expiry_date) < new Date(App_1.App.DateNow())) {
                                 isValidVoucher = false;
                                 message = "VOUCHER_EXPIRED";
                             }

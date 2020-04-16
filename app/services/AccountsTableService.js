@@ -214,7 +214,7 @@ var AccountsTableService = /** @class */ (function () {
                             // item.accountNum = await this.getaccountNum();
                             item.dataareaid = this.sessionInfo.dataareaid;
                             item.createdBy = this.sessionInfo.userName;
-                            item.createdDatetime = new Date(App_1.App.dateNow());
+                            item.createdDatetime = new Date(App_1.App.DateNow());
                         }
                         else {
                             console.log(item.accountNum);
@@ -224,9 +224,9 @@ var AccountsTableService = /** @class */ (function () {
                                 }
                             }
                         }
-                        item.modifiedDatetime = new Date(App_1.App.dateNow());
+                        item.modifiedDatetime = new Date(App_1.App.DateNow());
                         item.lastModifiedBy = this.sessionInfo.userName;
-                        item.lastModifiedDate = new Date(App_1.App.dateNow());
+                        item.lastModifiedDate = new Date(App_1.App.DateNow());
                         return [2 /*return*/, true];
                 }
             });

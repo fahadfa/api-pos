@@ -189,7 +189,7 @@ var FiscalYearCloseService = /** @class */ (function () {
                             }
                             else {
                                 item.createdBy = this.sessionInfo.userName;
-                                item.createdDateTime = new Date(App_1.App.dateNow());
+                                item.createdDateTime = new Date(App_1.App.DateNow());
                                 item.recid = item.recid ? item.recid : 0;
                             }
                         }
@@ -200,7 +200,7 @@ var FiscalYearCloseService = /** @class */ (function () {
                             }
                         }
                         item.lastModifiedBy = this.sessionInfo.userName;
-                        item.lastModifiedDate = new Date(App_1.App.dateNow());
+                        item.lastModifiedDate = new Date(App_1.App.DateNow());
                         month = item.endingDate;
                         item.endingDate = App_1.App.DaysBack(new Date(item.yearNo, month, 1), 1);
                         item.dataareaid = this.sessionInfo.dataareaid;

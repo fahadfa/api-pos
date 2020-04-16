@@ -156,9 +156,9 @@ var MenuGroupService = /** @class */ (function () {
                                     groupid: element.groupid
                                 }
                             };
-                            menugroup.updatedDate = new Date(App_1.App.dateNow());
+                            menugroup.updatedDate = new Date(App_1.App.DateNow());
                             if (!element.id) {
-                                menugroup.createdBy = new Date(App_1.App.dateNow());
+                                menugroup.createdBy = new Date(App_1.App.DateNow());
                             }
                             delete element.children;
                             saveData_1.push(menugroup);
