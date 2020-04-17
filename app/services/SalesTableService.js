@@ -1993,6 +1993,7 @@ var SalesTableService = /** @class */ (function () {
                         delete item.id;
                         item.id = uuid();
                         item.salesId = reqData.salesId;
+                        item.custAccount = reqData.custAccount;
                         item.createddatetime = moment().format();
                         item.createdBy = this.sessionInfo.userName;
                         item.numberSequenceGroupId = this.seqNum;
@@ -2118,6 +2119,7 @@ var SalesTableService = /** @class */ (function () {
                         item.lastModifiedDate = new Date(App_1.App.DateNow());
                         item.createdBy = this.sessionInfo.userName;
                         item.numberSequenceGroupId = this.seqNum;
+                        item.custAccount = reqData.custAccount;
                         item.batch = [];
                         if (!(batches_6 && batches_6.length > 0)) return [3 /*break*/, 14];
                         _a = 0, _b = item.batches;

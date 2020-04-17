@@ -72,6 +72,25 @@ var App = /** @class */ (function () {
         this.uniqueId = time;
         return time.toString(36).toUpperCase();
     };
+    App.convertUTCDateToLocalDate = function (date, timezoneoffset) {
+        if (date.getTimezoneOffset() + '' !== timezoneoffset) {
+            var diffseconds = timezoneoffset * 60;
+            var hours = parseInt(diffseconds / 3600 + "");
+            var minutes = (diffseconds / 60) % 60;
+            var seconds = (diffseconds % 60);
+            var yearOrg = date.getFullYear();
+            var dateOrg = date.getDate();
+            var hoursOrg = date.getHours();
+            var minutesOrg = date.getMinutes();
+            var secondsOrg = date.getSeconds();
+            date.setDate(dateOrg);
+            date.setYear(yearOrg);
+            date.setHours(hoursOrg - hours);
+            date.setMinutes(minutesOrg - minutes);
+            date.setSeconds(secondsOrg - seconds);
+        }
+        return date;
+    };
     App.uuidv4 = function () {
         return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
             var r = (Math.random() * 16) | 0, v = c == "x" ? r : (r & 0x3) | 0x8;

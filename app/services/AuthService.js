@@ -114,7 +114,7 @@ var AuthService = /** @class */ (function () {
                         }
                         else {
                             return [2 /*return*/, Promise.reject({
-                                    message: "INVALID_USERNAME/PASSWORD",
+                                    message: "INVALID_USERNAME/PASSWORD"
                                 })];
                         }
                         if (process && process.env && process.env.ENV_STORE_ID) {
@@ -175,13 +175,13 @@ var AuthService = /** @class */ (function () {
                                 }
                                 else {
                                     return [2 /*return*/, Promise.reject({
-                                            message: "ACCOUNT_DEACTIVATED_PLEASE_CONTACT_ADMIN",
+                                            message: "ACCOUNT_DEACTIVATED_PLEASE_CONTACT_ADMIN"
                                         })];
                                 }
                             }
                             else {
                                 return [2 /*return*/, Promise.reject({
-                                        message: "INVALID_PASSWORD",
+                                        message: "INVALID_PASSWORD"
                                     })];
                             }
                         }
@@ -216,13 +216,13 @@ var AuthService = /** @class */ (function () {
                         _a.sent();
                         return [4 /*yield*/, App_1.App.SendMail(profileObj.email, "Jaz Sales account activation for '" + profileObj.userName, "ForgotPassword", {
                                 name: profileObj.userName,
-                                securitytoken: profileObj.resetkey,
+                                securitytoken: profileObj.resetkey
                             })];
                     case 5:
                         _a.sent();
                         return [3 /*break*/, 7];
                     case 6: throw "INVALID_USERNAME";
-                    case 7: return [2 /*return*/, { message: "PASSWORD_RESET_TOKEN_SENT_TO_MAIL" }];
+                    case 7: return [2 /*return*/, { message: "PASSWORD_RESET_TOKEN_SENT_TO_MAIL", status: 1 }];
                     case 8:
                         error_2 = _a.sent();
                         throw error_2;

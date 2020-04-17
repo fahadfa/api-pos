@@ -107,7 +107,7 @@ var TransOrderReport = /** @class */ (function () {
                         data.forEach(function (item) {
                             item.statusVal = params.lang == "en" ? item.statusEn : item.statusAr;
                         });
-                        console.log(data);
+                        // console.log(data);
                         return [2 /*return*/, data];
                     case 8:
                         error_1 = _a.sent();
@@ -147,9 +147,10 @@ var TransOrderReport = /** @class */ (function () {
                         params.status = params.lang == "en" ? data.en : data.ar;
                         _a.label = 2;
                     case 2:
+                        console.log(params);
                         renderData = {
-                            printDate: new Date(params.printDate)
-                                .toISOString()
+                            printDate: App_1.App.convertUTCDateToLocalDate(new Date(App_1.App.DateNow()), parseInt(params.timeZoneOffSet))
+                                .toLocaleDateString()
                                 .replace(/T/, " ") // replace T with a space
                                 .replace(/\..+/, ""),
                             fromDate: params.fromDate,
@@ -157,7 +158,7 @@ var TransOrderReport = /** @class */ (function () {
                             status: params.status,
                             fromWareHouseId: params.fromWareHouseId,
                             toWareHouseId: params.toWareHouseId,
-                            user: params.user
+                            user: params.user,
                         };
                         // console.log(result.salesLine[0].product.nameEnglish);
                         renderData.data = result;
@@ -165,7 +166,6 @@ var TransOrderReport = /** @class */ (function () {
                         result.map(function (v) {
                             renderData.total += parseInt(v.quantity);
                         });
-                        console.log(renderData);
                         if (params.type == "excel") {
                             if (params.transkind == "ORDERSHIPMENT") {
                                 file = params.lang == "en" ? "odorder-excel" : "osorder-excel-ar";

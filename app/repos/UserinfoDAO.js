@@ -99,7 +99,7 @@ var UserinfoDAO = /** @class */ (function () {
                             .leftJoinAndSelect("UserInfo.userGroupConfig", "userGroupConfig")
                             .leftJoinAndSelect("UserInfo.userGroup", "userGroup")
                             .where({})
-                            .andWhere("LOWER(UserInfo.userName) = LOWER('" + data.userName + "')")
+                            .andWhere("LOWER(trim(UserInfo.userName)) = LOWER('" + data.userName.trim() + "')")
                             .getOne()];
                     case 1: return [2 /*return*/, _a.sent()];
                 }

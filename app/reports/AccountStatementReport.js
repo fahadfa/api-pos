@@ -94,7 +94,6 @@ var AccountStatementReport = /** @class */ (function () {
                     toDate: params.toDate,
                     user: params.user
                 };
-                // console.log(result.salesLine[0].product.nameEnglish);
                 renderData.data = result;
                 console.log(renderData);
                 if (params.type == "excel") {
