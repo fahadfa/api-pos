@@ -43,33 +43,13 @@ var ColorantReport = /** @class */ (function () {
     }
     ColorantReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, query, warehouseQuery, regionalWarehouses, inQueryStr_1, totalQuantity_1, totalAmount_1, renderData_1, error_1;
+            var data, totalQuantity_1, totalAmount_1, renderData_1, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
-                        data = void 0;
-                        query = "\n            select \n                sl.salesid as \"salesId\",\n                sl.colorantid as colorant,\n                sl.base_size_id as basesizeid,\n                sl.colorid,\n                sl.colorantprice  as price,\n                to_char(sl.salesprice,  'FM999999999.00') as \"salesPrice\",\n                to_char(sl.salesqty, 'FM999999990') as quantity,\n                to_char((sl.salesqty * sl.colorantprice), 'FM999999990.00') as \"totalAmount\",\n                sl.inventsizeid as inventsizeid,\n                sz.description as \"sizeNameEn\",\n                sz.\"name\" as \"sizeNameAr\",\n                w.name as \"wareHouseNameAr\",\n                w.namealias as \"wareHouseNameEn\",\n                i.batchno as batchno\n                from salesline sl\n                left join inventlocation w on w.inventlocationid=sl.inventlocationid\n                left join inventtrans i on i.invoiceid=sl.salesid \n                left join inventsize sz on sz.inventsizeid = sl.inventsizeid and sz.itemid = sl.itemid \n                left join salestable st on st.salesid = sl.salesid\n                where sl.createddatetime >= '" + params.fromDate + "' ::date\n                and  sl.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval)\n                and st.transkind != 'SALESQUOTATION' AND st.transkind != 'TRANSFERORDER' and (st.status = 'POSTED' or st.status = 'PAID') AND sl.colorantprice > 0\n           ";
-                        if (params.inventlocationid != "ALL") {
-                            query += "  and sl.inventlocationid = '" + params.inventlocationid + "' ";
-                        }
-                        if (!(params.inventlocationid == "ALL")) return [3 /*break*/, 2];
-                        warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
-                        return [4 /*yield*/, this.db.query(warehouseQuery)];
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.query_to_data(params)];
                     case 1:
-                        regionalWarehouses = _a.sent();
-                        inQueryStr_1 = "";
-                        regionalWarehouses[0].regionalwarehouse.split(",").map(function (item) {
-                            inQueryStr_1 += "'" + item + "',";
-                        });
-                        inQueryStr_1 += "'" + params.key + "',";
-                        query += " and sl.inventlocationid in (" + inQueryStr_1.substr(0, inQueryStr_1.length - 1) + ") ";
-                        return [3 /*break*/, 3];
-                    case 2:
-                        query += " and sl.inventlocationid='" + params.inventlocationid + "' ";
-                        _a.label = 3;
-                    case 3: return [4 /*yield*/, this.db.query(query)];
-                    case 4:
                         data = _a.sent();
                         totalQuantity_1 = 0;
                         totalAmount_1 = 0;
@@ -83,7 +63,7 @@ var ColorantReport = /** @class */ (function () {
                             toDate: params.toDate,
                             totalQuantity: totalQuantity_1,
                             totalAmount: totalAmount_1,
-                            user: params.user
+                            user: params.user,
                         };
                         renderData_1.totalQuantity = 0;
                         renderData_1.totalAmount = 0;
@@ -94,10 +74,10 @@ var ColorantReport = /** @class */ (function () {
                         renderData_1.totalAmount = renderData_1.totalAmount.toFixed(2);
                         renderData_1.data = data;
                         return [2 /*return*/, renderData_1];
-                    case 5:
+                    case 2:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 6: return [2 /*return*/];
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -127,10 +107,7 @@ var ColorantReport = /** @class */ (function () {
                         warehouse = _a.sent();
                         result.warehouseNameEn = warehouse.namealias;
                         result.warehouseNameAr = warehouse.name;
-                        result.printDate = new Date(params.printDate)
-                            .toISOString()
-                            .replace(/T/, " ")
-                            .replace(/\..+/, "");
+                        result.printDate = new Date(params.printDate).toISOString().replace(/T/, " ").replace(/\..+/, "");
                         if (params.type == "excel") {
                             file = params.lang == "en" ? "colorant-excel" : "colorant-excel-ar";
                         }
@@ -144,6 +121,37 @@ var ColorantReport = /** @class */ (function () {
                             throw error;
                         }
                         return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ColorantReport.prototype.query_to_data = function (params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, warehouseQuery, regionalWarehouses, inQueryStr_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "\n    select \n        sl.salesid as \"salesId\",\n        sl.colorantid as colorant,\n        sl.base_size_id as basesizeid,\n        sl.colorid,\n        sl.colorantprice  as price,\n        to_char(sl.salesprice,  'FM999999999.00') as \"salesPrice\",\n        to_char(sl.salesqty, 'FM999999990') as quantity,\n        to_char((sl.salesqty * sl.colorantprice), 'FM999999990.00') as \"totalAmount\",\n        sl.inventsizeid as inventsizeid,\n        sz.description as \"sizeNameEn\",\n        sz.\"name\" as \"sizeNameAr\",\n        w.name as \"wareHouseNameAr\",\n        w.namealias as \"wareHouseNameEn\",\n        i.batchno as batchno\n        from salesline sl\n        left join inventlocation w on w.inventlocationid=sl.inventlocationid\n        left join inventtrans i on i.invoiceid=sl.salesid \n        left join inventsize sz on sz.inventsizeid = sl.inventsizeid and sz.itemid = sl.itemid \n        left join salestable st on st.salesid = sl.salesid\n        where sl.createddatetime >= '" + params.fromDate + "' ::date\n        and  sl.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval)\n        and st.transkind != 'SALESQUOTATION' AND st.transkind != 'TRANSFERORDER' and (st.status = 'POSTED' or st.status = 'PAID') AND sl.colorantprice > 0\n   ";
+                        if (params.inventlocationid != "ALL") {
+                            query += "  and sl.inventlocationid = '" + params.inventlocationid + "' ";
+                        }
+                        if (!(params.inventlocationid == "ALL")) return [3 /*break*/, 2];
+                        warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
+                        return [4 /*yield*/, this.db.query(warehouseQuery)];
+                    case 1:
+                        regionalWarehouses = _a.sent();
+                        inQueryStr_1 = "";
+                        regionalWarehouses[0].regionalwarehouse.split(",").map(function (item) {
+                            inQueryStr_1 += "'" + item + "',";
+                        });
+                        inQueryStr_1 += "'" + params.key + "',";
+                        query += " and sl.inventlocationid in (" + inQueryStr_1.substr(0, inQueryStr_1.length - 1) + ") ";
+                        return [3 /*break*/, 3];
+                    case 2:
+                        query += " and sl.inventlocationid='" + params.inventlocationid + "' ";
+                        _a.label = 3;
+                    case 3: return [4 /*yield*/, this.db.query(query)];
+                    case 4: return [2 /*return*/, _a.sent()];
                 }
             });
         });

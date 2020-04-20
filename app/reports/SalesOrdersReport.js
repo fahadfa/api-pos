@@ -43,52 +43,13 @@ var SalesOrdersReport = /** @class */ (function () {
     }
     SalesOrdersReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, query, warehouseQuery, regionalWarehouses, inQueryStr_1, resData_1, error_1;
+            var data, resData_1, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
-                        data = void 0;
-                        query = "\n            select \n            distinct\n              s.salesid as \"salesId\",\n              \n              s.dimension6_ as \"salesManId\",\n              s.inventlocationid as \"fromWareHouse\",\n              s.custaccount as \"custaccount\",\n              to_char(s.createddatetime, 'DD-MM-YYYY') as \"createddatetime\",\n              to_char(s.lastmodifieddate, 'DD-MM-YYYY') as \"lastmodifieddate\",\n              s.status as status,              \n              als.en as \"statusEn\",\n              als.ar as \"statusAr\",              \n              alt.en as \"transkindEn\",\n              alt.ar as \"transkindAr\",\n              to_char(s.disc , 'FM999999999990.00') as discount,\n              s.salesname as name,\n              s.salesname as \"nameAlias\",\n              to_char(s.amount , 'FM999999999990.00') as \"grossAmount\",\n              to_char(s.netamount , 'FM999999999990.00') as \"netAmount\",\n              to_char(s.vatamount , 'FM999999999990.00') as \"vatAmount\",\n              w.name as \"wareHouseNameAr\",\n              w.namealias as \"wareHouseNameEn\",\n              s.payment as \"paymentMode\",\n              alp.en as \"paymentModeEn\",\n            \talp.ar as \"paymentModeAr\",              \n              c.walkincustomer as \"walkincustomer\",\n              s.mobileno as phone,\n              s.createddatetime,\n              s.transkind as type,\n              s.payment_type as \"paymentType\",\n              s.voucherdiscchecked as \"voucherdiscchecked\",\n              s.vouchernum as \"vouchernum\",\n              coalesce(s.deliveryaddress, '') || coalesce(s.citycode, '') || coalesce(s.districtcode, '') || coalesce(s.country_code, '') as deliveryaddress,\n              concat(d.num,' - ', d.description) as salesman\n            from salestable s\n              left join inventlocation w on w.inventlocationid=s.inventlocationid\n              left join custtable c on c.accountnum=s.custaccount\n              left join app_lang als on als.id = s.status\n              left join app_lang alt on alt.id = s.transkind\n              left join app_lang alp on alp.id = s.payment\n              left join dimensions d on s.dimension6_ = d.num\n            where s.transkind in ('SALESORDER', 'DESIGNERSERVICE')\n            and s.createddatetime >= '" + params.fromDate + "' ::date\n            AND  s.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval) \n            ";
-                        if (!(params.inventlocationid == "ALL")) return [3 /*break*/, 2];
-                        warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
-                        return [4 /*yield*/, this.db.query(warehouseQuery)];
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.query_to_data(params)];
                     case 1:
-                        regionalWarehouses = _a.sent();
-                        inQueryStr_1 = "";
-                        regionalWarehouses[0].regionalwarehouse.split(",").map(function (item) {
-                            inQueryStr_1 += "'" + item + "',";
-                        });
-                        inQueryStr_1 += "'" + params.key + "',";
-                        query += " and s.inventlocationid in (" + inQueryStr_1.substr(0, inQueryStr_1.length - 1) + ") ";
-                        return [3 /*break*/, 3];
-                    case 2:
-                        query += " and s.inventlocationid='" + params.inventlocationid + "' ";
-                        _a.label = 3;
-                    case 3:
-                        if (params.status != "ALL") {
-                            if (params.status == "RESERVED") {
-                                query += " and s.status in ('RESERVED') ";
-                            }
-                            else if (params.status == "SAVED") {
-                                query += " and s.status in ('SAVED') ";
-                            }
-                            else if (params.status == "CREATED") {
-                                query += " and s.status in ('CREATED') ";
-                            }
-                            else if (params.status == "POSTED") {
-                                query += " and s.status in ('POSTED','PAID') ";
-                            }
-                            else if (params.status == "PAID") {
-                                query += " and s.status in ('PAID','POSTED') ";
-                            }
-                        }
-                        if (params.accountnum) {
-                            query += " and s.custaccount = '" + params.accountnum + "'";
-                        }
-                        query += " order by s.createddatetime ASC";
-                        return [4 /*yield*/, this.db.query(query)];
-                    case 4:
                         data = _a.sent();
                         data.map(function (v) {
                             v.paymentMode = v.paymentType == "ONLINE" ? "Online" : v.paymentMode;
@@ -97,6 +58,7 @@ var SalesOrdersReport = /** @class */ (function () {
                             v.discount = v.discount ? v.discount : 0;
                             v.vatAmount = v.vatAmount ? v.vatAmount : 0;
                             v.netAmount = v.netAmount ? v.netAmount : 0;
+                            v.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(v.lastmodifieddate), parseInt(params.timeZoneOffSet)).toLocaleString();
                         });
                         resData_1 = {
                             grossAmount: 0,
@@ -114,13 +76,13 @@ var SalesOrdersReport = /** @class */ (function () {
                         resData_1.discount = resData_1.discount.toFixed(2);
                         resData_1.vatAmount = resData_1.vatAmount.toFixed(2);
                         resData_1.netAmount = resData_1.netAmount.toFixed(2);
-                        console.log("salesorders  ", data);
+                        // console.log("salesorders  ", data);
                         resData_1.data = data;
                         return [2 /*return*/, resData_1];
-                    case 5:
+                    case 2:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 6: return [2 /*return*/];
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -187,6 +149,56 @@ var SalesOrdersReport = /** @class */ (function () {
                     throw error;
                 }
                 return [2 /*return*/];
+            });
+        });
+    };
+    SalesOrdersReport.prototype.query_to_data = function (params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, warehouseQuery, regionalWarehouses, inQueryStr_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "\n            select \n            distinct\n              s.salesid as \"salesId\",\n              \n              s.dimension6_ as \"salesManId\",\n              s.inventlocationid as \"fromWareHouse\",\n              s.custaccount as \"custaccount\",\n              to_char(s.createddatetime, 'DD-MM-YYYY') as \"createddatetime\",\n              s.lastmodifieddate as \"lastmodifieddate\",\n              s.status as status,              \n              als.en as \"statusEn\",\n              als.ar as \"statusAr\",              \n              alt.en as \"transkindEn\",\n              alt.ar as \"transkindAr\",\n              to_char(s.disc , 'FM999999999990.00') as discount,\n              s.salesname as name,\n              s.salesname as \"nameAlias\",\n              to_char(s.amount , 'FM999999999990.00') as \"grossAmount\",\n              to_char(s.netamount , 'FM999999999990.00') as \"netAmount\",\n              to_char(s.vatamount , 'FM999999999990.00') as \"vatAmount\",\n              w.name as \"wareHouseNameAr\",\n              w.namealias as \"wareHouseNameEn\",\n              s.payment as \"paymentMode\",\n              alp.en as \"paymentModeEn\",\n            \talp.ar as \"paymentModeAr\",              \n              c.walkincustomer as \"walkincustomer\",\n              s.mobileno as phone,\n              s.createddatetime,\n              s.transkind as type,\n              s.payment_type as \"paymentType\",\n              s.voucherdiscchecked as \"voucherdiscchecked\",\n              s.vouchernum as \"vouchernum\",\n              coalesce(s.deliveryaddress, '') || coalesce(s.citycode, '') || coalesce(s.districtcode, '') || coalesce(s.country_code, '') as deliveryaddress,\n              concat(d.num,' - ', d.description) as salesman\n            from salestable s\n              left join inventlocation w on w.inventlocationid=s.inventlocationid\n              left join custtable c on c.accountnum=s.custaccount\n              left join app_lang als on als.id = s.status\n              left join app_lang alt on alt.id = s.transkind\n              left join app_lang alp on alp.id = s.payment\n              left join dimensions d on s.dimension6_ = d.num\n            where s.transkind in ('SALESORDER', 'DESIGNERSERVICE')\n            and s.lastmodifieddate >= '" + params.fromDate + "' ::date\n            AND  s.lastmodifieddate < ('" + params.toDate + "' ::date + '1 day'::interval) \n            ";
+                        if (!(params.inventlocationid == "ALL")) return [3 /*break*/, 2];
+                        warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
+                        return [4 /*yield*/, this.db.query(warehouseQuery)];
+                    case 1:
+                        regionalWarehouses = _a.sent();
+                        inQueryStr_1 = "";
+                        regionalWarehouses[0].regionalwarehouse.split(",").map(function (item) {
+                            inQueryStr_1 += "'" + item + "',";
+                        });
+                        inQueryStr_1 += "'" + params.key + "',";
+                        query += " and s.inventlocationid in (" + inQueryStr_1.substr(0, inQueryStr_1.length - 1) + ") ";
+                        return [3 /*break*/, 3];
+                    case 2:
+                        query += " and s.inventlocationid='" + params.inventlocationid + "' ";
+                        _a.label = 3;
+                    case 3:
+                        if (params.status != "ALL") {
+                            if (params.status == "RESERVED") {
+                                query += " and s.status in ('RESERVED') ";
+                            }
+                            else if (params.status == "SAVED") {
+                                query += " and s.status in ('SAVED') ";
+                            }
+                            else if (params.status == "CREATED") {
+                                query += " and s.status in ('CREATED') ";
+                            }
+                            else if (params.status == "POSTED") {
+                                query += " and s.status in ('POSTED','PAID') ";
+                            }
+                            else if (params.status == "PAID") {
+                                query += " and s.status in ('PAID','POSTED') ";
+                            }
+                        }
+                        if (params.accountnum) {
+                            query += " and s.custaccount = '" + params.accountnum + "'";
+                        }
+                        query += " order by s.createddatetime ASC";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 4: return [2 /*return*/, _a.sent()];
+                }
             });
         });
     };

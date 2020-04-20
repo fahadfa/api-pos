@@ -43,76 +43,26 @@ var TransOrderReport = /** @class */ (function () {
     }
     TransOrderReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, query, warehouseQuery, regionalWarehouses, inQueryStr_1, warehouseQuery, regionalWarehouses, inQueryStr_2, error_1;
+            var data, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 8, , 9]);
-                        data = void 0;
-                        query = "\n            select \n                distinct\n                  s.salesid as \"salesId\",\n                  s.inventlocationid as \"fromWareHouse\",\n                  s.custaccount as \"ToWareHouse\",\n                  to_char(s.createddatetime, 'DD-MM-YYYY') as \"createddatetime\",\n                  to_char(s.lastmodifieddate, 'DD-MM-YYYY') as \"lastmodifieddate\",\n                  to_char(s.lastmodifieddate, 'DD-MM-YYYY') as \"deliverydate\",\n                  s.status as status,\n                  als.en as \"statusEn\",\n                  als.ar as \"statusAr\",                  \n                  alt.en as \"transkindEn\",\n                  alt.ar as \"transkindAr\",\n                  fwh.name as \"fromWareHouseNameAr\",\n                  fwh.namealias as \"fromWareHouseNameEn\",\n                  twh.name as \"toWareHouseNameAr\",\n                  twh.namealias as \"toWareHouseNameEn\",\n                  (select to_char(sum(sl.salesqty), 'FM999999990.00') from salesline sl where sl.salesid=s.salesid) as quantity\n            from salestable s\n                left join inventlocation fwh on fwh.inventlocationid=s.inventlocationid\n                left join inventlocation twh on twh.inventlocationid=s.custaccount\n                left join app_lang als on als.id = s.status\n\t              left join app_lang alt on alt.id = s.transkind\n            where  s.createddatetime >= '" + params.fromDate + "' ::date\n            AND  s.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval) \n            ";
-                        if (!(params.fromWareHouseId == "ALL")) return [3 /*break*/, 2];
-                        warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
-                        return [4 /*yield*/, this.db.query(warehouseQuery)];
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.query_to_data(params)];
                     case 1:
-                        regionalWarehouses = _a.sent();
-                        inQueryStr_1 = "";
-                        regionalWarehouses[0].regionalwarehouse.split(",").map(function (item) {
-                            inQueryStr_1 += "'" + item + "',";
-                        });
-                        inQueryStr_1 += "'" + params.key + "',";
-                        query += " and s.inventlocationid in (" + inQueryStr_1.substr(0, inQueryStr_1.length - 1) + ") ";
-                        return [3 /*break*/, 3];
-                    case 2:
-                        query += " and s.inventlocationid='" + params.fromWareHouseId + "' ";
-                        _a.label = 3;
-                    case 3:
-                        if (params.transkind == "ORDERSHIPMENT") {
-                            query += " and s.transkind in ('ORDERSHIPMENT') and s.status in ('SHIPPED', 'POSTED')  ";
-                        }
-                        else if (params.transkind == "ORDERRECEIVE") {
-                            query += " and s.transkind in ('ORDERRECEIVE') and s.status in ('RECEIVED', 'POSTED')  ";
-                        }
-                        else if (params.transkind == "TRANSFERORDER") {
-                            query += " and s.transkind in ('TRANSFERORDER') ";
-                            if (params.status != "ALL") {
-                                query += " AND  s.status = '" + params.status + "' ";
-                            }
-                        }
-                        else {
-                            if (params.status != "ALL") {
-                                query += " AND  s.status = '" + params.status + "' ";
-                            }
-                            query += "and s.transkind in ('TRANSFERORDER') ";
-                        }
-                        if (!(params.toWareHouseId == "ALL")) return [3 /*break*/, 5];
-                        warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
-                        return [4 /*yield*/, this.db.query(warehouseQuery)];
-                    case 4:
-                        regionalWarehouses = _a.sent();
-                        inQueryStr_2 = "";
-                        regionalWarehouses[0].regionalwarehouse.split(",").map(function (item) {
-                            inQueryStr_2 += "'" + item + "',";
-                        });
-                        inQueryStr_2 += "'" + params.key + "',";
-                        query += " and s.custaccount in (" + inQueryStr_2.substr(0, inQueryStr_2.length - 1) + ") ";
-                        return [3 /*break*/, 6];
-                    case 5:
-                        if (params.toWareHouseId) {
-                            query += " and s.custaccount='" + params.toWareHouseId + "' ";
-                        }
-                        _a.label = 6;
-                    case 6: return [4 /*yield*/, this.db.query(query)];
-                    case 7:
                         data = _a.sent();
-                        data.forEach(function (item) {
+                        data.map(function (item) {
                             item.statusVal = params.lang == "en" ? item.statusEn : item.statusAr;
+                            item.createddatetime = App_1.App.convertUTCDateToLocalDate(new Date(item.createddatetime), parseInt(params.timeZoneOffSet)).toLocaleString();
+                            item.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(item.lastmodifieddate), parseInt(params.timeZoneOffSet)).toLocaleString();
+                            item.deliverydate = App_1.App.convertUTCDateToLocalDate(new Date(item.deliverydate), parseInt(params.timeZoneOffSet)).toLocaleString();
                         });
                         // console.log(data);
                         return [2 /*return*/, data];
-                    case 8:
+                    case 2:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 9: return [2 /*return*/];
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -195,6 +145,70 @@ var TransOrderReport = /** @class */ (function () {
                             throw error;
                         }
                         return [2 /*return*/];
+                }
+            });
+        });
+    };
+    TransOrderReport.prototype.query_to_data = function (params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, warehouseQuery, regionalWarehouses, inQueryStr_1, warehouseQuery, regionalWarehouses, inQueryStr_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "\n            select \n                distinct\n                  s.salesid as \"salesId\",\n                  s.inventlocationid as \"fromWareHouse\",\n                  s.custaccount as \"ToWareHouse\",\n                  s.createddatetime as \"createddatetime\",\n                  s.lastmodifieddate as \"lastmodifieddate\",\n                  s.lastmodifieddate as \"deliverydate\",\n                  s.status as status,\n                  als.en as \"statusEn\",\n                  als.ar as \"statusAr\",                  \n                  alt.en as \"transkindEn\",\n                  alt.ar as \"transkindAr\",\n                  fwh.name as \"fromWareHouseNameAr\",\n                  fwh.namealias as \"fromWareHouseNameEn\",\n                  twh.name as \"toWareHouseNameAr\",\n                  twh.namealias as \"toWareHouseNameEn\",\n                  (select to_char(sum(sl.salesqty), 'FM999999990.00') from salesline sl where sl.salesid=s.salesid) as quantity\n            from salestable s\n                left join inventlocation fwh on fwh.inventlocationid=s.inventlocationid\n                left join inventlocation twh on twh.inventlocationid=s.custaccount\n                left join app_lang als on als.id = s.status\n\t              left join app_lang alt on alt.id = s.transkind\n            where  s.createddatetime >= '" + params.fromDate + "' ::date\n            AND  s.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval) \n            ";
+                        if (!(params.fromWareHouseId == "ALL")) return [3 /*break*/, 2];
+                        warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
+                        return [4 /*yield*/, this.db.query(warehouseQuery)];
+                    case 1:
+                        regionalWarehouses = _a.sent();
+                        inQueryStr_1 = "";
+                        regionalWarehouses[0].regionalwarehouse.split(",").map(function (item) {
+                            inQueryStr_1 += "'" + item + "',";
+                        });
+                        inQueryStr_1 += "'" + params.key + "',";
+                        query += " and s.inventlocationid in (" + inQueryStr_1.substr(0, inQueryStr_1.length - 1) + ") ";
+                        return [3 /*break*/, 3];
+                    case 2:
+                        query += " and s.inventlocationid='" + params.fromWareHouseId + "' ";
+                        _a.label = 3;
+                    case 3:
+                        if (params.transkind == "ORDERSHIPMENT") {
+                            query += " and s.transkind in ('ORDERSHIPMENT') and s.status in ('SHIPPED', 'POSTED')  ";
+                        }
+                        else if (params.transkind == "ORDERRECEIVE") {
+                            query += " and s.transkind in ('ORDERRECEIVE') and s.status in ('RECEIVED', 'POSTED')  ";
+                        }
+                        else if (params.transkind == "TRANSFERORDER") {
+                            query += " and s.transkind in ('TRANSFERORDER') ";
+                            if (params.status != "ALL") {
+                                query += " AND  s.status = '" + params.status + "' ";
+                            }
+                        }
+                        else {
+                            if (params.status != "ALL") {
+                                query += " AND  s.status = '" + params.status + "' ";
+                            }
+                            query += "and s.transkind in ('TRANSFERORDER') ";
+                        }
+                        if (!(params.toWareHouseId == "ALL")) return [3 /*break*/, 5];
+                        warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
+                        return [4 /*yield*/, this.db.query(warehouseQuery)];
+                    case 4:
+                        regionalWarehouses = _a.sent();
+                        inQueryStr_2 = "";
+                        regionalWarehouses[0].regionalwarehouse.split(",").map(function (item) {
+                            inQueryStr_2 += "'" + item + "',";
+                        });
+                        inQueryStr_2 += "'" + params.key + "',";
+                        query += " and s.custaccount in (" + inQueryStr_2.substr(0, inQueryStr_2.length - 1) + ") ";
+                        return [3 /*break*/, 6];
+                    case 5:
+                        if (params.toWareHouseId) {
+                            query += " and s.custaccount='" + params.toWareHouseId + "' ";
+                        }
+                        _a.label = 6;
+                    case 6: return [4 /*yield*/, this.db.query(query)];
+                    case 7: return [2 /*return*/, _a.sent()];
                 }
             });
         });

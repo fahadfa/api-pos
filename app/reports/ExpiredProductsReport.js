@@ -43,38 +43,19 @@ var ExpiredProductsReport = /** @class */ (function () {
     }
     ExpiredProductsReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, query, warehouseQuery, regionalWarehouses, inQueryStr_1, error_1;
+            var data, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
-                        data = void 0;
-                        query = "\n            select \n            i.itemid as itemid, \n            i.configid as configid, \n            to_char(sum(qtyin), 'FM999,999,999.') as \"qtyIn\", \n            to_char(sum(qtyout), 'FM999,999,999.') as \"qtyOut\", \n            to_char((sum(qtyin)+sum(qtyout)), 'FM999,999,999.') as balance,\n            i.inventsizeid as inventsizeid,\n            sizenameen as \"sizeNameEn\",\n            sizenamear as \"sizeNameAr\",\n            nameen as \"nameEn\",\n            namear as \"nameAr\",\n            wareHouseNameAr as \"wareHouseNameAr\",\n            wareHouseNameEn as \"wareHouseNameEn\",\n            locationNameAr as \"locationNameAr\",\n            locationNameEn as \"locationNameEn\",\n            to_char(i.datestatus, 'yyyy-MM-dd') as \"lastModifiedDate\",\n            i.batchno as batchno,\n            to_char(i.expdate, 'yyyy-MM-dd') as \"expDate\",\n            DATE_PART('day',  to_char(i.expdate, 'yyyy-MM-dd')::timestamp - now()::timestamp) as \"expDays\" from (\n            select \n            i.itemid as itemid,\n            coalesce(case when i.qty > 0 then sum(i.qty) end, 0) as qtyin,\n            coalesce(case when i.qty < 0 then sum(i.qty) end, 0) as qtyout,\n            i.configid as configid,\n            i.inventsizeid as inventsizeid,\n            i.batchno as batchno,\n            s.description as sizenameen,\n            s.\"name\" as sizenamear,\n            bs.namealias as nameEn,\n            bs.itemname as nameAr,\n            w.name as wareHouseNameAr,\n            w.namealias as wareHouseNameEn,\n            w.name as locationNameAr,\n            w.namealias as locationNameEn,\n            i.datestatus as datestatus,\n            b.expdate as expdate\n            from inventtrans  i\n            left join inventbatch b on i.batchno = b.inventbatchid\n            left join inventtable bs on i.itemid = bs.itemid\n            left join inventsize s on s.inventsizeid = i.inventsizeid and s.itemid = i.itemid\n            left join inventlocation w on w.inventlocationid=i.inventlocationid\n            where ((reserve_status!='UNRESERVED' AND reserve_status != 'SAVED') or reserve_status is null) and\n            b.expdate <= ('" + params.date + "' ::date + '1 day'::interval) and i.transactionclosed = true ";
-                        if (!(params.inventlocationid == "ALL")) return [3 /*break*/, 2];
-                        warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
-                        return [4 /*yield*/, this.db.query(warehouseQuery)];
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.query_to_data(params)];
                     case 1:
-                        regionalWarehouses = _a.sent();
-                        inQueryStr_1 = "";
-                        regionalWarehouses[0].regionalwarehouse.split(",").map(function (item) {
-                            inQueryStr_1 += "'" + item + "',";
-                        });
-                        inQueryStr_1 += "'" + params.key + "',";
-                        query += " and i.inventlocationid in (" + inQueryStr_1.substr(0, inQueryStr_1.length - 1) + ") ";
-                        return [3 /*break*/, 3];
-                    case 2:
-                        query += " and i.inventlocationid='" + params.inventlocationid + "' ";
-                        _a.label = 3;
-                    case 3:
-                        query += " group by i.itemid, i.qty,\n            i.inventsizeid, i.configid,  i.batchno, b.expdate, s.name, s.description, bs.namealias, bs.itemname, i.datestatus, w.name, w.namealias\n            order by b.expdate ASC ) as i \n            \n              group by i.itemid, \n            i.inventsizeid, i.configid,  i.batchno, sizenameen, sizenamear, nameEn,nameAr, i.datestatus, wareHouseNameAr, wareHouseNameEn, locationNameAr, locationNameEn, i.expdate\n            order by i.expdate ASC";
-                        return [4 /*yield*/, this.db.query(query)];
-                    case 4:
                         data = _a.sent();
                         return [2 /*return*/, data];
-                    case 5:
+                    case 2:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 6: return [2 /*return*/];
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -108,13 +89,10 @@ var ExpiredProductsReport = /** @class */ (function () {
                         console.log(warehouse);
                         console.log(params);
                         renderData = {
-                            printDate: new Date(params.printDate)
-                                .toISOString()
-                                .replace(/T/, " ")
-                                .replace(/\..+/, ""),
+                            printDate: new Date(params.printDate).toISOString().replace(/T/, " ").replace(/\..+/, ""),
                             date: params.date,
                             // inventlocationid: params.inventlocationid,
-                            user: params.user
+                            user: params.user,
                         };
                         if (!(params.inventlocationid === "ALL")) return [3 /*break*/, 3];
                         query = "select * from app_lang ap where ap.id = '" + params.inventlocationid + "' limit 1";
@@ -143,6 +121,36 @@ var ExpiredProductsReport = /** @class */ (function () {
                             throw error;
                         }
                         return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ExpiredProductsReport.prototype.query_to_data = function (params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, warehouseQuery, regionalWarehouses, inQueryStr_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "\n    select \n    i.itemid as itemid, \n    i.configid as configid, \n    to_char(sum(qtyin), 'FM999,999,999.') as \"qtyIn\", \n    to_char(sum(qtyout), 'FM999,999,999.') as \"qtyOut\", \n    to_char((sum(qtyin)+sum(qtyout)), 'FM999,999,999.') as balance,\n    i.inventsizeid as inventsizeid,\n    sizenameen as \"sizeNameEn\",\n    sizenamear as \"sizeNameAr\",\n    nameen as \"nameEn\",\n    namear as \"nameAr\",\n    wareHouseNameAr as \"wareHouseNameAr\",\n    wareHouseNameEn as \"wareHouseNameEn\",\n    locationNameAr as \"locationNameAr\",\n    locationNameEn as \"locationNameEn\",\n    to_char(i.datestatus, 'yyyy-MM-dd') as \"lastModifiedDate\",\n    i.batchno as batchno,\n    to_char(i.expdate, 'yyyy-MM-dd') as \"expDate\",\n    DATE_PART('day',  to_char(i.expdate, 'yyyy-MM-dd')::timestamp - now()::timestamp) as \"expDays\" from (\n    select \n    i.itemid as itemid,\n    coalesce(case when i.qty > 0 then sum(i.qty) end, 0) as qtyin,\n    coalesce(case when i.qty < 0 then sum(i.qty) end, 0) as qtyout,\n    i.configid as configid,\n    i.inventsizeid as inventsizeid,\n    i.batchno as batchno,\n    s.description as sizenameen,\n    s.\"name\" as sizenamear,\n    bs.namealias as nameEn,\n    bs.itemname as nameAr,\n    w.name as wareHouseNameAr,\n    w.namealias as wareHouseNameEn,\n    w.name as locationNameAr,\n    w.namealias as locationNameEn,\n    i.datestatus as datestatus,\n    b.expdate as expdate\n    from inventtrans  i\n    left join inventbatch b on i.batchno = b.inventbatchid\n    left join inventtable bs on i.itemid = bs.itemid\n    left join inventsize s on s.inventsizeid = i.inventsizeid and s.itemid = i.itemid\n    left join inventlocation w on w.inventlocationid=i.inventlocationid\n    where ((reserve_status!='UNRESERVED' AND reserve_status != 'SAVED') or reserve_status is null) and\n    b.expdate <= ('" + params.date + "' ::date + '1 day'::interval) and i.transactionclosed = true ";
+                        if (!(params.inventlocationid == "ALL")) return [3 /*break*/, 2];
+                        warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
+                        return [4 /*yield*/, this.db.query(warehouseQuery)];
+                    case 1:
+                        regionalWarehouses = _a.sent();
+                        inQueryStr_1 = "";
+                        regionalWarehouses[0].regionalwarehouse.split(",").map(function (item) {
+                            inQueryStr_1 += "'" + item + "',";
+                        });
+                        inQueryStr_1 += "'" + params.key + "',";
+                        query += " and i.inventlocationid in (" + inQueryStr_1.substr(0, inQueryStr_1.length - 1) + ") ";
+                        return [3 /*break*/, 3];
+                    case 2:
+                        query += " and i.inventlocationid='" + params.inventlocationid + "' ";
+                        _a.label = 3;
+                    case 3:
+                        query += " group by i.itemid, i.qty,\n    i.inventsizeid, i.configid,  i.batchno, b.expdate, s.name, s.description, bs.namealias, bs.itemname, i.datestatus, w.name, w.namealias\n    order by b.expdate ASC ) as i \n    \n      group by i.itemid, \n    i.inventsizeid, i.configid,  i.batchno, sizenameen, sizenamear, nameEn,nameAr, i.datestatus, wareHouseNameAr, wareHouseNameEn, locationNameAr, locationNameEn, i.expdate\n    order by i.expdate ASC";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 4: return [2 /*return*/, _a.sent()];
                 }
             });
         });

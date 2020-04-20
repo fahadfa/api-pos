@@ -43,17 +43,12 @@ var AccountStatementReport = /** @class */ (function () {
     }
     AccountStatementReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, query, error_1;
+            var data, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        data = void 0;
-                        query = "select lj.accountNum as \"accountNum\", \n            accnt.accountname as \"nameAr\", \n            accnt.accountnamealias as \"nameEn\", \n            lj.transdate as \"journalDate\",\n            lj.journalnum as \"journalNum\",\n            lj.txt  as \"transactionText\",\n            to_char(lj.amountmst,   'FM999999999.00') as amount,\n            to_char(SUM(lj.amountmst) over(partition by lj.accountnum order by lj.accountnum, lj.txt rows unbounded preceding),  'FM999999999.00') as accumulated\n            from ledgertrans lj, accountstable accnt\n            where accnt.accountnum = lj.accountnum and lj.transdate is not null\n            and lj.transdate >= '" + params.fromDate + "'\n            and lj.transdate <= ('" + params.toDate + "' ::date + '1 day'::interval) ";
-                        if (params.ledgerAccount) {
-                            query += "  and lj.accountnum='" + params.ledgerAccount + "'";
-                        }
-                        return [4 /*yield*/, this.db.query(query)];
+                        return [4 /*yield*/, this.query_to_data(params)];
                     case 1:
                         data = _a.sent();
                         return [2 /*return*/, data];
@@ -85,14 +80,11 @@ var AccountStatementReport = /** @class */ (function () {
             var renderData, file;
             return __generator(this, function (_a) {
                 renderData = {
-                    printDate: new Date(params.printDate)
-                        .toISOString()
-                        .replace(/T/, " ")
-                        .replace(/\..+/, ""),
+                    printDate: new Date(params.printDate).toISOString().replace(/T/, " ").replace(/\..+/, ""),
                     ledgerAccount: params.ledgerAccount,
                     fromDate: params.fromDate,
                     toDate: params.toDate,
-                    user: params.user
+                    user: params.user,
                 };
                 renderData.data = result;
                 console.log(renderData);
@@ -109,6 +101,22 @@ var AccountStatementReport = /** @class */ (function () {
                     throw error;
                 }
                 return [2 /*return*/];
+            });
+        });
+    };
+    AccountStatementReport.prototype.query_to_data = function (params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "select lj.accountNum as \"accountNum\", \n            accnt.accountname as \"nameAr\", \n            accnt.accountnamealias as \"nameEn\", \n            lj.transdate as \"journalDate\",\n            lj.journalnum as \"journalNum\",\n            lj.txt  as \"transactionText\",\n            to_char(lj.amountmst,   'FM999999999.00') as amount,\n            to_char(SUM(lj.amountmst) over(partition by lj.accountnum order by lj.accountnum, lj.txt rows unbounded preceding),  'FM999999999.00') as accumulated\n            from ledgertrans lj, accountstable accnt\n            where accnt.accountnum = lj.accountnum and lj.transdate is not null\n            and lj.transdate >= '" + params.fromDate + "'\n            and lj.transdate <= ('" + params.toDate + "' ::date + '1 day'::interval) ";
+                        if (params.ledgerAccount) {
+                            query += "  and lj.accountnum='" + params.ledgerAccount + "'";
+                        }
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
             });
         });
     };

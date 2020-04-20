@@ -85,6 +85,15 @@ var run = function () { return __awaiter(_this, void 0, void 0, function () {
                     //     socket.emit("update", "Working!");
                     //   });
                     // });
+                    express.use("/api", function (req, res, next) {
+                        var diff = syncTimeDiff();
+                        Log_1.log.warn("sync Time Diff:", diff);
+                        if (diff > 30) {
+                            Log_1.log.error("----->: sync time start : " + diff);
+                            sync();
+                        }
+                        next();
+                    });
                     httpServer.listen(port, function (err) { return __awaiter(_this, void 0, void 0, function () {
                         return __generator(this, function (_a) {
                             if (err) {
@@ -122,23 +131,37 @@ var sync = function () {
     var child_process = require("child_process");
     child_process.fork(syncFile);
 };
+var syncTimeDiff = function () {
+    try {
+        var lastSyncDate = Store_1.getItem("syncdate", "index -> cron");
+        Log_1.log.warn("Last sync time: ", lastSyncDate);
+        lastSyncDate = new Date(lastSyncDate);
+        var diff = (new Date().getTime() - lastSyncDate.getTime()) / 60000;
+        return diff;
+    }
+    catch (error) {
+        Log_1.log.error(error);
+        Store_1.StoreInIt();
+        return 0;
+    }
+};
 try {
     var cron = require("node-cron");
-    var lastSyncDate_1 = null;
-    var diff_1 = null;
+    var lastSyncDate = null;
+    var diff = null;
     Store_1.StoreInIt();
     sync();
-    cron.schedule("*/10 * * * *", function () {
-        lastSyncDate_1 = Store_1.getItem("syncdate", "index -> cron");
-        Log_1.log.warn(lastSyncDate_1);
-        lastSyncDate_1 = new Date(lastSyncDate_1);
-        diff_1 = (new Date().getTime() - lastSyncDate_1.getTime()) / 60000;
-        Log_1.log.warn("----->: sync time diff : " + diff_1);
-        if (diff_1 > 50) {
-            Log_1.log.error("----->: sync time start : " + diff_1);
-            sync();
-        }
-    });
+    // cron.schedule("*/10 * * * *", () => {
+    //   lastSyncDate = getItem("syncdate", "index -> cron");
+    //   log.warn(lastSyncDate);
+    //   lastSyncDate = new Date(lastSyncDate);
+    //   diff = (new Date().getTime() - lastSyncDate.getTime()) / 60000;
+    //   log.warn("----->: sync time diff : " + diff);
+    //   if (diff > 60) {
+    //     log.error("----->: sync time start : " + diff);
+    //     sync();
+    //   }
+    // });
 }
 catch (error) {
     Log_1.log.error("Sync Error");

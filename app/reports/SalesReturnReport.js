@@ -43,43 +43,22 @@ var SalesReturnReport = /** @class */ (function () {
     }
     SalesReturnReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, query, warehouseQuery, regionalWarehouses, inQueryStr_1, error_1;
+            var data, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
-                        data = void 0;
-                        query = "\n            select \n                distinct\n                s.salesid as \"salesId\",\n                s.inventlocationid as \"fromWareHouse\",\n                s.custaccount as \"custaccount\",\n                to_char(s.createddatetime, 'DD-MM-YYYY') as createdDateTime,\n                to_char(s.lastmodifieddate, 'DD-MM-YYYY') as lastModifiedDate,\n                to_char(coalesce(s.disc, 0) , 'FM999999999990.00') as \"discount\",\n                to_char(s.amount , 'FM999999999990.00') as \"netAmount\",\n                to_char(s.netamount , 'FM999999999990.00') as \"grossAmount\",\n                to_char(s.vatamount , 'FM999999999990.00') as \"vatAmount\",\n                s.status as status,\n                als.en as \"statusEn\",\n                als.ar as \"statusAr\",\n                s.salesname as name,\n                s.salesname as \"nameAlias\",\n                to_char(s.amount, 'FM999999999990.00') as \"netAmount\",\n                to_char(s.netamount,'FM999999999990.00')  as \"grossAmount\",\n                s.transkind as type,\n                alt.en as \"transkindEn\",\n\t              alt.ar as \"transkindAr\",\n                w.name as \"wareHouseNameAr\",\n                w.namealias as \"wareHouseNameEn\",\n                c.paymtermid as \"paymentMode\",\n                alp.en as \"paymentModeEn\",\n                alp.ar as \"paymentModeAr\",\n                c.walkincustomer as \"walkincustomer\",\n                c.phone as phone\n            from salestable s\n              left join inventlocation w on w.inventlocationid=s.inventlocationid\n              left join custtable c on c.accountnum=s.custaccount\n              left join app_lang als on als.id = s.status\n              left join app_lang alt on alt.id = s.transkind\n              left join app_lang alp on alp.id = s.payment\n            where s.transkind in ('RETURNORDER', 'DESIGNERSERVICERETURN')  \n            and s.createddatetime >= '" + params.fromDate + "' ::date\n            AND  s.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval) \n            AND s.status in ('POSTED')\n            ";
-                        if (!(params.inventlocationid == "ALL")) return [3 /*break*/, 2];
-                        warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
-                        return [4 /*yield*/, this.db.query(warehouseQuery)];
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.query_to_data(params)];
                     case 1:
-                        regionalWarehouses = _a.sent();
-                        inQueryStr_1 = "";
-                        regionalWarehouses[0].regionalwarehouse.split(",").map(function (item) {
-                            inQueryStr_1 += "'" + item + "',";
-                        });
-                        inQueryStr_1 += "'" + params.key + "',";
-                        query += " and s.inventlocationid in (" + inQueryStr_1.substr(0, inQueryStr_1.length - 1) + ") ";
-                        return [3 /*break*/, 3];
-                    case 2:
-                        query += " and s.inventlocationid='" + params.inventlocationid + "' ";
-                        _a.label = 3;
-                    case 3:
-                        // if (params.status && params.status != "ALL") {
-                        //   query += ` and  s.status = '${params.status}' `;
-                        // }
-                        if (params.accountnum) {
-                            query += " and s.custaccount = '" + params.accountnum + "'";
-                        }
-                        return [4 /*yield*/, this.db.query(query)];
-                    case 4:
                         data = _a.sent();
+                        data.map(function (v) {
+                            v.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(v.lastmodifieddate), parseInt(params.timeZoneOffSet)).toLocaleString();
+                        });
                         return [2 /*return*/, data];
-                    case 5:
+                    case 2:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 6: return [2 /*return*/];
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -152,6 +131,41 @@ var SalesReturnReport = /** @class */ (function () {
                             throw error;
                         }
                         return [2 /*return*/];
+                }
+            });
+        });
+    };
+    SalesReturnReport.prototype.query_to_data = function (params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, warehouseQuery, regionalWarehouses, inQueryStr_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "\n            select \n                distinct\n                s.salesid as \"salesId\",\n                s.inventlocationid as \"fromWareHouse\",\n                s.custaccount as \"custaccount\",\n                to_char(s.createddatetime, 'DD-MM-YYYY') as createdDateTime,\n                to_char(s.lastmodifieddate, 'DD-MM-YYYY') as lastModifiedDate,\n                to_char(coalesce(s.disc, 0) , 'FM999999999990.00') as \"discount\",\n                to_char(s.amount , 'FM999999999990.00') as \"netAmount\",\n                to_char(s.netamount , 'FM999999999990.00') as \"grossAmount\",\n                to_char(s.vatamount , 'FM999999999990.00') as \"vatAmount\",\n                s.status as status,\n                als.en as \"statusEn\",\n                als.ar as \"statusAr\",\n                s.salesname as name,\n                s.salesname as \"nameAlias\",\n                to_char(s.amount, 'FM999999999990.00') as \"netAmount\",\n                to_char(s.netamount,'FM999999999990.00')  as \"grossAmount\",\n                s.transkind as type,\n                alt.en as \"transkindEn\",\n\t              alt.ar as \"transkindAr\",\n                w.name as \"wareHouseNameAr\",\n                w.namealias as \"wareHouseNameEn\",\n                c.paymtermid as \"paymentMode\",\n                alp.en as \"paymentModeEn\",\n                alp.ar as \"paymentModeAr\",\n                c.walkincustomer as \"walkincustomer\",\n                c.phone as phone\n            from salestable s\n              left join inventlocation w on w.inventlocationid=s.inventlocationid\n              left join custtable c on c.accountnum=s.custaccount\n              left join app_lang als on als.id = s.status\n              left join app_lang alt on alt.id = s.transkind\n              left join app_lang alp on alp.id = s.payment\n            where s.transkind in ('RETURNORDER', 'DESIGNERSERVICERETURN')  \n            and s.createddatetime >= '" + params.fromDate + "' ::date\n            AND  s.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval) \n            AND s.status in ('POSTED')\n            ";
+                        if (!(params.inventlocationid == "ALL")) return [3 /*break*/, 2];
+                        warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
+                        return [4 /*yield*/, this.db.query(warehouseQuery)];
+                    case 1:
+                        regionalWarehouses = _a.sent();
+                        inQueryStr_1 = "";
+                        regionalWarehouses[0].regionalwarehouse.split(",").map(function (item) {
+                            inQueryStr_1 += "'" + item + "',";
+                        });
+                        inQueryStr_1 += "'" + params.key + "',";
+                        query += " and s.inventlocationid in (" + inQueryStr_1.substr(0, inQueryStr_1.length - 1) + ") ";
+                        return [3 /*break*/, 3];
+                    case 2:
+                        query += " and s.inventlocationid='" + params.inventlocationid + "' ";
+                        _a.label = 3;
+                    case 3:
+                        // if (params.status && params.status != "ALL") {
+                        //   query += ` and  s.status = '${params.status}' `;
+                        // }
+                        if (params.accountnum) {
+                            query += " and s.custaccount = '" + params.accountnum + "'";
+                        }
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 4: return [2 /*return*/, _a.sent()];
                 }
             });
         });

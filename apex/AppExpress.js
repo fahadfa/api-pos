@@ -50,8 +50,7 @@ var AppExpress = /** @class */ (function () {
         this.addSessionInfo = function (req) {
             var sessionInfo = App_1.App.DecodeJWT(req.headers["authorization"]);
             Log_1.log.info("-----------------------------------------------------");
-            Log_1.log.info("sessionInfo: ");
-            Log_1.log.info(sessionInfo);
+            Log_1.log.info("sessionInfo: ", sessionInfo);
             Log_1.log.info("-----------------------------------------------------");
             if (!req.body) {
                 req.body = {};
@@ -61,7 +60,7 @@ var AppExpress = /** @class */ (function () {
             }
         };
         this.express = express_1.default();
-        this.express.use(body_parser_1.json({ limit: '150mb' }));
+        this.express.use(body_parser_1.json({ limit: "150mb" }));
         this.express.use(express_fileupload_1.default());
         // this.express.use(bodyParser.json({limit: '150mb'}))
         this.errorHandle();
@@ -77,7 +76,7 @@ var AppExpress = /** @class */ (function () {
                         router = express_1.default.Router();
                         router.get("/", function (req, res) {
                             res.json({
-                                message: "Hello World! Website Applications"
+                                message: "Hello World! Website Applications",
                             });
                         });
                         this.express.use("/", router);
@@ -100,7 +99,8 @@ var AppExpress = /** @class */ (function () {
             res.setHeader("Access-Control-Allow-Origin", "*");
             res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
             res.setHeader("Access-Control-Allow-Headers", "accept, Content-Type, Authorization");
-            if (req.headers["content-type"] && req.headers["content-type"].indexOf("application/x-www-form-urlencoded") > -1) {
+            if (req.headers["content-type"] &&
+                req.headers["content-type"].indexOf("application/x-www-form-urlencoded") > -1) {
                 _this.parsePost(req, function (data) {
                     if (data && data != "") {
                         req.body = data;
@@ -134,13 +134,13 @@ var AppExpress = /** @class */ (function () {
                 status: 0,
                 error: {
                     code: err.status,
-                    message: "Server side error"
-                }
+                    message: "Server side error",
+                },
             });
         });
     };
     AppExpress.prototype.getServer = function () {
-        return require('http').Server(this.express);
+        return require("http").Server(this.express);
     };
     return AppExpress;
 }());

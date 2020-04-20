@@ -43,14 +43,76 @@ var InventoryOnHandReport = /** @class */ (function () {
     }
     InventoryOnHandReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var query, warehouseQuery, regionalWarehouses, inQueryStr_1, data, i, sum, _i, data_1, item, result, error_1;
+            var data, i, sum, _i, data_1, item, result, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
-                        query = "select\n                        i.itemid as itemid,\n                        bs.namealias as nameEn,\n                        bs.itemname as nameAr,\n                        sum(i.qty_in-i.qty_out-i.qty_reserved) as \"physicalAvailable\",\n                        i.configid as configid,\n                        i.inventsizeid as inventsizeid,\n                        " + (params.batchCheck
-                            ? "i.batchno as batchno,\n                        to_char(b.expdate, 'yyyy-MM-dd') as batchexpdate,"
-                            : "") + "\n                        sum(i.qty_reserved) as \"reservedQuantity\",\n                        sum(i.qty_in-i.qty_out) as \"totalAvailable\",\n                        w.name as WareHouseNameAr, \n                        w.namealias as WareHouseNameEn\n                        from inventory_onhand as i\n                        left join inventbatch b on i.batchno = b.inventbatchid and i.itemid = b.itemid\n                        inner join inventtable bs on i.itemid = bs.itemid\n                        inner join inventlocation w on w.inventlocationid=i.inventlocationid\n        ";
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.query_to_data(params)];
+                    case 1:
+                        data = _a.sent();
+                        i = 1;
+                        sum = 0;
+                        data = data.filter(function (item) { return Number.parseFloat(item.totalAvailable) >= 0; });
+                        for (_i = 0, data_1 = data; _i < data_1.length; _i++) {
+                            item = data_1[_i];
+                            item.sNo = i;
+                            i += 1;
+                            item.batchCheck = params.batchCheck;
+                            sum += Number.parseFloat(item.physicalAvailable);
+                        }
+                        result = {
+                            printDate: new Date().toLocaleString(),
+                            data: data,
+                            sum: sum,
+                            batchCheck: params.batchCheck ? params.batchCheck : false,
+                            user: params.user,
+                        };
+                        return [2 /*return*/, result];
+                    case 2:
+                        error_1 = _a.sent();
+                        throw error_1;
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    InventoryOnHandReport.prototype.report = function (result, params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var renderData, file;
+            return __generator(this, function (_a) {
+                console.log(params);
+                renderData = result;
+                (renderData.printDate = new Date(params.printDate)
+                    .toISOString()
+                    .replace(/T/, " ") // replace T with a space
+                    .replace(/\..+/, "")),
+                    console.log(params.lang);
+                if (params.type == "excel") {
+                    file = params.lang == "en" ? "onhandinventory-excel" : "onhandinventory-excel-ar";
+                }
+                else {
+                    file = params.lang == "en" ? "onhandinventory-report" : "onhandinventory-report-ar";
+                }
+                try {
+                    return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];
+                }
+                catch (error) {
+                    throw error;
+                }
+                return [2 /*return*/];
+            });
+        });
+    };
+    InventoryOnHandReport.prototype.query_to_data = function (params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, warehouseQuery, regionalWarehouses, inQueryStr_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "select\n    i.itemid as itemid,\n    bs.namealias as nameEn,\n    bs.itemname as nameAr,\n    sum(i.qty_in-i.qty_out-i.qty_reserved) as \"physicalAvailable\",\n    i.configid as configid,\n    i.inventsizeid as inventsizeid,\n    " + (params.batchCheck
+                            ? "i.batchno as batchno,\n    to_char(b.expdate, 'yyyy-MM-dd') as batchexpdate,"
+                            : "") + "\n    sum(i.qty_reserved) as \"reservedQuantity\",\n    sum(i.qty_in-i.qty_out) as \"totalAvailable\",\n    w.name as WareHouseNameAr, \n    w.namealias as WareHouseNameEn\n    from inventory_onhand as i\n    left join inventbatch b on i.batchno = b.inventbatchid and i.itemid = b.itemid\n    inner join inventtable bs on i.itemid = bs.itemid\n    inner join inventlocation w on w.inventlocationid=i.inventlocationid\n";
                         if (!(params.key == "ALL")) return [3 /*break*/, 2];
                         warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.inventlocationid + "' limit 1";
                         return [4 /*yield*/, this.db.query(warehouseQuery)];
@@ -81,59 +143,10 @@ var InventoryOnHandReport = /** @class */ (function () {
                         }
                         // query += ` and (i.qty_in-i.qty_out)>0  GROUP BY bs.itemname, bs.namealias, w.name, w.namealias,
                         //         i.itemid, i.configid, i.inventsizeid ${params.batchCheck ? `, i.batchno, b.expdate` : ``} `;
-                        query += "  GROUP BY bs.itemname, bs.namealias, w.name, w.namealias,\n              i.itemid, i.configid, i.inventsizeid " + (params.batchCheck ? ", i.batchno, b.expdate" : "") + " ";
+                        query += "  GROUP BY bs.itemname, bs.namealias, w.name, w.namealias,\ni.itemid, i.configid, i.inventsizeid " + (params.batchCheck ? ", i.batchno, b.expdate" : "") + " ";
                         return [4 /*yield*/, this.db.query(query)];
-                    case 4:
-                        data = _a.sent();
-                        i = 1;
-                        sum = 0;
-                        data = data.filter(function (item) { return Number.parseFloat(item.totalAvailable) >= 0; });
-                        for (_i = 0, data_1 = data; _i < data_1.length; _i++) {
-                            item = data_1[_i];
-                            item.sNo = i;
-                            i += 1;
-                            item.batchCheck = params.batchCheck;
-                            sum += Number.parseFloat(item.physicalAvailable);
-                        }
-                        result = {
-                            printDate: new Date().toLocaleString(),
-                            data: data,
-                            sum: sum,
-                            batchCheck: params.batchCheck ? params.batchCheck : false,
-                            user: params.user
-                        };
-                        return [2 /*return*/, result];
-                    case 5:
-                        error_1 = _a.sent();
-                        throw error_1;
-                    case 6: return [2 /*return*/];
+                    case 4: return [2 /*return*/, _a.sent()];
                 }
-            });
-        });
-    };
-    InventoryOnHandReport.prototype.report = function (result, params) {
-        return __awaiter(this, void 0, void 0, function () {
-            var renderData, file;
-            return __generator(this, function (_a) {
-                console.log(params);
-                renderData = result;
-                renderData.printDate = new Date(params.printDate).toISOString().
-                    replace(/T/, ' '). // replace T with a space
-                    replace(/\..+/, ''),
-                    console.log(params.lang);
-                if (params.type == "excel") {
-                    file = params.lang == "en" ? "onhandinventory-excel" : "onhandinventory-excel-ar";
-                }
-                else {
-                    file = params.lang == "en" ? "onhandinventory-report" : "onhandinventory-report-ar";
-                }
-                try {
-                    return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];
-                }
-                catch (error) {
-                    throw error;
-                }
-                return [2 /*return*/];
             });
         });
     };

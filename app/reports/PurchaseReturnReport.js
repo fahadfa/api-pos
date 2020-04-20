@@ -60,14 +60,12 @@ var PurchaseReturnReport = /** @class */ (function () {
     }
     PurchaseReturnReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, query, batchesQuery, batches, result, new_data_1, batches_2, _i, batches_1, item, error_1;
+            var data, batches, result, new_data_1, batches_2, _i, batches_1, item, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 5, , 6]);
-                        data = void 0;
-                        query = "\n            select \n                distinct\n                s.salesid as \"salesId\",\n                s.inventlocationid as \"fromWareHouse\",\n                s.custaccount as \"custaccount\",\n                s.createddatetime as \"ReturnDate\",\n                s.lastmodifieddate as \"lastModifiedDate\",\n                s.status as status,\n                als.en as \"statusEn\",\n                als.ar as \"statusAr\",\n                alt.en as \"transkindEn\",\n                alt.ar as \"transkindAr\",\n                s.disc as discount,\n                v.name as name,\n                v.namealias as \"nameAlias\",\n                v.phone as phone,\n                s.amount as \"netAmount\",\n                s.netamount as \"grossAmount\",\n                s.vatamount as \"vatAmount\",\n                s.originalprinted as \"originalPrinted\",\n                s.createdby as \"createdBy\",\n                s.intercompanyoriginalsalesid as \"purchaseOrderId\",\n                w.name as \"wareHouseNameAr\",\n                w.namealias as \"wareHouseNameEn\"\n                from salestable s\n                left join inventlocation w on w.inventlocationid=s.inventlocationid\n                left join vendortable v on v.accountnum=s.custaccount\n                left join app_lang als on als.id = s.status\n                left join app_lang alt on alt.id = s.transkind\n            where s.transkind = 'PURCHASERETURN' and s.salesid = '" + params.salesId + "' limit 1\n            ";
-                        return [4 /*yield*/, this.db.query(query)];
+                        return [4 /*yield*/, this.query_to_data(params)];
                     case 1:
                         data = _a.sent();
                         data[0].originalPrinted = data[0].originalPrinted == null ? false : data[0].originalPrinted;
@@ -79,8 +77,7 @@ var PurchaseReturnReport = /** @class */ (function () {
                         else {
                             data[0].isCopy = false;
                         }
-                        batchesQuery = "select \n            ROW_NUMBER()  OVER (ORDER BY  invoiceid) As \"sNo\",\n            i.itemid as itemid,\n            bs.namealias as nameEn,\n            bs.itemname as nameAr,\n            to_char(ABS(i.qty), 'FM999,999,999,999D') as qty,\n            i.configid as configid,\n            i.inventsizeid as inventsizeid,\n            i.invoiceid as invoiceid,\n            i.transrefid as transrefid,\n            s.description as sizenameen,\n            s.name as sizenamear,\n            i.batchno as batchno,\n            b.expdate as batchExpDate,\n            cast((select salesprice from salesline sl where sl.salesid=i.invoiceid and sl.itemid = i.itemid and sl.configid=i.configid and sl.inventsizeid=i.inventsizeid) as decimal(10,2)) as price,\n            cast((select lineamount from salesline sl where sl.salesid=i.invoiceid and sl.itemid = i.itemid and sl.configid=i.configid and sl.inventsizeid=i.inventsizeid) as decimal(10,2)) as \"lineAmount\",\n            cast((select vatamount from salesline sl where sl.salesid=i.invoiceid and sl.itemid = i.itemid and sl.configid=i.configid and sl.inventsizeid=i.inventsizeid) as decimal(10,2)) as \"vatAmount\"\n        from inventtrans  i\n        left join inventbatch b on i.batchno = b.inventbatchid\n        left join inventtable bs on i.itemid = bs.itemid\n        left join inventsize s on s.inventsizeid = i.inventsizeid and s.itemid = i.itemid\n        where  ((reserve_status!='UNRESERVED' AND reserve_status != 'SAVED') or reserve_status is null)  and i.invoiceid = '" + params.salesId + "'";
-                        return [4 /*yield*/, this.db.query(batchesQuery)];
+                        return [4 /*yield*/, this.batches_query_to_data(params)];
                     case 2:
                         batches = _a.sent();
                         result = this.groupBy(batches, function (item) {
@@ -147,6 +144,32 @@ var PurchaseReturnReport = /** @class */ (function () {
                     throw error;
                 }
                 return [2 /*return*/];
+            });
+        });
+    };
+    PurchaseReturnReport.prototype.query_to_data = function (params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "\n            select \n                distinct\n                s.salesid as \"salesId\",\n                s.inventlocationid as \"fromWareHouse\",\n                s.custaccount as \"custaccount\",\n                s.createddatetime as \"ReturnDate\",\n                s.lastmodifieddate as \"lastModifiedDate\",\n                s.status as status,\n                als.en as \"statusEn\",\n                als.ar as \"statusAr\",\n                alt.en as \"transkindEn\",\n                alt.ar as \"transkindAr\",\n                s.disc as discount,\n                v.name as name,\n                v.namealias as \"nameAlias\",\n                v.phone as phone,\n                s.amount as \"netAmount\",\n                s.netamount as \"grossAmount\",\n                s.vatamount as \"vatAmount\",\n                s.originalprinted as \"originalPrinted\",\n                s.createdby as \"createdBy\",\n                s.intercompanyoriginalsalesid as \"purchaseOrderId\",\n                w.name as \"wareHouseNameAr\",\n                w.namealias as \"wareHouseNameEn\"\n                from salestable s\n                left join inventlocation w on w.inventlocationid=s.inventlocationid\n                left join vendortable v on v.accountnum=s.custaccount\n                left join app_lang als on als.id = s.status\n                left join app_lang alt on alt.id = s.transkind\n            where s.transkind = 'PURCHASERETURN' and s.salesid = '" + params.salesId + "' limit 1\n            ";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    PurchaseReturnReport.prototype.batches_query_to_data = function (params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var batchesQuery;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        batchesQuery = "select \n            ROW_NUMBER()  OVER (ORDER BY  invoiceid) As \"sNo\",\n            i.itemid as itemid,\n            bs.namealias as nameEn,\n            bs.itemname as nameAr,\n            to_char(ABS(i.qty), 'FM999,999,999,999D') as qty,\n            i.configid as configid,\n            i.inventsizeid as inventsizeid,\n            i.invoiceid as invoiceid,\n            i.transrefid as transrefid,\n            s.description as sizenameen,\n            s.name as sizenamear,\n            i.batchno as batchno,\n            b.expdate as batchExpDate,\n            cast((select salesprice from salesline sl where sl.salesid=i.invoiceid and sl.itemid = i.itemid and sl.configid=i.configid and sl.inventsizeid=i.inventsizeid) as decimal(10,2)) as price,\n            cast((select lineamount from salesline sl where sl.salesid=i.invoiceid and sl.itemid = i.itemid and sl.configid=i.configid and sl.inventsizeid=i.inventsizeid) as decimal(10,2)) as \"lineAmount\",\n            cast((select vatamount from salesline sl where sl.salesid=i.invoiceid and sl.itemid = i.itemid and sl.configid=i.configid and sl.inventsizeid=i.inventsizeid) as decimal(10,2)) as \"vatAmount\"\n        from inventtrans  i\n        left join inventbatch b on i.batchno = b.inventbatchid\n        left join inventtable bs on i.itemid = bs.itemid\n        left join inventsize s on s.inventsizeid = i.inventsizeid and s.itemid = i.itemid\n        where  ((reserve_status!='UNRESERVED' AND reserve_status != 'SAVED') or reserve_status is null)  and i.invoiceid = '" + params.salesId + "'";
+                        return [4 /*yield*/, this.db.query(batchesQuery)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
             });
         });
     };

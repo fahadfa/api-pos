@@ -192,11 +192,11 @@ var AuthService = /** @class */ (function () {
     };
     AuthService.prototype.forgotPassword = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var profileObj, error_2;
+            var profileObj, error_2, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 8, , 9]);
+                        _a.trys.push([0, 11, , 12]);
                         profileObj = null;
                         return [4 /*yield*/, this.userinfoDAO.findOne({ userName: reqData.userName })];
                     case 1:
@@ -207,33 +207,41 @@ var AuthService = /** @class */ (function () {
                         profileObj = _a.sent();
                         _a.label = 3;
                     case 3:
-                        if (!profileObj) return [3 /*break*/, 6];
+                        if (!profileObj) return [3 /*break*/, 9];
                         profileObj.userGroupConfig = profileObj.userGroupConfig == null ? {} : profileObj.userGroupConfig;
                         profileObj.userGroup = profileObj.userGroup == null ? {} : profileObj.userGroup;
                         profileObj.resetkey = App_1.App.generateOTP(10);
                         return [4 /*yield*/, this.userinfoDAO.save(profileObj)];
                     case 4:
                         _a.sent();
+                        _a.label = 5;
+                    case 5:
+                        _a.trys.push([5, 7, , 8]);
                         return [4 /*yield*/, App_1.App.SendMail(profileObj.email, "Jaz Sales account activation for '" + profileObj.userName, "ForgotPassword", {
                                 name: profileObj.userName,
                                 securitytoken: profileObj.resetkey
                             })];
-                    case 5:
+                    case 6:
                         _a.sent();
-                        return [3 /*break*/, 7];
-                    case 6: throw "INVALID_USERNAME";
-                    case 7: return [2 /*return*/, { message: "PASSWORD_RESET_TOKEN_SENT_TO_MAIL", status: 1 }];
-                    case 8:
+                        return [3 /*break*/, 8];
+                    case 7:
                         error_2 = _a.sent();
-                        throw error_2;
-                    case 9: return [2 /*return*/];
+                        console.log(error_2);
+                        throw { message: "RESET_TOKEN_NOT_SENT", status: 0 };
+                    case 8: return [3 /*break*/, 10];
+                    case 9: throw { message: "INVALID_USERNAME", status: 0 };
+                    case 10: return [2 /*return*/, { message: "PASSWORD_RESET_TOKEN_SENT_TO_MAIL", status: 1 }];
+                    case 11:
+                        error_3 = _a.sent();
+                        throw error_3;
+                    case 12: return [2 /*return*/];
                 }
             });
         });
     };
     AuthService.prototype.resetPassword = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var profileObj, error_3;
+            var profileObj, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -258,11 +266,11 @@ var AuthService = /** @class */ (function () {
                     case 4:
                         _a.sent();
                         return [3 /*break*/, 6];
-                    case 5: throw { message: "INVALID_TOKEN" };
-                    case 6: return [2 /*return*/, { message: "PASSWORD_UPDATED" }];
+                    case 5: throw { message: "INVALID_TOKEN", status: 0 };
+                    case 6: return [2 /*return*/, { message: "PASSWORD_UPDATED", status: 0 }];
                     case 7:
-                        error_3 = _a.sent();
-                        throw error_3;
+                        error_4 = _a.sent();
+                        throw error_4;
                     case 8: return [2 /*return*/];
                 }
             });

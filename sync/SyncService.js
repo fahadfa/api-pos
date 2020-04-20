@@ -91,11 +91,12 @@ var SyncService = /** @class */ (function () {
                                 isMasterProceed = true;
                                 return [3 /*break*/, 8];
                             case 7:
-                                Log_1.slog.warn("still processing ...................................");
+                                Log_1.slog.warn("Master still processing ...................................");
                                 _a.label = 8;
                             case 8: return [3 /*break*/, 10];
                             case 9:
                                 error_1 = _a.sent();
+                                isMasterProceed = true;
                                 Log_1.slog.error("--------- CRON MASTER ERROR ---------");
                                 Log_1.slog.error(error_1);
                                 Log_1.slog.error("--------- CRON MASTER ERROR ---------");
@@ -129,11 +130,12 @@ var SyncService = /** @class */ (function () {
                                 isTranscationProceed = true;
                                 return [3 /*break*/, 6];
                             case 5:
-                                Log_1.slog.warn("still processing ...................................");
+                                Log_1.slog.warn("Transcation still processing ...................................");
                                 _a.label = 6;
                             case 6: return [3 /*break*/, 8];
                             case 7:
                                 error_2 = _a.sent();
+                                isTranscationProceed = true;
                                 Log_1.slog.error("--------- CRON TRANSACTION ERROR ---------");
                                 Log_1.slog.error(error_2);
                                 Log_1.slog.error("--------- CRON TRANSACTION ERROR ---------");

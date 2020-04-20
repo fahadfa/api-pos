@@ -43,46 +43,13 @@ var itemTransactionsReport = /** @class */ (function () {
     }
     itemTransactionsReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data_1, query, warehouseQuery, regionalWarehouses, inQueryStr_1, result, renderData, warehouse, error_1;
+            var data_1, result, renderData, warehouse, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 6, , 7]);
-                        query = "\n            select\n                i.invoiceid,\n                st.transkind as transtype,\n                als.en as \"statusEn\",\n                als.ar as \"statusAr\",\n                alt.en as \"transkindEn\",\n                alt.ar as \"transkindAr\",\n                to_char(i.dateinvent, 'YYYY-MM-DD') as date,\n                sz.description as \"sizeNameEn\",\n                sz.\"name\"  as \"sizeNameAr\",\n                i.configid,\n                i.itemid,\n                i.inventsizeid,\n                i.batchno,\n                case when qty>0 then abs(qty) else 0 end as \"qtyIn\",\n                case when qty<0 then abs(qty) else 0 end as \"qtyOut\",\n                i.inventlocationid as inventlocationid,\n                w.name as \"wareHouseNameAr\",\n                w.namealias as \"wareHouseNameEn\",\n                p.itemname as \"itemNameAr\",\n                p.namealias as \"itemNameEn\"\n                from inventtrans i \n                left join inventsize sz on sz.inventsizeid  = i.inventsizeid and sz.itemid = i.itemid\n                left join inventlocation w on w.inventlocationid=i.inventlocationid\n                left join salestable st on st.salesid = i.invoiceid\n                left join inventtable p on p.itemid = i.itemid\n                left join app_lang als on als.id = st.status\n\t              left join app_lang alt on alt.id = st.transkind\n                where dateinvent >= '" + params.fromDate + "' ::date and \n                dateinvent < ('" + params.toDate + "' ::date + '1 day'::interval) and transactionclosed = true ";
-                        if (!(params.inventlocationid == "ALL")) return [3 /*break*/, 2];
-                        warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
-                        return [4 /*yield*/, this.db.query(warehouseQuery)];
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, this.query_to_data(params)];
                     case 1:
-                        regionalWarehouses = _a.sent();
-                        inQueryStr_1 = "";
-                        regionalWarehouses[0].regionalwarehouse.split(",").map(function (item) {
-                            inQueryStr_1 += "'" + item + "',";
-                        });
-                        inQueryStr_1 += "'" + params.key + "',";
-                        query += " and i.inventlocationid in (" + inQueryStr_1.substr(0, inQueryStr_1.length - 1) + ") ";
-                        return [3 /*break*/, 3];
-                    case 2:
-                        query += " and i.inventlocationid='" + params.inventlocationid + "' ";
-                        _a.label = 3;
-                    case 3:
-                        if (params.color) {
-                            query += " and  i.configid = '" + params.color + "' ";
-                        }
-                        if (params.product) {
-                            query += " and  i.itemid = '" + params.product + "' ";
-                        }
-                        if (params.transType && params.transType != "ALL") {
-                            query += " and  st.transkind = '" + params.transType + "' ";
-                        }
-                        if (params.batchno) {
-                            query += " and  i.batchno = '" + params.batchno + "' ";
-                        }
-                        if (params.inventsizeid) {
-                            query += " and  i.inventsizeid = '" + params.inventsizeid + "' ";
-                        }
-                        query += "  order by dateinvent ASC ";
-                        return [4 /*yield*/, this.db.query(query)];
-                    case 4:
                         data_1 = _a.sent();
                         result = this.groupBy(data_1, function (item) {
                             return [item.itemid];
@@ -117,19 +84,19 @@ var itemTransactionsReport = /** @class */ (function () {
                             product: params.product ? params.product : "ALL",
                             color: params.color ? params.color : "ALL",
                             inventsizeid: params.inventsizeid ? params.inventsizeid : "ALL",
-                            user: params.user
+                            user: params.user,
                         };
                         return [4 /*yield*/, this.warehouseName(params.inventlocationid)];
-                    case 5:
+                    case 2:
                         warehouse = _a.sent();
                         renderData.wareHouseNameAr = warehouse.name;
                         renderData.wareHouseNameEn = warehouse.namealias;
                         renderData.data = data_1;
                         return [2 /*return*/, renderData];
-                    case 6:
+                    case 3:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 7: return [2 /*return*/];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -172,10 +139,7 @@ var itemTransactionsReport = /** @class */ (function () {
                         else {
                             file = params.lang == "en" ? "itemtransactions-report" : "itemtransactions-report-ar";
                         }
-                        result.printDate = new Date(params.printDate)
-                            .toISOString()
-                            .replace(/T/, " ")
-                            .replace(/\..+/, "");
+                        result.printDate = new Date(params.printDate).toISOString().replace(/T/, " ").replace(/\..+/, "");
                         if (!(result.batchno == "ALL" ||
                             result.product === "ALL" ||
                             result.color === "ALL" ||
@@ -227,6 +191,51 @@ var itemTransactionsReport = /** @class */ (function () {
                         }
                         return [4 /*yield*/, tempArray];
                     case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    itemTransactionsReport.prototype.query_to_data = function (params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, warehouseQuery, regionalWarehouses, inQueryStr_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "\n    select\n        i.invoiceid,\n        st.transkind as transtype,\n        als.en as \"statusEn\",\n        als.ar as \"statusAr\",\n        alt.en as \"transkindEn\",\n        alt.ar as \"transkindAr\",\n        to_char(i.dateinvent, 'YYYY-MM-DD') as date,\n        sz.description as \"sizeNameEn\",\n        sz.\"name\"  as \"sizeNameAr\",\n        i.configid,\n        i.itemid,\n        i.inventsizeid,\n        i.batchno,\n        case when qty>0 then abs(qty) else 0 end as \"qtyIn\",\n        case when qty<0 then abs(qty) else 0 end as \"qtyOut\",\n        i.inventlocationid as inventlocationid,\n        w.name as \"wareHouseNameAr\",\n        w.namealias as \"wareHouseNameEn\",\n        p.itemname as \"itemNameAr\",\n        p.namealias as \"itemNameEn\"\n        from inventtrans i \n        left join inventsize sz on sz.inventsizeid  = i.inventsizeid and sz.itemid = i.itemid\n        left join inventlocation w on w.inventlocationid=i.inventlocationid\n        left join salestable st on st.salesid = i.invoiceid\n        left join inventtable p on p.itemid = i.itemid\n        left join app_lang als on als.id = st.status\n        left join app_lang alt on alt.id = st.transkind\n        where dateinvent >= '" + params.fromDate + "' ::date and \n        dateinvent < ('" + params.toDate + "' ::date + '1 day'::interval) and transactionclosed = true ";
+                        if (!(params.inventlocationid == "ALL")) return [3 /*break*/, 2];
+                        warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
+                        return [4 /*yield*/, this.db.query(warehouseQuery)];
+                    case 1:
+                        regionalWarehouses = _a.sent();
+                        inQueryStr_1 = "";
+                        regionalWarehouses[0].regionalwarehouse.split(",").map(function (item) {
+                            inQueryStr_1 += "'" + item + "',";
+                        });
+                        inQueryStr_1 += "'" + params.key + "',";
+                        query += " and i.inventlocationid in (" + inQueryStr_1.substr(0, inQueryStr_1.length - 1) + ") ";
+                        return [3 /*break*/, 3];
+                    case 2:
+                        query += " and i.inventlocationid='" + params.inventlocationid + "' ";
+                        _a.label = 3;
+                    case 3:
+                        if (params.color) {
+                            query += " and  i.configid = '" + params.color + "' ";
+                        }
+                        if (params.product) {
+                            query += " and  i.itemid = '" + params.product + "' ";
+                        }
+                        if (params.transType && params.transType != "ALL") {
+                            query += " and  st.transkind = '" + params.transType + "' ";
+                        }
+                        if (params.batchno) {
+                            query += " and  i.batchno = '" + params.batchno + "' ";
+                        }
+                        if (params.inventsizeid) {
+                            query += " and  i.inventsizeid = '" + params.inventsizeid + "' ";
+                        }
+                        query += "  order by dateinvent ASC ";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 4: return [2 /*return*/, _a.sent()];
                 }
             });
         });

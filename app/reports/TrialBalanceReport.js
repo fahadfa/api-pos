@@ -43,14 +43,12 @@ var TrialBalanceReport = /** @class */ (function () {
     }
     TrialBalanceReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, query, error_1;
+            var data, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        data = void 0;
-                        query = "\n            select \n            i.accountnum as \"accountNum\",\n            i.namear as \"nameAr\",\n            i.nameen as \"nameEn\",\n            i.openingbal as \"openingBal\",\n            to_char(i.debit, 'FM999999990.00') as debit,\n            to_char(i.credit, 'FM999999990.00') as credit,\n            to_char(i.closingbal, 'FM999999990.00') as \"closingBal\" from(\n            SELECT * FROM (SELECT a.accountnum AS \"accountnum\", \n                a.accountnamealias AS \"nameen\", \n                a.accountname AS \"namear\", \n                0.00 as \"openingbal\",\n                coalesce((SELECT sum(amountcurdebit) FROM ledgerjournaltrans\n                WHERE to_char(lj.transdate, 'yyyy-MM-dd') >= '" + params.fromDate + "' \n                AND to_char(lj.transdate, 'yyyy-MM-dd') <= '" + params.toDate + "'), 0) AS debit,\n                coalesce((SELECT sum(amountcurcredit) FROM ledgerjournaltrans \n                WHERE to_char(lj.transdate, 'yyyy-MM-dd') >= '" + params.fromDate + "' \n                AND to_char(lj.transdate, 'yyyy-MM-dd') <= '" + params.toDate + "'), 0) AS credit,\n                coalesce((SELECT sum(coalesce((SELECT sum(amountcurdebit) FROM ledgerjournaltrans \n                WHERE to_char(lj.transdate, 'yyyy-MM-dd') >= '" + params.fromDate + "' AND\n                to_char(lj.transdate, 'yyyy-MM-dd') <= '" + params.toDate + "'), 0)-coalesce((SELECT sum(amountcurcredit)FROM ledgerjournaltrans \n                WHERE to_char(lj.transdate, 'yyyy-MM-dd') >= '" + params.fromDate + "'\n                AND to_char(lj.transdate, 'yyyy-MM-dd') <= '" + params.toDate + "'), 0))), 0) AS \"closingbal\"\n                FROM ledgerjournaltrans lj, accountstable a\n                WHERE a.accountpltype=1 AND a.accountnum=lj.accountnum\n            GROUP BY a.accountnum, a.accountnamealias, a.accountname, lj.transdate) t\n                WHERE debit <> 0 OR credit <>0 OR closingbal <>0\n                ) as i";
-                        return [4 /*yield*/, this.db.query(query)];
+                        return [4 /*yield*/, this.query_to_data(params)];
                     case 1:
                         data = _a.sent();
                         return [2 /*return*/, data];
@@ -82,14 +80,11 @@ var TrialBalanceReport = /** @class */ (function () {
             var renderData, file;
             return __generator(this, function (_a) {
                 renderData = {
-                    printDate: new Date(params.printDate)
-                        .toISOString()
-                        .replace(/T/, " ")
-                        .replace(/\..+/, ""),
+                    printDate: new Date(params.printDate).toISOString().replace(/T/, " ").replace(/\..+/, ""),
                     fromDate: params.fromDate,
                     toDate: params.toDate,
                     status: params.status,
-                    user: params.user
+                    user: params.user,
                 };
                 // console.log(result.salesLine[0].product.nameEnglish);
                 renderData.data = result;
@@ -107,6 +102,19 @@ var TrialBalanceReport = /** @class */ (function () {
                     throw error;
                 }
                 return [2 /*return*/];
+            });
+        });
+    };
+    TrialBalanceReport.prototype.query_to_data = function (params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "\n            select \n            i.accountnum as \"accountNum\",\n            i.namear as \"nameAr\",\n            i.nameen as \"nameEn\",\n            i.openingbal as \"openingBal\",\n            to_char(i.debit, 'FM999999990.00') as debit,\n            to_char(i.credit, 'FM999999990.00') as credit,\n            to_char(i.closingbal, 'FM999999990.00') as \"closingBal\" from(\n            SELECT * FROM (SELECT a.accountnum AS \"accountnum\", \n                a.accountnamealias AS \"nameen\", \n                a.accountname AS \"namear\", \n                0.00 as \"openingbal\",\n                coalesce((SELECT sum(amountcurdebit) FROM ledgerjournaltrans\n                WHERE to_char(lj.transdate, 'yyyy-MM-dd') >= '" + params.fromDate + "' \n                AND to_char(lj.transdate, 'yyyy-MM-dd') <= '" + params.toDate + "'), 0) AS debit,\n                coalesce((SELECT sum(amountcurcredit) FROM ledgerjournaltrans \n                WHERE to_char(lj.transdate, 'yyyy-MM-dd') >= '" + params.fromDate + "' \n                AND to_char(lj.transdate, 'yyyy-MM-dd') <= '" + params.toDate + "'), 0) AS credit,\n                coalesce((SELECT sum(coalesce((SELECT sum(amountcurdebit) FROM ledgerjournaltrans \n                WHERE to_char(lj.transdate, 'yyyy-MM-dd') >= '" + params.fromDate + "' AND\n                to_char(lj.transdate, 'yyyy-MM-dd') <= '" + params.toDate + "'), 0)-coalesce((SELECT sum(amountcurcredit)FROM ledgerjournaltrans \n                WHERE to_char(lj.transdate, 'yyyy-MM-dd') >= '" + params.fromDate + "'\n                AND to_char(lj.transdate, 'yyyy-MM-dd') <= '" + params.toDate + "'), 0))), 0) AS \"closingbal\"\n                FROM ledgerjournaltrans lj, accountstable a\n                WHERE a.accountpltype=1 AND a.accountnum=lj.accountnum\n            GROUP BY a.accountnum, a.accountnamealias, a.accountname, lj.transdate) t\n                WHERE debit <> 0 OR credit <>0 OR closingbal <>0\n                ) as i";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
             });
         });
     };

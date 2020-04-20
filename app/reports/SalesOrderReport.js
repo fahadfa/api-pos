@@ -51,19 +51,20 @@ var SalesOrderReport = /** @class */ (function () {
     }
     SalesOrderReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, status_1, query, data_1, salesQuery, salesLine, list_1, j, chunkArray, newSalesline_1, sNo_1, quantity_1, error_1;
+            var id, data_1, salesLine, list_1, j, chunkArray, newSalesline_1, sNo_1, quantity_1, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 4, , 5]);
                         id = params.salesId;
-                        query = "\n            select \n            st.salesid as \"salesId\",\n            st.custaccount as \"custAccount\",\n            st.status as status,\n            st.transkind as transkind,\n            st.salesname as customername,\n            st.mobileno as custmobilenumber,\n            to_char(st.vatamount, 'FM999999999990.00')  as vatamount,\n            to_char(st.netamount, 'FM999999999990.00')  as \"netAmount\",\n            to_char(st.disc, 'FM999999999990.00')  as disc,\n            to_char(st.amount , 'FM999999999990.00') as amount,\n            to_char(st.shipping_amount, 'FM999999999990.00') as \"shippingAmount\",\n            st.salesname as cname,\n            st.salesname as \"cnamealias\",\n            st.voucherdiscchecked as \"voucherdiscchecked\",\n            st.vouchernum as \"vouchernum\",\n            st.payment_type as \"paymentType\",\n            c.phone as \"cphone\",\n            to_char(st.createddatetime, 'DD-MM-YYYY') as createddatetime,\n            to_char(st.lastmodifieddate, 'DD-MM-YYYY') as lastmodifieddate,\n            st.originalprinted as \"originalPrinted\",\n            st.inventlocationid as \"inventLocationId\",\n            w.namealias as wnamealias,\n            w.name as wname,\n            st.payment as \"paymentMode\",\n            st.createdby,\n            coalesce(st.deliveryaddress, ' ') || (' ') || coalesce(st.citycode, ' ') || (' ') || coalesce(st.districtcode, ' ') || (' ') || coalesce(st.country_code, ' ') as deliveryaddress,\n            concat(d.num,' - ', d.description) as salesman,\n            to_char(st.deliverydate, 'DD-MM-YYYY') as \"deliveryDate\"\n            from salestable st \n            left join dimensions d on st.dimension6_ = d.num\n            left join inventlocation w on w.inventlocationid = st.inventlocationid\n            left join custtable c on c.accountnum = st.custaccount\n            left join paymterm p on p.paymtermid = st.payment\n            where salesid='" + id + "'\n            ";
-                        return [4 /*yield*/, this.db.query(query)];
+                        return [4 /*yield*/, this.query_to_data(id)];
                     case 1:
                         data_1 = _a.sent();
                         data_1 = data_1.length >= 1 ? data_1[0] : {};
                         data_1.paymentMode = data_1.paymentType == "ONLINE" ? "Online" : data_1.paymentMode;
                         data_1.paymentModeAr = data_1.paymentType == "ONLINE" ? "عبر الانترنت" : data_1.paymentMode;
+                        console.log(data_1);
+                        data_1.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(data_1.lastmodifieddate), parseInt(params.timeZoneOffSet)).toLocaleString();
                         if (data_1.paymentMode != "CASH" && data_1.paymentMode != "ONLINE") {
                             data_1.paymentMode = "Credit";
                             data_1.paymentModeAr = "ائتمان";
@@ -73,8 +74,7 @@ var SalesOrderReport = /** @class */ (function () {
                             data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
                             this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED");
                         }
-                        salesQuery = "\n              select\n              distinct\n              ln.salesid,\n              ln.itemid,\n              ln.batchno,\n              ln.configid,\n              ln.inventsizeid,\n              ln.saleslineqty,\n              to_char(ln.lastmodifieddate, 'DD-MM-YYYY') as \"shippingDate\",\n              to_char(ln.salesqty, 'FM999999999D') as \"salesQty\",\n              to_char(ln.salesprice, 'FM999999999990.00') as salesprice,\n              to_char((ln.vatamount/ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"vatAmount\",\n              to_char((ln.linetotaldisc/ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"lineTotalDisc\",\n              to_char(ln.colorantprice, 'FM999999999990.00') as colorantprice,\n              to_char((ln.lineamount / ln.saleslineqty)*ln.salesqty + (ln.colorantprice*ln.salesqty) - (ln.linetotaldisc / ln.saleslineqty)*ln.salesqty + (ln.vatamount / ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"lineAmount\",\n              ln.prodnamear as \"prodNameAr\",\n              ln.prodnameen as \"prodNameEn\",\n              ln.colNameAr as \"colNameAr\",\n              ln.colNameEn as \"colNameEn\",\n              ln.sizeNameEn as \"sizeNameEn\",\n              ln.sizeNameAr as \"sizeNameAr\",\n              to_char((ln.lineamount/ln.saleslineqty)*ln.salesqty + (ln.colorantprice*ln.salesqty) - (ln.linetotaldisc/ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"lineAmountBeforeVat\",\n              ln.vat as vat,\n              ln.colorantid as colorant,\n              ln.linenum as linenum\n              from\n              (\n                select\n                i.invoiceid as salesid,\n                i.batchno,\n                i.itemid,\n                i.configid,\n                i.inventsizeid,\n                st.status as status,\n                ABS(i.qty) as salesqty,\n                b.itemname as prodnamear,\n                b.namealias as prodnameen,\n                coalesce(sl.salesprice, 0)  as salesprice,\n                coalesce(sl.vatamount, 0)  as vatamount,\n                coalesce(sl.linetotaldisc, 0) as linetotaldisc,\n                coalesce(sl.colorantprice,0) as colorantprice,\n                c.name as colNameAr,\n                c.name as colNameEn,\n                s.description as sizeNameEn,\n                s.name as sizeNameAr,\n                coalesce(sl.lineamount,0) as  lineamount,\n                sl.colorantid as  colorantid,\n                sl.salesqty as saleslineqty,\n                sl.vat as vat,\n                sl.linenum,\n                sl.lastmodifieddate\n                from inventtrans i\n                left join salestable st on st.salesid = i.invoiceid\n                left join salesline sl on sl.id = i.sales_line_id\n                left join inventtable b on i.itemid=b.itemid\n                left join inventsize s on s.itemid = i.itemid and i.inventsizeid = s.inventsizeid\n                left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n                \n            where invoiceid='" + id + "'\n            ) as ln order by linenum ASC\n            ";
-                        return [4 /*yield*/, this.db.query(salesQuery)];
+                        return [4 /*yield*/, this.salesline_query_to_data(id)];
                     case 2:
                         salesLine = _a.sent();
                         list_1 = [];
@@ -144,7 +144,6 @@ var SalesOrderReport = /** @class */ (function () {
                         data_1.salesLine.map(function (v) {
                             data_1.quantity += parseInt(v.quantity);
                         });
-                        console.log(data_1);
                         return [2 /*return*/, data_1];
                     case 4:
                         error_1 = _a.sent();
@@ -185,6 +184,32 @@ var SalesOrderReport = /** @class */ (function () {
                             tempArray.push(myChunk);
                         }
                         return [4 /*yield*/, tempArray];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    SalesOrderReport.prototype.query_to_data = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "\n            select \n            st.salesid as \"salesId\",\n            st.custaccount as \"custAccount\",\n            st.status as status,\n            st.transkind as transkind,\n            st.salesname as customername,\n            st.mobileno as custmobilenumber,\n            to_char(st.vatamount, 'FM999999999990.00')  as vatamount,\n            to_char(st.netamount, 'FM999999999990.00')  as \"netAmount\",\n            to_char(st.disc, 'FM999999999990.00')  as disc,\n            to_char(st.amount , 'FM999999999990.00') as amount,\n            to_char(st.shipping_amount, 'FM999999999990.00') as \"shippingAmount\",\n            st.salesname as cname,\n            st.salesname as \"cnamealias\",\n            st.voucherdiscchecked as \"voucherdiscchecked\",\n            st.vouchernum as \"vouchernum\",\n            st.payment_type as \"paymentType\",\n            c.phone as \"cphone\",\n            to_char(st.createddatetime, 'DD-MM-YYYY') as createddatetime,\n            st.lastmodifieddate as lastmodifieddate,\n            st.originalprinted as \"originalPrinted\",\n            st.inventlocationid as \"inventLocationId\",\n            w.namealias as wnamealias,\n            w.name as wname,\n            st.payment as \"paymentMode\",\n            st.createdby,\n            coalesce(st.deliveryaddress, ' ') || (' ') || coalesce(st.citycode, ' ') || (' ') || coalesce(st.districtcode, ' ') || (' ') || coalesce(st.country_code, ' ') as deliveryaddress,\n            concat(d.num,' - ', d.description) as salesman,\n            to_char(st.deliverydate, 'DD-MM-YYYY') as \"deliveryDate\"\n            from salestable st \n            left join dimensions d on st.dimension6_ = d.num\n            left join inventlocation w on w.inventlocationid = st.inventlocationid\n            left join custtable c on c.accountnum = st.custaccount\n            left join paymterm p on p.paymtermid = st.payment\n            where salesid='" + id + "'\n            ";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    SalesOrderReport.prototype.salesline_query_to_data = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var salesQuery;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        salesQuery = "\n              select\n              distinct\n              ln.salesid,\n              ln.itemid,\n              ln.batchno,\n              ln.configid,\n              ln.inventsizeid,\n              ln.saleslineqty,\n              to_char(ln.lastmodifieddate, 'DD-MM-YYYY') as \"shippingDate\",\n              to_char(ln.salesqty, 'FM999999999D') as \"salesQty\",\n              to_char(ln.salesprice, 'FM999999999990.00') as salesprice,\n              to_char((ln.vatamount/ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"vatAmount\",\n              to_char((ln.linetotaldisc/ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"lineTotalDisc\",\n              to_char(ln.colorantprice, 'FM999999999990.00') as colorantprice,\n              to_char((ln.lineamount / ln.saleslineqty)*ln.salesqty + (ln.colorantprice*ln.salesqty) - (ln.linetotaldisc / ln.saleslineqty)*ln.salesqty + (ln.vatamount / ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"lineAmount\",\n              ln.prodnamear as \"prodNameAr\",\n              ln.prodnameen as \"prodNameEn\",\n              ln.colNameAr as \"colNameAr\",\n              ln.colNameEn as \"colNameEn\",\n              ln.sizeNameEn as \"sizeNameEn\",\n              ln.sizeNameAr as \"sizeNameAr\",\n              to_char((ln.lineamount/ln.saleslineqty)*ln.salesqty + (ln.colorantprice*ln.salesqty) - (ln.linetotaldisc/ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"lineAmountBeforeVat\",\n              ln.vat as vat,\n              ln.colorantid as colorant,\n              ln.linenum as linenum\n              from\n              (\n                select\n                i.invoiceid as salesid,\n                i.batchno,\n                i.itemid,\n                i.configid,\n                i.inventsizeid,\n                st.status as status,\n                ABS(i.qty) as salesqty,\n                b.itemname as prodnamear,\n                b.namealias as prodnameen,\n                coalesce(sl.salesprice, 0)  as salesprice,\n                coalesce(sl.vatamount, 0)  as vatamount,\n                coalesce(sl.linetotaldisc, 0) as linetotaldisc,\n                coalesce(sl.colorantprice,0) as colorantprice,\n                c.name as colNameAr,\n                c.name as colNameEn,\n                s.description as sizeNameEn,\n                s.name as sizeNameAr,\n                coalesce(sl.lineamount,0) as  lineamount,\n                sl.colorantid as  colorantid,\n                sl.salesqty as saleslineqty,\n                sl.vat as vat,\n                sl.linenum,\n                sl.lastmodifieddate\n                from inventtrans i\n                left join salestable st on st.salesid = i.invoiceid\n                left join salesline sl on sl.id = i.sales_line_id\n                left join inventtable b on i.itemid=b.itemid\n                left join inventsize s on s.itemid = i.itemid and i.inventsizeid = s.inventsizeid\n                left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n                \n            where invoiceid='" + id + "'\n            ) as ln order by linenum ASC\n            ";
+                        return [4 /*yield*/, this.db.query(salesQuery)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });

@@ -68,10 +68,14 @@ var DiscountService = /** @class */ (function () {
                         reqData.currency = checkCustomer_1.currency;
                         reqData.custaccount = checkCustomer_1.accountnum;
                         reqData.taxgroup = checkCustomer_1.taxgroup;
+                        reqData.walkincustomer = checkCustomer_1.walkincustomer;
                         return [3 /*break*/, 4];
                     case 2: return [4 /*yield*/, this.custtableDAO.entity(reqData.custaccount)];
                     case 3:
                         checkCustomer = _a.sent();
+                        reqData.custaccount =
+                            checkCustomer.walkincustomer == true ? this.sessionInfo.defaultcustomerid : reqData.custaccount;
+                        reqData.walkincustomer = checkCustomer.walkincustomer;
                         if (!checkCustomer) {
                             throw { message: "INVALID_CUSTOMER_CODE" };
                         }
