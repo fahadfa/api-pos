@@ -139,7 +139,6 @@ var InventtransService = /** @class */ (function () {
                         _a.trys.push([0, 2, , 3]);
                         t0 = new Date().getTime();
                         params.inventlocationid = this.sessionInfo.inventlocationid;
-                        console.log(params);
                         return [4 /*yield*/, this.rawQuery.getSelectedBatches(params)];
                     case 1:
                         data = _a.sent();

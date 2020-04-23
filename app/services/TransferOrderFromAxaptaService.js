@@ -175,7 +175,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         if (!salesData) return [3 /*break*/, 2];
                         throw { message: "ALREADY_RECEIVED" };
                     case 2: return [4 /*yield*/, this.usergroupconfigDAO.findOne({
-                            groupid: this.sessionInfo.groupid
+                            groupid: this.sessionInfo.groupid,
                         })];
                     case 3:
                         usergroupconfig = _a.sent();
@@ -192,16 +192,10 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         date = new Date(seqData.lastmodifieddate).toLocaleString();
                         console.log(date);
                         console.log(seqData);
-                        prevYear = new Date(seqData.lastmodifieddate)
-                            .getFullYear()
-                            .toString()
-                            .substr(2, 2);
-                        year = new Date()
-                            .getFullYear()
-                            .toString()
-                            .substr(2, 2);
+                        prevYear = new Date(seqData.lastmodifieddate).getFullYear().toString().substr(2, 2);
+                        year = new Date().getFullYear().toString().substr(2, 2);
                         seqData.nextrec = prevYear == year ? seqData.nextrec : "000001";
-                        salesData.salesId = seqData.format.replace(hashString, seqData.nextrec) + "-" + year;
+                        salesData.salesId = seqData.format.replace(hashString, year) + "-" + seqData.nextrec;
                         //console.log(salesId);
                         return [4 /*yield*/, this.rawQuery.updateNumberSequence(seqNum, seqData.nextrec)];
                     case 5:
@@ -231,8 +225,8 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         item.batch = [
                             {
                                 batchNo: item.batches.batchno,
-                                quantity: item.batches.qty
-                            }
+                                quantity: item.batches.qty,
+                            },
                         ];
                         batches = item.batches;
                         batches.invoiceid = salesData.salesId;
