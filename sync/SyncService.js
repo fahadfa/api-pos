@@ -55,7 +55,7 @@ var SyncService = /** @class */ (function () {
     }
     SyncService.prototype.init = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var isMasterProceed, isTranscationProceed;
+            var isMasterProceed, isTranscationProceed, isPriorityProceed, toggleSync;
             var _this = this;
             return __generator(this, function (_a) {
                 isMasterProceed = true;
@@ -111,14 +111,60 @@ var SyncService = /** @class */ (function () {
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                _a.trys.push([0, 7, , 8]);
-                                if (!(isTranscationProceed == true)) return [3 /*break*/, 5];
+                                _a.trys.push([0, 8, , 9]);
+                                if (!(isTranscationProceed == true)) return [3 /*break*/, 6];
                                 isTranscationProceed = false;
                                 Log_1.slog.debug("(((((((((( SYNC START TRANS ))))))))))");
                                 return [4 /*yield*/, this.checkInternet()];
                             case 1:
-                                if (!_a.sent()) return [3 /*break*/, 3];
+                                if (!_a.sent()) return [3 /*break*/, 4];
+                                Log_1.slog.log("info", ">>>>>>>>>>>>>>>>> Delete DML <<<<<<<<<<<<<<<<<<<<<<<");
+                                return [4 /*yield*/, this.syncDMLService.deleteExecute()];
+                            case 2:
+                                _a.sent();
+                                Log_1.slog.log("info", ">>>>>>>>>>>>>>>>> DML <<<<<<<<<<<<<<<<<<<<<<<");
                                 return [4 /*yield*/, this.syncDMLService.execute("T")];
+                            case 3:
+                                _a.sent();
+                                return [3 /*break*/, 5];
+                            case 4:
+                                Log_1.slog.warn(">>>>>>>>>>>>>>>>> No Internet connection <<<<<<<<<<<<<<<<<<<<");
+                                _a.label = 5;
+                            case 5:
+                                Log_1.slog.debug("(((((((((( SYNC CLOSE TRANS ))))))))))");
+                                isTranscationProceed = true;
+                                return [3 /*break*/, 7];
+                            case 6:
+                                Log_1.slog.warn("TRANSACTION still processing ...................................");
+                                _a.label = 7;
+                            case 7: return [3 /*break*/, 9];
+                            case 8:
+                                error_2 = _a.sent();
+                                isTranscationProceed = true;
+                                Log_1.slog.error("--------- CRON TRANSACTION ERROR ---------");
+                                Log_1.slog.error(error_2);
+                                Log_1.slog.error("--------- CRON TRANSACTION ERROR ---------");
+                                return [3 /*break*/, 9];
+                            case 9: return [2 /*return*/];
+                        }
+                    });
+                }); });
+                isPriorityProceed = true;
+                toggleSync = "T";
+                cron.schedule("*/10 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
+                    var error_3;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                _a.trys.push([0, 7, , 8]);
+                                toggleSync = toggleSync == "M" ? "T" : "M";
+                                if (!(isPriorityProceed == true)) return [3 /*break*/, 5];
+                                isPriorityProceed = false;
+                                Log_1.slog.debug("(((((((((( SYNC START PRIORITY ))))))))))");
+                                return [4 /*yield*/, this.checkInternet()];
+                            case 1:
+                                if (!_a.sent()) return [3 /*break*/, 3];
+                                return [4 /*yield*/, this.syncDMLService.execute(toggleSync, 1)];
                             case 2:
                                 _a.sent();
                                 return [3 /*break*/, 4];
@@ -126,19 +172,19 @@ var SyncService = /** @class */ (function () {
                                 Log_1.slog.warn(">>>>>>>>>>>>>>>>> No Internet connection <<<<<<<<<<<<<<<<<<<<");
                                 _a.label = 4;
                             case 4:
-                                Log_1.slog.debug("(((((((((( SYNC CLOSE TRANS ))))))))))");
-                                isTranscationProceed = true;
+                                Log_1.slog.debug("(((((((((( SYNC CLOSE PRIORITY ))))))))))");
+                                isPriorityProceed = true;
                                 return [3 /*break*/, 6];
                             case 5:
-                                Log_1.slog.warn("Transcation still processing ...................................");
+                                Log_1.slog.warn("PRIORITY still processing ...................................");
                                 _a.label = 6;
                             case 6: return [3 /*break*/, 8];
                             case 7:
-                                error_2 = _a.sent();
-                                isTranscationProceed = true;
-                                Log_1.slog.error("--------- CRON TRANSACTION ERROR ---------");
-                                Log_1.slog.error(error_2);
-                                Log_1.slog.error("--------- CRON TRANSACTION ERROR ---------");
+                                error_3 = _a.sent();
+                                isPriorityProceed = true;
+                                Log_1.slog.error("--------- CRON PRIORITY ERROR ---------");
+                                Log_1.slog.error(error_3);
+                                Log_1.slog.error("--------- CRON PRIORITY ERROR ---------");
                                 return [3 /*break*/, 8];
                             case 8: return [2 /*return*/];
                         }

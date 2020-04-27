@@ -96,8 +96,72 @@ var InventsizeController = /** @class */ (function () {
                 }
             });
         }); });
-        this.router.get("/", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
+        this.router.post("/salesorderpagesizes", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
             var params, reqData, result, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 5, , 6]);
+                        params = request.params;
+                        reqData = request.body ? request.body.data : {};
+                        // const id: any = request.params.id;
+                        this.service.sessionInfo = request.body.sessionInfo;
+                        result = null;
+                        App_1.App.PrintLog(this.constructor.name, "Search", this.service.sessionInfo);
+                        return [4 /*yield*/, App_1.App.ValildateUserAccess(this.service.sessionInfo, this.componentName, Props_1.Props.ACCESS_READ)];
+                    case 1:
+                        if (!_a.sent()) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.service.searchSalesOrderSizes(reqData)];
+                    case 2:
+                        result = _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3: throw this.service.sessionInfo ? this.service.sessionInfo : { message: Props_1.Props.TOKEN_MESSAGE };
+                    case 4:
+                        response.send({ status: 1, data: result });
+                        return [3 /*break*/, 6];
+                    case 5:
+                        error_2 = _a.sent();
+                        console.log(error_2);
+                        response.send({ status: 0, error: error_2 });
+                        return [3 /*break*/, 6];
+                    case 6: return [2 /*return*/];
+                }
+            });
+        }); });
+        this.router.post("/sizeswithnoprice", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
+            var params, reqData, result, error_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 5, , 6]);
+                        params = request.params;
+                        reqData = request.body ? request.body.data : {};
+                        // const id: any = request.params.id;
+                        this.service.sessionInfo = request.body.sessionInfo;
+                        result = null;
+                        App_1.App.PrintLog(this.constructor.name, "Search", this.service.sessionInfo);
+                        return [4 /*yield*/, App_1.App.ValildateUserAccess(this.service.sessionInfo, this.componentName, Props_1.Props.ACCESS_READ)];
+                    case 1:
+                        if (!_a.sent()) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.service.searchSizesWithNoPrice(reqData)];
+                    case 2:
+                        result = _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3: throw this.service.sessionInfo ? this.service.sessionInfo : { message: Props_1.Props.TOKEN_MESSAGE };
+                    case 4:
+                        response.send({ status: 1, data: result });
+                        return [3 /*break*/, 6];
+                    case 5:
+                        error_3 = _a.sent();
+                        console.log(error_3);
+                        response.send({ status: 0, error: error_3 });
+                        return [3 /*break*/, 6];
+                    case 6: return [2 /*return*/];
+                }
+            });
+        }); });
+        this.router.get("/", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
+            var params, reqData, result, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -120,9 +184,41 @@ var InventsizeController = /** @class */ (function () {
                         response.send({ status: 1, data: result });
                         return [3 /*break*/, 6];
                     case 5:
-                        error_2 = _a.sent();
-                        console.log(error_2);
-                        response.send({ status: 0, error: error_2 });
+                        error_4 = _a.sent();
+                        console.log(error_4);
+                        response.send({ status: 0, error: error_4 });
+                        return [3 /*break*/, 6];
+                    case 6: return [2 /*return*/];
+                }
+            });
+        }); });
+        this.router.post("/", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
+            var params, reqData, result, error_5;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 5, , 6]);
+                        params = request.params;
+                        reqData = request.body ? request.body.data : {};
+                        // const id: any = request.params.id;
+                        this.service.sessionInfo = request.body.sessionInfo;
+                        result = null;
+                        App_1.App.PrintLog(this.constructor.name, "Search", this.service.sessionInfo);
+                        return [4 /*yield*/, App_1.App.ValildateUserAccess(this.service.sessionInfo, this.componentName, Props_1.Props.ACCESS_READ)];
+                    case 1:
+                        if (!_a.sent()) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.service.search(reqData)];
+                    case 2:
+                        result = _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3: throw this.service.sessionInfo ? this.service.sessionInfo : { message: Props_1.Props.TOKEN_MESSAGE };
+                    case 4:
+                        response.send({ status: 1, data: result });
+                        return [3 /*break*/, 6];
+                    case 5:
+                        error_5 = _a.sent();
+                        console.log(error_5);
+                        response.send({ status: 0, error: error_5 });
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
                 }

@@ -47,7 +47,50 @@ var SyncDMLService = /** @class */ (function () {
     function SyncDMLService() {
         this.limitData = 1000;
     }
-    SyncDMLService.prototype.execute = function (type) {
+    SyncDMLService.prototype.deleteExecute = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var stageDbConfig, localDbConfig, sql, syncResults, sysDeleteQuery, tableDeleteQuery, err_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        Log_1.slog.info("#################### DeleteExecute " + STORE_ID + " - " + new Date().toISOString() + " #######################");
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 5, , 6]);
+                        stageDbConfig = SyncServiceHelper_1.SyncServiceHelper.StageDBOptions();
+                        localDbConfig = SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions();
+                        sql = "SELECT table_id, table_name, table_value, deleted_on FROM sync_delete_data ";
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(localDbConfig, sql)];
+                    case 2:
+                        syncResults = _a.sent();
+                        syncResults = syncResults ? syncResults.rows : [];
+                        syncResults = syncResults.length > 0 ? syncResults : null;
+                        Log_1.slog.debug(JSON.stringify(syncResults, null, 2));
+                        if (!syncResults)
+                            return [2 /*return*/, Promise.resolve("")];
+                        sysDeleteQuery = this.buildDMLSyncDeleteQuery(syncResults);
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(stageDbConfig, sysDeleteQuery)];
+                    case 3:
+                        _a.sent();
+                        tableDeleteQuery = this.buildDMLDeleteQuery(syncResults);
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(localDbConfig, tableDeleteQuery)];
+                    case 4:
+                        _a.sent();
+                        return [3 /*break*/, 6];
+                    case 5:
+                        err_1 = _a.sent();
+                        Log_1.slog.warn(":::::::::::::::::::CATCH DELETE BLOCK START ::::::::::::::::::::::");
+                        Log_1.slog.error(err_1);
+                        return [3 /*break*/, 6];
+                    case 6:
+                        Log_1.slog.info("#################### DeleteExecute #######################");
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    SyncDMLService.prototype.execute = function (type, priority) {
+        if (priority === void 0) { priority = 9; }
         return __awaiter(this, void 0, void 0, function () {
             var stageDbConfig, localDbConfig, sql, utcDate, utcDateTime, currentTime, syncResults, sourceDB, targetDB, error_1;
             return __generator(this, function (_a) {
@@ -77,10 +120,10 @@ var SyncDMLService = /** @class */ (function () {
                         if (stageDbConfig.host == localDbConfig.host)
                             throw { message: "Invalid DB config Data" };
                         if (type == "M") {
-                            sql = " select * from sync_table \n        where (target_id = '" + STORE_ID + "' ) \n        and active = true \n        order by updated_on  ASC \n        limit 1";
+                            sql = " select * from sync_table \n        where (target_id = '" + STORE_ID + "' ) \n        and active = true\n        and priority = " + priority + " \n        order by updated_on  ASC \n        limit 1";
                         }
                         else {
-                            sql = " select * from sync_table \n        where (source_id = '" + STORE_ID + "' ) \n        and active = true \n        order by updated_on  ASC \n        limit 1";
+                            sql = " select * from sync_table \n        where (source_id = '" + STORE_ID + "' ) \n        and active = true \n        and priority = " + priority + "\n        order by updated_on  ASC \n        limit 1";
                         }
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(stageDbConfig, sql)];
                     case 3:
@@ -117,7 +160,7 @@ var SyncDMLService = /** @class */ (function () {
     };
     SyncDMLService.prototype.syncDb = function (sourceDb, targetDb, sync, currentTime) {
         return __awaiter(this, void 0, void 0, function () {
-            var updateSyncConfig, batchSql, sql, isChunkEnd, offset, isTableUpdated, lastUpdate, rowsAvalible_1, rowsNotAvalible, soruceRes, rowsLength, primaryKeys, res, metaDataTable, updateQuery, err_1, updateQuery;
+            var updateSyncConfig, batchSql, sql, isChunkEnd, offset, isTableUpdated, lastUpdate, rowsAvalible_1, rowsNotAvalible, soruceRes, rowsLength, primaryKeys, res, metaDataTable, updateQuery, err_2, updateQuery;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -139,7 +182,7 @@ var SyncDMLService = /** @class */ (function () {
                         rowsAvalible_1 = null;
                         rowsNotAvalible = null;
                         batchSql = [];
-                        sql = this.buildDDLQuery(sync, offset);
+                        sql = this.buildDMLSelectQuery(sync, offset);
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(sourceDb, sql)];
                     case 3:
                         soruceRes = _a.sent();
@@ -210,11 +253,11 @@ var SyncDMLService = /** @class */ (function () {
                         Log_1.slog.debug(":::::::::::::::::::UPDATE " + sync.id + " END ::::::::::::::::::::::\n\n");
                         return [3 /*break*/, 21];
                     case 17:
-                        err_1 = _a.sent();
+                        err_2 = _a.sent();
                         Log_1.slog.warn(":::::::::::::::::::CATCH BLOCK START ::::::::::::::::::::::");
-                        Log_1.slog.error(err_1);
+                        Log_1.slog.error(err_2);
                         updateQuery = null;
-                        if (err_1 == Props_1.Props.RECORD_NOT_FOUND) {
+                        if (err_2 == Props_1.Props.RECORD_NOT_FOUND) {
                             updateQuery = "update sync_table set updated_on = '" + currentTime + "'  where id='" + sync.id + "'";
                         }
                         else {
@@ -223,7 +266,7 @@ var SyncDMLService = /** @class */ (function () {
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(updateSyncConfig, [updateQuery])];
                     case 18:
                         _a.sent();
-                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ErrorMessage("DML", err_1)];
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ErrorMessage("DML", err_2)];
                     case 19:
                         _a.sent();
                         Log_1.slog.warn(":::::::::::::::::::CATCH BLOCK ENDS ::::::::::::::::::::::");
@@ -234,9 +277,23 @@ var SyncDMLService = /** @class */ (function () {
             });
         });
     };
-    SyncDMLService.prototype.buildDDLQuery = function (sync, offset) {
+    SyncDMLService.prototype.buildDMLSelectQuery = function (sync, offset) {
         var sql = "select * from " + sync.map_table + " where " + sync.cond + "  \n    and " + sync.sync_column + " >= '" + sync.last_update + "' \n    offset " + offset + " limit " + this.limitData;
         return sql;
+    };
+    SyncDMLService.prototype.buildDMLSyncDeleteQuery = function (deleteData) {
+        var list = [];
+        deleteData.map(function (val) {
+            list.push("delete from " + val.table_name + " where " + val.table_id + "='" + val.table_value + "'");
+        });
+        return list;
+    };
+    SyncDMLService.prototype.buildDMLDeleteQuery = function (deleteData) {
+        var list = [];
+        deleteData.map(function (val) {
+            list.push("delete from sync_delete_data where table_name='" + val.table_name + "' and table_id='" + val.table_id + "' and table_value='" + val.table_value + "'");
+        });
+        return list;
     };
     return SyncDMLService;
 }());

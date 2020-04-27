@@ -1338,16 +1338,17 @@ var SalesTableService = /** @class */ (function () {
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
+                        console.log("===========================================================");
                         promiseList = [];
                         batches = [];
                         item.batch = [];
                         if (!(item.salesQty > 0)) return [3 /*break*/, 9];
-                        item.id = reqData.paymentType == "ONLINE" ? item.id : uuid();
                         item.salesId = reqData.salesId;
                         item.createddatetime = new Date(App_1.App.DateNow());
                         item.createdBy = this.sessionInfo.userName;
                         item.numberSequenceGroupId = this.seqNum;
                         item.lastModifiedDate = new Date(App_1.App.DateNow());
+                        console.log("--------------------------------------------", item.batches);
                         if (!(item.batches && item.batches.length > 0)) return [3 /*break*/, 7];
                         item.batches = item.batches.filter(function (v) { return v.quantity > 0; });
                         _i = 0, _a = item.batches;
@@ -1355,6 +1356,7 @@ var SalesTableService = /** @class */ (function () {
                     case 1:
                         if (!(_i < _a.length)) return [3 /*break*/, 6];
                         batch = _a[_i];
+                        console.log("=================================================", batch);
                         return [4 /*yield*/, this.rawQuery.getbatchavailability({
                                 inventlocationid: this.sessionInfo.inventlocationid,
                                 itemid: item.itemid,
@@ -1587,7 +1589,7 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.saveSalesOrder = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var promiseList, customerRecord, salesLine, returnData, cond, salesTable_1, _i, salesLine_5, item, salesline, batches, condData, customerDetails, pmobileno, userName, ptokenData, pmessage, pmail, imail;
+            var promiseList, customerRecord, salesLine, returnData, cond, salesTable_1, _i, salesLine_5, item, salesline, condData, customerDetails, pmobileno, userName, ptokenData, pmessage, pmail, imail;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -1638,7 +1640,8 @@ var SalesTableService = /** @class */ (function () {
                         promiseList = [];
                         for (_i = 0, salesLine_5 = salesLine; _i < salesLine_5.length; _i++) {
                             item = salesLine_5[_i];
-                            console.log(item);
+                            item.id = reqData.paymentType == "ONLINE" ? item.id : uuid();
+                            item.salesId = reqData.salesId;
                             promiseList.push(this.salesLineItemOrder(item, reqData));
                         }
                         return [4 /*yield*/, Promise.all(promiseList)];
@@ -1648,7 +1651,6 @@ var SalesTableService = /** @class */ (function () {
                     case 8:
                         salesline = _a.sent();
                         console.log("5----------------------------");
-                        batches = [];
                         promiseList = [];
                         if (!(reqData.status == "PAID")) return [3 /*break*/, 10];
                         return [4 /*yield*/, this.rawQuery.salesTableData(reqData.interCompanyOriginalSalesId)];
@@ -1685,7 +1687,6 @@ var SalesTableService = /** @class */ (function () {
                         if (reqData.designServiceRedeemAmount > 0) {
                             promiseList.push(this.saveSalesOrderDesignerService(reqData));
                         }
-                        promiseList.push(this.saveSalesOrderRedeem(reqData));
                         _a.label = 10;
                     case 10:
                         console.log("6---------------------------- " + reqData.paymentType + reqData.onlineAmount);
