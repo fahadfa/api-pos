@@ -2081,8 +2081,8 @@ var SalesTableService = /** @class */ (function () {
                                     batches_7.dateinvent = new Date(App_1.App.DateNow());
                                     batches_7.salesLineId = item.id;
                                     item.batch.push({
-                                        batchNo: batches_7.batchNo,
-                                        quantity: batches_7.quantity,
+                                        batchNo: batches_7.batchno,
+                                        quantity: batches_7.qty,
                                     });
                                     this.updateInventoryService.sessionInfo = this.sessionInfo;
                                     promiseList.push(this.updateInventoryService.updateInventtransTable(batches_7, false));

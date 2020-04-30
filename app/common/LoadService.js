@@ -1157,18 +1157,22 @@ var LoadService = /** @class */ (function () {
             {
                 value: 12,
                 text: "Monthly",
+                textAr: "شهريا",
             },
             {
                 value: 3,
                 text: "Quarterly",
+                textAr: "ربعي",
             },
             {
                 value: 2,
                 text: "Half Yearly",
+                textAr: "منتصف المدة",
             },
             {
                 value: 1,
                 text: "Yearly",
+                textAr: "سنوي",
             },
         ];
     };

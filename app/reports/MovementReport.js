@@ -57,7 +57,7 @@ var MovementReport = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 8, , 9]);
                         id = params.salesId;
-                        return [4 /*yield*/, this.query_to_data(params)];
+                        return [4 /*yield*/, this.query_to_data(id)];
                     case 1:
                         data_1 = _a.sent();
                         data_1 = data_1.length > 0 ? data_1[0] : {};
@@ -93,9 +93,9 @@ var MovementReport = /** @class */ (function () {
                     case 6:
                         _i++;
                         return [3 /*break*/, 4];
-                    case 7:
-                        console.log(data_1);
-                        return [2 /*return*/, data_1];
+                    case 7: 
+                    // console.log(data);
+                    return [2 /*return*/, data_1];
                     case 8:
                         error_1 = _a.sent();
                         throw error_1;

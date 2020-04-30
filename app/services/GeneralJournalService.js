@@ -235,7 +235,7 @@ var GeneralJournalService = /** @class */ (function () {
                         year = new Date().getFullYear().toString().substr(2, 2);
                         data.nextrec = prevYear == year ? data.nextrec : 1;
                         hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);
-                        salesId = data.format.replace(hashString, data.nextrec) + "-" + year;
+                        salesId = data.format.replace(hashString, year) + "-" + data.nextrec;
                         console.log(salesId);
                         return [4 /*yield*/, this.rawQuery.updateNumberSequence(seqNum, data.nextrec)];
                     case 3:

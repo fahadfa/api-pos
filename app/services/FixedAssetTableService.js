@@ -57,16 +57,30 @@ var FixedAssetTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.fixedassettableRepository.entity(id)];
                     case 1:
                         data = _a.sent();
-                        data.createdDateTime = data.createdDateTime ? data.createdDateTime.toISOString().substr(0, 10) : data.createdDateTime;
-                        data.lastModifiedDate = data.lastModifiedDate ? data.lastModifiedDate.toISOString().substr(0, 10) : data.lastModifiedDate;
+                        data.createdDateTime = data.createdDateTime
+                            ? data.createdDateTime.toISOString().substr(0, 10)
+                            : data.createdDateTime;
+                        data.lastModifiedDate = data.lastModifiedDate
+                            ? data.lastModifiedDate.toISOString().substr(0, 10)
+                            : data.lastModifiedDate;
                         data.guaranteeDate = data.guaranteeDate ? data.guaranteeDate.toISOString().substr(0, 10) : data.guaranteeDate;
                         data.insuranceDate1 = data.insuranceDate1 ? data.insuranceDate1.toISOString().substr(0, 10) : data.insuranceDate1;
                         data.insuranceDate2 = data.insuranceDate2 ? data.insuranceDate2.toISOString().substr(0, 10) : data.insuranceDate2;
-                        data.lastMaintenance = data.lastMaintenance ? data.lastMaintenance.toISOString().substr(0, 10) : data.lastMaintenance;
-                        data.nextMaintenance = data.nextMaintenance ? data.nextMaintenance.toISOString().substr(0, 10) : data.nextMaintenance;
-                        data.physicalInventory = data.physicalInventory ? data.physicalInventory.toISOString().substr(0, 10) : data.physicalInventory;
-                        data.policyExpiration = data.policyExpiration ? data.policyExpiration.toISOString().substr(0, 10) : data.policyExpiration;
-                        data.lastFactorUpdateDate = data.lastFactorUpdateDate ? data.lastFactorUpdateDate.toISOString().substr(0, 10) : data.lastFactorUpdateDate;
+                        data.lastMaintenance = data.lastMaintenance
+                            ? data.lastMaintenance.toISOString().substr(0, 10)
+                            : data.lastMaintenance;
+                        data.nextMaintenance = data.nextMaintenance
+                            ? data.nextMaintenance.toISOString().substr(0, 10)
+                            : data.nextMaintenance;
+                        data.physicalInventory = data.physicalInventory
+                            ? data.physicalInventory.toISOString().substr(0, 10)
+                            : data.physicalInventory;
+                        data.policyExpiration = data.policyExpiration
+                            ? data.policyExpiration.toISOString().substr(0, 10)
+                            : data.policyExpiration;
+                        data.lastFactorUpdateDate = data.lastFactorUpdateDate
+                            ? data.lastFactorUpdateDate.toISOString().substr(0, 10)
+                            : data.lastFactorUpdateDate;
                         return [2 /*return*/, data];
                     case 2:
                         error_1 = _a.sent();
@@ -95,9 +109,13 @@ var FixedAssetTableService = /** @class */ (function () {
                             i.insuranceDate2 = i.insuranceDate2 ? i.insuranceDate2.toISOString().substr(0, 10) : i.insuranceDate2;
                             i.lastMaintenance = i.lastMaintenance ? i.lastMaintenance.toISOString().substr(0, 10) : i.lastMaintenance;
                             i.nextMaintenance = i.nextMaintenance ? i.nextMaintenance.toISOString().substr(0, 10) : i.nextMaintenance;
-                            i.physicalInventory = i.physicalInventory ? i.physicalInventory.toISOString().substr(0, 10) : i.physicalInventory;
+                            i.physicalInventory = i.physicalInventory
+                                ? i.physicalInventory.toISOString().substr(0, 10)
+                                : i.physicalInventory;
                             i.policyExpiration = i.policyExpiration ? i.policyExpiration.toISOString().substr(0, 10) : i.policyExpiration;
-                            i.lastFactorUpdateDate = i.lastFactorUpdateDate ? i.lastFactorUpdateDate.toISOString().substr(0, 10) : i.lastFactorUpdateDate;
+                            i.lastFactorUpdateDate = i.lastFactorUpdateDate
+                                ? i.lastFactorUpdateDate.toISOString().substr(0, 10)
+                                : i.lastFactorUpdateDate;
                         });
                         return [2 /*return*/, data];
                     case 2:
@@ -128,10 +146,10 @@ var FixedAssetTableService = /** @class */ (function () {
                         return [2 /*return*/, returnData];
                     case 3:
                         if (cond == "assetId") {
-                            throw { message: 'RECORD_ALREADY_EXISTS' };
+                            throw { message: "RECORD_ALREADY_EXISTS" };
                         }
                         else {
-                            throw { message: 'INVALID_DATA' };
+                            throw { message: "INVALID_DATA" };
                         }
                         _a.label = 4;
                     case 4: return [3 /*break*/, 6];
@@ -157,13 +175,13 @@ var FixedAssetTableService = /** @class */ (function () {
                             entity.deleted = true;
                         }
                         else {
-                            throw { MESSAGE: 'RECORD_NOT_FOUND' };
+                            throw { MESSAGE: "RECORD_NOT_FOUND" };
                         }
                         entity.deletedby = this.sessionInfo.userName;
                         return [4 /*yield*/, this.fixedassettableRepository.save(entity)];
                     case 2:
                         _a.sent();
-                        return [2 /*return*/, { id: entity.assetId, message: 'REMOVED' }];
+                        return [2 /*return*/, { id: entity.assetId, message: "REMOVED" }];
                     case 3:
                         error_4 = _a.sent();
                         throw error_4;
@@ -206,7 +224,8 @@ var FixedAssetTableService = /** @class */ (function () {
                         _a.label = 8;
                     case 8: return [3 /*break*/, 10];
                     case 9:
-                        if (item.lastModifiedDate && previousItem.lastModifiedDate.toISOString() != new Date(item.lastModifiedDate).toISOString()) {
+                        if (item.lastModifiedDate &&
+                            previousItem.lastModifiedDate.toISOString() != new Date(item.lastModifiedDate).toISOString()) {
                             return [2 /*return*/, "updated"];
                         }
                         _a.label = 10;
@@ -226,7 +245,7 @@ var FixedAssetTableService = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 8, , 9]);
                         return [4 /*yield*/, this.usergroupconfigDAO.findOne({
-                                inventlocationid: this.sessionInfo.inventlocationid
+                                inventlocationid: this.sessionInfo.inventlocationid,
                             })];
                     case 1:
                         usergroupconfig = _a.sent();
@@ -250,29 +269,23 @@ var FixedAssetTableService = /** @class */ (function () {
                     case 3:
                         data = _a.sent();
                         if (!data) return [3 /*break*/, 6];
-                        prevYear = new Date(data.lastmodifieddate)
-                            .getFullYear()
-                            .toString()
-                            .substr(2, 2);
-                        year = new Date()
-                            .getFullYear()
-                            .toString()
-                            .substr(2, 2);
+                        prevYear = new Date(data.lastmodifieddate).getFullYear().toString().substr(2, 2);
+                        year = new Date().getFullYear().toString().substr(2, 2);
                         data.nextrec = prevYear == year ? data.nextrec : 1;
                         hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);
-                        salesId = data.format.replace(hashString, data.nextrec) + "-" + year;
+                        salesId = data.format.replace(hashString, year) + "-" + data.nextrec;
                         console.log(salesId);
                         return [4 /*yield*/, this.rawQuery.updateNumberSequence(seqNum, data.nextrec)];
                     case 4:
                         _a.sent();
                         return [4 /*yield*/, salesId];
                     case 5: return [2 /*return*/, _a.sent()];
-                    case 6: throw { message: 'CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE' };
+                    case 6: throw { message: "CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE" };
                     case 7: return [3 /*break*/, 9];
                     case 8:
                         error_5 = _a.sent();
                         if (error_5 == {}) {
-                            error_5 = { message: 'TECHNICAL_ISSUE,_PLEASE_CONTACT_YOUR_TECHNICAL_TEAM' };
+                            error_5 = { message: "TECHNICAL_ISSUE,_PLEASE_CONTACT_YOUR_TECHNICAL_TEAM" };
                         }
                         throw error_5;
                     case 9: return [2 /*return*/];
