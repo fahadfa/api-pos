@@ -1447,13 +1447,13 @@ var LoadService = /** @class */ (function () {
             });
         });
     };
-    LoadService.prototype.checkForColorantOption = function () {
+    LoadService.prototype.checkForColorantOption = function (param) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, error_12;
+            var data, product, isBase, error_12;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
+                        _a.trys.push([0, 4, , 5]);
                         return [4 /*yield*/, this.db.query("select nocolorantcheckgroup, blocklistedbasecolor, special_products_for_colorant_option as specialproductsforcolorantoption from usergroupconfig where id = '" + this.sessionInfo.usergroupconfigid + "'")];
                     case 1:
                         data = _a.sent();
@@ -1463,11 +1463,28 @@ var LoadService = /** @class */ (function () {
                         data.specialproductsforcolorantoption = data.specialproductsforcolorantoption
                             ? data.specialproductsforcolorantoption.split(",")
                             : [];
-                        return [2 /*return*/, data];
+                        if (!param.key) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.db.query("select * from inventtable where itemid = '" + param.key + "' limit 1")];
                     case 2:
+                        product = _a.sent();
+                        product = product.length > 0 ? product[0] : {};
+                        console.log(product);
+                        isBase = false;
+                        isBase =
+                            data.nocolorantcheckgroup.includes(product.itemgroupid) ||
+                                data.blocklistedbasecolor.includes(product.citgroupid)
+                                ? false
+                                : true;
+                        if (data.specialproductsforcolorantoption.includes(product.itemid)) {
+                            isBase = true;
+                        }
+                        data.isBase = isBase;
+                        _a.label = 3;
+                    case 3: return [2 /*return*/, data];
+                    case 4:
                         error_12 = _a.sent();
                         return [2 /*return*/, error_12];
-                    case 3: return [2 /*return*/];
+                    case 5: return [2 /*return*/];
                 }
             });
         });
