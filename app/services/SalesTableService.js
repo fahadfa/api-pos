@@ -1475,7 +1475,7 @@ var SalesTableService = /** @class */ (function () {
                         this.visitCustomerService.sessionInfo = this.sessionInfo;
                         visitorData.visitorName = reqData.salesName;
                         visitorData.purchased = "Yes";
-                        visitorData.visitorMobileNumber = customerDetails.phone;
+                        visitorData.visitorMobileNumber = reqData.mobileNo;
                         visitorData.visitorType =
                             Props_1.Props.RCUSTTYPE[customerDetails.rcusttype] && Props_1.Props.RCUSTTYPE[customerDetails.rcusttype][1]
                                 ? Props_1.Props.RCUSTTYPE[customerDetails.rcusttype][1]
@@ -1623,7 +1623,7 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.salestableDAO.save(reqData)];
                     case 4:
                         salesTable_1 = _a.sent();
-                        return [4 /*yield*/, this.rawQuery.getCustomer(reqData.custAccount)];
+                        return [4 /*yield*/, this.rawQuery.getCustomer(reqData.invoiceAccount)];
                     case 5:
                         customerRecord = _a.sent();
                         if (reqData.status == "CREATED" || reqData.status == "CONVERTED") {

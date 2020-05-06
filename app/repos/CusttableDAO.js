@@ -55,7 +55,7 @@ var CusttableDAO = /** @class */ (function () {
                                 .createQueryBuilder("custtable")
                                 .where("LOWER(custtable.name) like LOWER(:name) or LOWER(custtable.nameAlias) like LOWER(:nameAlias)", {
                                 name: "%" + data.name + "%",
-                                nameAlias: "%" + data.name + "%"
+                                nameAlias: "%" + data.name + "%",
                             })
                                 .andWhere("custtable.deleted=false")
                                 .getMany()];
@@ -65,7 +65,7 @@ var CusttableDAO = /** @class */ (function () {
                         return [4 /*yield*/, this.dao
                                 .createQueryBuilder("custtable")
                                 .where("LOWER(custtable.phone) like LOWER(:phone)", {
-                                phone: "%" + data.phone + "%"
+                                phone: "%" + data.phone + "%",
                             })
                                 .andWhere("custtable.deleted=false")
                                 .getMany()];
@@ -76,7 +76,7 @@ var CusttableDAO = /** @class */ (function () {
                                 .createQueryBuilder("custtable")
                                 .where("LOWER(custtable.name) like LOWER(:name) or LOWER(custtable.nameAlias) like LOWER(:nameAlias)", {
                                 name: "%" + data.painter + "%",
-                                nameAlias: "%" + data.painter + "%"
+                                nameAlias: "%" + data.painter + "%",
                             })
                                 .andWhere("custtable.deleted=false")
                                 .getMany()];
@@ -98,7 +98,7 @@ var CusttableDAO = /** @class */ (function () {
                             .createQueryBuilder("custtable")
                             .where("custtable.accountnum = :accountnum AND custtable.paymtermid <> :payid", {
                             accountnum: accountNum,
-                            payid: "CASH"
+                            payid: "CASH",
                         })
                             .select(["custtable.creditmax"])
                             .andWhere("custtable.deleted=false")
@@ -410,7 +410,7 @@ var CusttableDAO = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select \n        accountnum, \n        name, \n        namealias,\n        phone,\n        pricegroup,\n        inventlocation,\n        dataareaid,\n        walkincustomer,\n        custgroup,\n        cashdisc,\n        salesgroup,\n        currency,\n        paymtermid,\n        dimension as regionid,\n        dimension2_ as departmentid,\n        dimension3_ as costcenterid,\n        dimension4_ as employeeid,\n        dimension5_ as projectid,\n        dimension6_ as salesmanid,\n        dimension7_ as brandid,\n        dimension8_ as productlineid,\n        rcusttype from custtable where deleted = false ";
+                        query = "select \n        accountnum, \n        name, \n        namealias,\n        phone,\n        pricegroup,\n        inventlocation,\n        dataareaid,\n        walkincustomer,\n        custgroup,\n        cashdisc,\n        salesgroup,\n        currency,\n        paymtermid,\n        custtype,\n        rcusttype,\n        dimension as regionid,\n        dimension2_ as departmentid,\n        dimension3_ as costcenterid,\n        dimension4_ as employeeid,\n        dimension5_ as projectid,\n        dimension6_ as salesmanid,\n        dimension7_ as brandid,\n        dimension8_ as productlineid,\n        rcusttype from custtable where deleted = false ";
                         query += " and (";
                         if (data.customergroup.length > 0) {
                             query += "(custgroup in (" + data.customergroup + ") or walkincustomer = true) ";

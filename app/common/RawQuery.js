@@ -146,6 +146,21 @@ var RawQuery = /** @class */ (function () {
             });
         });
     };
+    RawQuery.prototype.updateDocumentStatus = function (salesId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "UPDATE salestable\n        SET documentstatus = '" + true + "'\n        WHERE salesid = '" + salesId + "'";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, data];
+                }
+            });
+        });
+    };
     RawQuery.prototype.getInventTrans = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
             var query, data, warehouse, wareHouseNamear_1, wareHouseNameEn_1, error_1;
