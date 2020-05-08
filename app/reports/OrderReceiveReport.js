@@ -128,7 +128,7 @@ var OrderReceiveReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 // console.log(result.salesLine[0].product.nameEnglish);
                 renderData = result;
-                renderData.printDate = new Date(params.printDate).toISOString().replace(/T/, " ").replace(/\..+/, "");
+                renderData.printDate = renderData.printDate = App_1.App.convertUTCDateToLocalDate(new Date(App_1.App.DateNow()), parseInt(params.timeZoneOffSet)).toLocaleString();
                 console.log(params.lang);
                 file = params.lang == "en" ? "or-en" : "or-ar";
                 try {

@@ -51,28 +51,27 @@ var OrderShipmentReport = /** @class */ (function () {
     }
     OrderShipmentReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, status_1, data_1, salesLine, batches, _i, batches_1, item, error_1;
+            var id, status, data, salesLine, batches, _i, batches_1, item;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
                     case 1:
-                        data_1 = _a.sent();
-                        data_1 = data_1.length >= 1 ? data_1[0] : {};
-                        data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
+                        data = _a.sent();
+                        data = data.length >= 1 ? data[0] : {};
+                        data.originalPrinted = data.originalPrinted ? data.originalPrinted : false;
                         return [4 /*yield*/, this.salesline_query_to_data(id)];
                     case 2:
                         salesLine = _a.sent();
                         // salesLine = salesLine.length > 0 ? salesLine : [];
                         console.log(salesLine);
-                        data_1.salesLine = salesLine;
-                        data_1.quantity = 0;
+                        data.salesLine = salesLine;
+                        data.quantity = 0;
                         salesLine.map(function (v) {
-                            data_1.quantity += parseInt(v.salesQty);
+                            data.quantity += parseInt(v.salesQty);
                         });
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 4];
+                        if (!(data.status != "POSTED")) return [3 /*break*/, 4];
                         this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED");
                         return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
                     case 3:
@@ -84,11 +83,7 @@ var OrderShipmentReport = /** @class */ (function () {
                             this.updateInventoryService.updateInventtransTable(item);
                         }
                         _a.label = 4;
-                    case 4: return [2 /*return*/, data_1];
-                    case 5:
-                        error_1 = _a.sent();
-                        throw error_1;
-                    case 6: return [2 /*return*/];
+                    case 4: return [2 /*return*/, data];
                 }
             });
         });
@@ -114,16 +109,11 @@ var OrderShipmentReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 // console.log(result.salesLine[0].product.nameEnglish);
                 renderData = result;
-                renderData.printDate = new Date(params.printDate).toISOString().replace(/T/, " ").replace(/\..+/, "");
+                renderData.printDate = App_1.App.convertUTCDateToLocalDate(new Date(App_1.App.DateNow()), parseInt(params.timeZoneOffSet)).toLocaleString();
                 console.log(params.lang);
                 file = params.lang == "en" ? "os-en" : "os-ar";
-                try {
-                    return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];
-                }
-                catch (error) {
-                    throw error;
-                }
-                return [2 /*return*/];
+                // try {
+                return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];
             });
         });
     };
