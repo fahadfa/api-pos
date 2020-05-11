@@ -495,6 +495,32 @@ var LoadService = /** @class */ (function () {
             });
         });
     };
+    LoadService.prototype.salesmanList = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, salesmanQuery, reqData, ids, query;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        salesmanQuery = "select salesmanid from usergroupconfig where id = '" + this.sessionInfo.usergroupconfigid + "'";
+                        return [4 /*yield*/, this.db.query(salesmanQuery)];
+                    case 1:
+                        reqData = _a.sent();
+                        reqData = reqData.length > 0 ? reqData[0].salesmanid : null;
+                        if (!(reqData != null)) return [3 /*break*/, 3];
+                        ids = reqData
+                            .split(",")
+                            .map(function (d) { return "'" + d + "'"; })
+                            .join(",");
+                        query = "select concat(num,' - ', description) as salesman, num as salesmanid\n    from dimensions where num in(" + ids + ")";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 2:
+                        data = _a.sent();
+                        return [2 /*return*/, data];
+                    case 3: return [2 /*return*/, []];
+                }
+            });
+        });
+    };
     LoadService.prototype.locationsalesman = function (param) {
         return __awaiter(this, void 0, void 0, function () {
             var query, data, error_9;

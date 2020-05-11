@@ -144,15 +144,7 @@ var InventtransService = /** @class */ (function () {
                         data = _a.sent();
                         console.log(data);
                         result = this.groupBy(data, function (item) {
-                            return [
-                                item.itemid,
-                                item.batchno,
-                                item.configid,
-                                item.inventsizeid,
-                                item.isItemFree,
-                                item.colorantId,
-                                item.linkId,
-                            ];
+                            return [item.itemid, item.batchno, item.configid, item.inventsizeid, item.isItemFree, item.colorantId];
                         });
                         new_data_1 = [];
                         result.forEach(function (groupitem) {
