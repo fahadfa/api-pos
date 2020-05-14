@@ -1668,7 +1668,7 @@ var SalesTableService = /** @class */ (function () {
                             pmobileno = function () { return __awaiter(_this, void 0, void 0, function () {
                                 var message, sms;
                                 return __generator(this, function (_a) {
-                                    message = "  \u0631\u0636\u0627\u0624\u0643\u0645 \u0647\u0648 \u0647\u062F\u0641\u0646\u0627 \u062F\u0647\u0627\u0646\u0627\u062A \u0627\u0644\u062C\u0632\u064A\u0631\u0629 \u062C\u0648\u062F\u0629 \u0648\u062C\u0645\u0627\u0644 \u0642\u064A\u0645\u0629 \u0645\u0634\u062A\u0631\u064A\u0627\u062A\u0643\u0645 \u0647\u064A " + reqData.netAmount.to(2) + " ";
+                                    message = "  \u0631\u0636\u0627\u0624\u0643\u0645 \u0647\u0648 \u0647\u062F\u0641\u0646\u0627 \u062F\u0647\u0627\u0646\u0627\u062A \u0627\u0644\u062C\u0632\u064A\u0631\u0629 \u062C\u0648\u062F\u0629 \u0648\u062C\u0645\u0627\u0644 \u0642\u064A\u0645\u0629 \u0645\u0634\u062A\u0631\u064A\u0627\u062A\u0643\u0645 \u0647\u064A " + reqData.netAmount.toFixed(2) + " ";
                                     sms = new Sms_1.Sms();
                                     return [2 /*return*/, sms.sendMessage("966", reqData.mobileNo, message)];
                                 });
@@ -2720,7 +2720,7 @@ var SalesTableService = /** @class */ (function () {
                         _a.trys.push([0, 4, , 5]);
                         console.log(item);
                         if (!item.inventlocationid) return [3 /*break*/, 2];
-                        query = "select st.salesid ,ct1.\"name\" as \"painterAr\",ct1.namealias as \"painterEn\" ,ct.\"name\" as \"customerNameAr\",ct.namealias as \"customerNameEn\",st.salesname as customer,st.amount,st.lastmodifieddate,\n        ct.accountnum ,ct.\"name\" as  painterAr,ct.namealias as painterEn,ct.rcusttype from salestable  st inner join custtable ct \n        on st.custaccount = ct.accountnum \n        inner join custtable ct1 \n        on st.painter = ct1.accountnum  \n        where st.transkind ='SALESORDER'\n        and st.inventlocationid ='" + item.inventlocationid + "'\n        order by st.lastmodifieddate desc;";
+                        query = "select st.salesid ,st.salesname ,st.painter ,\n        ct.\"name\" as \"customerNameAr\",\n        ct.namealias as \"customerNameEn\" ,\n        ct1.\"name\" as \"painterAr\",ct1.namealias as \"painterEn\",\n        st.salesname as customer,st.netamount as amount,st.lastmodifieddate,\n                ct.accountnum ,ct.rcusttype \n                from salestable  st \n                inner join custtable ct \n                on st.salesname = ct.namealias \n                inner join custtable ct1 \n                on st.painter = ct1.accountnum  \n                where st.transkind ='SALESORDER'\n                and st.inventlocationid ='" + item.inventlocationid + "'\n                order by st.lastmodifieddate desc;\n        ";
                         return [4 /*yield*/, this.salestableDAO.getDAO().query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2: throw { message: Props_1.Props.INVALID_DATA };

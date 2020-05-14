@@ -165,7 +165,7 @@ var SalesLineDAO = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = " select \n    salesline.itemid ,\n    --sum(salesline.lineamount) as amount \n    sum(salesline .lineamount +salesline .vatamount -salesline .linetotaldisc+coalesce(salesline.colorantprice, 0) * salesline.salesqty ) as amount \n    from salesline as salesline \n    inner join salestable st on st.salesid = salesline.salesid\n    where salesline.salesid in (\n      select salesid from salestable st\n      where st.transkind = 'SALESORDER'\n      and st.status IN('POSTED', 'PAID')\n      and st.lastmodifieddate ::date>='" + from + "'\n      and st.lastmodifieddate ::date<='" + to + "'\n      and st.inventlocationid='" + inventlocationid + "'     \n      ) and salesline.is_item_free is false\n      group by salesline.itemid ,salesline .is_item_free order by amount desc limit 20\n     \n    ";
+                        query = " select \n    salesline.itemid ,\n    --sum(salesline.lineamount) as amount \n    sum(salesline .lineamount +salesline .vatamount -salesline .linetotaldisc+coalesce(salesline.colorantprice, 0) * salesline.salesqty ) as amount \n    from salesline as salesline \n    inner join salestable st on st.salesid = salesline.salesid\n    where salesline.salesid in (\n      select salesid from salestable st\n      where st.transkind In('SALESORDER') \n      and st.status IN('POSTED', 'PAID')\n      and st.lastmodifieddate ::date>='" + from + "'\n      and st.lastmodifieddate ::date<='" + to + "'\n      and st.inventlocationid='" + inventlocationid + "'     \n      ) \n      group by salesline.itemid ,salesline.itemid order by amount desc limit 20\n     \n    ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
@@ -178,7 +178,7 @@ var SalesLineDAO = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = " select \n    salesline.itemid ,\n    sum(salesline.lineamount- salesline.linetotaldisc + salesline.vatamount) as previousamount \n    from salesline as salesline \n    inner join salestable st on st.salesid = salesline.salesid\n    where (salesline.lastmodifieddate::date >= '" + from + "' \n    and salesline.lastmodifieddate::date <= '" + to + "' ) \n    and salesline.inventlocationid='" + inventlocationid + "'     \n    and st.transkind = 'SALESORDER' \n    and st.status IN('POSTED', 'PAID')\n    and salesline.itemid  in(" + itemIds
+                        query = " select \n    salesline.itemid ,\n    sum(salesline .lineamount +salesline .vatamount -salesline .linetotaldisc+coalesce(salesline.colorantprice, 0) * salesline.salesqty ) as previousamount \n    from salesline as salesline \n    inner join salestable st on st.salesid = salesline.salesid\n    where (salesline.lastmodifieddate::date >= '" + from + "' \n    and salesline.lastmodifieddate::date <= '" + to + "' ) \n    and salesline.inventlocationid='" + inventlocationid + "'     \n    and st.transkind In('SALESORDER')  \n    and st.status IN('POSTED', 'PAID')\n    and salesline.itemid  in(" + itemIds
                             .map(function (id) {
                             return "'" + id + "'";
                         })

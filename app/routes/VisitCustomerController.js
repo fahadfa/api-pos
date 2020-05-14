@@ -117,7 +117,6 @@ var VisitCustomerController = /** @class */ (function () {
                         return [3 /*break*/, 4];
                     case 3: throw this.service.sessionInfo ? this.service.sessionInfo : { message: Props_1.Props.TOKEN_MESSAGE };
                     case 4:
-                        console.log(result);
                         response.send({ status: 1, data: result });
                         return [3 /*break*/, 6];
                     case 5:

@@ -329,12 +329,12 @@
                                         {{#if batchCheck}}
                                         <th class="th">دفعة</th>
                                         {{/if}}
-                                        <th class="th">توافر المادية</th>
-                                        <th class="th">محجوز</th>
-                                        <th class="th">إجمالي توافر</th>
                                         {{#if batchCheck}}
                                         <th class="th">تاريخ الانتهاء</th>
                                         {{/if}}
+                                        <th class="th">توافر المادية</th>
+                                        <th class="th">محجوز</th>
+                                        <th class="th">إجمالي توافر</th>
                                     </tr>
                                     </thead>
                                   
@@ -349,15 +349,6 @@
                                         {{#if batchCheck}}
                                         <td class="td">{{this.batchno}}</td>
                                         {{/if}}
-                                        <td class="td">
-                                            {{this.physicalAvailable}}
-                                        </td>
-                                        <td class="td">
-                                            {{this.reservedQuantity}}
-                                        </td>
-                                        <td class="td">
-                                            {{this.totalAvailable}}
-                                        </td>
                                         {{#if batchCheck}}
                                         <td class="td">
                                                 {{#if this.batchexpdate}}
@@ -367,6 +358,15 @@
                                                 {{/if}}
                                         </td>
                                         {{/if}}
+                                        <td class="td">
+                                            {{this.physicalAvailable}}
+                                        </td>
+                                        <td class="td">
+                                            {{this.reservedQuantity}}
+                                        </td>
+                                        <td class="td">
+                                            {{this.totalAvailable}}
+                                        </td>
                                     </tr>
                                     <!-- <tr>
                                         <td style="border-bottom:1px dotted #8a8989;padding:1px;width:100%;height:5px">

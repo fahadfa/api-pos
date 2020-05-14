@@ -310,7 +310,7 @@ var SalestargetService = /** @class */ (function () {
                         console.log("=============================================");
                         currentPercentage = currentDayTarget ? ((todaySales - currentDayTarget) / currentDayTarget) * 100 : 0;
                         previousPercentageDecimal = todaySales == 0 ? Infinity : ((yesterdaySale - todaySales) / todaySales) * 100;
-                        previousPercentage = previousPercentageDecimal == Infinity ? 0 : previousPercentageDecimal;
+                        previousPercentage = previousPercentageDecimal == Infinity ? 100 : previousPercentageDecimal;
                         salesStatus = new SalesStatus_1.SalesStatus();
                         salesStatus.currentSale = todaySales;
                         salesStatus.previousSale = yesterdaySale;
@@ -569,7 +569,7 @@ var SalestargetService = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.salestableRepository
                             .createQueryBuilder("salestable")
                             .select("SUM(salestable.netamount :: float)", "sum")
-                            .andWhere("salestable.transkind IN (:...transkind)", { transkind: ["SALESORDER"] })
+                            .andWhere("salestable.transkind IN (:...transkind)", { transkind: ["SALESORDER", "DESIGNERSERVICE"] })
                             .andWhere("salestable.status IN (:...status)", { status: ["PAID", "POSTED"] })
                             .andWhere("salestable.lastmodifieddate ::date = :lastmodifieddate", date)
                             .andWhere("salestable.inventlocationid = :inventlocationid", data)
@@ -589,7 +589,7 @@ var SalestargetService = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.salestableRepository
                             .createQueryBuilder("salestable")
                             .select("SUM(salestable.netamount :: float)", "sum")
-                            .andWhere("salestable.transkind IN (:...transkind)", { transkind: ["SALESORDER"] })
+                            .andWhere("salestable.transkind IN (:...transkind)", { transkind: ["SALESORDER", "DESIGNERSERVICE"] })
                             .andWhere("salestable.status IN (:...status)", { status: ["PAID", "POSTED"] })
                             .andWhere("salestable.inventlocationid = :inventlocationid", data)
                             .andWhere(new typeorm_1.Brackets(function (qb) {

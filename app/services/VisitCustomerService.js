@@ -93,19 +93,38 @@ var VisitCustomerService = /** @class */ (function () {
     };
     VisitCustomerService.prototype.searchVisitors = function (item) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, error_3;
+            var data_1, citycodes_1, uniqueCodes, cities_1, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
+                        _a.trys.push([0, 3, , 4]);
                         return [4 /*yield*/, this.salesTableDAO.searchVisitors(item)];
                     case 1:
-                        data = _a.sent();
-                        return [2 /*return*/, data];
+                        data_1 = _a.sent();
+                        console.log("========================", data_1);
+                        citycodes_1 = [];
+                        data_1.forEach(function (item) {
+                            if (item.citycode != null && item.citycode && item.citycode.toString().trim().length > 0) {
+                                citycodes_1.push(item.citycode);
+                            }
+                        });
+                        uniqueCodes = new Set(citycodes_1);
+                        return [4 /*yield*/, this.salesTableDAO.searchCities(Array.from(uniqueCodes))];
                     case 2:
+                        cities_1 = _a.sent();
+                        data_1.forEach(function (item, index) {
+                            var city = cities_1.find(function (cityObj) {
+                                return cityObj.cityname == item.citycode;
+                            });
+                            if (city) {
+                                data_1[index] = Object.assign({}, data_1[index], city);
+                            }
+                        });
+                        return [2 /*return*/, data_1];
+                    case 3:
                         error_3 = _a.sent();
                         throw error_3;
-                    case 3: return [2 /*return*/];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -137,7 +156,7 @@ var VisitCustomerService = /** @class */ (function () {
                         return [2 /*return*/, { id: reqData.visitorSequenceNumber, message: Props_1.Props.SAVED_SUCCESSFULLY }];
                     case 4:
                         if (cond == "VisitSeqNumber") {
-                            throw { message: 'RECORD_ALREADY_EXISTS' };
+                            throw { message: "RECORD_ALREADY_EXISTS" };
                         }
                         return [3 /*break*/, 6];
                     case 5:
@@ -162,14 +181,8 @@ var VisitCustomerService = /** @class */ (function () {
                     case 2:
                         data = _a.sent();
                         hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);
-                        prevYear = new Date(data.lastmodifieddate)
-                            .getFullYear()
-                            .toString()
-                            .substr(2, 2);
-                        year = new Date()
-                            .getFullYear()
-                            .toString()
-                            .substr(2, 2);
+                        prevYear = new Date(data.lastmodifieddate).getFullYear().toString().substr(2, 2);
+                        year = new Date().getFullYear().toString().substr(2, 2);
                         data.nextrec = prevYear == year ? data.nextrec : 1;
                         visitCustNum = data.format.replace(hashString, item.regionNumber + "-" + this.visitCustomer.showroomId + "-" + year + "-" + data.nextrec);
                         // let visitCustNum: string = data.format.substr(0, 3) + item.regionNumber + "-" + this.visitCustomer.showroomId + "-" + year + "-" + data.nextrec;
