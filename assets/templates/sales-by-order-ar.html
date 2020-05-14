@@ -10,17 +10,17 @@
       size: A4;
       margin: 10px;
     }
-  
+
     @media print {
       tfoot {
         display: table-footer-group;
       }
-  
+
       @page {
         margin: 2cm 0.5cm 1cm 0.5cm;
       }
     }
-  
+
     body {
       font-family: " Courier New", Courier, monospace !important;
       font-size: 14px;
@@ -30,37 +30,37 @@
       font-weight: normal !important;
       /* width: 210mm; */
     }
-  
+
     table {
       page-break-inside: auto;
     }
-  
+
     tr {
       page-break-inside: avoid;
       page-break-after: always;
       border-bottom: 1px dotted #8a8989;
       padding: 1px;
     }
-  
+
     thead {
       display: table-header-group;
     }
-  
+
     tfoot {
       display: table-footer-group;
     }
-  
+
     th,
     td {
       padding: 5px 5px;
     }
-  
+
     #bg__watermark {
       display: block;
       min-width: 100%;
       opacity: 0.5;
     }
-  
+
     #bg__text__watermark {
       color: lightgrey;
       font-size: 120px;
@@ -76,32 +76,32 @@
       position: fixed;
       margin: 50% auto;
     }
-  
+
     .mainheading {
       text-align: center;
       font-weight: 600;
       font-size: 20px;
       margin: 20px auto;
     }
-  
+
     #headertbl {
       width: 100%;
       margin: 20px auto;
     }
-  
+
     .tdleft {
       text-align: left;
     }
-  
+
     .tdright {
       text-align: right;
     }
-  
+
     .textbold {
       font-weight: bold;
       font-size: 16px;
     }
-    
+
     table.dash {
       border: 1px dashed #cccccc;
       border-collapse: collapse;
@@ -127,15 +127,11 @@
         <td>:</td>
         <td class="tdright">مستودع</td>
       </tr>
-      <tr>
-        <td class="tdleft">{{printDate}}</td>
-        <td>:</td>
-        <td class="tdleft">وقت الطباعة</td>
-        <td colspan="6">&nbsp;</td>
+      <!-- <tr>
         <td class="tdright">{{headers.salesman}}</td>
         <td>:</td>
-        <td class="tdright">بائع</td>        
-      </tr>
+        <td class="tdright">بائع</td>
+      </tr> -->
       <tr>
         <td class="tdleft">{{headers.toDate}}</td>
         <td>:</td>
@@ -145,8 +141,17 @@
         <td>:</td>
         <td class="tdright">من التاريخ</td>
       </tr>
+      <tr>
+        <td class="tdleft"></td>
+        <td></td>
+        <td class="tdleft"></td>
+        <td colspan="6">&nbsp;</td>
+        <td class="tdright">{{headers.salesman}}</td>
+        <td>:</td>
+        <td class="tdright">بائع</td>
+      </tr>
     </table>
-  
+
     <table width="100%" class="dash" cellpadding="1" cellspacing="0">
       <thead>
         <tr class="heading">
@@ -162,7 +167,9 @@
       <tbody>
         {{#each data}}
         <tr>
-          <td colspan="7" class="textbold tdright"><strong>{{this.salesgroup.salesman}} - {{this.salesgroup.salesmanId}}</strong></td>
+          <td colspan="7" class="textbold tdright">
+            <strong>{{this.salesgroup.salesman}} - {{this.salesgroup.salesmanId}}</strong>
+          </td>
         </tr>
         {{#each salesdata}}
         <tr>
@@ -176,7 +183,6 @@
         </tr>
         {{/each}}
         <tr class="textbold">
-          
           <td class="tdright">{{this.salesgroup.netamount}}</td>
           <td class="tdright">{{this.salesgroup.vatamount}}</td>
           <td class="tdright">{{this.salesgroup.disc}}</td>

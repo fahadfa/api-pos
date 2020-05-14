@@ -109,7 +109,7 @@
             /* border: 1px solid #2a4b76 !important; */
             border-collapse: collapse !important;
             /* color: #fff !important; */
-            font-size: 14px;
+            font-size: 12px;
 
         }
 
@@ -281,6 +281,10 @@
                position: fixed;
                margin: 50% auto;
            }
+           .specific{
+               width: 25% !important;
+               padding:0 !important;
+           }
     </style>
 
 </head>
@@ -340,24 +344,27 @@
                                 </table>
                             </div>
                             <div class="table-border">
-                                <table class="" style="width:100%;margin:auto;border-collapse: collapse !important;">
+                                <table class="" style="width:100%;margin:auto;border-collapse: collapse !important;table-layout: fixed;font-size: 10px">
+                                   
                                     <thead>
-                                    <tr class="background" style="font-size:14px">
-                                        <th class="th">S.No</th>
-                                        <th class="th">Warehouse</th>
-                                        <th class="th">Product</th>
-                                        <th class="th">ItemId</th>
-                                        <th class="th">Color</th>
-                                        <th class="th">Size</th>
+                                    <tr class="background" style="font-size:10px !important">
+                                        <th class="th" style="width: 6%">S.No</th>
+                                        <th class="th" style="width: 13%">Warehouse</th>
+                                        <th class="th " style="width: 15%">Product</th>
+                                        <th class="th" style="width: 13%">ItemId</th>
+                                        <th class="th" style="width: 9%">Color</th>
+                                        <th class="th" style="width: 9%">Size</th>
                                         {{#if batchCheck}}
-                                        <th class="th">Batch</th>
+                                        <th class="th" style="width: 9%">Batch</th>
                                         {{/if}}
                                         {{#if batchCheck}}
-                                        <th class="th">Expiry Date</th>
+                                        <th class="th" style="width: 10%">Expiry Date</th>
                                         {{/if}}
-                                        <th class="th">Physical Available</th>
-                                        <th class="th">Reserved</th>
-                                        <th class="th">Total Available</th>
+                                        <th class="th" style="width: 13%">Physical Available</th>
+                                        <th class="th" style="width: 13%">Reserved</th>
+                                        <th class="th" style="width: 13%">Total Available</th>
+                                      
+               
                                     </tr>
                                     </thead>
                                     {{#each data}}
@@ -405,6 +412,7 @@
                                         <td class="td">
                                             {{this.totalAvailable}}
                                         </td>
+                                    
                                         
                                     </tr>
                                     <!-- <tr>
@@ -437,9 +445,14 @@
 
 
                                     <tr>
-                                        
+                                      
+                                        {{#if this.batchCheck}}
+                                        <td colspan="10" align="right">Total:</td>
+                                        <td align="center">{{ sum }}</td>
+                                        {{else}}
                                         <td colspan="8" align="right">Total:</td>
                                         <td align="center">{{ sum }}</td>
+                                        {{/if}}
 
                                     </tr>
 

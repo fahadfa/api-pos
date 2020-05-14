@@ -106,7 +106,7 @@
 
         .th {
             border-collapse: collapse !important;
-            font-size: 14px;
+            font-size: 10px;
 
         }
 
@@ -317,10 +317,10 @@
                             </div>
 
                             <div class="table-border">
-                                <table class="" style="width:100%;margin:auto;border-collapse: collapse !important;">
+                                <table class="" style="width:100%;margin:auto;border-collapse: collapse !important;table-layout: fixed;font-size: 10px">
                                    <thead>
-                                    <tr class="background" style="font-size:14px">
-                                        <th class="th">الرقم التسلسلي</th>
+                                    <tr class="background" style="font-size:10px !important">
+                                        <th class="th" >الرقم التسلسلي</th>
                                         <th class="th">المستودع</th>
                                         <th class="th">المنتج</th>
                                         <th class="th">معرف العنصر</th>
@@ -396,8 +396,13 @@
                                     {{/each}}
                                     <tr>
                                         
-                                        <td colspan="8" align="left">Total:</td>
+                                        {{#if this.batchCheck}}
+                                        <td colspan="10" align="right">Total:</td>
                                         <td align="center">{{ sum }}</td>
+                                        {{else}}
+                                        <td colspan="8" align="right">Total:</td>
+                                        <td align="center">{{ sum }}</td>
+                                        {{/if}}
 
                                     </tr>
 

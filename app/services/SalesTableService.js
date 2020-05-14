@@ -2713,22 +2713,47 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.searchPainters = function (item) {
         return __awaiter(this, void 0, void 0, function () {
-            var query, error_14;
+            var query, data_1, paintersId_1, query1, painters_1, error_14;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 4, , 5]);
+                        _a.trys.push([0, 5, , 6]);
                         console.log(item);
-                        if (!item.inventlocationid) return [3 /*break*/, 2];
-                        query = "select st.salesid ,st.salesname ,st.painter ,\n        ct.\"name\" as \"customerNameAr\",\n        ct.namealias as \"customerNameEn\" ,\n        ct1.\"name\" as \"painterAr\",ct1.namealias as \"painterEn\",\n        st.salesname as customer,st.netamount as amount,st.lastmodifieddate,\n                ct.accountnum ,ct.rcusttype \n                from salestable  st \n                inner join custtable ct \n                on st.salesname = ct.namealias \n                inner join custtable ct1 \n                on st.painter = ct1.accountnum  \n                where st.transkind ='SALESORDER'\n                and st.inventlocationid ='" + item.inventlocationid + "'\n                order by st.lastmodifieddate desc;\n        ";
+                        if (!item.inventlocationid) return [3 /*break*/, 3];
+                        query = " select st.salesid ,st.salesname,st.painter,\n        ct.namealias as \"customerNameEn\",ct.name as \"cusomerNameAr\",\n        st.netamount as amount,st.lastmodifieddate\n        from salestable  st \n        inner join custtable ct on\n        ct.accountnum =st.invoiceaccount \n        where st.transkind ='SALESORDER'\n                       and st.inventlocationid ='" + item.inventlocationid + "'\n                       order by st.lastmodifieddate desc;;\n        ";
                         return [4 /*yield*/, this.salestableDAO.getDAO().query(query)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                    case 2: throw { message: Props_1.Props.INVALID_DATA };
-                    case 3: return [3 /*break*/, 5];
-                    case 4:
+                    case 1:
+                        data_1 = _a.sent();
+                        paintersId_1 = [];
+                        data_1.forEach(function (item) {
+                            if (item.painter != null && item.painter && item.painter.toString().trim().length > 0) {
+                                paintersId_1.push(item.painter);
+                            }
+                        });
+                        paintersId_1 = Array.from(new Set(paintersId_1));
+                        query1 = "select ct1.accountnum as \"painterCode\",ct1.\"name\" as \"painterAr\",\n         ct1.namealias as \"painterEn\" \n         from custtable ct1\n         where ct1.accountnum  in (" + paintersId_1
+                            .map(function (painterID) {
+                            return "'" + painterID + "'";
+                        })
+                            .join(",") + ");";
+                        return [4 /*yield*/, this.salestableDAO.getDAO().query(query1)];
+                    case 2:
+                        painters_1 = _a.sent();
+                        data_1.forEach(function (item, index) {
+                            var painter = painters_1.find(function (painterObj) {
+                                return painterObj.painterCode == item.painter;
+                            });
+                            if (painter) {
+                                data_1[index] = Object.assign({}, data_1[index], painter);
+                            }
+                        });
+                        return [2 /*return*/, data_1];
+                    case 3: throw { message: Props_1.Props.INVALID_DATA };
+                    case 4: return [3 /*break*/, 6];
+                    case 5:
                         error_14 = _a.sent();
                         throw error_14;
-                    case 5: return [2 /*return*/];
+                    case 6: return [2 /*return*/];
                 }
             });
         });
