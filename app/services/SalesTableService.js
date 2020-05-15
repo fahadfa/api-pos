@@ -2720,7 +2720,7 @@ var SalesTableService = /** @class */ (function () {
                         _a.trys.push([0, 5, , 6]);
                         console.log(item);
                         if (!item.inventlocationid) return [3 /*break*/, 3];
-                        query = " select st.salesid ,st.salesname,st.painter,\n        ct.namealias as \"customerNameEn\",ct.name as \"cusomerNameAr\",\n        st.netamount as amount,st.lastmodifieddate\n        from salestable  st \n        inner join custtable ct on\n        ct.accountnum =st.invoiceaccount \n        where st.transkind ='SALESORDER'\n                       and st.inventlocationid ='" + item.inventlocationid + "'\n                       order by st.lastmodifieddate desc;;\n        ";
+                        query = " select st.salesid ,st.salesname,st.painter,\n        ct.namealias as \"customerNameEn\",ct.name as \"customerNameAr\",\n        st.netamount as amount,st.lastmodifieddate\n        from salestable  st \n        inner join custtable ct on\n        ct.accountnum =st.invoiceaccount \n        where st.transkind ='SALESORDER'\n                       and st.inventlocationid ='" + item.inventlocationid + "'\n                       order by st.lastmodifieddate desc;;\n        ";
                         return [4 /*yield*/, this.salestableDAO.getDAO().query(query)];
                     case 1:
                         data_1 = _a.sent();

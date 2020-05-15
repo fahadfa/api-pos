@@ -68,7 +68,7 @@ var SalesByOrderReport = /** @class */ (function () {
                         return [4 /*yield*/, this.salesData(params)];
                     case 1:
                         rows = _c.sent();
-                        if (rows && rows[0]) {
+                        if (rows && rows.length > 0) {
                             result.headers.wnamealias = rows[0].wnamealias;
                             result.headers.wname = rows[0].wname;
                             result.headers.fromDate = params.fromDate;
@@ -83,7 +83,7 @@ var SalesByOrderReport = /** @class */ (function () {
                             // result.headers.wname = params.viewType;
                             result.headers.fromDate = params.fromDate;
                             result.headers.toDate = params.toDate;
-                            result.headers.salesman = params.salesmanid ? rows[0].salesman : "ALL";
+                            result.headers.salesman = params.salesmanid ? rows.length > 0 ? rows[0].salesman : "-" : "ALL";
                             result.headers.printtime = moment().format("HH:mm:ss");
                             result.headers.printdate = moment().format("DD-MM-YY");
                         }

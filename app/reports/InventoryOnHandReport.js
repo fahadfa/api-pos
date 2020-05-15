@@ -141,9 +141,8 @@ var InventoryOnHandReport = /** @class */ (function () {
                         if (params.batchno && params.batchCheck) {
                             query = query + (" and LOWER(i.batchno)=LOWER('" + params.batchno + "') ");
                         }
-                        // query += ` and (i.qty_in-i.qty_out)>0  GROUP BY bs.itemname, bs.namealias, w.name, w.namealias,
-                        //         i.itemid, i.configid, i.inventsizeid ${params.batchCheck ? `, i.batchno, b.expdate` : ``} `;
-                        query += "  GROUP BY bs.itemname, bs.namealias, w.name, w.namealias,\ni.itemid, i.configid, i.inventsizeid " + (params.batchCheck ? ", i.batchno, b.expdate" : "") + "   order by i.itemid";
+                        query += "  GROUP BY bs.itemname, bs.namealias, w.name, w.namealias,\ni.itemid, i.configid, i.inventsizeid " + (params.batchCheck ? ", i.batchno, b.expdate" : "") + " ";
+                        query += " " + (params.withZero ? "having sum(i.qty_in-i.qty_out) >= 0" : " having sum(i.qty_in-i.qty_out) > 0 ") + " order by i.itemid ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 4: return [2 /*return*/, _a.sent()];
                 }

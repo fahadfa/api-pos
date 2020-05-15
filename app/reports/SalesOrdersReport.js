@@ -193,7 +193,7 @@ var SalesOrdersReport = /** @class */ (function () {
                             }
                         }
                         if (params.accountnum) {
-                            query += " and s.custaccount = '" + params.accountnum + "'";
+                            query += " and (s.custaccount = '" + params.accountnum + "' or s.mobileno ='" + params.accountnum + "' or s.invoiceaccount='" + params.accountnum + "') ";
                         }
                         query += " order by s.createddatetime ASC";
                         return [4 /*yield*/, this.db.query(query)];
