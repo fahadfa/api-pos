@@ -158,7 +158,7 @@ var itemSalesByCustomerReport = /** @class */ (function () {
                             query += " and  i.batchno = '" + params.batchNo + "' ";
                         }
                         if (params.accountnum) {
-                            query += " and  and (s.custaccount = '" + params.accountnum + "' or s.mobileno ='" + params.accountnum + "' or s.invoiceaccount='" + params.accountnum + "') ";
+                            query += " and  (s.custaccount = '" + params.accountnum + "' or s.mobileno ='" + params.accountnum + "' or s.invoiceaccount='" + params.accountnum + "') ";
                         }
                         if (params.inventsizeid) {
                             query += " and  i.inventsizeid = '" + params.inventsizeid + "' ";
