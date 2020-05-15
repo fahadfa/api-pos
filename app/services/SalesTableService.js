@@ -690,6 +690,23 @@ var SalesTableService = /** @class */ (function () {
                     case 5:
                         item.lastModifiedBy = this.sessionInfo.userName;
                         item.lastModifiedDate = new Date(App_1.App.DateNow());
+                        if (item.cardAmount) {
+                        }
+                        if (item.cashAmount == "" || item.cashAmount == null) {
+                            item.cashAmount = 0;
+                        }
+                        if (item.designServiceRedeemAmount == "" || item.designServiceRedeemAmount == null) {
+                            item.designServiceRedeemAmount = 0;
+                        }
+                        if (item.cardAmount == "" || item.cardAmount == null) {
+                            item.cardAmount = 0;
+                        }
+                        if (item.shippingAmount == "" || item.shippingAmount == null) {
+                            item.shippingAmount = 0;
+                        }
+                        if (item.redeemAmount == "" || item.redeemAmount == null) {
+                            item.redeemAmount = 0;
+                        }
                         console.log(item.lastModifiedDate.toISOString());
                         return [2 /*return*/, true];
                 }
@@ -2701,8 +2718,8 @@ var SalesTableService = /** @class */ (function () {
         data.voucherdiscpercent = data.voucherdiscpercent
             ? Math.round(parseFloat((data.vatamount * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
             : 0;
-        data.redeemptsamt = data.redeemptsamt
-            ? Math.round(parseFloat((data.redeemptsamt * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
+        data.redeemAmount = data.redeemAmount
+            ? Math.round(parseFloat((data.redeemAmount * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)
             : 0;
         data.voucherdiscamt = data.voucherdiscamt
             ? Math.round(parseFloat((data.voucherdiscamt * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2)

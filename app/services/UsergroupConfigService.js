@@ -106,9 +106,48 @@ var UsergroupConfigService = /** @class */ (function () {
             });
         });
     };
+    UsergroupConfigService.prototype.findOne = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, error_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.usergroupconfigDAO.findOneEntity()];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, data];
+                    case 2:
+                        error_3 = _a.sent();
+                        throw error_3;
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    UsergroupConfigService.prototype.saveAll = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var returnData, error_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.usergroupconfigDAO.saveAll(data)];
+                    case 1:
+                        _a.sent();
+                        returnData = { message: "SAVED_SUCCESSFULLY" };
+                        return [2 /*return*/, returnData];
+                    case 2:
+                        error_4 = _a.sent();
+                        throw error_4;
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
     UsergroupConfigService.prototype.save = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var sequenceGroupList, itemsNotInNumSeq, _i, sequenceGroupList_1, seq, numberSeq, cond, promiseList, returnData, error_3;
+            var sequenceGroupList, itemsNotInNumSeq, _i, sequenceGroupList_1, seq, numberSeq, cond, promiseList, returnData, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -170,8 +209,8 @@ var UsergroupConfigService = /** @class */ (function () {
                         }
                         return [3 /*break*/, 9];
                     case 8:
-                        error_3 = _a.sent();
-                        throw error_3;
+                        error_5 = _a.sent();
+                        throw error_5;
                     case 9: return [2 /*return*/];
                 }
             });
@@ -242,7 +281,7 @@ var UsergroupConfigService = /** @class */ (function () {
     };
     UsergroupConfigService.prototype.delete = function (id) {
         return __awaiter(this, void 0, void 0, function () {
-            var usergroupconfig, error_4;
+            var usergroupconfig, error_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -265,8 +304,8 @@ var UsergroupConfigService = /** @class */ (function () {
                         _a.sent();
                         return [2 /*return*/, { id: usergroupconfig.groupid, message: "REMOVED" }];
                     case 6:
-                        error_4 = _a.sent();
-                        throw error_4;
+                        error_6 = _a.sent();
+                        throw error_6;
                     case 7: return [2 /*return*/];
                 }
             });

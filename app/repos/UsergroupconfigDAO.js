@@ -37,9 +37,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var Usergroupconfig_1 = require("../../entities/Usergroupconfig");
+var App_1 = require("../../utils/App");
 var UsergroupconfigDAO = /** @class */ (function () {
     function UsergroupconfigDAO() {
         this.dao = typeorm_1.getRepository(Usergroupconfig_1.Usergroupconfig);
+        this.db = typeorm_1.getManager();
     }
     UsergroupconfigDAO.prototype.search = function (data) {
         return __awaiter(this, void 0, void 0, function () {
@@ -97,6 +99,16 @@ var UsergroupconfigDAO = /** @class */ (function () {
             });
         });
     };
+    UsergroupconfigDAO.prototype.findOneEntity = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.dao.findOne()];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
     UsergroupconfigDAO.prototype.find = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -113,11 +125,24 @@ var UsergroupconfigDAO = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.dao
-                            .createQueryBuilder("Usergroupconfig")
-                            .where(data)
-                            .getMany()];
+                    case 0: return [4 /*yield*/, this.dao.createQueryBuilder("Usergroupconfig").where(data).getMany()];
                     case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    UsergroupconfigDAO.prototype.saveAll = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        console.log(data);
+                        query = " update usergroupconfig set \n                        special_products_for_colorant_option = '" + data.specialproductsforcolorantoption + "', \n                        blocklistedbasecolor = '" + data.blocklistedbasecolor + "',\n                        sabic_customers = '" + data.sabiccustomers + "',\n                        nocolorantcheckgroup = '" + data.nocolorantcheckgroup + "',\n                        workflowcustomers = '" + data.workflowcustomers + "',\n                        lastmodifieddate = '" + App_1.App.dateNow() + "'\n                        ";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
                 }
             });
         });

@@ -102,7 +102,7 @@ exports.mailOptions = {
     host: "smtp.gmail.com",
     port: 465,
     user: "jpos@jazeerapaints.com",
-    pass: "12345678",
+    pass: "J2123@2123",
 };
 exports.setEnvConfig = function () {
     var envData = process.env.ENV_JPOS;

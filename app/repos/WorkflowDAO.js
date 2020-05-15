@@ -56,7 +56,7 @@ var WorkflowDAO = /** @class */ (function () {
                                 .addSelect("Inventlocation.name")
                                 .addSelect("Inventlocation.nameAlias")
                                 .where({})
-                                .andWhere("pendingwith ~ '" + data.pendingWith + "' and statusid!='APPROVEDBYRA' and statusid!='REJECTEDBYRM' and statusid!='REJECTEDBYRA'")
+                                .andWhere("pendingwith Ilike '%" + data.pendingWith + "%' and statusid!='APPROVEDBYRA' and statusid!='REJECTEDBYRM' and statusid!='REJECTEDBYRA'")
                                 .orderBy("Workflow.createdDateTime", "DESC")
                                 .getMany()];
                     case 1: return [2 /*return*/, _a.sent()];
