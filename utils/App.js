@@ -51,6 +51,7 @@ var Config = __importStar(require("./Config"));
 var Log_1 = require("./Log");
 var bcryptjs_1 = require("bcryptjs");
 var RawQuery_1 = require("../app/common/RawQuery");
+var dns = require("dns").promises;
 var App = /** @class */ (function () {
     function App() {
     }
@@ -73,11 +74,11 @@ var App = /** @class */ (function () {
         return time.toString(36).toUpperCase();
     };
     App.convertUTCDateToLocalDate = function (date, timezoneoffset) {
-        if (date.getTimezoneOffset() + '' !== timezoneoffset) {
+        if (date.getTimezoneOffset() + "" !== timezoneoffset) {
             var diffseconds = timezoneoffset * 60;
             var hours = parseInt(diffseconds / 3600 + "");
             var minutes = (diffseconds / 60) % 60;
-            var seconds = (diffseconds % 60);
+            var seconds = diffseconds % 60;
             var yearOrg = date.getFullYear();
             var dateOrg = date.getDate();
             var hoursOrg = date.getHours();
@@ -348,6 +349,12 @@ var App = /** @class */ (function () {
     };
     App.Sleep = function (millseconds) {
         App.SystemSleep(millseconds);
+    };
+    App.checkInternet = function () {
+        return dns
+            .lookup("google.com")
+            .then(function () { return true; })
+            .catch(function () { return false; });
     };
     App.uniqueId = 0;
     App.TOKEN_MESSAGE = "Please enter the token.";

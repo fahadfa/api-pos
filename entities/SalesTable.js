@@ -347,7 +347,7 @@ var SalesTable = /** @class */ (function () {
     __decorate([
         typeorm_1.Column({ name: "redeempts" }),
         __metadata("design:type", Number)
-    ], SalesTable.prototype, "redeempts", void 0);
+    ], SalesTable.prototype, "redeemPoints", void 0);
     __decorate([
         typeorm_1.Column({ name: "redeemptsamt" }),
         __metadata("design:type", Number)
