@@ -218,7 +218,7 @@ var PhoneVerificationService = /** @class */ (function () {
                         _a.trys.push([0, 7, , 8]);
                         return [4 /*yield*/, this.phoneVerificationDAO.findOne({
                                 phoneNumber: item.phoneNumber,
-                                customerId: item.customerId
+                                customerId: item.customerId,
                             })];
                     case 1:
                         phoneVerification = _a.sent();
@@ -230,7 +230,7 @@ var PhoneVerificationService = /** @class */ (function () {
                     case 2:
                         _a.sent();
                         return [2 /*return*/, { message: "VERIFIED", status: true }];
-                    case 3: throw { message: "INVALID_TOKEN" };
+                    case 3: throw { message: "INVALID_OTP" };
                     case 4: return [3 /*break*/, 6];
                     case 5: throw { message: "INVALID_MOBILE_NUMBER" };
                     case 6: return [3 /*break*/, 8];

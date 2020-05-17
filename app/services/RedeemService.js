@@ -36,11 +36,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var Props_1 = require("../../constants/Props");
+var PhoneVerificationService_1 = require("../services/PhoneVerificationService");
 var RedeemService = /** @class */ (function () {
     function RedeemService() {
         this.axios = require("axios");
         this.url = "https://api-qa.jazeerapaints.com/api";
         this.otpStore = new Map();
+        this.otp_token = "WTRNVnBLa3Q5UE5tTy9MczVtRWY0QT09";
+        this.phoneVerificationService = new PhoneVerificationService_1.PhoneVerificationService();
     }
     RedeemService.prototype.getCustomerPoints = function (params) {
         return __awaiter(this, void 0, void 0, function () {
@@ -101,56 +104,66 @@ var RedeemService = /** @class */ (function () {
     //0550590391
     RedeemService.prototype.getOtp = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var url, data, error_3;
+            var reqData, data, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log("new getOtpRequest by Krupa", params);
-                        _a.label = 1;
+                        _a.trys.push([0, 2, , 3]);
+                        // let token = await this.getToken();
+                        // console.log(token);
+                        // let url = `https://api.jazeerapaints.com/api/gen_otp?phone=${params.mobile}`;
+                        // let url = `${this.url}/gen_otp`;
+                        // console.log(url);
+                        // this.axios.defaults.headers["Token"] = token;
+                        // console.log(this.axios.defaults.headers);
+                        // let data = await this.axios.get(url + `?phone=${params.mobile}`);
+                        // console.log(data);
+                        // this.otpStore.set(params.mobile, { token: data.data.otp_token, validate: false });
+                        // return data.data;
+                        this.phoneVerificationService.sessionInfo = this.sessionInfo;
+                        reqData = { phoneNumber: params.mobile, customerId: "REDEEM_SERVICE" };
+                        return [4 /*yield*/, this.phoneVerificationService.sendOtp(reqData)];
                     case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        url = this.url + "/gen_otp";
-                        console.log(url);
-                        return [4 /*yield*/, this.axios.get(url + ("?phone=" + params.mobile))];
-                    case 2:
                         data = _a.sent();
-                        console.log(data);
-                        this.otpStore.set(params.mobile, { token: data.data.otp_token, validate: false });
-                        return [2 /*return*/, data.data];
-                    case 3:
+                        return [2 /*return*/, { otp_token: "WTRNVnBLa3Q5UE5tTy9MczVtRWY0QT09", status: 1, message: data.message }];
+                    case 2:
                         error_3 = _a.sent();
                         throw error_3;
-                    case 4: return [2 /*return*/];
+                    case 3: return [2 /*return*/];
                 }
             });
         });
     };
     RedeemService.prototype.validateOtp = function (reqdata) {
         return __awaiter(this, void 0, void 0, function () {
-            var token, otp_token, otp, url, data, error_4;
+            var reqData, data, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
-                        return [4 /*yield*/, this.getToken()];
+                        _a.trys.push([0, 2, , 3]);
+                        // let token = await this.getToken();
+                        // console.log(this.otpStore.get(reqdata.mobile));
+                        // let otp_token: any = this.otpStore.get(reqdata.mobile).token;
+                        // let otp: any = reqdata.otp;
+                        // console.log(reqdata);
+                        // let url = `${this.url}/check_otp`;
+                        // console.log(url);
+                        // this.axios.defaults.headers["Token"] = token;
+                        // // console.log(this.axios.defaults.headers);
+                        // let data = await this.axios.post(url, { phone: reqdata.mobile, otp: otp, otp_token: otp_token });
+                        // console.log(data.data);
+                        // return data.data;
+                        this.phoneVerificationService.sessionInfo = this.sessionInfo;
+                        reqData = { customerId: "REDEEM_SERVICE", phoneNumber: reqdata.mobile, otp: reqdata.otp };
+                        console.log(reqData);
+                        return [4 /*yield*/, this.phoneVerificationService.verfiyOtp(reqData)];
                     case 1:
-                        token = _a.sent();
-                        console.log(this.otpStore.get(reqdata.mobile));
-                        otp_token = this.otpStore.get(reqdata.mobile).token;
-                        otp = reqdata.otp;
-                        console.log(reqdata);
-                        url = this.url + "/check_otp";
-                        console.log(url);
-                        this.axios.defaults.headers["Token"] = token;
-                        return [4 /*yield*/, this.axios.post(url, { phone: reqdata.mobile, otp: otp, otp_token: otp_token })];
-                    case 2:
                         data = _a.sent();
-                        console.log(data.data);
-                        return [2 /*return*/, data.data];
-                    case 3:
+                        return [2 /*return*/, { message: "VERIFIED", status: true }];
+                    case 2:
                         error_4 = _a.sent();
                         throw error_4;
-                    case 4: return [2 /*return*/];
+                    case 3: return [2 /*return*/];
                 }
             });
         });

@@ -83,7 +83,9 @@ var OrderShipmentReport = /** @class */ (function () {
                             this.updateInventoryService.updateInventtransTable(item);
                         }
                         _a.label = 4;
-                    case 4: return [2 /*return*/, data];
+                    case 4:
+                        console.log(App_1.App.DateNow(), new Date(App_1.App.DateNow()), new Date().toISOString());
+                        return [2 /*return*/, data];
                 }
             });
         });

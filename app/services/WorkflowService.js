@@ -77,6 +77,7 @@ var WorkflowService = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
                         item.pendingWith = this.sessionInfo.userName;
+                        item.groupid = this.sessionInfo.groupid;
                         return [4 /*yield*/, this.workflowDAO.search(item)];
                     case 1:
                         data = _a.sent();
@@ -251,7 +252,6 @@ var WorkflowService = /** @class */ (function () {
                         item.lastModifiedBy = this.sessionInfo.userName;
                         // console.log(new Date());
                         item.lastModifiedDate = new Date(App_1.App.DateNow());
-                        console.log("lastModifiedDate", item.lastModifiedDate);
                         return [4 /*yield*/, this.validate(item)];
                     case 17:
                         _a.sent();
@@ -259,6 +259,7 @@ var WorkflowService = /** @class */ (function () {
                     case 18:
                         data = _a.sent();
                         salesData.status = item.statusId;
+                        console.log("lastModifiedDate", item.lastModifiedDate, salesData.status);
                         salesData.lastModifiedDate = new Date(App_1.App.DateNow());
                         return [4 /*yield*/, this.salesTableDAO.save(salesData)];
                     case 19:

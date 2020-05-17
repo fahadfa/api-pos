@@ -90,7 +90,7 @@ var DesignerserviceService = /** @class */ (function () {
                         if (!item.accountnum) return [3 /*break*/, 2];
                         return [4 /*yield*/, this.rawQuery.getDesignerServiceList(item.accountnum, item.mobileNo)];
                     case 1: return [2 /*return*/, _a.sent()];
-                    case 2: throw { message: 'PLEASE_PROVIDE_ID' };
+                    case 2: throw { message: "PLEASE_PROVIDE_ID" };
                     case 3: return [3 /*break*/, 5];
                     case 4:
                         error_3 = _a.sent();
@@ -110,7 +110,7 @@ var DesignerserviceService = /** @class */ (function () {
                         return [4 /*yield*/, this.designerserviceRepository.save(item)];
                     case 1:
                         designerserviceData = _a.sent();
-                        returnData = { id: item.serviceid, message: 'SAVED_SUCCESSFULLY' };
+                        returnData = { id: item.serviceid, message: "SAVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
                     case 2:
                         error_4 = _a.sent();
@@ -131,12 +131,12 @@ var DesignerserviceService = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         if (!data) {
-                            throw { message: 'DATA_NOT_FOUND' };
+                            throw { message: "DATA_NOT_FOUND" };
                         }
                         return [4 /*yield*/, this.designerserviceRepository.delete(data)];
                     case 2:
                         result = _a.sent();
-                        returnData = { id: id, message: 'REMOVED' };
+                        returnData = { id: id, message: "REMOVED" };
                         return [2 /*return*/, returnData];
                     case 3:
                         error_5 = _a.sent();

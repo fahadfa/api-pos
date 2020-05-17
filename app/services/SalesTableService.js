@@ -1640,6 +1640,8 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.salestableDAO.save(reqData)];
                     case 4:
                         salesTable_1 = _a.sent();
+                        reqData.invoiceAccount =
+                            reqData.invoiceAccount || reqData.invoiceAccount != "" ? reqData.invoiceAccount : reqData.custAccount;
                         return [4 /*yield*/, this.rawQuery.getCustomer(reqData.invoiceAccount)];
                     case 5:
                         customerRecord = _a.sent();

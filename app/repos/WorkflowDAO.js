@@ -56,7 +56,7 @@ var WorkflowDAO = /** @class */ (function () {
                                 .addSelect("Inventlocation.name")
                                 .addSelect("Inventlocation.nameAlias")
                                 .where({})
-                                .andWhere("pendingwith Ilike '%" + data.pendingWith + "%' and statusid!='APPROVEDBYRA' and statusid!='REJECTEDBYRM' and statusid!='REJECTEDBYRA'")
+                                .andWhere(" (pendingwith Ilike '%" + data.pendingWith + "%' or pendingWith = '" + data.groupid + "') and statusid!='APPROVEDBYRA' and statusid!='REJECTEDBYRM' and statusid!='REJECTEDBYRA'")
                                 .orderBy("Workflow.createdDateTime", "DESC")
                                 .getMany()];
                     case 1: return [2 /*return*/, _a.sent()];
@@ -98,10 +98,7 @@ var WorkflowDAO = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.dao
-                            .createQueryBuilder("Workflow")
-                            .where(data)
-                            .getOne()];
+                    case 0: return [4 /*yield*/, this.dao.createQueryBuilder("Workflow").where(data).getOne()];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
