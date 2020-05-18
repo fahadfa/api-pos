@@ -149,14 +149,19 @@ var InventtransService = /** @class */ (function () {
                         new_data_1 = [];
                         result.forEach(function (groupitem) {
                             var qty = groupitem.reduce(function (res, item) { return res + parseInt(item.qty); }, 0);
-                            if (params.type == "SALESORDER" || params.type == "INVENTORYMOVEMENT" || params.type == "PURCHASERETURN") {
-                                if (qty <= 0) {
+                            if (params.type == "SALESORDER" || params.type == "PURCHASERETURN" || params.type == "INVENTORYMOVEMENT") {
+                                if (qty <= 0 && params.type != "INVENTORYMOVEMENT") {
                                     groupitem[0].qty = Math.abs(qty);
                                     groupitem[0].returnQuantity = 0;
                                     new_data_1.push(__assign({}, groupitem[0]));
                                 }
-                                else if ((qty > 0 && params.type == "INVENTORYMOVEMENT") || params.type == "SALESORDER") {
+                                else if (qty > 0 && params.type == "SALESORDER") {
                                     groupitem[0].qty = Math.abs(qty);
+                                    groupitem[0].returnQuantity = 0;
+                                    new_data_1.push(__assign({}, groupitem[0]));
+                                }
+                                else if (params.type == "INVENTORYMOVEMENT") {
+                                    groupitem[0].qty = parseInt(qty);
                                     groupitem[0].returnQuantity = 0;
                                     new_data_1.push(__assign({}, groupitem[0]));
                                 }

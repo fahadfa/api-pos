@@ -240,10 +240,11 @@ var WorkflowService = /** @class */ (function () {
                             }
                         }
                         else if (status_1 == "reject") {
-                            if (RM_AND_RA.rm == this.sessionInfo.userName) {
+                            console.log("==========================", status_1);
+                            if (RM_AND_RA.rm == this.sessionInfo.groupid) {
                                 item.statusId = Props_1.Props.WORKFLOW_STATUSID.REJECTEDBYRM[0];
                             }
-                            else if (RM_AND_RA.ra == this.sessionInfo.userName) {
+                            else if (RM_AND_RA.ra == this.sessionInfo.groupid) {
                                 item.statusId = Props_1.Props.WORKFLOW_STATUSID.REJECTEDBYRA[0];
                             }
                         }

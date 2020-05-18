@@ -54,6 +54,7 @@ var SalesReturnReport = /** @class */ (function () {
                         data.map(function (v) {
                             console.log(v.lastmodifieddate);
                             v.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(v.lastmodifieddate), parseInt(params.timeZoneOffSet)).toLocaleString();
+                            v.phone = v.phone && v.phone != 'null' ? v.phone : null;
                         });
                         return [2 /*return*/, data];
                     case 2:

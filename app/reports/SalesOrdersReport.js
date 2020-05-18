@@ -59,6 +59,7 @@ var SalesOrdersReport = /** @class */ (function () {
                             v.vatAmount = v.vatAmount ? v.vatAmount : 0;
                             v.netAmount = v.netAmount ? v.netAmount : 0;
                             v.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(v.lastmodifieddate), parseInt(params.timeZoneOffSet)).toLocaleString();
+                            v.phone = v.phone && v.phone != 'null' ? v.phone : null;
                         });
                         resData_1 = {
                             grossAmount: 0,
