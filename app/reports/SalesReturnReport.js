@@ -52,9 +52,8 @@ var SalesReturnReport = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         data.map(function (v) {
-                            console.log(v.lastmodifieddate);
                             v.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(v.lastmodifieddate), parseInt(params.timeZoneOffSet)).toLocaleString();
-                            v.phone = v.phone && v.phone != 'null' ? v.phone : null;
+                            v.phone = v.phone && v.phone != "null" ? v.phone : null;
                         });
                         return [2 /*return*/, data];
                     case 2:
@@ -86,10 +85,8 @@ var SalesReturnReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log("date:::" + params.printDate);
                         renderData = {
-                            printDate: new Date(params.printDate)
-                                .toISOString(),
+                            printDate: App_1.App.convertUTCDateToLocalDate(new Date(App_1.App.DateNow()), parseInt(params.timeZoneOffSet)).toLocaleString(),
                             fromDate: params.fromDate,
                             toDate: params.toDate,
                             status: params.status,

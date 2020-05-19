@@ -2214,42 +2214,43 @@ var SalesTableService = /** @class */ (function () {
                         //console.log(item.batches);
                         for (_a = 0, _b = item.batches; _a < _b.length; _a++) {
                             batches = _b[_a];
-                            batches.itemid = item.itemid;
-                            batches.transrefid = reqData.interCompanyOriginalSalesId
-                                ? reqData.interCompanyOriginalSalesId
-                                : reqData.salesId;
-                            batches.invoiceid = reqData.salesId;
-                            batches.qty =
-                                reqData.status == "PURCHASEORDER" ? parseInt(batches.quantity) : parseInt(batches.quantity);
-                            batches.batchno = batches.batchNo;
-                            batches.configid = item.configId;
-                            batches.inventsizeid = item.inventsizeid;
-                            batches.inventlocationid = this.sessionInfo.inventlocationid;
-                            batches.dataareaid = this.sessionInfo.dataareaid;
-                            batches.reserveStatus = reqData.transkind;
-                            batches.transactionClosed = transactionClosed;
-                            batches.dateinvent = new Date(App_1.App.DateNow());
-                            batches.salesLineId = item.id;
-                            //console.log(batches);
-                            if (reqData.isMovementIn) {
-                                // batches.inventbatch = {
-                                //   inventBatchId: batches.batchNo,
-                                //   itemId: item.itemid,
-                                //   configId: item.configId,
-                                //   description: batches.description,
-                                //   dataAreaId: this.sessionInfo.dataareaid,
-                                //   createdDateTime: new Date(),
-                                //   dateinvent: new Date()
-                                // };
-                                // await this.inventbatchDAO.save(batches.inventbatch);
+                            if (parseInt(batches.quantity) != 0) {
+                                batches.itemid = item.itemid;
+                                batches.transrefid = reqData.interCompanyOriginalSalesId
+                                    ? reqData.interCompanyOriginalSalesId
+                                    : reqData.salesId;
+                                batches.invoiceid = reqData.salesId;
+                                batches.qty = reqData.status == "PURCHASEORDER" ? parseInt(batches.quantity) : parseInt(batches.quantity);
+                                batches.batchno = batches.batchNo;
+                                batches.configid = item.configId;
+                                batches.inventsizeid = item.inventsizeid;
+                                batches.inventlocationid = this.sessionInfo.inventlocationid;
+                                batches.dataareaid = this.sessionInfo.dataareaid;
+                                batches.reserveStatus = reqData.transkind;
+                                batches.transactionClosed = transactionClosed;
+                                batches.dateinvent = new Date(App_1.App.DateNow());
+                                batches.salesLineId = item.id;
+                                //console.log(batches);
+                                if (reqData.isMovementIn) {
+                                    // batches.inventbatch = {
+                                    //   inventBatchId: batches.batchNo,
+                                    //   itemId: item.itemid,
+                                    //   configId: item.configId,
+                                    //   description: batches.description,
+                                    //   dataAreaId: this.sessionInfo.dataareaid,
+                                    //   createdDateTime: new Date(),
+                                    //   dateinvent: new Date()
+                                    // };
+                                    // await this.inventbatchDAO.save(batches.inventbatch);
+                                }
+                                // await this.inventTransDAO.save(batches);
+                                item.batch.push({
+                                    batchNo: batches.batchNo,
+                                    quantity: batches.quantity,
+                                });
+                                this.updateInventoryService.sessionInfo = this.sessionInfo;
+                                promiseList.push(this.updateInventoryService.updateInventtransTable(batches));
                             }
-                            // await this.inventTransDAO.save(batches);
-                            item.batch.push({
-                                batchNo: batches.batchNo,
-                                quantity: batches.quantity,
-                            });
-                            this.updateInventoryService.sessionInfo = this.sessionInfo;
-                            promiseList.push(this.updateInventoryService.updateInventtransTable(batches));
                         }
                         return [3 /*break*/, 5];
                     case 3: return [4 /*yield*/, this.inventTransDAO.findAll({
@@ -2747,7 +2748,7 @@ var SalesTableService = /** @class */ (function () {
                         _a.trys.push([0, 5, , 6]);
                         console.log(item);
                         if (!item.inventlocationid) return [3 /*break*/, 3];
-                        query = " select st.salesid ,st.salesname,st.painter,\n        ct.namealias as \"customerNameEn\",ct.name as \"customerNameAr\",\n        st.netamount as amount,st.lastmodifieddate\n        from salestable  st \n        inner join custtable ct on\n        ct.accountnum =st.invoiceaccount \n        where st.transkind ='SALESORDER'\n                       and st.inventlocationid ='" + item.inventlocationid + "'\n                       order by st.lastmodifieddate desc;;\n        ";
+                        query = " select st.salesid ,st.salesname,st.painter,\n        ct.namealias as \"customerNameEn\",ct.name as \"customerNameAr\",\n        st.netamount as amount,st.lastmodifieddate\n        from salestable  st \n        inner join custtable ct on\n        ct.accountnum =st.invoiceaccount \n        where st.transkind ='SALESORDER'\n                       and st.inventlocationid ='" + item.inventlocationid + "'\n                       and  COALESCE(st.painter, '') != '' \n                       order by st.lastmodifieddate desc;;\n        ";
                         return [4 /*yield*/, this.salestableDAO.getDAO().query(query)];
                     case 1:
                         data_1 = _a.sent();

@@ -590,6 +590,7 @@ var SalestargetService = /** @class */ (function () {
                             .createQueryBuilder("salestable")
                             .select("SUM(salestable.netamount :: float)", "sum")
                             .andWhere("salestable.transkind IN (:...transkind)", { transkind: ["SALESORDER"] })
+                            // .andWhere("salestable.transkind IN (:...transkind)", { transkind: ["SALESORDER","DESIGNERSERVICE"] })
                             .andWhere("salestable.status IN (:...status)", { status: ["PAID", "POSTED"] })
                             .andWhere("salestable.inventlocationid = :inventlocationid", data)
                             .andWhere(new typeorm_1.Brackets(function (qb) {
