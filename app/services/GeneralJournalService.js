@@ -59,12 +59,12 @@ var GeneralJournalService = /** @class */ (function () {
                         return [4 /*yield*/, this.generalJournalDAO.entity(id)];
                     case 1:
                         data = _a.sent();
+                        if (!data) return [3 /*break*/, 3];
                         data.status = data.posted == 0 ? "OPEN" : "POSTED";
                         data.createdDatetime = data.createdDatetime ? data.createdDatetime.toLocaleDateString() : data.createdDatetime;
                         data.lastModifiedDate = data.lastModifiedDate
                             ? data.lastModifiedDate.toLocaleDateString()
                             : data.lastModifiedDate;
-                        if (!data) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.legerJournalTrasDAO.search({ journalNum: id })];
                     case 2:
                         legerJournalTras = _a.sent();
@@ -116,105 +116,108 @@ var GeneralJournalService = /** @class */ (function () {
     };
     GeneralJournalService.prototype.save = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var cond, account, lineData, ledgerTransData, legerJournalTras, _i, _a, item, legderData, deleteData, ledgerTrasfer, error_3;
+            var cond, userGroupData_1, account, lineData, ledgerTransData, legerJournalTras, _i, _a, item, legderData, deleteData, ledgerTrasfer;
             var _this = this;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0:
-                        _b.trys.push([0, 14, , 15]);
-                        return [4 /*yield*/, this.validate(reqData)];
+                    case 0: return [4 /*yield*/, this.validate(reqData)];
                     case 1:
                         cond = _b.sent();
-                        if (!(cond == true)) return [3 /*break*/, 13];
+                        if (!(cond == true)) return [3 /*break*/, 14];
                         console.log(this.sessionInfo);
                         reqData.dataareaid = this.sessionInfo.dataareaid;
-                        return [4 /*yield*/, this.generalJournalDAO.save(reqData)];
+                        return [4 /*yield*/, this.usergroupconfigDAO.entity(this.sessionInfo.usergroupconfigid)];
                     case 2:
+                        userGroupData_1 = _b.sent();
+                        reqData.journalName = userGroupData_1.journalnameid;
+                        return [4 /*yield*/, this.generalJournalDAO.save(reqData)];
+                    case 3:
                         account = _b.sent();
                         return [4 /*yield*/, this.legerJournalTrasDAO.findAll({ journalNum: reqData.journalNum })];
-                    case 3:
-                        lineData = _b.sent();
-                        if (!lineData) return [3 /*break*/, 5];
-                        return [4 /*yield*/, this.legerJournalTrasDAO.delete(lineData)];
                     case 4:
-                        _b.sent();
-                        _b.label = 5;
+                        lineData = _b.sent();
+                        if (!lineData) return [3 /*break*/, 6];
+                        return [4 /*yield*/, this.legerJournalTrasDAO.delete(lineData)];
                     case 5:
+                        _b.sent();
+                        _b.label = 6;
+                    case 6:
                         ledgerTransData = [];
                         reqData.legerJournalTras.map(function (item) {
                             item.journalNum = reqData.journalNum;
+                            item.region = userGroupData_1.regionId;
+                            item.department = userGroupData_1.departmentid;
+                            item.costcenter = userGroupData_1.costCenterId;
+                            item.employee = userGroupData_1.employeeid;
+                            item.project = userGroupData_1.projectid;
+                            item.salesman = userGroupData_1.salesmanid;
+                            item.brand = userGroupData_1.brandid;
+                            item.productline = userGroupData_1.productlineid;
                             item.dataareaid = _this.sessionInfo.dataareaid;
+                            item.currencyCode = userGroupData_1.currencycode;
                             item.modifiedDateTime = new Date(App_1.App.DateNow());
                             item.lastModifiedBy = _this.sessionInfo.userName;
                             item.lastModifiedDate = new Date(App_1.App.DateNow());
                         });
                         return [4 /*yield*/, this.legerJournalTrasDAO.save(reqData.legerJournalTras)];
-                    case 6:
+                    case 7:
                         legerJournalTras = _b.sent();
                         _i = 0, _a = reqData.legerJournalTras;
-                        _b.label = 7;
-                    case 7:
-                        if (!(_i < _a.length)) return [3 /*break*/, 11];
+                        _b.label = 8;
+                    case 8:
+                        if (!(_i < _a.length)) return [3 /*break*/, 12];
                         item = _a[_i];
                         legderData = {
-                            accountNum: item.accountNumber.accountNum,
+                            accountNum: item.accountNum,
                             transDate: item.transdDate,
                             txt: item.txt,
-                            region: item.region,
-                            department: item.department,
-                            costcenter: item.costcenter,
-                            employee: item.employee,
-                            project: item.project,
-                            salesman: item.salesman,
-                            brand: item.brand,
-                            productline: item.productline,
-                            journalNum: item.journalNum,
+                            region: userGroupData_1.regionId,
+                            department: userGroupData_1.departmentid,
+                            costcenter: userGroupData_1.costCenterId,
+                            employee: userGroupData_1.employeeid,
+                            project: userGroupData_1.projectid,
+                            salesman: userGroupData_1.salesmanid,
+                            brand: userGroupData_1.brandid,
+                            productline: userGroupData_1.productlineid,
+                            journalNum: userGroupData_1.journalnameid,
                             modifiedDateTime: item.lastModifiedDate,
                             lastModifiedDate: item.lastModifiedDate,
                             modifiedBy: item.modifiedBy,
                             createdDateTime: item.createDateTime,
                             createdBy: this.sessionInfo.userName,
-                            currencyCode: item.currencyCode,
+                            currencyCode: userGroupData_1.currencycode,
                             amountMst: item.amountCurCredit != 0 && item.amountCurCredit ? item.amountCurCredit : -item.amountCurDebit,
                             recid: item.recid,
                             recversion: item.recversion,
-                            accountpltype: item.accounttype,
-                            dataareaid: item.dataareaid,
+                            accountpltype: item.accountType,
+                            dataareaid: userGroupData_1.dataareaid,
                         };
                         return [4 /*yield*/, this.ledgerTrasDAO.search({
-                                accountNum: item.accountNumber.accountNum,
+                                accountNum: item.accountNum,
                                 journalNum: item.journalNum,
                             })];
-                    case 8:
+                    case 9:
                         deleteData = _b.sent();
                         return [4 /*yield*/, this.ledgerTrasDAO.delete(deleteData)];
-                    case 9:
+                    case 10:
                         _b.sent();
                         ledgerTransData.push(legderData);
-                        _b.label = 10;
-                    case 10:
+                        _b.label = 11;
+                    case 11:
                         _i++;
-                        return [3 /*break*/, 7];
-                    case 11: return [4 /*yield*/, this.ledgerTrasDAO.save(ledgerTransData)];
-                    case 12:
+                        return [3 /*break*/, 8];
+                    case 12: return [4 /*yield*/, this.ledgerTrasDAO.save(ledgerTransData)];
+                    case 13:
                         ledgerTrasfer = _b.sent();
                         return [2 /*return*/, { id: reqData.journalNum, message: "SAVED_SUCCESSFULLY" }];
-                    case 13:
-                        if (cond == "journalNum") {
-                            throw { message: "RECORD_ALREADY_EXISTS" };
-                        }
-                        return [3 /*break*/, 15];
-                    case 14:
-                        error_3 = _b.sent();
-                        throw { message: "SERVER_SIDE_ERROR" };
-                    case 15: return [2 /*return*/];
+                    case 14: return [2 /*return*/];
                 }
             });
         });
     };
     GeneralJournalService.prototype.getaccountNum = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var usergroupconfig, data, seqNum, prevYear, year, hashString, salesId, error_4;
+            var usergroupconfig, data, seqNum, prevYear, year, hashString, salesId, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -244,9 +247,9 @@ var GeneralJournalService = /** @class */ (function () {
                     case 4: throw { message: "CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE" };
                     case 5: return [3 /*break*/, 7];
                     case 6:
-                        error_4 = _a.sent();
-                        if (error_4 == {}) {
-                            error_4 = { message: "TECHNICAL_ISSUE,_PLEASE_CONTACT_YOUR_TECHNICAL_TEAM" };
+                        error_3 = _a.sent();
+                        if (error_3 == {}) {
+                            error_3 = { message: "TECHNICAL_ISSUE,_PLEASE_CONTACT_YOUR_TECHNICAL_TEAM" };
                         }
                         else {
                             throw { message: "SERVER_SIDE_ERROR" };
@@ -316,7 +319,7 @@ var GeneralJournalService = /** @class */ (function () {
     };
     GeneralJournalService.prototype.delete = function (id) {
         return __awaiter(this, void 0, void 0, function () {
-            var entity, error_5;
+            var entity, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -336,8 +339,8 @@ var GeneralJournalService = /** @class */ (function () {
                         _a.sent();
                         return [2 /*return*/, { id: entity.journalNum, message: "REMOVED" }];
                     case 3:
-                        error_5 = _a.sent();
-                        throw error_5;
+                        error_4 = _a.sent();
+                        throw error_4;
                     case 4: return [2 /*return*/];
                 }
             });

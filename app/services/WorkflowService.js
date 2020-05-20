@@ -108,7 +108,7 @@ var WorkflowService = /** @class */ (function () {
     WorkflowService.prototype.save = function (item, type) {
         if (type === void 0) { type = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var status_1, workflowcondition, usergroupid, salesData, RM_AND_RA, data, error_3;
+            var status_1, workflowcondition, usergroupid, salesData, RM_AND_RA, data, salesTableData, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -264,7 +264,7 @@ var WorkflowService = /** @class */ (function () {
                         salesData.lastModifiedDate = new Date(App_1.App.DateNow());
                         return [4 /*yield*/, this.salesTableDAO.save(salesData)];
                     case 19:
-                        _a.sent();
+                        salesTableData = _a.sent();
                         return [2 /*return*/, { id: item.id, status: status_1, message: "SAVED_SUCCESSFULLY" }];
                     case 20: throw { message: "INVALID_DATA" };
                     case 21: return [3 /*break*/, 23];

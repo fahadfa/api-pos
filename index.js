@@ -55,6 +55,7 @@ var Log_1 = require("./utils/Log");
 var http = require("http");
 var Store_1 = require("./utils/Store");
 var port = 5000;
+var ENV_STORE_ID = process.env ? process.env.ENV_STORE_ID : null;
 var count = 0;
 Config.setEnvConfig();
 var conn = null;
@@ -86,11 +87,13 @@ var run = function () { return __awaiter(_this, void 0, void 0, function () {
                     //   });
                     // });
                     express.use("/api", function (req, res, next) {
-                        var diff = syncTimeDiff();
-                        Log_1.log.warn("sync Time Diff:", diff);
-                        if (diff > 30) {
-                            Log_1.log.error("----->: sync time start : " + diff);
-                            sync();
+                        if (ENV_STORE_ID) {
+                            var diff = syncTimeDiff();
+                            Log_1.log.warn("sync Time Diff:", diff);
+                            if (diff > 3) {
+                                Log_1.log.error("----->: sync time start : " + diff);
+                                sync();
+                            }
                         }
                         next();
                     });
@@ -146,22 +149,12 @@ var syncTimeDiff = function () {
     }
 };
 try {
-    var cron = require("node-cron");
-    var lastSyncDate = null;
-    var diff = null;
-    Store_1.StoreInIt();
-    sync();
-    // cron.schedule("*/10 * * * *", () => {
-    //   lastSyncDate = getItem("syncdate", "index -> cron");
-    //   log.warn(lastSyncDate);
-    //   lastSyncDate = new Date(lastSyncDate);
-    //   diff = (new Date().getTime() - lastSyncDate.getTime()) / 60000;
-    //   log.warn("----->: sync time diff : " + diff);
-    //   if (diff > 60) {
-    //     log.error("----->: sync time start : " + diff);
-    //     sync();
-    //   }
-    // });
+    if (ENV_STORE_ID) {
+        var lastSyncDate = null;
+        var diff = null;
+        Store_1.StoreInIt();
+        sync();
+    }
 }
 catch (error) {
     Log_1.log.error("Sync Error");
