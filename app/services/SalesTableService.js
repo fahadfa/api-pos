@@ -1580,10 +1580,10 @@ var SalesTableService = /** @class */ (function () {
                     case 0:
                         redeemData = {
                             TransactionId: reqData.salesId,
-                            MobileNo: reqData.mobileNo,
+                            MobileNo: reqData.mobileNo.length == 9 ? "0" + reqData.mobileNo : reqData.mobileNo,
                             InvoiceNo: reqData.salesId,
                             InvoiceAmount: reqData.netAmount,
-                            RedeemPoints: reqData.redeempts,
+                            RedeemPoints: reqData.redeemPoints,
                             SyncStatus: 0,
                             InventLocationId: this.sessionInfo.inventlocationid,
                             LoyaltyStatus: 0,
@@ -1706,6 +1706,7 @@ var SalesTableService = /** @class */ (function () {
                         if (reqData.designServiceRedeemAmount > 0) {
                             promiseList.push(this.saveSalesOrderDesignerService(reqData));
                         }
+                        promiseList.push(this.saveSalesOrderRedeem(reqData));
                         _a.label = 10;
                     case 10:
                         console.log("6---------------------------- " + reqData.paymentType + reqData.onlineAmount);

@@ -569,7 +569,8 @@ var SalestargetService = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.salestableRepository
                             .createQueryBuilder("salestable")
                             .select("SUM(salestable.netamount :: float)", "sum")
-                            .andWhere("salestable.transkind IN (:...transkind)", { transkind: ["SALESORDER"] })
+                            // .andWhere("salestable.transkind IN (:...transkind)", { transkind: ["SALESORDER"] })
+                            .andWhere("salestable.transkind IN (:...transkind)", { transkind: ["SALESORDER", "DESIGNERSERVICE"] })
                             .andWhere("salestable.status IN (:...status)", { status: ["PAID", "POSTED"] })
                             .andWhere("salestable.lastmodifieddate ::date = :lastmodifieddate", date)
                             .andWhere("salestable.inventlocationid = :inventlocationid", data)
@@ -589,8 +590,8 @@ var SalestargetService = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.salestableRepository
                             .createQueryBuilder("salestable")
                             .select("SUM(salestable.netamount :: float)", "sum")
-                            .andWhere("salestable.transkind IN (:...transkind)", { transkind: ["SALESORDER"] })
-                            // .andWhere("salestable.transkind IN (:...transkind)", { transkind: ["SALESORDER","DESIGNERSERVICE"] })
+                            // .andWhere("salestable.transkind IN (:...transkind)", { transkind: ["SALESORDER"] })
+                            .andWhere("salestable.transkind IN (:...transkind)", { transkind: ["SALESORDER", "DESIGNERSERVICE"] })
                             .andWhere("salestable.status IN (:...status)", { status: ["PAID", "POSTED"] })
                             .andWhere("salestable.inventlocationid = :inventlocationid", data)
                             .andWhere(new typeorm_1.Brackets(function (qb) {
