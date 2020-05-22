@@ -41,21 +41,14 @@ var GeneralJournalDAO = /** @class */ (function () {
     function GeneralJournalDAO() {
         this.dao = typeorm_1.getRepository(GeneralJournal_1.GeneralJournal);
     }
-    GeneralJournalDAO.prototype.search = function (data) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.dao
-                            .createQueryBuilder("ledgerjournaltable")
-                            .where(data)
-                            .andWhere("ledgerjournaltable.deleted=false or ledgerjournaltable.deleted is NULL")
-                            .orderBy("ledgerjournaltable.lastModifiedDate", "DESC")
-                            .getMany()];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
+    //   async search(data: any) {
+    //     return await this.dao
+    //       .createQueryBuilder(`ledgerjournaltable`)
+    //       .where(data)
+    //       .andWhere(`ledgerjournaltable.deleted=false or ledgerjournaltable.deleted is NULL`)
+    //       .orderBy(`ledgerjournaltable.lastModifiedDate`, `DESC`)
+    //       .getMany();
+    //   }
     GeneralJournalDAO.prototype.save = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -66,13 +59,25 @@ var GeneralJournalDAO = /** @class */ (function () {
             });
         });
     };
-    GeneralJournalDAO.prototype.entity = function (journalNum) {
+    // async entity(journalNum: string) {
+    //     return await this.dao.findOne(journalNum);
+    // }
+    GeneralJournalDAO.prototype.entity = function (id) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.dao.findOne(journalNum)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
+                return [2 /*return*/, this.dao.findOne(id, {
+                        relations: ["legerJournalTras"],
+                    })];
+            });
+        });
+    };
+    GeneralJournalDAO.prototype.search = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.dao.find({
+                        relations: ["legerJournalTras"],
+                        where: data,
+                    })];
             });
         });
     };

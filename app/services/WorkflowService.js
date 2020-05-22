@@ -143,13 +143,23 @@ var WorkflowService = /** @class */ (function () {
                     case 6:
                         _a.sent();
                         if (!(salesData.transkind == "RETURNORDER")) return [3 /*break*/, 7];
-                        // if (workflowcondition.returnorderrmapprovalrequired) {
-                        item.statusId = Props_1.Props.WORKFLOW_STATUSID.PENDINGRMAPPROVAL[0];
-                        if (RM_AND_RA.rm && RM_AND_RA.rm != "") {
-                            item.pendingWith = RM_AND_RA.rm;
+                        if (salesData.designServiceRedeemAmount > 0) {
+                            item.statusId = Props_1.Props.WORKFLOW_STATUSID.PENDINGINGFORDESIGNERAPPROVAL[0];
+                            if (RM_AND_RA.designer_signing_authority && RM_AND_RA.designer_signing_authority != "") {
+                                item.pendingWith = RM_AND_RA.designer_signing_authority;
+                            }
+                            else {
+                                throw { message: "NO_DESIGNER_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT" };
+                            }
                         }
                         else {
-                            throw { message: "NO_RM_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
+                            item.statusId = Props_1.Props.WORKFLOW_STATUSID.PENDINGRMAPPROVAL[0];
+                            if (RM_AND_RA.rm && RM_AND_RA.rm != "") {
+                                item.pendingWith = RM_AND_RA.rm;
+                            }
+                            else {
+                                throw { message: "NO_RM_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
+                            }
                         }
                         return [3 /*break*/, 14];
                     case 7:
@@ -210,17 +220,12 @@ var WorkflowService = /** @class */ (function () {
                             if (item.statusId == Props_1.Props.WORKFLOW_STATUSID.PENDINGRMAPPROVAL[0] ||
                                 item.statusId == Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYDESIGNER[0]) {
                                 item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRM[0];
-                                if (salesData.transkind == "RETURNORDER") {
-                                    item.pendingWith = null;
+                                if (RM_AND_RA.ra) {
+                                    console.log(RM_AND_RA);
+                                    item.pendingWith = RM_AND_RA.ra;
                                 }
                                 else {
-                                    if (RM_AND_RA.ra) {
-                                        console.log(RM_AND_RA);
-                                        item.pendingWith = RM_AND_RA.ra;
-                                    }
-                                    else {
-                                        throw { message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
-                                    }
+                                    throw { message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
                                 }
                             }
                             else if (item.statusId == Props_1.Props.WORKFLOW_STATUSID.PENDINGRAAPPROVAL[0] ||
@@ -265,7 +270,7 @@ var WorkflowService = /** @class */ (function () {
                         return [4 /*yield*/, this.salesTableDAO.save(salesData)];
                     case 19:
                         salesTableData = _a.sent();
-                        return [2 /*return*/, { id: item.id, status: status_1, message: "SAVED_SUCCESSFULLY" }];
+                        return [2 /*return*/, { id: item.id, status: item.statusId, message: "SAVED_SUCCESSFULLY" }];
                     case 20: throw { message: "INVALID_DATA" };
                     case 21: return [3 /*break*/, 23];
                     case 22:

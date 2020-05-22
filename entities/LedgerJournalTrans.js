@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
+var GeneralJournal_1 = require("../entities/GeneralJournal");
 var LedgerJournalTrans = /** @class */ (function () {
     function LedgerJournalTrans() {
     }
@@ -28,7 +29,7 @@ var LedgerJournalTrans = /** @class */ (function () {
     __decorate([
         typeorm_1.Column({ name: "accounttype" }),
         __metadata("design:type", Number)
-    ], LedgerJournalTrans.prototype, "accounttype", void 0);
+    ], LedgerJournalTrans.prototype, "accountType", void 0);
     __decorate([
         typeorm_1.Column({ name: "accountnum" }),
         __metadata("design:type", String)
@@ -137,6 +138,11 @@ var LedgerJournalTrans = /** @class */ (function () {
         typeorm_1.Column({ name: "dimension8_" }),
         __metadata("design:type", String)
     ], LedgerJournalTrans.prototype, "productline", void 0);
+    __decorate([
+        typeorm_1.JoinColumn({ name: "journalnum" }),
+        typeorm_1.ManyToOne(function (type) { return GeneralJournal_1.GeneralJournal; }),
+        __metadata("design:type", GeneralJournal_1.GeneralJournal)
+    ], LedgerJournalTrans.prototype, "generalJournal", void 0);
     LedgerJournalTrans = __decorate([
         typeorm_1.Entity("ledgerjournaltrans")
     ], LedgerJournalTrans);

@@ -72,7 +72,7 @@ var OrderReceiveReport = /** @class */ (function () {
                             data_1.quantity += parseInt(v.salesQty);
                         });
                         if (!(data_1.status != "POSTED")) return [3 /*break*/, 4];
-                        this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED");
+                        this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED", new Date().toISOString());
                         return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
                     case 3:
                         batches = _a.sent();

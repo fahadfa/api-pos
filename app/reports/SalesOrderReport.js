@@ -79,7 +79,7 @@ var SalesOrderReport = /** @class */ (function () {
                         if (data_1.status != "RESERVED") {
                             data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
                             if (data_1.status != "POSTED") {
-                                this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED");
+                                this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "PAID", new Date().toISOString());
                             }
                         }
                         return [4 /*yield*/, this.salesline_query_to_data(id)];

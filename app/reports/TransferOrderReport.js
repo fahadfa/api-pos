@@ -71,7 +71,7 @@ var TransferOrderReport = /** @class */ (function () {
                         console.log(shipOrderData);
                         // shipOrderData = shipOrderData.length > 0 ? shipOrderData[0] : null
                         if (data_1.status != "POSTED" && shipOrderData.length != 0) {
-                            this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED");
+                            this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED", new Date().toISOString());
                         }
                         return [4 /*yield*/, this.salesline_query_to_data(id)];
                     case 3:

@@ -1494,16 +1494,22 @@ var LoadService = /** @class */ (function () {
                     case 2:
                         product = _a.sent();
                         product = product.length > 0 ? product[0] : {};
-                        console.log(product);
-                        isBase = false;
+                        console.log(product.citbaseproduct, product.itemid);
+                        isBase = true;
+                        if (product.citbaseproduct == product.itemid) {
+                            isBase = false;
+                        }
+                        console.log(isBase);
                         isBase =
                             data.nocolorantcheckgroup.includes(product.itemgroupid) ||
                                 data.blocklistedbasecolor.includes(product.citgroupid)
                                 ? false
-                                : true;
+                                : isBase;
+                        console.log(isBase);
                         if (data.specialproductsforcolorantoption.includes(product.itemid)) {
                             isBase = true;
                         }
+                        console.log(isBase);
                         data.isBase = isBase;
                         _a.label = 3;
                     case 3: return [2 /*return*/, data];

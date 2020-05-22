@@ -131,13 +131,18 @@ var RawQuery = /** @class */ (function () {
             });
         });
     };
-    RawQuery.prototype.updateSalesTable = function (salesId, status) {
+    RawQuery.prototype.updateSalesTable = function (salesId, status, date) {
+        if (date === void 0) { date = null; }
         return __awaiter(this, void 0, void 0, function () {
             var query, data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "UPDATE salestable\n        SET originalprinted = '" + true + "',\n        status = '" + status + "',\n        lastmodifieddate = '" + new Date().toISOString() + "'\n        WHERE salesid = '" + salesId + "'";
+                        query = "UPDATE salestable\n        SET originalprinted = '" + true + "',\n        status = '" + status + "'";
+                        if (date) {
+                            query += "\n      ,lastmodifieddate = '" + date + "' ";
+                        }
+                        query += " WHERE salesid = '" + salesId + "'";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
@@ -853,7 +858,7 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "\n                    select distinct d.invoiceid, d.customerid, \n                    cast(coalesce(d.balanceamount, 0) as Decimal(10,2)) as \"balanceAmount\", \n                    cast(coalesce(d.usedamount, 0) as Decimal(10,2)) as \"usedAmount\", \n                    cast((coalesce(d.balanceamount, 0)+ coalesce(d.usedamount, 0)) as Decimal(10,2)) as \"designerserviceAmount\" from (select \n                    a.invoiceid, \n                    a.customerid,\n                    a.custphone,\n                    (select ABS(sum(b.amount)) from designerservice b where b.invoiceid=a.invoiceid and b.customerid = a.customerid and b.custphone= a.custphone group by b.invoiceid, b.customerid, b.custphone ) as balanceamount,\n                    (select ABS(sum(c.amount)) from designerservice c where c.amount < 0 and c.invoiceid=a.invoiceid and c.customerid = a.customerid and c.custphone = a.custphone group by c.invoiceid, c.customerid, c.custphone) as usedamount\n                    from designerservice a where a.customerid = '" + customerid + "' and a.custphone = '" + mobileno + "')  as d where d.balanceamount > 0\n                    ";
+                        query = "\n                select distinct d.invoiceid, d.customerid, \n                cast(coalesce(d.balanceamount, 0) as Decimal(10,2)) as \"balanceAmount\", \n                cast((coalesce(d.designerserviceamount, 0) - coalesce(d.balanceamount, 0)) as Decimal(10,2)) as \"usedAmount\", \n                cast(coalesce(d.designerserviceamount, 0) as Decimal(10,2)) as \"designerserviceAmount\" from \n                (\n                select \n                a.invoiceid, \n                a.customerid,\n                a.custphone,\n                (select ABS(sum(b.amount)) from designerservice b where b.invoiceid=a.invoiceid and b.customerid = a.customerid and b.custphone= a.custphone group by b.invoiceid, b.customerid, b.custphone ) \n                as balanceamount,\n                (select ABS(sum(e.amount)) from designerservice e where e.amount > 0 and e.salesorderid is null and e.invoiceid=a.invoiceid and e.customerid = a.customerid and e.custphone = a.custphone group by e.invoiceid, e.customerid, e.custphone)\n                as designerserviceamount\n                from designerservice a where a.customerid = '" + customerid + "' and a.custphone = '" + mobileno + "')  as d where d.balanceamount > 0\n                    ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }

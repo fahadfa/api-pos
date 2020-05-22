@@ -55,36 +55,37 @@ var GeneralJournalService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
+                        _a.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, this.generalJournalDAO.entity(id)];
                     case 1:
                         data = _a.sent();
-                        if (!data) return [3 /*break*/, 3];
-                        data.status = data.posted == 0 ? "OPEN" : "POSTED";
-                        data.createdDatetime = data.createdDatetime ? data.createdDatetime.toLocaleDateString() : data.createdDatetime;
-                        data.lastModifiedDate = data.lastModifiedDate
-                            ? data.lastModifiedDate.toLocaleDateString()
-                            : data.lastModifiedDate;
-                        return [4 /*yield*/, this.legerJournalTrasDAO.search({ journalNum: id })];
+                        if (data) {
+                            data.status = data.posted == 0 ? "OPEN" : "POSTED";
+                            data.createdDatetime = data.createdDatetime ? data.createdDatetime.toLocaleDateString() : data.createdDatetime;
+                            data.lastModifiedDate = data.lastModifiedDate
+                                ? data.lastModifiedDate.toLocaleDateString()
+                                : data.lastModifiedDate;
+                            legerJournalTras = data.legerJournalTras;
+                            legerJournalTras.map(function (ele) {
+                                ele.createDateTime = ele.createDateTime ? ele.createDateTime.toISOString().substr(0, 10) : ele.createDateTime;
+                                ele.lastModifiedDate = ele.lastModifiedDate
+                                    ? ele.lastModifiedDate.toISOString().substr(0, 10)
+                                    : ele.lastModifiedDate;
+                                ele.transdDate = ele.transdDate ? ele.transdDate.toISOString().substr(0, 10) : ele.transdDate;
+                                ele.amountCurCredit = Math.ceil(ele.amountCurCredit);
+                                ele.amountCurDebit = Math.ceil(ele.amountCurDebit);
+                            });
+                            data.legerJournalTras = legerJournalTras;
+                            return [2 /*return*/, data];
+                        }
+                        else {
+                            throw { message: "RECORD_NOT_FOUND" };
+                        }
+                        return [3 /*break*/, 3];
                     case 2:
-                        legerJournalTras = _a.sent();
-                        legerJournalTras.map(function (ele) {
-                            ele.createDateTime = ele.createDateTime ? ele.createDateTime.toISOString().substr(0, 10) : ele.createDateTime;
-                            ele.lastModifiedDate = ele.lastModifiedDate
-                                ? ele.lastModifiedDate.toISOString().substr(0, 10)
-                                : ele.lastModifiedDate;
-                            ele.transdDate = ele.transdDate ? ele.transdDate.toISOString().substr(0, 10) : ele.transdDate;
-                            ele.amountCurCredit = Math.ceil(ele.amountCurCredit);
-                            ele.amountCurDebit = Math.ceil(ele.amountCurDebit);
-                        });
-                        data.legerJournalTras = legerJournalTras;
-                        return [2 /*return*/, data];
-                    case 3: throw { message: "RECORD_NOT_FOUND" };
-                    case 4: return [3 /*break*/, 6];
-                    case 5:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 6: return [2 /*return*/];
+                    case 3: return [2 /*return*/];
                 }
             });
         });

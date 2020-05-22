@@ -88,7 +88,7 @@ var QuotationReport = /** @class */ (function () {
                     case 7:
                         if (!(data_1.originalPrinted == false && data_1.status == "CREATED")) return [3 /*break*/, 9];
                         status_1 = "POSTED";
-                        return [4 /*yield*/, this.rawQuery.updateSalesTable(id.toUpperCase(), status_1)];
+                        return [4 /*yield*/, this.rawQuery.updateSalesTable(id.toUpperCase(), status_1, new Date().toISOString())];
                     case 8:
                         _a.sent();
                         data_1.isCopy = true;

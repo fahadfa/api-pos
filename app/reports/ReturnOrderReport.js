@@ -52,11 +52,13 @@ var RawQuery_1 = require("../common/RawQuery");
 var InventTransDAO_1 = require("../repos/InventTransDAO");
 var UpdateInventoryService_1 = require("../services/UpdateInventoryService");
 var SalesLineDAO_1 = require("../repos/SalesLineDAO");
+var DesignerserviceRepository_1 = require("../repos/DesignerserviceRepository");
 var ReturnOrderReport = /** @class */ (function () {
     function ReturnOrderReport() {
         this.db = typeorm_1.getManager();
         this.rawQuery = new RawQuery_1.RawQuery();
         this.inventTransDAO = new InventTransDAO_1.InventorytransDAO();
+        this.designerServiceDAO = new DesignerserviceRepository_1.DesignerserviceRepository();
         this.updateInventoryService = new UpdateInventoryService_1.UpdateInventoryService();
         this.salesLineDAO = new SalesLineDAO_1.SalesLineDAO();
     }
@@ -66,18 +68,19 @@ var ReturnOrderReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 7, , 8]);
+                        _a.trys.push([0, 9, , 10]);
                         return [4 /*yield*/, this.query_to_data(params)];
                     case 1:
                         data_1 = _a.sent();
-                        data_1[0].originalPrinted = data_1[0].originalPrinted == null ? false : data_1[0].originalPrinted;
-                        data_1[0].vatAmount = Math.round(parseFloat((data_1[0].vatAmount * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2);
-                        data_1[0].ReturnDate = new Date(data_1[0].ReturnDate).toLocaleDateString();
-                        if (data_1[0].originalPrinted) {
-                            data_1[0].isCopy = true;
+                        data_1 = data_1.length > 0 ? data_1[0] : {};
+                        data_1.originalPrinted = data_1.originalPrinted == null ? false : data_1.originalPrinted;
+                        data_1.vatAmount = Math.round(parseFloat((data_1.vatAmount * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2);
+                        data_1.ReturnDate = new Date(data_1.ReturnDate).toLocaleDateString();
+                        if (data_1.originalPrinted) {
+                            data_1.isCopy = true;
                         }
                         else {
-                            data_1[0].isCopy = false;
+                            data_1.isCopy = false;
                         }
                         return [4 /*yield*/, this.batches_data_to_query(params)];
                     case 2:
@@ -102,12 +105,14 @@ var ReturnOrderReport = /** @class */ (function () {
                                 Math.round(parseFloat((element.lineAmount * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2);
                             i_1++;
                         });
-                        data_1[0].batches = new_data_1;
+                        data_1.batches = new_data_1;
                         this.db.query(" update inventtrans set transactionclosed = true where invoiceid='" + params.salesId + "'");
-                        if (!(data_1[0].status != "POSTED")) return [3 /*break*/, 5];
-                        this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED");
-                        return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 7];
+                        return [4 /*yield*/, this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED", new Date().toISOString())];
                     case 3:
+                        _a.sent();
+                        return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
+                    case 4:
                         batches_2 = _a.sent();
                         for (_i = 0, batches_1 = batches_2; _i < batches_1.length; _i++) {
                             item = batches_1[_i];
@@ -116,11 +121,15 @@ var ReturnOrderReport = /** @class */ (function () {
                             this.updateInventoryService.updateInventtransTable(item);
                         }
                         return [4 /*yield*/, this.updateSalesLineData(params.salesId)];
-                    case 4:
+                    case 5:
                         _a.sent();
-                        _a.label = 5;
-                    case 5: return [4 /*yield*/, this.salesline_query_to_data(params)];
+                        if (!(data_1.designServiceRedeemAmount > 0)) return [3 /*break*/, 7];
+                        return [4 /*yield*/, this.updateDesignerServiceForCustomer(data_1)];
                     case 6:
+                        _a.sent();
+                        _a.label = 7;
+                    case 7: return [4 /*yield*/, this.salesline_query_to_data(params)];
+                    case 8:
                         salesLine = _a.sent();
                         sNo_1 = 1;
                         salesLine.map(function (val) {
@@ -128,7 +137,6 @@ var ReturnOrderReport = /** @class */ (function () {
                             sNo_1 += 1;
                         });
                         //--------------------End-------------------//
-                        data_1 = data_1.length > 0 ? data_1[0] : {};
                         data_1.salesLine = salesLine;
                         data_1.quantity = 0;
                         data_1.salesLine.map(function (v) {
@@ -136,10 +144,10 @@ var ReturnOrderReport = /** @class */ (function () {
                         });
                         // console.log(data);
                         return [2 /*return*/, data_1];
-                    case 7:
+                    case 9:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 8: return [2 /*return*/];
+                    case 10: return [2 /*return*/];
                 }
             });
         });
@@ -202,6 +210,40 @@ var ReturnOrderReport = /** @class */ (function () {
             });
         });
     };
+    ReturnOrderReport.prototype.updateDesignerServiceForCustomer = function (reqData) {
+        return __awaiter(this, void 0, void 0, function () {
+            var designerData, designerServiceData;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.db.query(" select * from designerservice where salesorderid = '" + reqData.salesOrderId + "' ")];
+                    case 1:
+                        designerData = _a.sent();
+                        designerData = designerData.length > 0 ? designerData[0] : {};
+                        designerServiceData = {
+                            custphone: reqData.phone,
+                            amount: reqData.designServiceRedeemAmount,
+                            invoiceid: designerData.invoiceid,
+                            salesorderid: reqData.salesId,
+                            dataareaid: reqData.dataareaid,
+                            recordtype: 0,
+                            settle: 0,
+                            selectedforsettle: 0,
+                            createdby: reqData.createdBy,
+                            createddatetime: new Date(App_1.App.DateNow()),
+                            lastmodifiedby: reqData.createdBy,
+                            lastmodifieddate: new Date(App_1.App.DateNow()),
+                            customer: {
+                                accountnum: reqData.invoiceAccount,
+                            },
+                        };
+                        return [4 /*yield*/, this.designerServiceDAO.save(designerServiceData)];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     ReturnOrderReport.prototype.report = function (result, params) {
         return __awaiter(this, void 0, void 0, function () {
             var renderData, file;
@@ -224,7 +266,7 @@ var ReturnOrderReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "\n            select \n                distinct\n                s.salesid as \"salesId\",\n                s.inventlocationid as \"fromWareHouse\",\n                s.custaccount as \"custaccount\",\n                s.createddatetime as \"createdDateTime\",\n                s.lastmodifieddate as \"ReturnDate\",\n                s.lastmodifieddate as \"lastModifiedDate\",\n                s.status as status,\n                als.en as \"statusEn\",\n                als.ar as \"statusAr\",\n                alt.en as \"transkindEn\",\n                alt.ar as \"transkindAr\",\n                s.salesname as name,\n                to_char(s.disc, 'FM999999999990.00')  as discount,\n                s.mobileno as phone,\n                to_char(s.amount , 'FM999999999990.00') as \"grossAmount\",\n                to_char(s.netamount, 'FM999999999990.00') as \"netAmount\",\n                to_char(s.vatamount,  'FM999999999990.00') as \"vatAmount\",\n                to_char(sl.colorantprice,  'FM999999999990.00') as \"colorantPrice\",\n\n                s.originalprinted as \"originalPrinted\",\n                s.createdby as \"createdBy\",\n                s.intercompanyoriginalsalesid as \"salesOrderId\",\n                w.name as \"wareHouseNameAr\",\n                w.namealias as \"wareHouseNameEn\",\n                d.\"description\" as salesman,\n                to_char(s.createddatetime, 'DD-MM-YYYY') as createddatetime\n                from salestable s\n                left join salesline sl on sl.salesid = s.salesid\n                left join inventlocation w on w.inventlocationid=s.inventlocationid\n                left join custtable c on c.accountnum=s.custaccount\n                left join dimensions d on d.num = s.dimension6_\n                left join app_lang als on als.id = s.status\n                left join app_lang alt on alt.id = s.transkind\n            where s.transkind = 'RETURNORDER' and s.salesid = '" + params.salesId + "' limit 1\n            ";
+                        query = "\n            select \n                distinct\n                s.salesid as \"salesId\",\n                s.inventlocationid as \"fromWareHouse\",\n                s.custaccount as \"custaccount\",\n                S.invoiceaccount as \"invoiceAccount\",\n                s.createddatetime as \"createdDateTime\",\n                s.lastmodifieddate as \"ReturnDate\",\n                s.lastmodifieddate as \"lastModifiedDate\",\n                s.status as status,\n                als.en as \"statusEn\",\n                als.ar as \"statusAr\",\n                alt.en as \"transkindEn\",\n                alt.ar as \"transkindAr\",\n                s.salesname as name,\n                to_char(s.disc, 'FM999999999990.00')  as discount,\n                s.mobileno as phone,\n                to_char(s.amount , 'FM999999999990.00') as \"grossAmount\",\n                to_char(s.netamount, 'FM999999999990.00') as \"netAmount\",\n                to_char(s.vatamount,  'FM999999999990.00') as \"vatAmount\",\n                to_char(sl.colorantprice,  'FM999999999990.00') as \"colorantPrice\",\n                s.redeemptsamt as \"redeemAmount\",\n                s.design_service_redeem_amount as \"designServiceRedeemAmount\",\n                s.originalprinted as \"originalPrinted\",\n                s.createdby as \"createdBy\",\n                s.intercompanyoriginalsalesid as \"salesOrderId\",\n                w.name as \"wareHouseNameAr\",\n                w.namealias as \"wareHouseNameEn\",\n                d.\"description\" as salesman,\n                to_char(s.createddatetime, 'DD-MM-YYYY') as createddatetime\n                from salestable s\n                left join salesline sl on sl.salesid = s.salesid\n                left join inventlocation w on w.inventlocationid=s.inventlocationid\n                left join custtable c on c.accountnum=s.custaccount\n                left join dimensions d on d.num = s.dimension6_\n                left join app_lang als on als.id = s.status\n                left join app_lang alt on alt.id = s.transkind\n            where s.transkind = 'RETURNORDER' and s.salesid = '" + params.salesId + "' limit 1\n            ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }

@@ -164,7 +164,7 @@ var AuthService = /** @class */ (function () {
                     case 1:
                         profileObj = _a.sent();
                         if (profileObj == null) {
-                            return [2 /*return*/, Promise.reject({ message: "INVALID_PASSWORD" })];
+                            return [2 /*return*/, Promise.reject({ message: "INVALID_USERNAME/PASSWORD" })];
                         }
                         else {
                             auth = false;
@@ -182,7 +182,7 @@ var AuthService = /** @class */ (function () {
                             }
                             else {
                                 return [2 /*return*/, Promise.reject({
-                                        message: "INVALID_PASSWORD"
+                                        message: "INVALID_USERNAME/PASSWORD"
                                     })];
                             }
                         }

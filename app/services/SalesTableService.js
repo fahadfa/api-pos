@@ -121,6 +121,7 @@ var SalesTableService = /** @class */ (function () {
                         data.originalPrinted = data.originalPrinted ? data.originalPrinted : false;
                         data.deleted = data.deleted ? data.deleted : false;
                         data.designServiceRedeemAmount = data.designServiceRedeemAmount ? parseFloat(data.designServiceRedeemAmount) : 0;
+                        data.sendForApproval = data.designServiceRedeemAmount > 0 && data.transkind == "RETURNORDER" ? true : false;
                         data.isMovementIn = data.isMovementIn ? data.isMovementIn : false;
                         data.deleted = data.deleted ? data.deleted : false;
                         data.isCash = data.isCash ? data.isCash : false;
@@ -1159,7 +1160,7 @@ var SalesTableService = /** @class */ (function () {
                     case 1:
                         salesData = _a.sent();
                         //console.log(salesData);
-                        salesData.status = !status ? "UNRESERVED" : status;
+                        salesData.status = !status ? "SAVED" : status;
                         this.salestableDAO.save(salesData);
                         return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: id })];
                     case 2:
@@ -1636,6 +1637,7 @@ var SalesTableService = /** @class */ (function () {
                         reqData.warehouse.inventLocationId = this.sessionInfo.inventlocationid;
                         reqData.url = reqData.onlineAmount > 0 ? Props_1.Props.ECOMMERCE_PAYMENT_URL + reqData.salesId : null;
                         reqData.paymentType = "OFFLINE";
+                        reqData.status = reqData.status == "CREATED" || reqData.status == "UNRESERVED" ? "SAVED" : reqData.status;
                         console.log(reqData.lastModifiedDate.toISOString());
                         return [4 /*yield*/, this.salestableDAO.save(reqData)];
                     case 4:
@@ -1645,7 +1647,7 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.getCustomer(reqData.invoiceAccount)];
                     case 5:
                         customerRecord = _a.sent();
-                        if (reqData.status == "CREATED" || reqData.status == "CONVERTED") {
+                        if (reqData.status == "SAVED" || reqData.status == "CONVERTED") {
                             this.rawQuery.salesTableInventlocation(reqData.inventLocationId, reqData.salesId);
                         }
                         console.log("3----------------------------");

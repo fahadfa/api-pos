@@ -63,7 +63,7 @@ var MovementReport = /** @class */ (function () {
                         data_1 = data_1.length > 0 ? data_1[0] : {};
                         data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
                         if (data_1.status != "POSTED") {
-                            this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED");
+                            this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED", new Date().toISOString());
                         }
                         return [4 /*yield*/, this.salesline_query_to_data(id)];
                     case 2:

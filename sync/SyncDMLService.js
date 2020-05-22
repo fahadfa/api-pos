@@ -150,7 +150,7 @@ var SyncDMLService = /** @class */ (function () {
                     case 6:
                         error_1 = _a.sent();
                         Log_1.slog.error(error_1);
-                        return [3 /*break*/, 7];
+                        throw error_1;
                     case 7:
                         Log_1.slog.info("###########################################");
                         return [2 /*return*/];
@@ -270,7 +270,7 @@ var SyncDMLService = /** @class */ (function () {
                     case 19:
                         _a.sent();
                         Log_1.slog.warn(":::::::::::::::::::CATCH BLOCK ENDS ::::::::::::::::::::::");
-                        return [3 /*break*/, 21];
+                        throw err_2;
                     case 20: return [7 /*endfinally*/];
                     case 21: return [2 /*return*/];
                 }

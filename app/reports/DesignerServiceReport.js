@@ -62,7 +62,7 @@ var DesignerServiceReport = /** @class */ (function () {
                         data_1 = _a.sent();
                         data_1 = data_1.length >= 1 ? data_1[0] : {};
                         data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
-                        return [4 /*yield*/, this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED")];
+                        return [4 /*yield*/, this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED", new Date().toISOString())];
                     case 2:
                         _a.sent();
                         return [4 /*yield*/, this.salesline_query_to_data(id)];
