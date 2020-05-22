@@ -18,7 +18,7 @@ exports.writeFile = function (data) {
 };
 exports.readFile = function () {
     var data = fs_1.readFileSync(file, "utf8");
-    if (data && data.trim() != "") {
+    if (data && data.trim() != "" && data.includes("T")) {
         return data;
     }
     else {
