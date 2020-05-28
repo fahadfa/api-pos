@@ -43,7 +43,7 @@ var LedgerJournalTrans = /** @class */ (function () {
         __metadata("design:type", String)
     ], LedgerJournalTrans.prototype, "txt", void 0);
     __decorate([
-        typeorm_1.Column({ name: "amountcurdebit" }),
+        typeorm_1.Column({ name: "amountcurdebit", precision: 18, scale: 2 }),
         __metadata("design:type", Number)
     ], LedgerJournalTrans.prototype, "amountCurDebit", void 0);
     __decorate([
@@ -51,7 +51,7 @@ var LedgerJournalTrans = /** @class */ (function () {
         __metadata("design:type", String)
     ], LedgerJournalTrans.prototype, "currencyCode", void 0);
     __decorate([
-        typeorm_1.Column({ name: "amountcurcredit" }),
+        typeorm_1.Column({ name: "amountcurcredit", precision: 18, scale: 2 }),
         __metadata("design:type", Number)
     ], LedgerJournalTrans.prototype, "amountCurCredit", void 0);
     __decorate([

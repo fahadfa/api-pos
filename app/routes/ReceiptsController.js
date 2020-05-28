@@ -113,7 +113,7 @@ var ReceiptsController = /** @class */ (function () {
                 }
             });
         }); });
-        this.router.put("/save", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
+        this.router.put("/", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
             var reqData, result, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {

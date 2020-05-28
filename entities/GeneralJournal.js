@@ -119,6 +119,10 @@ var GeneralJournal = /** @class */ (function () {
         __metadata("design:type", String)
     ], GeneralJournal.prototype, "financialDataareaid", void 0);
     __decorate([
+        typeorm_1.Column({ name: "custaccount" }),
+        __metadata("design:type", String)
+    ], GeneralJournal.prototype, "custaccount", void 0);
+    __decorate([
         typeorm_1.OneToMany(function (type) { return LedgerJournalTrans_1.LedgerJournalTrans; }, function (legerJournalTras) { return legerJournalTras.generalJournal; }),
         __metadata("design:type", Array)
     ], GeneralJournal.prototype, "legerJournalTras", void 0);

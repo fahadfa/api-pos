@@ -35,27 +35,41 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var BankAccountTableDAO_1 = require("../repos/BankAccountTableDAO");
-var LedgerJournalTransDAO_1 = require("../repos/LedgerJournalTransDAO");
-var GeneralJournalService_1 = require("../services/GeneralJournalService");
 var typeorm_1 = require("typeorm");
-var ReceiptsService = /** @class */ (function () {
-    function ReceiptsService() {
-        this.bankAccountTableDAO = new BankAccountTableDAO_1.BankAccountTableDAO();
-        this.ledgerJournalTransDAO = new LedgerJournalTransDAO_1.LedgerJournalTransDAO();
-        this.generalJournalService = new GeneralJournalService_1.GeneralJournalService();
+var App_1 = require("../../utils/App");
+var ReceiptsService_1 = require("../services/ReceiptsService");
+var Words_1 = require("../../utils/Words");
+var ReceiptReport = /** @class */ (function () {
+    function ReceiptReport() {
+        this.db = typeorm_1.getManager();
+        this.receiptService = new ReceiptsService_1.ReceiptsService();
     }
-    ReceiptsService.prototype.entity = function (id) {
+    ReceiptReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, error_1;
+            var data, result, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        this.generalJournalService.sessionInfo = this.sessionInfo;
-                        return [4 /*yield*/, this.generalJournalService.entity(id)];
+                        data = Object.assign({}, params);
+                        return [4 /*yield*/, this.receiptService.entity(data.id)];
                     case 1:
-                        data = _a.sent();
+                        result = _a.sent();
+                        console.log(result);
+                        data.transDate = new Date(result.cashdate).toISOString().split("T")[0];
+                        data.type = result.log;
+                        data.isbank = result.log == "bank" ? true : false;
+                        data.amount = result.legerJournalTras[1].amountCurCredit;
+                        data.worden = Words_1.en(data.amount);
+                        data.wordar = Words_1.ar(data.amount);
+                        data.custid = result.legerJournalTras[1].accountNum;
+                        data.custnameen = result.legerJournalTras[1].name;
+                        data.custnamear = result.legerJournalTras[1].nameArabic;
+                        data.bankid = result.legerJournalTras[0].accountNum;
+                        data.banknameen = result.legerJournalTras[0].name;
+                        data.banknamear = result.legerJournalTras[0].nameArabic;
+                        data.remarks = result.description;
+                        console.log("ReceiptReport : ", data);
                         return [2 /*return*/, data];
                     case 2:
                         error_1 = _a.sent();
@@ -65,49 +79,24 @@ var ReceiptsService = /** @class */ (function () {
             });
         });
     };
-    ReceiptsService.prototype.search = function (item) {
+    ReceiptReport.prototype.report = function (result, params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, error_2;
+            var renderData, fileName;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        if (item.fromDate && item.toDate) {
-                            item.cashdate = typeorm_1.Between(new Date(item.fromDate).toISOString(), new Date(item.toDate).toISOString());
-                        }
-                        this.generalJournalService.sessionInfo = this.sessionInfo;
-                        return [4 /*yield*/, this.generalJournalService.search(item)];
-                    case 1:
-                        data = _a.sent();
-                        return [2 /*return*/, data];
-                    case 2:
-                        error_2 = _a.sent();
-                        throw error_2;
-                    case 3: return [2 /*return*/];
+                renderData = {};
+                fileName = params.lang == "en" ? "receipt-en" : "receipt-ar";
+                console.log("ReceiptReport File Name: ", fileName);
+                renderData = result;
+                try {
+                    return [2 /*return*/, App_1.App.HtmlRender(fileName, renderData)];
                 }
+                catch (error) {
+                    throw error;
+                }
+                return [2 /*return*/];
             });
         });
     };
-    ReceiptsService.prototype.save = function (item) {
-        return __awaiter(this, void 0, void 0, function () {
-            var data, error_3;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        this.generalJournalService.sessionInfo = this.sessionInfo;
-                        return [4 /*yield*/, this.generalJournalService.save(item)];
-                    case 1:
-                        data = _a.sent();
-                        return [2 /*return*/, data];
-                    case 2:
-                        error_3 = _a.sent();
-                        throw error_3;
-                    case 3: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    return ReceiptsService;
+    return ReceiptReport;
 }());
-exports.ReceiptsService = ReceiptsService;
+exports.ReceiptReport = ReceiptReport;

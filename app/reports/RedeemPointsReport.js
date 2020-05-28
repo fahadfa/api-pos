@@ -35,27 +35,31 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var BankAccountTableDAO_1 = require("../repos/BankAccountTableDAO");
-var LedgerJournalTransDAO_1 = require("../repos/LedgerJournalTransDAO");
-var GeneralJournalService_1 = require("../services/GeneralJournalService");
 var typeorm_1 = require("typeorm");
-var ReceiptsService = /** @class */ (function () {
-    function ReceiptsService() {
-        this.bankAccountTableDAO = new BankAccountTableDAO_1.BankAccountTableDAO();
-        this.ledgerJournalTransDAO = new LedgerJournalTransDAO_1.LedgerJournalTransDAO();
-        this.generalJournalService = new GeneralJournalService_1.GeneralJournalService();
+var App_1 = require("../../utils/App");
+var SalesTableService_1 = require("../services/SalesTableService");
+var RawQuery_1 = require("../common/RawQuery");
+var RedeemPointsReport = /** @class */ (function () {
+    function RedeemPointsReport() {
+        this.db = typeorm_1.getManager();
+        this.salesTableService = new SalesTableService_1.SalesTableService();
+        this.rawQuery = new RawQuery_1.RawQuery();
     }
-    ReceiptsService.prototype.entity = function (id) {
+    RedeemPointsReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
             var data, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        this.generalJournalService.sessionInfo = this.sessionInfo;
-                        return [4 /*yield*/, this.generalJournalService.entity(id)];
+                        data = params;
+                        return [4 /*yield*/, this.query_to_data(params)];
                     case 1:
                         data = _a.sent();
+                        data.map(function (item) {
+                            item.lastModifiedDate = App_1.App.convertUTCDateToLocalDate(new Date(item.lastModifiedDate), parseInt(params.timeZoneOffSet)).toLocaleString();
+                        });
+                        console.log(data);
                         return [2 /*return*/, data];
                     case 2:
                         error_1 = _a.sent();
@@ -65,49 +69,45 @@ var ReceiptsService = /** @class */ (function () {
             });
         });
     };
-    ReceiptsService.prototype.search = function (item) {
+    RedeemPointsReport.prototype.report = function (result, params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, error_2;
+            var renderData, file;
+            return __generator(this, function (_a) {
+                renderData = params;
+                renderData.data = result;
+                renderData.printDate = App_1.App.convertUTCDateToLocalDate(new Date(App_1.App.DateNow()), parseInt(params.timeZoneOffSet))
+                    .toLocaleString()
+                    .replace(/T/, " ") // replace T with a space
+                    .replace(/\..+/, "");
+                renderData.fromDate = new Date(renderData.fromDate).toLocaleDateString();
+                renderData.toDate = new Date(renderData.toDate).toLocaleDateString();
+                file = params.lang == "en" ? "redeem-points-en" : "redeem-points-ar";
+                try {
+                    return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];
+                }
+                catch (error) {
+                    throw error;
+                }
+                return [2 /*return*/];
+            });
+        });
+    };
+    RedeemPointsReport.prototype.query_to_data = function (params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        if (item.fromDate && item.toDate) {
-                            item.cashdate = typeorm_1.Between(new Date(item.fromDate).toISOString(), new Date(item.toDate).toISOString());
+                        query = "select\n    s.salesid,\n    s.invoiceaccount as \"custAccount\",\n    c.\"name\" as \"customerNameAr\",\n    c.namealias as \"customerNameEn\",\n    to_char(s.redeempts, 'FM999999999') as \"redeemPoints\",\n    s.redeemptsamt  as \"redeemAmount\",\n    s.createddatetime as \"createdDateTime\",\n    s.lastmodifieddate  as \"lastModifiedDate\",\n    s.inventlocationid  as inventlocationid\n    from salestable s\n    left join custtable c on c.accountnum  = s.invoiceaccount\n    where redeempts > 0 and s.inventlocationid ='" + params.inventlocationid + "'\nand s.lastmodifieddate ::Date>='" + params.fromDate + "'\nand s.lastmodifieddate ::Date<='" + params.toDate + "'";
+                        if (params.custaccount) {
+                            query += "and s.custaccount= '" + params.custaccount + "'";
                         }
-                        this.generalJournalService.sessionInfo = this.sessionInfo;
-                        return [4 /*yield*/, this.generalJournalService.search(item)];
-                    case 1:
-                        data = _a.sent();
-                        return [2 /*return*/, data];
-                    case 2:
-                        error_2 = _a.sent();
-                        throw error_2;
-                    case 3: return [2 /*return*/];
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
     };
-    ReceiptsService.prototype.save = function (item) {
-        return __awaiter(this, void 0, void 0, function () {
-            var data, error_3;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        this.generalJournalService.sessionInfo = this.sessionInfo;
-                        return [4 /*yield*/, this.generalJournalService.save(item)];
-                    case 1:
-                        data = _a.sent();
-                        return [2 /*return*/, data];
-                    case 2:
-                        error_3 = _a.sent();
-                        throw error_3;
-                    case 3: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    return ReceiptsService;
+    return RedeemPointsReport;
 }());
-exports.ReceiptsService = ReceiptsService;
+exports.RedeemPointsReport = RedeemPointsReport;

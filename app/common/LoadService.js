@@ -1573,13 +1573,14 @@ var LoadService = /** @class */ (function () {
             });
         });
     };
-    LoadService.prototype.bankaccounts = function () {
+    LoadService.prototype.bankaccounts = function (param) {
         return __awaiter(this, void 0, void 0, function () {
             var query;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select accountid as \"accountId\", ledgeraccount as \"ledgerAccount\", currencycode as \"currenyCode\", name as \"nameAr\", accountnum as \"accountNum\" from bankaccounttable";
+                        console.log(param);
+                        query = "select accountid as \"accountId\", ledgeraccount as \"ledgerAccount\", currencycode as \"currenyCode\", name as \"nameAr\", accountnum as \"accountNum\" \n      from bankaccounttable\n      where ( accountid ILIKE '%" + param.key + "%' or  name ILIKE '%" + param.key + "%' )";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }

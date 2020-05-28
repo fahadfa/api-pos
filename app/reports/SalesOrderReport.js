@@ -78,7 +78,7 @@ var SalesOrderReport = /** @class */ (function () {
                         // console.log(data.status);
                         if (data_1.status != "RESERVED") {
                             data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
-                            if (data_1.status != "POSTED") {
+                            if (data_1.originalPrinted == false) {
                                 this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "PAID", new Date().toISOString());
                             }
                         }
