@@ -219,7 +219,7 @@ var SalesTableController = /** @class */ (function () {
             });
         }); });
         this.router.post("/paginate/:id", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
-            var params, result, id, reqData, error_6;
+            var params, result, id, queryData, reqData, error_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -230,7 +230,9 @@ var SalesTableController = /** @class */ (function () {
                         result = null;
                         id = params.id;
                         id = request.params ? id : null;
+                        queryData = request.query ? request.query : {};
                         reqData = request.body ? request.body.data : {};
+                        reqData.timeZoneOffSet = queryData.timeZoneOffSet ? queryData.timeZoneOffSet : reqData.timeZoneOffSet;
                         switch (id) {
                             case "quotationdetails":
                                 reqData.type = "quotation";

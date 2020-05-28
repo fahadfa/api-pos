@@ -135,7 +135,7 @@
             </tr>
             {{/if}} {{#if printDate}}
             <tr class="billing">
-              <td>تاريخ الطباعة</td>
+              <td>طباعة التاريخ والوقت</td>
               <td>:</td>
               <td>{{printDate}}</td>
             </tr>
@@ -157,13 +157,15 @@
               <td>:</td>
               <td>{{toDate}}</td>
             </tr>
-            {{/if}} {{#if status}}
+            {{/if}} 
+            {{#if status}}
             <tr class="billing">
               <td>الحالة</td>
               <td>:</td>
               <td>{{status}}</td>
             </tr>
-            {{/if}} {{#if user}}
+            {{/if}} 
+            {{#if user}}
             <tr class="billing">
               <td>طبع بواسطة</td>
               <td>:</td>
@@ -178,12 +180,12 @@
     <table class="dash" width="100%" cellpadding="0" cellspacing="0">
       <thead>
         <tr>
-          <th >Designer Service Id Ar</th>
-          <th>Designer Service Amount Ar</th>
-          <th >Utilized Amount Ar</th>
-          <th >Balance Amount Ar</th>
-          <th >Status</th>
-          <th >Last Modified Date</th>
+          <th >معرف خدمة المصمم</th>
+          <th>مبلغ خدمة المصمم</th>
+          <th >المبلغ المستخدم</th>
+          <th >مقدار وسطي</th>
+          <th >مقدار وسطي</th>
+          <th >اخر تحديث</th>
           <!-- <th width="5%">فاتورة</th>
           <th width="5%">اكتب</th>
           <th width="5%">الحالة</th>

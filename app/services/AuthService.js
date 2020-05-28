@@ -110,6 +110,8 @@ var AuthService = /** @class */ (function () {
                             responseData.user.ledgerAccount = accountObj.userGroupConfig.ledgeraccount;
                             responseData.identity = {};
                             responseData.identity = responseData.user;
+                            responseData.token = {};
+                            responseData.token.refresh = "abcd";
                             delete responseData.user;
                             responseData.access_token = App_1.App.EncodeJWT({ identity: responseData.identity });
                         }

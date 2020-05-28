@@ -135,7 +135,7 @@
             {{/if}}
             {{#if printDate}}
             <tr>
-              <td>Print Date</td>
+              <td>Print Date and Time</td>
               <td>:</td>
               <td>{{printDate}}</td>
             </tr>
@@ -159,13 +159,15 @@
               <td>:</td>
               <td>{{toDate}}</td>
             </tr>
-            {{/if}} {{#if status}}
+            {{/if}} 
+            {{#if status}}
             <tr class="billing">
               <td>Status</td>
               <td>:</td>
               <td>{{status}}</td>
             </tr>
-            {{/if}} {{#if user}}
+            {{/if}}
+             {{#if user}}
             <tr class="billing">
               <td>Print By</td>
               <td>:</td>

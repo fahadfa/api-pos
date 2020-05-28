@@ -151,7 +151,7 @@ var UsergroupConfigService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 8, , 9]);
+                        _a.trys.push([0, 9, , 10]);
                         sequenceGroupList = [
                             "quotationsequencegroup",
                             "salesordersequencegroup",
@@ -190,7 +190,7 @@ var UsergroupConfigService = /** @class */ (function () {
                     case 5:
                         cond = _a.sent();
                         console.log(cond);
-                        if (!(cond == true)) return [3 /*break*/, 7];
+                        if (!(cond == true)) return [3 /*break*/, 8];
                         reqData.lastmodifieddate = new Date(App_1.App.DateNow());
                         promiseList = [];
                         promiseList.push(this.usergroupconfigDAO.save(reqData));
@@ -198,20 +198,24 @@ var UsergroupConfigService = /** @class */ (function () {
                         return [4 /*yield*/, Promise.all(promiseList)];
                     case 6:
                         _a.sent();
+                        console.log("======================================");
+                        return [4 /*yield*/, this.rawQuery.updateSynctable(reqData.inventlocationid)];
+                    case 7:
+                        _a.sent();
                         returnData = { id: reqData.id, message: "SAVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
-                    case 7:
+                    case 8:
                         if (cond == "groupname") {
                             throw { message: "RECORD_ALREADY_EXISTS" };
                         }
                         else {
                             throw { message: "INVALID_DATA" };
                         }
-                        return [3 /*break*/, 9];
-                    case 8:
+                        return [3 /*break*/, 10];
+                    case 9:
                         error_5 = _a.sent();
                         throw error_5;
-                    case 9: return [2 /*return*/];
+                    case 10: return [2 /*return*/];
                 }
             });
         });

@@ -100,7 +100,7 @@ var RedeemPointsReport = /** @class */ (function () {
                     case 0:
                         query = "select\n    s.salesid,\n    s.invoiceaccount as \"custAccount\",\n    c.\"name\" as \"customerNameAr\",\n    c.namealias as \"customerNameEn\",\n    to_char(s.redeempts, 'FM999999999') as \"redeemPoints\",\n    s.redeemptsamt  as \"redeemAmount\",\n    s.createddatetime as \"createdDateTime\",\n    s.lastmodifieddate  as \"lastModifiedDate\",\n    s.inventlocationid  as inventlocationid\n    from salestable s\n    left join custtable c on c.accountnum  = s.invoiceaccount\n    where redeempts > 0 and s.inventlocationid ='" + params.inventlocationid + "'\nand s.lastmodifieddate ::Date>='" + params.fromDate + "'\nand s.lastmodifieddate ::Date<='" + params.toDate + "'";
                         if (params.custaccount) {
-                            query += "and s.custaccount= '" + params.custaccount + "'";
+                            query += "and s.invoiceaccount= '" + params.custaccount + "'";
                         }
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];

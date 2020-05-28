@@ -1851,7 +1851,7 @@ var SalesTableService = /** @class */ (function () {
                     case 2:
                         PrevReturnedData = _c.sent();
                         if (!PrevReturnedData) return [3 /*break*/, 3];
-                        throw { message: "ALREADY_RETURNED" };
+                        throw { status: 0, message: "ALREADY_RETURNED" };
                     case 3: return [4 /*yield*/, this.designerServiceDAO.search({
                             invoiceid: reqData.interCompanyOriginalSalesId,
                         })];
@@ -1859,7 +1859,7 @@ var SalesTableService = /** @class */ (function () {
                         desinerService = _c.sent();
                         console.log(desinerService);
                         if (desinerService.length > 1) {
-                            throw { message: "CAN_NOT_CREATE_RETURN_ORDER_AMOUNT_ALREADY_USED" };
+                            throw { status: 0, message: "CAN_NOT_CREATE_RETURN_ORDER_AMOUNT_ALREADY_USED" };
                         }
                         _c.label = 5;
                     case 5: return [4 /*yield*/, this.designerServiceDAO.findOne({
