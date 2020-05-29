@@ -133,9 +133,11 @@ var sync = function () {
     var syncFile = __dirname + "/sync.ts";
     syncFile = fs.existsSync(syncFile) ? __dirname + "/sync.ts" : __dirname + "/sync.js";
     child_process.fork(syncFile);
+    Log_1.log.warn("syncFile:", syncFile);
     var syncFileUpdate = __dirname + "/update.ts";
-    syncFileUpdate = fs.existsSync(syncFile) ? __dirname + "/update.ts" : __dirname + "/update.js";
+    syncFileUpdate = fs.existsSync(syncFileUpdate) ? __dirname + "/update.ts" : __dirname + "/update.js";
     child_process.fork(syncFileUpdate);
+    Log_1.log.warn("syncFileUpdate:", syncFileUpdate);
 };
 var syncTimeDiff = function () {
     try {
