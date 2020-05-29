@@ -1737,7 +1737,7 @@ var SalesTableService = /** @class */ (function () {
                                         return [2 /*return*/, sms.sendMessage("966", reqData.mobileNo, message)];
                                     }
                                     catch (error) {
-                                        Log_1.slog.error(error);
+                                        Log_1.log.error(error);
                                     }
                                     return [2 /*return*/];
                                 });
@@ -1787,7 +1787,7 @@ var SalesTableService = /** @class */ (function () {
                                             })];
                                     }
                                     catch (error) {
-                                        Log_1.slog.error(error);
+                                        Log_1.log.error(error);
                                     }
                                     return [2 /*return*/];
                                 });
@@ -1809,7 +1809,7 @@ var SalesTableService = /** @class */ (function () {
                                                 return [2 /*return*/, App_1.App.SendMail(reqData.custEmail, "Invoice", template, reportData)];
                                             }
                                             catch (error) {
-                                                Log_1.slog.error(error);
+                                                Log_1.log.error(error);
                                             }
                                             return [2 /*return*/];
                                     }
@@ -2552,7 +2552,7 @@ var SalesTableService = /** @class */ (function () {
                                     return [2 /*return*/, App_1.App.SendMail(reqData.custEmail, "Invoice", template, reportData)];
                                 }
                                 catch (error) {
-                                    Log_1.slog.error(error);
+                                    Log_1.log.error(error);
                                 }
                                 return [2 /*return*/];
                             });
@@ -2762,11 +2762,14 @@ var SalesTableService = /** @class */ (function () {
                             }
                         });
                         paintersId_1 = Array.from(new Set(paintersId_1));
-                        query1 = "select ct1.accountnum as \"painterCode\",ct1.\"name\" as \"painterAr\",\n         ct1.namealias as \"painterEn\" \n         from custtable ct1\n         where ct1.accountnum  in (" + paintersId_1
-                            .map(function (painterID) {
-                            return "'" + painterID + "'";
-                        })
-                            .join(",") + ");";
+                        query1 = "select ct1.accountnum as \"painterCode\",ct1.\"name\" as \"painterAr\",\n         ct1.namealias as \"painterEn\" \n         from custtable ct1\n         ";
+                        if (paintersId_1.length > 0) {
+                            query1 += "where ct1.accountnum  in (" + paintersId_1
+                                .map(function (painterID) {
+                                return "'" + painterID + "'";
+                            })
+                                .join(",") + ");";
+                        }
                         return [4 /*yield*/, this.salestableDAO.getDAO().query(query1)];
                     case 2:
                         painters_1 = _a.sent();

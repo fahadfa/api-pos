@@ -46,9 +46,10 @@ var Props_1 = require("../constants/Props");
 var SyncServiceHelper_1 = require("../sync/SyncServiceHelper");
 var STAGING_ID = "STAGING";
 var STORE_ID = process.env.ENV_STORE_ID || "LOCAL";
-var Log_1 = require("../utils/Log");
+var log;
 var SyncDDLService = /** @class */ (function () {
-    function SyncDDLService() {
+    function SyncDDLService(slog) {
+        log = slog;
     }
     SyncDDLService.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -56,7 +57,7 @@ var SyncDDLService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        Log_1.slog.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                        log.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
                         sync = null;
                         currentTime = new Date();
                         _a.label = 1;
@@ -75,11 +76,11 @@ var SyncDDLService = /** @class */ (function () {
                         return [4 /*yield*/, this.syncDDL(syncResults, currentTime)];
                     case 3:
                         _a.sent();
-                        Log_1.slog.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                        log.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
                         return [3 /*break*/, 5];
                     case 4:
                         error_1 = _a.sent();
-                        Log_1.slog.error(error_1);
+                        log.error(error_1);
                         throw error_1;
                     case 5: return [2 /*return*/];
                 }
@@ -133,7 +134,7 @@ var SyncDDLService = /** @class */ (function () {
                         return [3 /*break*/, 11];
                     case 9:
                         err_1 = _b.sent();
-                        Log_1.slog.error(err_1);
+                        log.error(err_1);
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ErrorMessage("DDL", err_1)];
                     case 10:
                         _b.sent();
@@ -155,7 +156,7 @@ var SyncDDLService = /** @class */ (function () {
                         return [3 /*break*/, 15];
                     case 13:
                         err_2 = _b.sent();
-                        Log_1.slog.error(err_2);
+                        log.error(err_2);
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ErrorMessage("DDL", err_2)];
                     case 14:
                         _b.sent();
@@ -181,7 +182,7 @@ var SyncDDLService = /** @class */ (function () {
                     case 23: return [3 /*break*/, 25];
                     case 24:
                         err_3 = _b.sent();
-                        Log_1.slog.error(err_3);
+                        log.error(err_3);
                         throw err_3;
                     case 25: return [2 /*return*/];
                 }

@@ -61,14 +61,14 @@ log4js_1.configure({
             property: "type",
             extension: ".log",
             maxLogSize: 10485760,
-            backups: 2,
+            backups: 1,
         },
         out: { type: "stdout", layout: { type: "dummy" } },
         emergencies: {
             type: "file",
             filename: __dirname + "/../../logs/jpos/error.log",
             maxLogSize: 10485760,
-            backups: 2,
+            backups: 1,
         },
         error: {
             type: "logLevelFilter",
@@ -82,8 +82,12 @@ log4js_1.configure({
 });
 exports.log = log4js_1.getLogger("app");
 exports.log.addContext("type", "app");
-exports.slog = log4js_1.getLogger("sync");
-exports.slog.addContext("type", "sync");
+exports.smlog = log4js_1.getLogger("sync");
+exports.smlog.addContext("type", "syncm");
+exports.stlog = log4js_1.getLogger("sync");
+exports.stlog.addContext("type", "synct");
+exports.s1log = log4js_1.getLogger("sync");
+exports.s1log.addContext("type", "sync1");
 exports.ulog = log4js_1.getLogger("update");
 exports.ulog.addContext("type", "update");
 // export const log = getLogger();

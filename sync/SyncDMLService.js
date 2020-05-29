@@ -39,13 +39,14 @@ var SyncServiceHelper_1 = require("../sync/SyncServiceHelper");
 var Props_1 = require("../constants/Props");
 var App_1 = require("../utils/App");
 var moment = require("moment");
-var Log_1 = require("../utils/Log");
 var STAGING_ID = "STAGING";
 var STORE_ID = process.env.ENV_STORE_ID || "LOCAL-TEST";
+var log;
 var SyncDMLService = /** @class */ (function () {
     //private db: any;
-    function SyncDMLService() {
+    function SyncDMLService(slog) {
         this.limitData = 1000;
+        log = slog;
     }
     SyncDMLService.prototype.deleteExecute = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -53,7 +54,7 @@ var SyncDMLService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        Log_1.slog.info("#################### DeleteExecute " + STORE_ID + " - " + new Date().toISOString() + " #######################");
+                        log.info("#################### DeleteExecute " + STORE_ID + " - " + new Date().toISOString() + " #######################");
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 5, , 6]);
@@ -65,7 +66,7 @@ var SyncDMLService = /** @class */ (function () {
                         syncResults = _a.sent();
                         syncResults = syncResults ? syncResults.rows : [];
                         syncResults = syncResults.length > 0 ? syncResults : null;
-                        Log_1.slog.debug(JSON.stringify(syncResults, null, 2));
+                        log.debug(JSON.stringify(syncResults, null, 2));
                         if (!syncResults)
                             return [2 /*return*/, Promise.resolve("")];
                         sysDeleteQuery = this.buildDMLSyncDeleteQuery(syncResults);
@@ -79,11 +80,11 @@ var SyncDMLService = /** @class */ (function () {
                         return [3 /*break*/, 6];
                     case 5:
                         err_1 = _a.sent();
-                        Log_1.slog.warn(":::::::::::::::::::CATCH DELETE BLOCK START ::::::::::::::::::::::");
-                        Log_1.slog.error(err_1);
+                        log.warn(":::::::::::::::::::CATCH DELETE BLOCK START ::::::::::::::::::::::");
+                        log.error(err_1);
                         throw err_1;
                     case 6:
-                        Log_1.slog.info("#################### DeleteExecute #######################");
+                        log.info("#################### DeleteExecute #######################");
                         return [2 /*return*/];
                 }
             });
@@ -96,9 +97,9 @@ var SyncDMLService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        Log_1.slog.info("###########################################");
+                        log.info("###########################################");
                         // App.Sleep(2000);
-                        Log_1.slog.debug("!!!!!!!!!!!!!!!!!!!! " + STORE_ID + " - " + new Date().toISOString() + "!!!!!!!!!!!!!!!!!!!!");
+                        log.debug("!!!!!!!!!!!!!!!!!!!! " + STORE_ID + " - " + new Date().toISOString() + "!!!!!!!!!!!!!!!!!!!!");
                         stageDbConfig = SyncServiceHelper_1.SyncServiceHelper.StageDBOptions();
                         localDbConfig = SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions();
                         sql = "SELECT to_char (now(), 'YYYY-MM-DD\"T\"HH24:MI:SS') as utc_date";
@@ -107,11 +108,11 @@ var SyncDMLService = /** @class */ (function () {
                         utcDate = _a.sent();
                         utcDateTime = utcDate.rows[0]["utc_date"];
                         currentTime = moment().toISOString();
-                        Log_1.slog.info("Db Date: " + utcDateTime);
-                        Log_1.slog.info("Sys Date: " + currentTime);
+                        log.info("Db Date: " + utcDateTime);
+                        log.info("Sys Date: " + currentTime);
                         // log.info("currentTime Date: ", currentTime);
                         if (App_1.App.DaysDiff(new Date(utcDateTime), new Date(currentTime)) != 0) {
-                            Log_1.slog.error("+++++++++++++++++++++++ INVALID DATE SYNC +++++++++++++++++++++++");
+                            log.error("+++++++++++++++++++++++ INVALID DATE SYNC +++++++++++++++++++++++");
                             return [2 /*return*/, Promise.resolve("")];
                         }
                         _a.label = 2;
@@ -130,7 +131,7 @@ var SyncDMLService = /** @class */ (function () {
                         syncResults = _a.sent();
                         syncResults = syncResults ? syncResults.rows : [];
                         syncResults = syncResults.length > 0 ? syncResults[0] : null;
-                        Log_1.slog.debug(JSON.stringify(syncResults, null, 2));
+                        log.debug(JSON.stringify(syncResults, null, 2));
                         if (!syncResults)
                             return [2 /*return*/, Promise.resolve("")];
                         if (!(syncResults.source_id != syncResults.target_id)) return [3 /*break*/, 5];
@@ -141,7 +142,7 @@ var SyncDMLService = /** @class */ (function () {
                         //     .format()
                         //     .split("+")[0];
                         // }
-                        Log_1.slog.warn("\n\n((((((<<<< " + syncResults.map_table + "::" + syncResults.last_update + " >>>>))))))\n\n");
+                        log.warn("\n\n((((((<<<< " + syncResults.map_table + "::" + syncResults.last_update + " >>>>))))))\n\n");
                         return [4 /*yield*/, this.syncDb(sourceDB, targetDB, syncResults, currentTime)];
                     case 4:
                         _a.sent();
@@ -149,10 +150,10 @@ var SyncDMLService = /** @class */ (function () {
                     case 5: return [3 /*break*/, 7];
                     case 6:
                         error_1 = _a.sent();
-                        Log_1.slog.error(error_1);
+                        log.error(error_1);
                         throw error_1;
                     case 7:
-                        Log_1.slog.info("###########################################");
+                        log.info("###########################################");
                         return [2 /*return*/];
                 }
             });
@@ -178,7 +179,7 @@ var SyncDMLService = /** @class */ (function () {
                         _a.label = 2;
                     case 2:
                         if (!(isChunkEnd == false)) return [3 /*break*/, 15];
-                        Log_1.slog.info("************* ***** *************");
+                        log.info("************* ***** *************");
                         rowsAvalible_1 = null;
                         rowsNotAvalible = null;
                         batchSql = [];
@@ -197,8 +198,8 @@ var SyncDMLService = /** @class */ (function () {
                         res = _a.sent();
                         rowsAvalible_1 = res.rows.map(function (ele) { return ele[sync.map_pk]; });
                         rowsNotAvalible = primaryKeys.filter(function (ele) { return rowsAvalible_1.indexOf(ele) < 0; });
-                        Log_1.slog.debug("\t\tUpdate Records: " + sync.map_table + " --> " + rowsAvalible_1.length);
-                        Log_1.slog.debug("\t\tInsert Records: " + sync.map_table + " --> " + rowsNotAvalible.length);
+                        log.debug("\t\tUpdate Records: " + sync.map_table + " --> " + rowsAvalible_1.length);
+                        log.debug("\t\tInsert Records: " + sync.map_table + " --> " + rowsNotAvalible.length);
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.MetadataTable(targetDb, sync.map_table)];
                     case 6:
                         metaDataTable = _a.sent();
@@ -223,23 +224,23 @@ var SyncDMLService = /** @class */ (function () {
                         _a.label = 12;
                     case 12:
                         offset = offset + this.limitData;
-                        Log_1.slog.warn("Offset: " + offset);
+                        log.warn("Offset: " + offset);
                         /** check loop ends */
                         if (rowsLength < this.limitData) {
-                            Log_1.slog.debug("completed batch data ...");
+                            log.debug("completed batch data ...");
                             isChunkEnd = true;
                         }
                         return [3 /*break*/, 14];
                     case 13:
                         isTableUpdated = false;
-                        Log_1.slog.debug("No data found...");
+                        log.debug("No data found...");
                         isChunkEnd = true;
                         _a.label = 14;
                     case 14:
-                        Log_1.slog.info("************* ***** *************");
+                        log.info("************* ***** *************");
                         return [3 /*break*/, 2];
                     case 15:
-                        Log_1.slog.debug(":::::::::::::::::::UPDATE " + sync.id + " START ::::::::::::::::::::::");
+                        log.debug(":::::::::::::::::::UPDATE " + sync.id + " START ::::::::::::::::::::::");
                         updateQuery = null;
                         if (isTableUpdated == true) {
                             updateQuery = "update sync_table set last_update = '" + lastUpdate + "', updated_on = '" + currentTime + "'  where id='" + sync.id + "'";
@@ -250,12 +251,12 @@ var SyncDMLService = /** @class */ (function () {
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(updateSyncConfig, [updateQuery])];
                     case 16:
                         _a.sent();
-                        Log_1.slog.debug(":::::::::::::::::::UPDATE " + sync.id + " END ::::::::::::::::::::::\n\n");
+                        log.debug(":::::::::::::::::::UPDATE " + sync.id + " END ::::::::::::::::::::::\n\n");
                         return [3 /*break*/, 20];
                     case 17:
                         err_2 = _a.sent();
-                        Log_1.slog.warn(":::::::::::::::::::CATCH BLOCK START ::::::::::::::::::::::");
-                        Log_1.slog.error(err_2);
+                        log.warn(":::::::::::::::::::CATCH BLOCK START ::::::::::::::::::::::");
+                        log.error(err_2);
                         updateQuery = null;
                         if (err_2 == Props_1.Props.RECORD_NOT_FOUND) {
                             updateQuery = "update sync_table set updated_on = '" + currentTime + "'  where id='" + sync.id + "'";
@@ -269,7 +270,7 @@ var SyncDMLService = /** @class */ (function () {
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ErrorMessage("DML", err_2)];
                     case 19:
                         _a.sent();
-                        Log_1.slog.warn(":::::::::::::::::::CATCH BLOCK ENDS ::::::::::::::::::::::");
+                        log.warn(":::::::::::::::::::CATCH BLOCK ENDS ::::::::::::::::::::::");
                         throw err_2;
                     case 20: return [2 /*return*/];
                 }

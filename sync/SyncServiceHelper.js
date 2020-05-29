@@ -53,14 +53,17 @@ var pg_1 = require("pg");
 var Config = __importStar(require("../utils/Config"));
 var App_1 = require("../utils/App");
 var format = require("pg-format");
-var Log_1 = require("../utils/Log");
 var STORE_ID = process.env.ENV_STORE_ID || "LOCAL";
 pg_1.types.setTypeParser(1114, function (stringValue) {
     return stringValue.replace(" ", "T");
 });
+var log;
 var SyncServiceHelper = /** @class */ (function () {
     function SyncServiceHelper() {
     }
+    SyncServiceHelper.SetLog = function (slog) {
+        log = slog;
+    };
     SyncServiceHelper.BatchQuery = function (config, sqls) {
         var sqls_1, sqls_1_1;
         return __awaiter(this, void 0, void 0, function () {
@@ -68,9 +71,9 @@ var SyncServiceHelper = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        Log_1.slog.info("-------------- Batch Query Starts --------------");
-                        Log_1.slog.debug("\tHost Query: " + config.host);
-                        Log_1.slog.debug("\t\tBatch length: " + sqls.length);
+                        log.info("-------------- Batch Query Starts --------------");
+                        log.debug("\tHost Query: " + config.host);
+                        log.debug("\t\tBatch length: " + sqls.length);
                         db = new pg_1.Client(config);
                         _b.label = 1;
                     case 1:
@@ -114,14 +117,14 @@ var SyncServiceHelper = /** @class */ (function () {
                         return [7 /*endfinally*/];
                     case 15: return [7 /*endfinally*/];
                     case 16:
-                        Log_1.slog.info("END");
+                        log.info("END");
                         return [4 /*yield*/, db.query("COMMIT")];
                     case 17:
                         _b.sent();
                         return [3 /*break*/, 24];
                     case 18:
                         e_2 = _b.sent();
-                        Log_1.slog.error(e_2);
+                        log.error(e_2);
                         _b.label = 19;
                     case 19:
                         _b.trys.push([19, 21, , 22]);
@@ -142,7 +145,7 @@ var SyncServiceHelper = /** @class */ (function () {
                         }
                         return [7 /*endfinally*/];
                     case 24:
-                        Log_1.slog.info("-------------- Batch Query Ends --------------");
+                        log.info("-------------- Batch Query Ends --------------");
                         return [2 /*return*/];
                 }
             });
@@ -157,12 +160,12 @@ var SyncServiceHelper = /** @class */ (function () {
                         showLog = !(sql.includes("DISTINCT") || sql.includes("sync_table") || sql.includes("sync_source"));
                         //let showLog = true;
                         if (showLog)
-                            Log_1.slog.info("----------------- Query Starts----------------------------");
+                            log.info("----------------- Query Starts----------------------------");
                         //let db: PoolClient = null;
                         if (showLog)
-                            Log_1.slog.info("\tHost Query: " + config.host);
+                            log.info("\tHost Query: " + config.host);
                         if (showLog)
-                            Log_1.slog.debug(sql);
+                            log.debug(sql);
                         res = null;
                         db = new pg_1.Client(config);
                         _a.label = 1;
@@ -182,7 +185,7 @@ var SyncServiceHelper = /** @class */ (function () {
                         return [2 /*return*/, { metaData: res.fields, rows: res.rows }];
                     case 4:
                         e_3 = _a.sent();
-                        Log_1.slog.error(e_3);
+                        log.error(e_3);
                         throw e_3;
                     case 5:
                         //if (db) db.release();
@@ -193,7 +196,7 @@ var SyncServiceHelper = /** @class */ (function () {
                             throw err;
                         }
                         if (showLog)
-                            Log_1.slog.info("----------------- Query Ends----------------------------");
+                            log.info("----------------- Query Ends----------------------------");
                         return [7 /*endfinally*/];
                     case 6: return [2 /*return*/];
                 }

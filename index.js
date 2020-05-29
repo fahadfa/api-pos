@@ -130,14 +130,22 @@ run();
 var sync = function () {
     var child_process = require("child_process");
     var fs = require("fs");
-    var syncFile = __dirname + "/sync.ts";
-    syncFile = fs.existsSync(syncFile) ? __dirname + "/sync.ts" : __dirname + "/sync.js";
-    child_process.fork(syncFile);
-    Log_1.log.warn("syncFile:", syncFile);
     var syncFileUpdate = __dirname + "/update.ts";
     syncFileUpdate = fs.existsSync(syncFileUpdate) ? __dirname + "/update.ts" : __dirname + "/update.js";
     child_process.fork(syncFileUpdate);
     Log_1.log.warn("syncFileUpdate:", syncFileUpdate);
+    var syncMFile = __dirname + "/syncM.ts";
+    syncMFile = fs.existsSync(syncMFile) ? __dirname + "/syncM.ts" : __dirname + "/syncM.js";
+    child_process.fork(syncMFile);
+    Log_1.log.warn("syncMFile:", syncMFile);
+    var syncTFile = __dirname + "/syncT.ts";
+    syncTFile = fs.existsSync(syncTFile) ? __dirname + "/syncT.ts" : __dirname + "/syncT.js";
+    child_process.fork(syncTFile);
+    Log_1.log.warn("syncTFile:", syncTFile);
+    var sync1File = __dirname + "/sync1.ts";
+    sync1File = fs.existsSync(sync1File) ? __dirname + "/sync1.ts" : __dirname + "/sync1.js";
+    child_process.fork(sync1File);
+    Log_1.log.warn("syncFile:", sync1File);
 };
 var syncTimeDiff = function () {
     try {
@@ -164,9 +172,6 @@ try {
 catch (error) {
     Log_1.log.error("Sync Error");
     Log_1.log.error(error);
-    setTimeout(function () {
-        sync();
-    }, 60000);
 }
 process.on("uncaughtException", function (err) {
     Log_1.log.error("Caught exception: " + err);
