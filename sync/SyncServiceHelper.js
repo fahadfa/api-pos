@@ -56,10 +56,7 @@ var format = require("pg-format");
 var Log_1 = require("../utils/Log");
 var STORE_ID = process.env.ENV_STORE_ID || "LOCAL";
 pg_1.types.setTypeParser(1114, function (stringValue) {
-    return stringValue
-        .replace(" ", "T")
-        .split(".")
-        .shift();
+    return stringValue.replace(" ", "T");
 });
 var SyncServiceHelper = /** @class */ (function () {
     function SyncServiceHelper() {
@@ -67,7 +64,7 @@ var SyncServiceHelper = /** @class */ (function () {
     SyncServiceHelper.BatchQuery = function (config, sqls) {
         var sqls_1, sqls_1_1;
         return __awaiter(this, void 0, void 0, function () {
-            var e_1, _a, db, res, sql, e_1_1, e_2;
+            var e_1, _a, db, res, sql, e_1_1, e_2, err_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -77,7 +74,7 @@ var SyncServiceHelper = /** @class */ (function () {
                         db = new pg_1.Client(config);
                         _b.label = 1;
                     case 1:
-                        _b.trys.push([1, 18, 20, 21]);
+                        _b.trys.push([1, 18, 23, 24]);
                         return [4 /*yield*/, db.connect()];
                     case 2:
                         _b.sent();
@@ -121,18 +118,30 @@ var SyncServiceHelper = /** @class */ (function () {
                         return [4 /*yield*/, db.query("COMMIT")];
                     case 17:
                         _b.sent();
-                        return [3 /*break*/, 21];
+                        return [3 /*break*/, 24];
                     case 18:
                         e_2 = _b.sent();
                         Log_1.slog.error(e_2);
-                        return [4 /*yield*/, db.query("ROLLBACK")];
+                        _b.label = 19;
                     case 19:
-                        _b.sent();
-                        throw e_2;
+                        _b.trys.push([19, 21, , 22]);
+                        return [4 /*yield*/, db.query("ROLLBACK")];
                     case 20:
-                        db.end();
-                        return [7 /*endfinally*/];
+                        _b.sent();
+                        return [3 /*break*/, 22];
                     case 21:
+                        err_1 = _b.sent();
+                        throw err_1;
+                    case 22: throw e_2;
+                    case 23:
+                        try {
+                            db.end();
+                        }
+                        catch (err) {
+                            throw err;
+                        }
+                        return [7 /*endfinally*/];
+                    case 24:
                         Log_1.slog.info("-------------- Batch Query Ends --------------");
                         return [2 /*return*/];
                 }
@@ -177,8 +186,12 @@ var SyncServiceHelper = /** @class */ (function () {
                         throw e_3;
                     case 5:
                         //if (db) db.release();
-                        if (db)
+                        try {
                             db.end();
+                        }
+                        catch (err) {
+                            throw err;
+                        }
                         if (showLog)
                             Log_1.slog.info("----------------- Query Ends----------------------------");
                         return [7 /*endfinally*/];
@@ -377,7 +390,7 @@ var SyncServiceHelper = /** @class */ (function () {
             port: Config.stageDbOptions.port,
             user: Config.stageDbOptions.username,
             password: Config.stageDbOptions.password,
-            database: Config.stageDbOptions.database
+            database: Config.stageDbOptions.database,
         };
     };
     // public static LocalDBOptions() {
@@ -395,7 +408,7 @@ var SyncServiceHelper = /** @class */ (function () {
             port: Config.localDbOptions.port,
             user: Config.localDbOptions.username,
             password: Config.localDbOptions.password,
-            database: Config.localDbOptions.database
+            database: Config.localDbOptions.database,
         };
     };
     SyncServiceHelper.synTableColumns = "*";

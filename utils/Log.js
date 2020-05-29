@@ -61,24 +61,24 @@ log4js_1.configure({
             property: "type",
             extension: ".log",
             maxLogSize: 10485760,
-            backups: 1
+            backups: 2,
         },
         out: { type: "stdout", layout: { type: "dummy" } },
         emergencies: {
             type: "file",
             filename: __dirname + "/../../logs/jpos/error.log",
             maxLogSize: 10485760,
-            backups: 5
+            backups: 2,
         },
         error: {
             type: "logLevelFilter",
             appender: "emergencies",
-            level: "error"
-        }
+            level: "error",
+        },
     },
     categories: {
-        default: { appenders: ["app", "out", "error"], level: "debug" }
-    }
+        default: { appenders: ["app", "out", "error"], level: "debug" },
+    },
 });
 exports.log = log4js_1.getLogger("app");
 exports.log.addContext("type", "app");

@@ -81,7 +81,7 @@ var SyncDMLService = /** @class */ (function () {
                         err_1 = _a.sent();
                         Log_1.slog.warn(":::::::::::::::::::CATCH DELETE BLOCK START ::::::::::::::::::::::");
                         Log_1.slog.error(err_1);
-                        return [3 /*break*/, 6];
+                        throw err_1;
                     case 6:
                         Log_1.slog.info("#################### DeleteExecute #######################");
                         return [2 /*return*/];
@@ -172,7 +172,7 @@ var SyncDMLService = /** @class */ (function () {
                         lastUpdate = currentTime;
                         _a.label = 1;
                     case 1:
-                        _a.trys.push([1, 17, 20, 21]);
+                        _a.trys.push([1, 17, , 20]);
                         rowsAvalible_1 = null;
                         rowsNotAvalible = null;
                         _a.label = 2;
@@ -251,7 +251,7 @@ var SyncDMLService = /** @class */ (function () {
                     case 16:
                         _a.sent();
                         Log_1.slog.debug(":::::::::::::::::::UPDATE " + sync.id + " END ::::::::::::::::::::::\n\n");
-                        return [3 /*break*/, 21];
+                        return [3 /*break*/, 20];
                     case 17:
                         err_2 = _a.sent();
                         Log_1.slog.warn(":::::::::::::::::::CATCH BLOCK START ::::::::::::::::::::::");
@@ -271,8 +271,7 @@ var SyncDMLService = /** @class */ (function () {
                         _a.sent();
                         Log_1.slog.warn(":::::::::::::::::::CATCH BLOCK ENDS ::::::::::::::::::::::");
                         throw err_2;
-                    case 20: return [7 /*endfinally*/];
-                    case 21: return [2 /*return*/];
+                    case 20: return [2 /*return*/];
                 }
             });
         });

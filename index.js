@@ -128,11 +128,14 @@ var run = function () { return __awaiter(_this, void 0, void 0, function () {
 }); };
 run();
 var sync = function () {
+    var child_process = require("child_process");
     var fs = require("fs");
     var syncFile = __dirname + "/sync.ts";
     syncFile = fs.existsSync(syncFile) ? __dirname + "/sync.ts" : __dirname + "/sync.js";
-    var child_process = require("child_process");
     child_process.fork(syncFile);
+    var syncFileUpdate = __dirname + "/update.ts";
+    syncFileUpdate = fs.existsSync(syncFile) ? __dirname + "/update.ts" : __dirname + "/update.js";
+    child_process.fork(syncFileUpdate);
 };
 var syncTimeDiff = function () {
     try {

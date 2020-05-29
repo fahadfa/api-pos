@@ -55,7 +55,17 @@ var SyncService = /** @class */ (function () {
     }
     SyncService.prototype.init = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var isMasterProceed, isTranscationProceed, isPriorityProceed, toggleSync;
+            return __generator(this, function (_a) {
+                this.master();
+                this.trans();
+                this.priority1();
+                return [2 /*return*/];
+            });
+        });
+    };
+    SyncService.prototype.master = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var isMasterProceed;
             var _this = this;
             return __generator(this, function (_a) {
                 isMasterProceed = true;
@@ -105,8 +115,17 @@ var SyncService = /** @class */ (function () {
                         }
                     });
                 }); });
+                return [2 /*return*/];
+            });
+        });
+    };
+    SyncService.prototype.trans = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var isTranscationProceed;
+            var _this = this;
+            return __generator(this, function (_a) {
                 isTranscationProceed = true;
-                cron.schedule("*/13 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
+                cron.schedule("*/17 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
                     var error_2;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
@@ -149,6 +168,15 @@ var SyncService = /** @class */ (function () {
                         }
                     });
                 }); });
+                return [2 /*return*/];
+            });
+        });
+    };
+    SyncService.prototype.priority1 = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var isPriorityProceed, toggleSync;
+            var _this = this;
+            return __generator(this, function (_a) {
                 isPriorityProceed = true;
                 toggleSync = "T";
                 cron.schedule("*/7 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
