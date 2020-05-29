@@ -514,14 +514,29 @@ var SalesTableService = /** @class */ (function () {
                                 item.toWarehouseAr = toWarehouseAr;
                                 item.toWarehouseEn = toWarehouseEn;
                             }
-                            if (item.custAccount == _this.sessionInfo.inventlocationid && item.status != "CREATED") {
-                                newData_1.push(item);
+                            if (item.transkind == "ORDERSHIPMENT") {
+                                if (item.inSalesid != null && item.slSalesId != null) {
+                                    if (item.custAccount == _this.sessionInfo.inventlocationid && item.status != "CREATED") {
+                                        newData_1.push(item);
+                                    }
+                                    else if (item.inventLocationId == _this.sessionInfo.inventlocationid) {
+                                        newData_1.push(item);
+                                    }
+                                    else if (item.jazeeraWarehouse == _this.sessionInfo.inventlocationid) {
+                                        newData_1.push(item);
+                                    }
+                                }
                             }
-                            else if (item.inventLocationId == _this.sessionInfo.inventlocationid) {
-                                newData_1.push(item);
-                            }
-                            else if (item.jazeeraWarehouse == _this.sessionInfo.inventlocationid) {
-                                newData_1.push(item);
+                            else {
+                                if (item.custAccount == _this.sessionInfo.inventlocationid && item.status != "CREATED") {
+                                    newData_1.push(item);
+                                }
+                                else if (item.inventLocationId == _this.sessionInfo.inventlocationid) {
+                                    newData_1.push(item);
+                                }
+                                else if (item.jazeeraWarehouse == _this.sessionInfo.inventlocationid) {
+                                    newData_1.push(item);
+                                }
                             }
                         });
                         return [2 /*return*/, newData_1];

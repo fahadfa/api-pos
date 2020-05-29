@@ -1228,12 +1228,16 @@ var RawQuery = /** @class */ (function () {
         });
     };
     RawQuery.prototype.updateSynctable = function (inventlocationid) {
+        if (inventlocationid === void 0) { inventlocationid = null; }
         return __awaiter(this, void 0, void 0, function () {
             var query;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "update sync_table set updated_on = '1900-01-01' where group_on = '" + inventlocationid + "' and map_table ='usergroupconfig'";
+                        query = "update sync_table set updated_on = '1900-01-01' \n    where map_table ='usergroupconfig' ";
+                        if (inventlocationid) {
+                            query += " and group_on = '" + inventlocationid + "'";
+                        }
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }

@@ -131,16 +131,19 @@ var UsergroupConfigService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
+                        _a.trys.push([0, 3, , 4]);
                         return [4 /*yield*/, this.usergroupconfigDAO.saveAll(data)];
                     case 1:
                         _a.sent();
+                        return [4 /*yield*/, this.rawQuery.updateSynctable()];
+                    case 2:
+                        _a.sent();
                         returnData = { message: "SAVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
-                    case 2:
+                    case 3:
                         error_4 = _a.sent();
                         throw error_4;
-                    case 3: return [2 /*return*/];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
