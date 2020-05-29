@@ -108,18 +108,18 @@ var WorkflowService = /** @class */ (function () {
     WorkflowService.prototype.save = function (item, type) {
         if (type === void 0) { type = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var status_1, workflowcondition, usergroupid, salesData, RM_AND_RA, data, salesTableData, error_3;
+            var status_1, workflowcondition, usergroupid, salesData, RM_AND_RA, promistList, salesSaveData, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 22, , 23]);
+                        _a.trys.push([0, 21, , 22]);
                         status_1 = item.status;
                         return [4 /*yield*/, this.rawQuery.workflowconditions(this.sessionInfo.usergroupconfigid)];
                     case 1:
                         workflowcondition = _a.sent();
                         console.log(this.sessionInfo);
                         usergroupid = this.sessionInfo.groupid;
-                        if (!(item.id || item.orderId)) return [3 /*break*/, 20];
+                        if (!(item.id || item.orderId)) return [3 /*break*/, 19];
                         if (!item.id) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.workflowDAO.entity(item.id)];
                     case 2:
@@ -261,22 +261,25 @@ var WorkflowService = /** @class */ (function () {
                         return [4 /*yield*/, this.validate(item)];
                     case 17:
                         _a.sent();
-                        return [4 /*yield*/, this.workflowDAO.save(item)];
+                        promistList = [];
+                        salesSaveData = {};
+                        salesSaveData.salesId = item.orderId;
+                        salesSaveData.status = item.statusId;
+                        salesSaveData.lastModifiedDate = item.lastModifiedDate;
+                        console.log("lastModifiedDate", salesSaveData.lastModifiedDate, salesSaveData.status);
+                        promistList.push(this.workflowDAO.save(item), this.salesTableDAO.save(salesSaveData));
+                        // let salesTableData: any = await this.salesTableDAO.save(salesData);
+                        return [4 /*yield*/, Promise.all(promistList)];
                     case 18:
-                        data = _a.sent();
-                        salesData.status = item.statusId;
-                        console.log("lastModifiedDate", item.lastModifiedDate, salesData.status);
-                        salesData.lastModifiedDate = new Date(App_1.App.DateNow());
-                        return [4 /*yield*/, this.salesTableDAO.save(salesData)];
-                    case 19:
-                        salesTableData = _a.sent();
+                        // let salesTableData: any = await this.salesTableDAO.save(salesData);
+                        _a.sent();
                         return [2 /*return*/, { id: item.id, status: item.statusId, message: "SAVED_SUCCESSFULLY" }];
-                    case 20: throw { message: "INVALID_DATA" };
-                    case 21: return [3 /*break*/, 23];
-                    case 22:
+                    case 19: throw { message: "INVALID_DATA" };
+                    case 20: return [3 /*break*/, 22];
+                    case 21:
                         error_3 = _a.sent();
                         throw error_3;
-                    case 23: return [2 /*return*/];
+                    case 22: return [2 /*return*/];
                 }
             });
         });
