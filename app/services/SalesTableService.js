@@ -1400,7 +1400,7 @@ var SalesTableService = /** @class */ (function () {
                     case 2:
                         availability = _c.sent();
                         if (!(availability <= 0 || availability < Math.abs(batch.qty))) return [3 /*break*/, 4];
-                        return [4 /*yield*/, this.dofifo(item, reqData.status)];
+                        return [4 /*yield*/, this.dofifo(item, reqData)];
                     case 3:
                         fiofoBatches = _c.sent();
                         batches = batches.concat(fiofoBatches);
@@ -1426,7 +1426,7 @@ var SalesTableService = /** @class */ (function () {
                         _i++;
                         return [3 /*break*/, 1];
                     case 6: return [3 /*break*/, 9];
-                    case 7: return [4 /*yield*/, this.dofifo(item, reqData.status)];
+                    case 7: return [4 /*yield*/, this.dofifo(item, reqData)];
                     case 8:
                         fiofoBatches = _c.sent();
                         batches = batches.concat(fiofoBatches);
@@ -1952,9 +1952,9 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.saveOrderShipment = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var salesLine, transactionClosed, salesData, checkStatus, cond, promiseList, _i, salesLine_8, item, _a, _b, batches, returnData;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+            var salesLine, transactionClosed, salesData, checkStatus, cond, promiseList, _i, salesLine_8, item, _a, _b, batches, fiofoBatches, _c, fiofoBatches_1, inv, returnData;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
                     case 0:
                         salesLine = reqData.salesLine;
                         delete reqData.salesLine;
@@ -1965,72 +1965,90 @@ var SalesTableService = /** @class */ (function () {
                                 salesId: reqData.interCompanyOriginalSalesId,
                             })];
                     case 1:
-                        salesData = _c.sent();
+                        salesData = _d.sent();
                         if (!salesData) return [3 /*break*/, 3];
                         salesData.status = "SHIPPED";
                         salesData.salesType = 2;
                         return [4 /*yield*/, this.salestableDAO.save(salesData)];
                     case 2:
-                        _c.sent();
+                        _d.sent();
                         reqData.salesType = 2;
                         reqData.isMovementIn = false;
                         reqData.status = "SHIPPED";
                         transactionClosed = true;
-                        _c.label = 3;
+                        _d.label = 3;
                     case 3: return [4 /*yield*/, this.validate(reqData)];
                     case 4:
-                        cond = _c.sent();
+                        cond = _d.sent();
                         promiseList = [];
-                        if (!(cond == true)) return [3 /*break*/, 6];
+                        if (!(cond == true)) return [3 /*break*/, 11];
                         promiseList.push(this.salestableDAO.save(reqData));
                         salesLine = salesLine.filter(function (v) { return v.status == "SHIPPED"; });
                         console.log(salesLine);
-                        for (_i = 0, salesLine_8 = salesLine; _i < salesLine_8.length; _i++) {
-                            item = salesLine_8[_i];
-                            delete item.id;
-                            item.id = uuid();
-                            item.salesId = reqData.salesId;
-                            item.custAccount = reqData.custAccount;
-                            item.createddatetime = moment().format();
-                            item.createdBy = this.sessionInfo.userName;
-                            item.numberSequenceGroupId = this.seqNum;
-                            item.lastModifiedDate = new Date(App_1.App.DateNow());
-                            item.batch = [];
-                            if (item.batches && item.batches.length > 0) {
-                                //console.log(item.batches);
-                                for (_a = 0, _b = item.batches; _a < _b.length; _a++) {
-                                    batches = _b[_a];
-                                    if (batches.quantity > 0) {
-                                        batches.itemid = item.itemid;
-                                        batches.transrefid = reqData.interCompanyOriginalSalesId
-                                            ? reqData.interCompanyOriginalSalesId
-                                            : reqData.salesId;
-                                        batches.invoiceid = reqData.salesId;
-                                        batches.qty = -parseInt(batches.quantity);
-                                        batches.batchno = batches.batchNo;
-                                        batches.configid = item.configId;
-                                        batches.inventsizeid = item.inventsizeid;
-                                        batches.inventlocationid = reqData.inventLocationId;
-                                        batches.dataareaid = reqData.dataareaid;
-                                        batches.reserveStatus = reqData.status;
-                                        batches.transactionClosed = false;
-                                        batches.custvendac = reqData.custAccount;
-                                        batches.dateinvent = moment().format();
-                                        batches.salesLineId = item.id;
-                                        item.batch.push({
-                                            batchNo: batches.batchNo,
-                                            quantity: batches.quantity,
-                                        });
-                                        this.updateInventoryService.sessionInfo = this.sessionInfo;
-                                        promiseList.push(this.updateInventoryService.updateInventtransTable(batches, false));
-                                    }
-                                }
+                        _i = 0, salesLine_8 = salesLine;
+                        _d.label = 5;
+                    case 5:
+                        if (!(_i < salesLine_8.length)) return [3 /*break*/, 9];
+                        item = salesLine_8[_i];
+                        delete item.id;
+                        item.id = uuid();
+                        item.salesId = reqData.salesId;
+                        item.custAccount = reqData.custAccount;
+                        item.createddatetime = moment().format();
+                        item.createdBy = this.sessionInfo.userName;
+                        item.numberSequenceGroupId = this.seqNum;
+                        item.lastModifiedDate = new Date(App_1.App.DateNow());
+                        item.batch = [];
+                        if (!(item.batches && item.batches.length > 0)) return [3 /*break*/, 6];
+                        //console.log(item.batches);
+                        for (_a = 0, _b = item.batches; _a < _b.length; _a++) {
+                            batches = _b[_a];
+                            if (batches.quantity > 0) {
+                                batches.itemid = item.itemid;
+                                batches.transrefid = reqData.interCompanyOriginalSalesId
+                                    ? reqData.interCompanyOriginalSalesId
+                                    : reqData.salesId;
+                                batches.invoiceid = reqData.salesId;
+                                batches.qty = -parseInt(batches.quantity);
+                                batches.batchno = batches.batchNo;
+                                batches.configid = item.configId;
+                                batches.inventsizeid = item.inventsizeid;
+                                batches.inventlocationid = reqData.inventLocationId;
+                                batches.dataareaid = reqData.dataareaid;
+                                batches.reserveStatus = reqData.status;
+                                batches.transactionClosed = false;
+                                batches.custvendac = reqData.custAccount;
+                                batches.dateinvent = moment().format();
+                                batches.salesLineId = item.id;
+                                item.batch.push({
+                                    batchNo: batches.batchNo,
+                                    quantity: batches.quantity,
+                                });
+                                this.updateInventoryService.sessionInfo = this.sessionInfo;
+                                promiseList.push(this.updateInventoryService.updateInventtransTable(batches, false));
                             }
                         }
+                        return [3 /*break*/, 8];
+                    case 6: return [4 /*yield*/, this.dofifo(item, reqData)];
+                    case 7:
+                        fiofoBatches = _d.sent();
+                        for (_c = 0, fiofoBatches_1 = fiofoBatches; _c < fiofoBatches_1.length; _c++) {
+                            inv = fiofoBatches_1[_c];
+                            item.batch.push({
+                                batchNo: inv.batchno,
+                                quantity: inv.qty,
+                            });
+                            promiseList.push(this.updateInventoryService.updateInventtransTable(inv, false));
+                        }
+                        _d.label = 8;
+                    case 8:
+                        _i++;
+                        return [3 /*break*/, 5];
+                    case 9:
                         promiseList.push(this.salesLineDAO.save(salesLine));
                         return [4 /*yield*/, Promise.all(promiseList)];
-                    case 5:
-                        _c.sent();
+                    case 10:
+                        _d.sent();
                         returnData = {
                             id: reqData.salesId,
                             message: "SAVED_SUCCESSFULLY",
@@ -2038,7 +2056,7 @@ var SalesTableService = /** @class */ (function () {
                         };
                         // //console.log(returnData);
                         return [2 /*return*/, returnData];
-                    case 6: return [2 /*return*/];
+                    case 11: return [2 /*return*/];
                 }
             });
         });
@@ -2370,7 +2388,7 @@ var SalesTableService = /** @class */ (function () {
             });
         });
     };
-    SalesTableService.prototype.dofifo = function (item, status) {
+    SalesTableService.prototype.dofifo = function (item, reqData) {
         return __awaiter(this, void 0, void 0, function () {
             var batches, inventory, val_1, _i, inventory_1, batch, _a, inventory_2, batch;
             return __generator(this, function (_b) {
@@ -2404,13 +2422,13 @@ var SalesTableService = /** @class */ (function () {
                             batch = inventory_2[_a];
                             if (batch.quantity > 0) {
                                 batch.itemid = item.itemid;
-                                batch.transrefid = item.salesId;
+                                batch.transrefid = reqData.interCompanyOriginalSalesId ? reqData.interCompanyOriginalSalesId : reqData.salesId;
                                 batch.invoiceid = item.salesId;
                                 batch.dataareaid = this.sessionInfo.dataareaid;
                                 batch.inventlocationid = this.sessionInfo.inventlocationid;
-                                batch.transactionClosed = status == "PAID" || status == "RESERVED" ? true : false;
+                                batch.transactionClosed = reqData.status == "PAID" || reqData.status == "RESERVED" ? true : false;
                                 batch.qty = -batch.quantity;
-                                batch.reserveStatus = status;
+                                batch.reserveStatus = reqData.status;
                                 batch.dateinvent = new Date(App_1.App.DateNow());
                                 // this.inventTransDAO.save(batche);
                                 batches.push(batch);
