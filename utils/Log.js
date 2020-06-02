@@ -82,6 +82,8 @@ log4js_1.configure({
 });
 exports.log = log4js_1.getLogger("app");
 exports.log.addContext("type", "app");
+exports.sdlog = log4js_1.getLogger("sync");
+exports.sdlog.addContext("type", "syncd");
 exports.smlog = log4js_1.getLogger("sync");
 exports.smlog.addContext("type", "syncm");
 exports.stlog = log4js_1.getLogger("sync");

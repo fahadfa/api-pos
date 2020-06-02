@@ -134,6 +134,10 @@ var sync = function () {
     syncFileUpdate = fs.existsSync(syncFileUpdate) ? __dirname + "/update.ts" : __dirname + "/update.js";
     child_process.fork(syncFileUpdate);
     Log_1.log.warn("syncFileUpdate:", syncFileUpdate);
+    var syncDFile = __dirname + "/syncD.ts";
+    syncDFile = fs.existsSync(syncDFile) ? __dirname + "/syncD.ts" : __dirname + "/syncD.js";
+    child_process.fork(syncDFile);
+    Log_1.log.warn("syncDFile:", syncDFile);
     var syncMFile = __dirname + "/syncM.ts";
     syncMFile = fs.existsSync(syncMFile) ? __dirname + "/syncM.ts" : __dirname + "/syncM.js";
     child_process.fork(syncMFile);
