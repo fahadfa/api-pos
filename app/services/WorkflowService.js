@@ -401,51 +401,53 @@ var WorkflowService = /** @class */ (function () {
     };
     WorkflowService.prototype.stockOnHandCheck = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var lines, canConvert, colors, items, sizes, batches, itemString, itemsInStock;
+            var lines, canConvert_1, colors_1, items_1, sizes_1, batches_1, itemString_1, itemsInStock_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.inventtransDAO.findAll({ invoiceid: reqData.salesId })];
                     case 1:
                         lines = _a.sent();
                         lines = lines.filter(function (v) { return v.qty < 0; });
-                        canConvert = true;
-                        colors = [];
-                        items = [];
-                        sizes = [];
-                        batches = [];
-                        itemString = "";
+                        if (!(lines.length > 0)) return [3 /*break*/, 3];
+                        canConvert_1 = true;
+                        colors_1 = [];
+                        items_1 = [];
+                        sizes_1 = [];
+                        batches_1 = [];
+                        itemString_1 = "";
                         lines.map(function (v) {
-                            items.push(v.itemid), colors.push(v.configid), sizes.push(v.inventsizeid), batches.push(v.batchno);
+                            items_1.push(v.itemid), colors_1.push(v.configid), sizes_1.push(v.inventsizeid), batches_1.push(v.batchno);
                         });
-                        return [4 /*yield*/, this.rawQuery.checkBatchAvailability(this.sessionInfo.inventlocationid, items, colors, sizes, batches)];
+                        return [4 /*yield*/, this.rawQuery.checkBatchAvailability(this.sessionInfo.inventlocationid, items_1, colors_1, sizes_1, batches_1)];
                     case 2:
-                        itemsInStock = _a.sent();
+                        itemsInStock_1 = _a.sent();
                         lines.map(function (v) {
-                            var index = itemsInStock.findIndex(function (value) {
+                            var index = itemsInStock_1.findIndex(function (value) {
                                 return value.itemid.toLowerCase() == v.itemid.toLowerCase() &&
                                     value.configid.toLowerCase() == v.configid.toLowerCase() &&
                                     value.inventsizeid.toLowerCase() == v.inventsizeid.toLowerCase() &&
                                     value.batchno.toLowerCase() == v.batchno.toLowerCase();
                             });
                             if (index >= 0) {
-                                if (Math.abs(parseInt(v.qty)) > parseInt(itemsInStock[index].qty)) {
-                                    canConvert = canConvert == true ? false : false;
-                                    itemString += v.itemid + ",";
+                                if (Math.abs(parseInt(v.qty)) > parseInt(itemsInStock_1[index].qty)) {
+                                    canConvert_1 = canConvert_1 == true ? false : false;
+                                    itemString_1 += v.itemid + ",";
                                 }
                             }
                             else {
-                                canConvert = canConvert == true ? false : false;
-                                itemString += v.itemid + ",";
+                                canConvert_1 = canConvert_1 == true ? false : false;
+                                itemString_1 += v.itemid + ",";
                             }
                         });
-                        return [2 /*return*/, canConvert];
+                        return [2 /*return*/, canConvert_1];
+                    case 3: return [2 /*return*/, true];
                 }
             });
         });
     };
     WorkflowService.prototype.inventryTransUpdate = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var batches, _i, batches_1, batch;
+            var batches, _i, batches_2, batch;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.inventtransDAO.findAll({
@@ -454,11 +456,12 @@ var WorkflowService = /** @class */ (function () {
                     case 1:
                         batches = _a.sent();
                         batches = batches.filter(function (v) { return v.qty < 0; });
-                        _i = 0, batches_1 = batches;
+                        if (!(batches.length > 0)) return [3 /*break*/, 5];
+                        _i = 0, batches_2 = batches;
                         _a.label = 2;
                     case 2:
-                        if (!(_i < batches_1.length)) return [3 /*break*/, 5];
-                        batch = batches_1[_i];
+                        if (!(_i < batches_2.length)) return [3 /*break*/, 5];
+                        batch = batches_2[_i];
                         batch.qty = Math.abs(batch.qty);
                         return [4 /*yield*/, this.updateInventoryService.updateUnReserveQty(batch)];
                     case 3:

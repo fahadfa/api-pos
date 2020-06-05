@@ -64,12 +64,12 @@ var AppReport = /** @class */ (function () {
     AppReport.prototype.getRouter = function () {
         var _this = this;
         this.router.get("/:code/:type", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
-            var params, code, paramsType, type, reqData, resData_1, report, dataFound, _i, _a, action, ns, error_1;
+            var params, code, paramsType, type, reqData, resData_1, report, dataFound, _i, _a, action, ns, _b, error_1;
             var _this = this;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
-                        _b.trys.push([0, 8, , 9]);
+                        _c.trys.push([0, 9, , 10]);
                         params = request.params;
                         code = params.code;
                         paramsType = request.params;
@@ -81,31 +81,37 @@ var AppReport = /** @class */ (function () {
                         report = void 0;
                         dataFound = false;
                         _i = 0, _a = this.reports;
-                        _b.label = 1;
+                        _c.label = 1;
                     case 1:
-                        if (!(_i < _a.length)) return [3 /*break*/, 7];
+                        if (!(_i < _a.length)) return [3 /*break*/, 8];
                         report = _a[_i];
                         report = report.slice(0, -3);
-                        if (!(report.toLowerCase() == code + "report")) return [3 /*break*/, 6];
+                        if (!(report.toLowerCase() == code + "report")) return [3 /*break*/, 7];
                         dataFound = true;
                         action = "../app/reports/" + report;
                         return [4 /*yield*/, Promise.resolve().then(function () { return __importStar(require(action)); })];
                     case 2:
-                        ns = _b.sent();
-                        return [4 /*yield*/, new ns[report]().execute(reqData)];
+                        ns = _c.sent();
+                        reqData.session = request.body.sessionInfo;
+                        _b = this;
+                        return [4 /*yield*/, new ns[report]()];
                     case 3:
-                        resData_1 = _b.sent();
-                        if (!(type != "data")) return [3 /*break*/, 5];
-                        reqData.type = type;
-                        return [4 /*yield*/, new ns[report]().report(resData_1, reqData)];
+                        _b.service = _c.sent();
+                        this.service.sessionInfo = request.body.sessionInfo;
+                        return [4 /*yield*/, this.service.execute(reqData)];
                     case 4:
-                        resData_1 = _b.sent();
-                        _b.label = 5;
-                    case 5: return [3 /*break*/, 7];
-                    case 6:
+                        resData_1 = _c.sent();
+                        if (!(type != "data")) return [3 /*break*/, 6];
+                        reqData.type = type;
+                        return [4 /*yield*/, this.service.report(resData_1, reqData)];
+                    case 5:
+                        resData_1 = _c.sent();
+                        _c.label = 6;
+                    case 6: return [3 /*break*/, 8];
+                    case 7:
                         _i++;
                         return [3 /*break*/, 1];
-                    case 7:
+                    case 8:
                         if (dataFound == true) {
                             if (type == "data") {
                                 response.send({ status: 1, data: resData_1 });
@@ -118,8 +124,8 @@ var AppReport = /** @class */ (function () {
                                         template: {
                                             content: resData_1,
                                             engine: "none",
-                                            recipe: "html"
-                                        }
+                                            recipe: "html",
+                                        },
                                     })
                                         .then(function (out) {
                                         out.stream.pipe(response);
@@ -142,14 +148,14 @@ var AppReport = /** @class */ (function () {
                                         template: {
                                             content: resData_1,
                                             engine: "none",
-                                            recipe: "html-to-xlsx"
-                                        }
+                                            recipe: "html-to-xlsx",
+                                        },
                                     })
                                         .then(function (out) {
                                         response.set({
                                             "Content-Type": "application/vnd.ms-excel",
                                             // instead of report.xlsx you can use any name you want, for example test.xlsx, etc
-                                            "Content-Disposition": 'attachment; filename="report.xlsx'
+                                            "Content-Disposition": 'attachment; filename="report.xlsx',
                                         });
                                         out.stream.pipe(response);
                                     })
@@ -167,14 +173,14 @@ var AppReport = /** @class */ (function () {
                         else {
                             throw { message: "No Report Found!!!" };
                         }
-                        return [3 /*break*/, 9];
-                    case 8:
-                        error_1 = _b.sent();
+                        return [3 /*break*/, 10];
+                    case 9:
+                        error_1 = _c.sent();
                         Log_1.log.error(error_1);
                         error_1 = typeof error_1 == "string" ? { message: error_1 } : error_1;
                         response.send({ status: 0, error: error_1 });
-                        return [3 /*break*/, 9];
-                    case 9: return [2 /*return*/];
+                        return [3 /*break*/, 10];
+                    case 10: return [2 /*return*/];
                 }
             });
         }); });

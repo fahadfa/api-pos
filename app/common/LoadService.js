@@ -674,7 +674,7 @@ var LoadService = /** @class */ (function () {
     };
     LoadService.prototype.reportwarehouses = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var warehouseQuery, regionalWarehouses, inQueryStr, query, data;
+            var warehouseQuery, regionalWarehouses, inQueryStr, query, data, resData;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -685,15 +685,27 @@ var LoadService = /** @class */ (function () {
                         inQueryStr = "";
                         if (!(regionalWarehouses.length > 0)) return [3 /*break*/, 5];
                         if (!regionalWarehouses[0].regionalwarehouse) return [3 /*break*/, 3];
-                        regionalWarehouses[0].regionalwarehouse.split(",").map(function (item) {
-                            inQueryStr += "'" + item + "',";
-                        });
-                        inQueryStr += "'" + this.sessionInfo.inventlocationid + "'";
+                        inQueryStr = regionalWarehouses[0].regionalwarehouse
+                            .split(",")
+                            .map(function (d) { return "'" + d + "'"; })
+                            .join(",");
+                        inQueryStr += ",'" + this.sessionInfo.inventlocationid + "'";
+                        console.log(inQueryStr);
                         query = "select inventlocationid, name, namealias from inventlocation where inventlocationid in (" + inQueryStr + ") order by namealias";
+                        data = [];
+                        if (regionalWarehouses[0].regionalwarehouse.split(",").includes("ALL")) {
+                            data = [
+                                {
+                                    inventlocationid: "ALL",
+                                    namealias: "All",
+                                    name: "الكل",
+                                },
+                            ];
+                        }
                         return [4 /*yield*/, this.db.query(query)];
                     case 2:
-                        data = _a.sent();
-                        return [2 /*return*/, data];
+                        resData = _a.sent();
+                        return [2 /*return*/, data.concat(resData)];
                     case 3: return [2 /*return*/, []];
                     case 4: return [3 /*break*/, 6];
                     case 5: return [2 /*return*/, []];

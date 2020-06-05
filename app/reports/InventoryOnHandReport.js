@@ -43,12 +43,10 @@ var InventoryOnHandReport = /** @class */ (function () {
     }
     InventoryOnHandReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, i, sum, _i, data_1, item, result, error_1;
+            var data, i, sum, _i, data_1, item, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.query_to_data(params)];
+                    case 0: return [4 /*yield*/, this.query_to_data(params)];
                     case 1:
                         data = _a.sent();
                         i = 1;
@@ -69,10 +67,6 @@ var InventoryOnHandReport = /** @class */ (function () {
                             user: params.user,
                         };
                         return [2 /*return*/, result];
-                    case 2:
-                        error_1 = _a.sent();
-                        throw error_1;
-                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -114,10 +108,11 @@ var InventoryOnHandReport = /** @class */ (function () {
                             ? "i.batchno as batchno,\n    to_char(b.expdate, 'yyyy-MM-dd') as batchexpdate,"
                             : "") + "\n    sum(i.qty_reserved) as \"reservedQuantity\",\n    sum(i.qty_in-i.qty_out) as \"totalAvailable\",\n    w.name as WareHouseNameAr, \n    w.namealias as WareHouseNameEn\n    from inventory_onhand as i\n    left join inventbatch b on i.batchno = b.inventbatchid and i.itemid = b.itemid\n    inner join inventtable bs on i.itemid = bs.itemid\n    inner join inventlocation w on w.inventlocationid=i.inventlocationid\n";
                         if (!(params.key == "ALL")) return [3 /*break*/, 2];
-                        warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.inventlocationid + "' limit 1";
+                        warehouseQuery = "select regionalwarehouse from usergroupconfig where id= '" + this.sessionInfo.usergroupconfigid + "' limit 1";
                         return [4 /*yield*/, this.db.query(warehouseQuery)];
                     case 1:
                         regionalWarehouses = _a.sent();
+                        console.log(regionalWarehouses);
                         inQueryStr_1 = "";
                         regionalWarehouses[0].regionalwarehouse.split(",").map(function (item) {
                             inQueryStr_1 += "'" + item + "',";
