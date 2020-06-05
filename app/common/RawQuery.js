@@ -795,7 +795,7 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select \n            returnorderapprovalrequired , \n            returnorderrmapprovalrequired,\n            returnorderraapprovalrequired, \n            projectcustomer, \n            agentcustomer from  usergroupconfig\n            where id= '" + usergroupconfigid + "' limit 1";
+                        query = "select \n            returnorderapprovalrequired  as \"approvalRequired\", \n            returnorderrmapprovalrequired as \"rmApprovalRequired\",\n            returnorderraapprovalrequired \"raApprovalRequired\", \n            projectcustomer, \n            agentcustomer from  usergroupconfig\n            where id= '" + usergroupconfigid + "' limit 1";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
@@ -1157,6 +1157,23 @@ var RawQuery = /** @class */ (function () {
                         sizes = sizesList.map(function (d) { return "lower('" + d + "')"; }).join(",");
                         colors = colorsList.map(function (d) { return "lower('" + d + "')"; }).join(",");
                         query = "select itemid, configid, inventsizeid,  sum(qty_in-qty_out-qty_reserved) as qty from inventory_onhand  \n    where lower(itemid) in (" + items + ")\n    and lower(configid) in (" + colors + ")\n    and lower(inventsizeid) in (" + sizes + ")\n    and inventlocationid = '" + inventlocationid + "'\n    group by itemid, configid, inventsizeid ";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    RawQuery.prototype.checkBatchAvailability = function (inventlocationid, itemsList, colorsList, sizesList, batchList) {
+        return __awaiter(this, void 0, void 0, function () {
+            var items, sizes, colors, batches, query;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        items = itemsList.map(function (d) { return "lower('" + d + "')"; }).join(",");
+                        sizes = sizesList.map(function (d) { return "lower('" + d + "')"; }).join(",");
+                        colors = colorsList.map(function (d) { return "lower('" + d + "')"; }).join(",");
+                        batches = batchList.map(function (d) { return "lower('" + d + "')"; }).join(",");
+                        query = "select itemid, configid, inventsizeid, batchno,  sum(qty_in-qty_out-qty_reserved) as qty from inventory_onhand  \n    where lower(itemid) in (" + items + ")\n    and lower(configid) in (" + colors + ")\n    and lower(inventsizeid) in (" + sizes + ")\n    and lower(batchno) in (" + batches + ")\n    and inventlocationid = '" + inventlocationid + "'\n    group by itemid, configid, inventsizeid, batchno";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }

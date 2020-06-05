@@ -52,12 +52,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var pg_1 = require("pg");
 var Config = __importStar(require("../utils/Config"));
 var App_1 = require("../utils/App");
+var Log_1 = require("../utils/Log");
 var format = require("pg-format");
 var STORE_ID = process.env.ENV_STORE_ID || "LOCAL";
 pg_1.types.setTypeParser(1114, function (stringValue) {
     return stringValue.replace(" ", "T");
 });
-var log;
+var log = Log_1.log;
 var SyncServiceHelper = /** @class */ (function () {
     function SyncServiceHelper() {
     }

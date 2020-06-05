@@ -44,7 +44,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
     }
     ReturnOrderAmountService.prototype.returnAmount = function (reqData, type) {
         return __awaiter(this, void 0, void 0, function () {
-            var salesOrderData, customer, salesLine, salesLineIds, grossAmount, total, discount, vat, sendForApproval, totalGrossAmountAfterReturnItems, filteredSalesLine, promotionalDiscountItems, promotionalreturnItems, discountConditions, _i, salesLine_1, item, checkForPromotional, _loop_1, _a, _b, item, result, _loop_2, _c, result_1, item, returnOrderData, lineNum, _loop_3, this_1, _d, _e, item;
+            var salesOrderData, customer, condition, salesLine, salesLineIds, grossAmount, total, discount, vat, sendForApproval, totalGrossAmountAfterReturnItems, filteredSalesLine, promotionalDiscountItems, promotionalreturnItems, discountConditions, _i, salesLine_1, item, checkForPromotional, _loop_1, _a, _b, item, result, _loop_2, _c, result_1, item, returnOrderData, lineNum, _loop_3, this_1, _d, _e, item;
             return __generator(this, function (_f) {
                 switch (_f.label) {
                     case 0: return [4 /*yield*/, this.salesTableDAO.entity(reqData.salesid.toUpperCase())];
@@ -53,6 +53,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.getCustomer(salesOrderData.custAccount)];
                     case 2:
                         customer = _f.sent();
+                        return [4 /*yield*/, this.rawQuery.workflowconditions(this.sessionInfo.usergroupconfigid)];
+                    case 3:
+                        condition = _f.sent();
                         salesLine = salesOrderData.salesLine;
                         salesLineIds = [];
                         grossAmount = 0;
@@ -155,7 +158,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             _loop_2(item);
                         }
                         return [4 /*yield*/, this.allocateReturnOrderData(salesOrderData, type)];
-                    case 3:
+                    case 4:
                         returnOrderData = _f.sent();
                         returnOrderData.salesLine = [];
                         lineNum = 1;
@@ -308,12 +311,23 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         returnOrderData.shippingAmount = 0;
                         returnOrderData.redeemAmount = 0;
                         returnOrderData.cardAmount = 0;
+                        console.log(sendForApproval, condition);
+                        if (returnOrderData.designServiceRedeemAmount > 0) {
+                            sendForApproval = true;
+                        }
+                        else if ((condition.rmApprovalRequired || condition.raApprovalRequired) && sendForApproval) {
+                            sendForApproval = true;
+                        }
+                        else {
+                            sendForApproval = false;
+                        }
+                        console.log(sendForApproval, condition);
                         return [2 /*return*/, {
                                 total: total > 0 ? total : 0,
                                 grossTotal: grossAmount,
                                 discount: discount,
                                 vatPrice: vat,
-                                sendForApproval: returnOrderData.designServiceRedeemAmount > 0 ? true : sendForApproval,
+                                sendForApproval: sendForApproval,
                                 returnOrderData: returnOrderData,
                             }];
                 }

@@ -44,18 +44,24 @@ var MenuGroupDAO = /** @class */ (function () {
     }
     MenuGroupDAO.prototype.search = function (data) {
         return __awaiter(this, void 0, void 0, function () {
+            var cond;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.dao
-                            .createQueryBuilder("menuGroup")
-                            .innerJoin("menuGroup.group", "group")
-                            .innerJoinAndSelect("menuGroup.menu", "menu")
-                            .addSelect("group.groupid")
-                            .addSelect("group.role")
-                            .orderBy("priority", "ASC")
-                            .where(data)
-                            .andWhere("menu.active=true")
-                            .getMany()];
+                    case 0:
+                        cond = "menu.active=true ";
+                        if (data.isMobile) {
+                            cond += " and menu.is_mobile = true";
+                        }
+                        return [4 /*yield*/, this.dao
+                                .createQueryBuilder("menuGroup")
+                                .innerJoin("menuGroup.group", "group")
+                                .innerJoinAndSelect("menuGroup.menu", "menu")
+                                .addSelect("group.groupid")
+                                .addSelect("group.role")
+                                .orderBy("priority", "ASC")
+                                .where(data)
+                                .andWhere(cond)
+                                .getMany()];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -89,9 +95,9 @@ var MenuGroupDAO = /** @class */ (function () {
                                 alias: "menuGroup",
                                 innerJoinAndSelect: {
                                     group: "menuGroup.group",
-                                    menu: "menuGroup.menu"
-                                }
-                            }
+                                    menu: "menuGroup.menu",
+                                },
+                            },
                         })];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
@@ -119,9 +125,9 @@ var MenuGroupDAO = /** @class */ (function () {
                                 alias: "menuGroup",
                                 innerJoinAndSelect: {
                                     group: "menuGroup.group",
-                                    menu: "menuGroup.menu"
-                                }
-                            }
+                                    menu: "menuGroup.menu",
+                                },
+                            },
                         })];
                     case 1: return [2 /*return*/, _a.sent()];
                 }

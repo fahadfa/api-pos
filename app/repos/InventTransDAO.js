@@ -47,11 +47,11 @@ var InventorytransDAO = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.dao
-                            .createQueryBuilder("inventoryonhand")
-                            .leftJoinAndSelect("inventoryonhand.inventbatch", "inventbatch")
-                            .leftJoinAndSelect("inventoryonhand", "color")
+                            .createQueryBuilder("inventtrans")
+                            .leftJoinAndSelect("inventtrans.inventbatch", "inventbatch")
+                            .leftJoinAndSelect("inventtrans", "color")
                             .where(data)
-                            .andWhere("color.code = 'inventoryonhand.configid'")
+                            .andWhere("color.code = 'inventtrans.configid'")
                             .getMany()];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
@@ -82,10 +82,7 @@ var InventorytransDAO = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.dao
-                            .createQueryBuilder("inventtrans")
-                            .where({ id: id })
-                            .getOne()];
+                    case 0: return [4 /*yield*/, this.dao.createQueryBuilder("inventtrans").where({ id: id }).getOne()];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -105,10 +102,7 @@ var InventorytransDAO = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.dao
-                            .createQueryBuilder("inventtrans")
-                            .where(data)
-                            .getOne()];
+                    case 0: return [4 /*yield*/, this.dao.createQueryBuilder("inventtrans").where(data).getOne()];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });

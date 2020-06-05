@@ -258,6 +258,12 @@ var SalesTableController = /** @class */ (function () {
                             case "purchaseorderdetails":
                                 reqData.type = "purchaseorder";
                                 break;
+                            case "designerservicedetails":
+                                reqData.type = "designerservice";
+                                break;
+                            case "designerservicereturndetails":
+                                reqData.type = "designerservicereturn";
+                                break;
                         }
                         App_1.App.PrintLog(this.constructor.name, "Search", this.service.sessionInfo);
                         return [4 /*yield*/, App_1.App.ValildateUserAccess(this.service.sessionInfo, this.componentName, Props_1.Props.ACCESS_READ)];

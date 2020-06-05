@@ -410,25 +410,28 @@ var CusttableDAO = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select \n        accountnum, \n        name, \n        namealias,\n        phone,\n        pricegroup,\n        inventlocation,\n        dataareaid,\n        walkincustomer,\n        custgroup,\n        cashdisc,\n        salesgroup,\n        currency,\n        paymtermid,\n        custtype,\n        rcusttype,\n        dimension as regionid,\n        dimension2_ as departmentid,\n        dimension3_ as costcenterid,\n        dimension4_ as employeeid,\n        dimension5_ as projectid,\n        dimension6_ as salesmanid,\n        dimension7_ as brandid,\n        dimension8_ as productlineid,\n        rcusttype from custtable where deleted = false ";
+                        query = "select \n        c.accountnum, \n        c.name, \n        c.namealias,\n        c.phone,\n        c.pricegroup,\n        c.inventlocation,\n        c.dataareaid,\n        c.walkincustomer,\n        c.custgroup,\n        c.cashdisc,\n        c.salesgroup,\n        c.currency,\n        c.paymtermid,\n        c.custtype,\n        c.rcusttype,\n        c.dimension as regionid,\n        c.dimension2_ as departmentid,\n        c.dimension3_ as costcenterid,\n        c.dimension4_ as employeeid,\n        c.dimension5_ as projectid,\n        (CASE \n          WHEN c.dimension6_!='' THEN concat(d.num,' - ', d.description)\n          ELSE '" + (data.salesmanid.length > 0 ? data.salesmanid[0].salesman : null) + "'\n      END\n       ) as salesman,\n       (CASE \n        WHEN c.dimension6_!='' THEN concat(d.num)\n        ELSE '" + (data.salesmanid.length > 0 ? data.salesmanid[0].salesmanid : null) + "'\n    END\n     ) as salesmanid,\n        c.dimension7_ as brandid,\n        c.dimension8_ as productlineid,\n        c.rcusttype from custtable c\n        left join dimensions d on c.dimension6_ = d.num \n        where c.deleted = false ";
+                        if (data.type == "designerservice") {
+                            query += " and c.walkincustomer=true ";
+                        }
                         query += " and (";
                         if (data.customergroup.length > 0) {
-                            query += "(custgroup in (" + data.customergroup + ") or walkincustomer = true) ";
+                            query += "(c.custgroup in (" + data.customergroup + ") or c.walkincustomer = true) ";
                         }
                         if (data.additionalcustomer.length > 0) {
-                            query += "OR (accountnum in (" + data.additionalcustomer + ") or walkincustomer = true) ";
+                            query += "OR (c.accountnum in (" + data.additionalcustomer + ") or c.walkincustomer = true) ";
                         }
                         if (data.sabiccustomers.length > 0) {
-                            query += "OR (accountnum in (" + data.sabiccustomers + ") or walkincustomer = true) ";
+                            query += "OR (c.accountnum in (" + data.sabiccustomers + ") or c.walkincustomer = true) ";
                         }
                         if (data.defaultcustomerid) {
-                            query += " or (accountnum='" + data.defaultcustomerid + " or walkincustomer = true') ";
+                            query += " or (c.accountnum='" + data.defaultcustomerid + " or c.walkincustomer = true') ";
                         }
                         query += ")";
                         if (data.filter) {
-                            query += " and (accountnum ILike '%" + data.filter + "%' or \n            name ILike '%" + data.filter + "%' or \n            namealias ILike '%" + data.filter + "%')";
+                            query += " and (c.accountnum ILike '%" + data.filter + "%' or \n            c.name ILike '%" + data.filter + "%' or \n            c.namealias ILike '%" + data.filter + "%')";
                         }
-                        query += " ORDER BY \n        createddatetime DESC offset " + (data.page - 1) * data.pageCount + " limit " + data.pageCount;
+                        query += " ORDER BY \n        c.createddatetime DESC offset " + (data.page - 1) * data.pageCount + " limit " + data.pageCount;
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }

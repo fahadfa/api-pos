@@ -315,7 +315,7 @@
           <th class="th">Shipping Date</th>
           <th class="th">Qty</th>
           <th class="th">Price</th>
-          <th class="th">Colorant</th>
+          <!-- <th class="th">Colorant</th> -->
           <th class="th">Colarant Price</th>
           <th class="th">Discount</th>
           <th class="th">Net Amnt Before VAT</th>
@@ -350,8 +350,8 @@
           </td>
           <td class="td description-data">
             <span style="font-size: 10px;">
-              {{this.prodNameEn}}, {{# if this.colorant}} {{this.colorant}}, {{else}} {{this.configid}}, {{/if}}
-              {{this.inventsizeid}}, {{this.batchno}}
+              {{this.prodNameEn}}, {{# if this.colorant}} {{this.colorant}}, {{else}} {{this.configid}},
+              {{/if}},{{this.colorantid}}, {{this.inventsizeid}}, {{this.batchno}}
             </span>
           </td>
 
@@ -365,9 +365,9 @@
           <td class="tdright">
             {{this.salesprice}}
           </td>
-          <td class="tdright">
+          <!-- <td class="tdright">
             {{this.colorantid}}
-          </td>
+          </td> -->
 
           <td class="tdright">
             {{this.colorantprice}}

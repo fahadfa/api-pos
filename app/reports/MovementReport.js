@@ -41,6 +41,7 @@ var SalesTableService_1 = require("../services/SalesTableService");
 var RawQuery_1 = require("../common/RawQuery");
 var InventTransDAO_1 = require("../repos/InventTransDAO");
 var UpdateInventoryService_1 = require("../services/UpdateInventoryService");
+var WorkflowService_1 = require("../services/WorkflowService");
 var MovementReport = /** @class */ (function () {
     function MovementReport() {
         this.db = typeorm_1.getManager();
@@ -48,14 +49,15 @@ var MovementReport = /** @class */ (function () {
         this.rawQuery = new RawQuery_1.RawQuery();
         this.inventTransDAO = new InventTransDAO_1.InventorytransDAO();
         this.updateInventoryService = new UpdateInventoryService_1.UpdateInventoryService();
+        this.workflowService = new WorkflowService_1.WorkflowService();
     }
     MovementReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, status_1, data_1, salesLine, batches, _i, batches_1, item, error_1;
+            var id, status_1, data_1, salesLine, promiseList, reqData, batches, _i, batches_1, item, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 8, , 9]);
+                        _a.trys.push([0, 6, , 7]);
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
                     case 1:
@@ -74,34 +76,34 @@ var MovementReport = /** @class */ (function () {
                         data_1.salesLine.map(function (v) {
                             data_1.quantity += parseInt(v.salesQty);
                         });
-                        if (!!data_1.originalPrinted) return [3 /*break*/, 7];
-                        if (!(data_1.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 7];
+                        if (!!data_1.originalPrinted) return [3 /*break*/, 5];
+                        promiseList = [];
+                        if (!(data_1.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 5];
+                        reqData = {
+                            salesId: id,
+                        };
+                        promiseList.push(this.workflowService.inventryTransUpdate(reqData));
                         return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: id })];
                     case 3:
                         batches = _a.sent();
-                        _i = 0, batches_1 = batches;
-                        _a.label = 4;
+                        for (_i = 0, batches_1 = batches; _i < batches_1.length; _i++) {
+                            item = batches_1[_i];
+                            // console.log("===================dffhsafyrkfhiufghllgsh================");
+                            item.transactionClosed = true;
+                            // this.inventTransDAO.save(item);
+                            promiseList.push(this.updateInventoryService.updateInventtransTable(item));
+                        }
+                        return [4 /*yield*/, Promise.all(promiseList)];
                     case 4:
-                        if (!(_i < batches_1.length)) return [3 /*break*/, 7];
-                        item = batches_1[_i];
-                        // console.log("===================dffhsafyrkfhiufghllgsh================");
-                        item.transactionClosed = true;
-                        // this.inventTransDAO.save(item);
-                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(item)];
-                    case 5:
-                        // this.inventTransDAO.save(item);
                         _a.sent();
-                        _a.label = 6;
-                    case 6:
-                        _i++;
-                        return [3 /*break*/, 4];
-                    case 7: 
+                        _a.label = 5;
+                    case 5: 
                     // console.log(data);
                     return [2 /*return*/, data_1];
-                    case 8:
+                    case 6:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 9: return [2 /*return*/];
+                    case 7: return [2 /*return*/];
                 }
             });
         });

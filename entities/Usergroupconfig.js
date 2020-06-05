@@ -350,7 +350,7 @@ var Usergroupconfig = /** @class */ (function () {
         __metadata("design:type", String)
     ], Usergroupconfig.prototype, "workflowcustomers", void 0);
     __decorate([
-        typeorm_1.Column({ name: 'workflowsequencegroup' }),
+        typeorm_1.Column({ name: "workflowsequencegroup" }),
         __metadata("design:type", String)
     ], Usergroupconfig.prototype, "workflowsequencegroup", void 0);
     __decorate([
@@ -385,6 +385,10 @@ var Usergroupconfig = /** @class */ (function () {
         typeorm_1.Column({ name: "report_warehouses" }),
         __metadata("design:type", String)
     ], Usergroupconfig.prototype, "reportwarehouses", void 0);
+    __decorate([
+        typeorm_1.Column({ name: "is_export_excel" }),
+        __metadata("design:type", Boolean)
+    ], Usergroupconfig.prototype, "isExportExcel", void 0);
     Usergroupconfig = __decorate([
         typeorm_1.Entity("usergroupconfig")
     ], Usergroupconfig);

@@ -95,11 +95,11 @@ var SalesTableService = /** @class */ (function () {
     SalesTableService.prototype.entity = function (id, type) {
         if (type === void 0) { type = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var data, promiseList, sabicCustomers, salesLine, _i, salesLine_1, item, baseSizeBatchesList_1, error_1;
+            var data, promiseList, condition, sabicCustomers, salesLine, _i, salesLine_1, item, baseSizeBatchesList_1, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 10, , 11]);
+                        _a.trys.push([0, 11, , 12]);
                         return [4 /*yield*/, this.salestableDAO.entity(id.toUpperCase())];
                     case 1:
                         data = _a.sent();
@@ -110,8 +110,11 @@ var SalesTableService = /** @class */ (function () {
                     case 2:
                         _a.sent();
                         promiseList = [this.getcustomer(data), this.getpainter(data), this.getsalesman(data)];
-                        return [4 /*yield*/, Promise.all(promiseList)];
+                        return [4 /*yield*/, this.rawQuery.workflowconditions(this.sessionInfo.usergroupconfigid)];
                     case 3:
+                        condition = _a.sent();
+                        return [4 /*yield*/, Promise.all(promiseList)];
+                    case 4:
                         _a.sent();
                         data.custAccount = data.custAccount ? data.custAccount.trim() : null;
                         data.customer = data.customer ? data.customer : {};
@@ -129,7 +132,19 @@ var SalesTableService = /** @class */ (function () {
                                 .join(",")
                             : [];
                         if (data.transkind == "RETURNORDER") {
-                            if (data.designServiceRedeemAmount > 0 || [1, 2].includes(data.customer.custtype)) {
+                            if (condition.approvalRequired) {
+                                if (data.designServiceRedeemAmount > 0) {
+                                    data.sendForApproval = true;
+                                }
+                                if ([1, 2].includes(data.customer.custtype) &&
+                                    (condition.rmApprovalRequired || condition.raApprovalRequired)) {
+                                    data.sendForApproval = true;
+                                }
+                                else {
+                                    data.sendForApproval = false;
+                                }
+                            }
+                            else {
                                 data.sendForApproval = true;
                             }
                         }
@@ -139,13 +154,16 @@ var SalesTableService = /** @class */ (function () {
                         else if (data.transkind == "SALESORDER" && sabicCustomers.includes(data.custAccount)) {
                             data.sendForApproval = true;
                         }
+                        else {
+                            data.sendForApproval = true;
+                        }
                         data.deleted = data.deleted ? data.deleted : false;
                         data.isCash = data.isCash ? data.isCash : false;
                         data.vatamount = data.vatamount ? parseFloat(data.vatamount) : 0;
                         data.movementType = data.movementType ? data.movementType : {};
                         salesLine = data.salesLine;
                         return [4 /*yield*/, this.allocateSalesLineData(salesLine)];
-                    case 4:
+                    case 5:
                         _a.sent();
                         salesLine.sort(function (a, b) {
                             var lineA = a.lineNum, lineB = b.lineNum;
@@ -157,23 +175,23 @@ var SalesTableService = /** @class */ (function () {
                             return 0; //default return value (no sorting)
                         });
                         _i = 0, salesLine_1 = salesLine;
-                        _a.label = 5;
-                    case 5:
-                        if (!(_i < salesLine_1.length)) return [3 /*break*/, 8];
+                        _a.label = 6;
+                    case 6:
+                        if (!(_i < salesLine_1.length)) return [3 /*break*/, 9];
                         item = salesLine_1[_i];
                         item.product = item.size ? item.size.product : {};
                         item.size = item.size ? item.size : {};
                         delete item.size.product;
-                        if (!(data.transkind == "TRANSFERORDER" && data.custAccount == this.sessionInfo.inventlocationid)) return [3 /*break*/, 7];
+                        if (!(data.transkind == "TRANSFERORDER" && data.custAccount == this.sessionInfo.inventlocationid)) return [3 /*break*/, 8];
                         return [4 /*yield*/, this.inventoryOnHandCheck(item, data.transkind, data.custAccount)];
-                    case 6:
-                        _a.sent();
-                        _a.label = 7;
                     case 7:
+                        _a.sent();
+                        _a.label = 8;
+                    case 8:
                         _i++;
-                        return [3 /*break*/, 5];
-                    case 8: return [4 /*yield*/, this.rawQuery.getBaseSizeBatchesList(id)];
-                    case 9:
+                        return [3 /*break*/, 6];
+                    case 9: return [4 /*yield*/, this.rawQuery.getBaseSizeBatchesList(id)];
+                    case 10:
                         baseSizeBatchesList_1 = _a.sent();
                         if (data.transkind == "SALESORDER" || data.transkind == "TRANSFERORDER") {
                             salesLine.map(function (item) {
@@ -194,10 +212,10 @@ var SalesTableService = /** @class */ (function () {
                             data.salesLine = salesLine;
                         }
                         return [2 /*return*/, data];
-                    case 10:
+                    case 11:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 11: return [2 /*return*/];
+                    case 12: return [2 /*return*/];
                 }
             });
         });
@@ -570,7 +588,10 @@ var SalesTableService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
+                        console.log(reqData);
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
                         switch (reqData.type) {
                             case "quotation":
                                 reqData.transkind = "('SALESQUOTATION')";
@@ -595,16 +616,23 @@ var SalesTableService = /** @class */ (function () {
                                 break;
                             case "purchaseorder":
                                 reqData.transkind = "('PURCHASEORDER')";
+                                break;
+                            case "designerservice":
+                                reqData.transkind = "('DESIGNERSERVICE')";
+                                break;
+                            case "designerservicereturn":
+                                reqData.transkind = "('DESIGNERSERVICERETURN')";
+                                break;
                         }
                         return [4 /*yield*/, this.salestableDAO.pagination(reqData, this.sessionInfo.inventlocationid)];
-                    case 1:
+                    case 2:
                         data = _a.sent();
                         // data.map((v: any) => {});
                         return [2 /*return*/, data];
-                    case 2:
+                    case 3:
                         error_4 = _a.sent();
                         throw error_4;
-                    case 3: return [2 /*return*/];
+                    case 4: return [2 /*return*/];
                 }
             });
         });

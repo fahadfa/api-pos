@@ -170,6 +170,20 @@
         position: fixed;
         margin: 50% auto;
       }
+      #headertbl {
+        width: 100%;
+        margin-top: 80px;
+        margin-bottom: 20px;
+        /* padding-top: 100px; */
+      }
+      @media print {
+        #headertbl {
+          width: 100%;
+          margin-top: 0px;
+          margin-bottom: 20px;
+          padding-top: 100px;
+        }
+      }
     </style>
   </head>
 
@@ -177,11 +191,11 @@
     <div id="bg__watermark">
       <p id="bg__text__watermark">فقط للاختبار</p>
     </div>
-
+    <!-- 
     <div class="page-header" style="text-align: center;"></div>
 
-    <div class="page-footer"></div>
-
+    <div class="page-footer"></div> -->
+    {{#each salesLine}}
     <table>
       <thead>
         <tr>
@@ -263,7 +277,7 @@
                       <tr class="billing">
                         <td>الصفحة</td>
                         <td>:</td>
-                        <td>1/1</td>
+                        <td>{{this.page}} | {{this.totalPages}}</td>
                       </tr>
                       <tr class="billing">
                         <td class="quotation-date">تاريخ الفاتورة</td>
@@ -288,7 +302,7 @@
                   <th class="th">تلوين</th>
                   <th class="th">الكمية</th>
                 </tr>
-                {{#each salesLine}}
+                {{#each lines}}
                 <tr class="tab-data">
                   <td class="td">{{this.sNo}}</td>
                   <td class="td">
@@ -329,7 +343,7 @@
                 </tr>
               </table>
 
-              <table style="width: 98%; position: absolute; bottom: 200px; border-collapse: collapse;">
+              <table style="width: 100%;border-collapse: collapse;">
                 <tr style="border: 1px dotted #ccc !important;">
                   <td style="font-size: 13px;" align="right" colspan="2">
                     نؤكد أننا تلقينا جميع العناصر دون أي ضرر
@@ -337,6 +351,17 @@
 
                   <td align="left">{{quantity}}</td>
                 </tr>
+              </table>
+
+              {{/each}}
+              <table style="width: 100%;border-collapse: collapse;">
+                <!-- <tr style="border: 1px dotted #ccc !important;">
+                  <td style="font-size: 13px;" align="right" colspan="2">
+                    نؤكد أننا تلقينا جميع العناصر دون أي ضرر
+                  </td>
+
+                  <td align="left">{{quantity}}</td>
+                </tr> -->
                 <tr>
                   <td style="font-size: 14px;width:33%" align="right">
                     مستلم
@@ -350,7 +375,7 @@
                 </tr>
                 <tr>
                   <td style="width:33%" align="right">اسم المتلقي :</td>
-                  <td style="width:33%" align="middle">{{salesman}}</td>
+                  <td style="width:33%" align="middle">{{this.salesman}}</td>
                   <td style="width:33%" align="left"></td>
                 </tr>
                 <tr>
@@ -364,14 +389,6 @@
           </td>
         </tr>
       </tbody>
-
-      <tfoot>
-        <tr>
-          <td>
-            <div class="page-footer-space"></div>
-          </td>
-        </tr>
-      </tfoot>
     </table>
   </body>
 </html>

@@ -42,12 +42,16 @@ var Props_1 = require("../../constants/Props");
 var RawQuery_1 = require("../common/RawQuery");
 var SalesTableDAO_1 = require("../repos/SalesTableDAO");
 var UsergroupconfigDAO_1 = require("../repos/UsergroupconfigDAO");
+var UpdateInventoryService_1 = require("../services/UpdateInventoryService");
+var InventTransDAO_1 = require("../repos/InventTransDAO");
 var WorkflowService = /** @class */ (function () {
     function WorkflowService() {
         this.workflowDAO = new WorkflowDAO_1.WorkflowDAO();
         this.rawQuery = new RawQuery_1.RawQuery();
         this.usergroupconfigDAO = new UsergroupconfigDAO_1.UsergroupconfigDAO();
         this.salesTableDAO = new SalesTableDAO_1.SalesTableDAO();
+        this.updateInventoryService = new UpdateInventoryService_1.UpdateInventoryService();
+        this.inventtransDAO = new InventTransDAO_1.InventorytransDAO();
         this.db = typeorm_1.getManager();
     }
     WorkflowService.prototype.entity = function (id) {
@@ -108,18 +112,18 @@ var WorkflowService = /** @class */ (function () {
     WorkflowService.prototype.save = function (item, type) {
         if (type === void 0) { type = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var status_1, workflowcondition, usergroupid, salesData, RM_AND_RA, promistList, salesSaveData, error_3;
+            var status_1, promistList, condition, usergroupid, salesData, RM_AND_RA, canSendForApproval, transactions, _i, transactions_1, v, salesSaveData, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 21, , 22]);
+                        _a.trys.push([0, 29, , 30]);
                         status_1 = item.status;
+                        promistList = [];
                         return [4 /*yield*/, this.rawQuery.workflowconditions(this.sessionInfo.usergroupconfigid)];
                     case 1:
-                        workflowcondition = _a.sent();
-                        console.log(this.sessionInfo);
+                        condition = _a.sent();
                         usergroupid = this.sessionInfo.groupid;
-                        if (!(item.id || item.orderId)) return [3 /*break*/, 19];
+                        if (!(item.id || item.orderId)) return [3 /*break*/, 27];
                         if (!item.id) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.workflowDAO.entity(item.id)];
                     case 2:
@@ -137,22 +141,12 @@ var WorkflowService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.getRmAndRa(usergroupid)];
                     case 5:
                         RM_AND_RA = _a.sent();
-                        console.log(RM_AND_RA);
-                        if (!(type == "sendforapproval")) return [3 /*break*/, 15];
+                        if (!(type == "sendforapproval")) return [3 /*break*/, 23];
                         return [4 /*yield*/, this.allocateData(item, salesData)];
                     case 6:
                         _a.sent();
                         if (!(salesData.transkind == "RETURNORDER")) return [3 /*break*/, 7];
-                        if (salesData.designServiceRedeemAmount > 0) {
-                            item.statusId = Props_1.Props.WORKFLOW_STATUSID.PENDINGINGFORDESIGNERAPPROVAL[0];
-                            if (RM_AND_RA.designer_signing_authority && RM_AND_RA.designer_signing_authority != "") {
-                                item.pendingWith = RM_AND_RA.designer_signing_authority;
-                            }
-                            else {
-                                throw { message: "NO_DESIGNER_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT" };
-                            }
-                        }
-                        else {
+                        if (condition.rmApprovalRequired) {
                             item.statusId = Props_1.Props.WORKFLOW_STATUSID.PENDINGRMAPPROVAL[0];
                             if (RM_AND_RA.rm && RM_AND_RA.rm != "") {
                                 item.pendingWith = RM_AND_RA.rm;
@@ -161,10 +155,24 @@ var WorkflowService = /** @class */ (function () {
                                 throw { message: "NO_RM_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
                             }
                         }
-                        return [3 /*break*/, 14];
+                        else if (condition.raApprovalRequired) {
+                            item.statusId = Props_1.Props.WORKFLOW_STATUSID.PENDINGRAPPROVAL[0];
+                            if (RM_AND_RA.ra && RM_AND_RA.ra != "") {
+                                item.pendingWith = RM_AND_RA.ra;
+                            }
+                            else {
+                                throw { message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
+                            }
+                        }
+                        return [3 /*break*/, 22];
                     case 7:
-                        if (!(salesData.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 13];
-                        if (![5, 8, 9].includes(salesData.movementType.id)) return [3 /*break*/, 8];
+                        if (!(salesData.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 21];
+                        return [4 /*yield*/, this.stockOnHandCheck(salesData)];
+                    case 8:
+                        canSendForApproval = _a.sent();
+                        console.log(canSendForApproval);
+                        if (!canSendForApproval) return [3 /*break*/, 19];
+                        if (![5, 8, 9].includes(salesData.movementType.id)) return [3 /*break*/, 9];
                         item.statusId = Props_1.Props.WORKFLOW_STATUSID.PENDINGRMAPPROVAL[0];
                         if (RM_AND_RA.rm && RM_AND_RA.rm != "") {
                             item.pendingWith = RM_AND_RA.rm;
@@ -172,9 +180,9 @@ var WorkflowService = /** @class */ (function () {
                         else {
                             throw { message: "NO_RM_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
                         }
-                        return [3 /*break*/, 12];
-                    case 8:
-                        if (![1, 2, 3, 4, 6, 7].includes(salesData.movementType.id)) return [3 /*break*/, 9];
+                        return [3 /*break*/, 13];
+                    case 9:
+                        if (![1, 2, 3, 4, 6, 7].includes(salesData.movementType.id)) return [3 /*break*/, 10];
                         item.statusId = Props_1.Props.WORKFLOW_STATUSID.PENDINGRAAPPROVAL[0];
                         if (RM_AND_RA.ra && RM_AND_RA.ra != "") {
                             item.pendingWith = RM_AND_RA.ra;
@@ -182,14 +190,40 @@ var WorkflowService = /** @class */ (function () {
                         else {
                             throw { message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
                         }
-                        return [3 /*break*/, 12];
-                    case 9: return [4 /*yield*/, this.rawQuery.updateSalesTableWorkFlowStatus(salesData.salesId, "NOWORKFLOW")];
-                    case 10: return [4 /*yield*/, _a.sent()];
-                    case 11:
+                        return [3 /*break*/, 13];
+                    case 10: return [4 /*yield*/, this.rawQuery.updateSalesTableWorkFlowStatus(salesData.salesId, "NOWORKFLOW")];
+                    case 11: return [4 /*yield*/, _a.sent()];
+                    case 12:
                         _a.sent();
                         return [2 /*return*/, { id: salesData.salesId, status: "NOWORKFLOW", message: Props_1.Props.SAVED_SUCCESSFULLY }];
-                    case 12: return [3 /*break*/, 14];
-                    case 13:
+                    case 13: return [4 /*yield*/, this.inventtransDAO.findAll({ invoiceid: salesData.salesId })];
+                    case 14:
+                        transactions = _a.sent();
+                        transactions = transactions.filter(function (v) { return v.qty < 0; });
+                        transactions.map(function (v) {
+                            v.qty = Math.abs(v.qty);
+                            v.reserveStatus = "RESERVED";
+                            v.transactionClosed = true;
+                            console.log(v);
+                        });
+                        _i = 0, transactions_1 = transactions;
+                        _a.label = 15;
+                    case 15:
+                        if (!(_i < transactions_1.length)) return [3 /*break*/, 18];
+                        v = transactions_1[_i];
+                        return [4 /*yield*/, this.updateInventoryService.updateInventoryOnhandTable(v, true)];
+                    case 16:
+                        _a.sent();
+                        _a.label = 17;
+                    case 17:
+                        _i++;
+                        return [3 /*break*/, 15];
+                    case 18:
+                        console.log(transactions);
+                        return [3 /*break*/, 20];
+                    case 19: throw { message: "CANNOT_CREATE_MOVEMENT_ORDER" };
+                    case 20: return [3 /*break*/, 22];
+                    case 21:
                         if (salesData.transkind == "DESIGNERSERVICERETURN") {
                             item.statusId = Props_1.Props.WORKFLOW_STATUSID.PENDINGINGFORDESIGNERAPPROVAL[0];
                             if (RM_AND_RA.designer_signing_authority && RM_AND_RA.designer_signing_authority != "") {
@@ -208,21 +242,27 @@ var WorkflowService = /** @class */ (function () {
                                 throw { message: "NO_RM_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
                             }
                         }
-                        _a.label = 14;
-                    case 14:
+                        _a.label = 22;
+                    case 22:
                         item.usergroupid = this.sessionInfo.groupid;
                         item.orderType = Props_1.Props.WORKFLOW_ORDER_TYPE[salesData.transkind][0];
                         item.inventLocationId = this.sessionInfo.inventlocationid;
-                        return [3 /*break*/, 16];
-                    case 15:
-                        console.log(item.statusId);
+                        return [3 /*break*/, 24];
+                    case 23:
+                        // console.log(item.statusId);
                         if (status_1 == "accept" || status_1 == null) {
                             if (item.statusId == Props_1.Props.WORKFLOW_STATUSID.PENDINGRMAPPROVAL[0] ||
                                 item.statusId == Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYDESIGNER[0]) {
                                 item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRM[0];
                                 if (RM_AND_RA.ra) {
-                                    console.log(RM_AND_RA);
-                                    item.pendingWith = RM_AND_RA.ra;
+                                    // console.log(RM_AND_RA);
+                                    if (condition.raApprovalRequired) {
+                                        item.pendingWith = RM_AND_RA.ra;
+                                    }
+                                    else {
+                                        item.pendingWith = null;
+                                        item.statusId = "APPROVED";
+                                    }
                                 }
                                 else {
                                     throw { message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
@@ -235,12 +275,17 @@ var WorkflowService = /** @class */ (function () {
                                 item.pendingWith = null;
                             }
                             else if (item.statusId == Props_1.Props.WORKFLOW_STATUSID.PENDINGINGFORDESIGNERAPPROVAL[0]) {
-                                if (RM_AND_RA.rm && RM_AND_RA.rm != "") {
+                                if (condition.rmApprovalRequired) {
                                     item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYDESIGNER[0];
                                     item.pendingWith = RM_AND_RA.rm;
                                 }
+                                else if (condition.rmApprovalRequired) {
+                                    item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRA[0];
+                                    item.pendingWith = RM_AND_RA.ra;
+                                }
                                 else {
-                                    throw { message: "NO_RM_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
+                                    item.statusId = "APPROVED";
+                                    item.pendingWith = null;
                                 }
                             }
                         }
@@ -252,16 +297,16 @@ var WorkflowService = /** @class */ (function () {
                             else if (RM_AND_RA.ra == this.sessionInfo.groupid) {
                                 item.statusId = Props_1.Props.WORKFLOW_STATUSID.REJECTEDBYRA[0];
                             }
+                            // await this.inventryTransUpdate(salesData);
                         }
-                        _a.label = 16;
-                    case 16:
+                        _a.label = 24;
+                    case 24:
                         item.lastModifiedBy = this.sessionInfo.userName;
                         // console.log(new Date());
                         item.lastModifiedDate = new Date(App_1.App.DateNow());
                         return [4 /*yield*/, this.validate(item)];
-                    case 17:
+                    case 25:
                         _a.sent();
-                        promistList = [];
                         salesSaveData = {};
                         salesSaveData.salesId = item.orderId;
                         salesSaveData.status = item.statusId;
@@ -270,16 +315,16 @@ var WorkflowService = /** @class */ (function () {
                         promistList.push(this.workflowDAO.save(item), this.salesTableDAO.save(salesSaveData));
                         // let salesTableData: any = await this.salesTableDAO.save(salesData);
                         return [4 /*yield*/, Promise.all(promistList)];
-                    case 18:
+                    case 26:
                         // let salesTableData: any = await this.salesTableDAO.save(salesData);
                         _a.sent();
                         return [2 /*return*/, { id: item.id, status: item.statusId, message: "SAVED_SUCCESSFULLY" }];
-                    case 19: throw { message: "INVALID_DATA" };
-                    case 20: return [3 /*break*/, 22];
-                    case 21:
+                    case 27: throw { message: "INVALID_DATA" };
+                    case 28: return [3 /*break*/, 30];
+                    case 29:
                         error_3 = _a.sent();
                         throw error_3;
-                    case 22: return [2 /*return*/];
+                    case 30: return [2 /*return*/];
                 }
             });
         });
@@ -353,6 +398,79 @@ var WorkflowService = /** @class */ (function () {
         item.createdBy = this.sessionInfo.userName;
         item.createdDateTime = new Date(App_1.App.DateNow());
         item.inventLocationId = this.sessionInfo.inventlocationid;
+    };
+    WorkflowService.prototype.stockOnHandCheck = function (reqData) {
+        return __awaiter(this, void 0, void 0, function () {
+            var lines, canConvert, colors, items, sizes, batches, itemString, itemsInStock;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.inventtransDAO.findAll({ invoiceid: reqData.salesId })];
+                    case 1:
+                        lines = _a.sent();
+                        lines = lines.filter(function (v) { return v.qty < 0; });
+                        canConvert = true;
+                        colors = [];
+                        items = [];
+                        sizes = [];
+                        batches = [];
+                        itemString = "";
+                        lines.map(function (v) {
+                            items.push(v.itemid), colors.push(v.configid), sizes.push(v.inventsizeid), batches.push(v.batchno);
+                        });
+                        return [4 /*yield*/, this.rawQuery.checkBatchAvailability(this.sessionInfo.inventlocationid, items, colors, sizes, batches)];
+                    case 2:
+                        itemsInStock = _a.sent();
+                        lines.map(function (v) {
+                            var index = itemsInStock.findIndex(function (value) {
+                                return value.itemid.toLowerCase() == v.itemid.toLowerCase() &&
+                                    value.configid.toLowerCase() == v.configid.toLowerCase() &&
+                                    value.inventsizeid.toLowerCase() == v.inventsizeid.toLowerCase() &&
+                                    value.batchno.toLowerCase() == v.batchno.toLowerCase();
+                            });
+                            if (index >= 0) {
+                                if (Math.abs(parseInt(v.qty)) > parseInt(itemsInStock[index].qty)) {
+                                    canConvert = canConvert == true ? false : false;
+                                    itemString += v.itemid + ",";
+                                }
+                            }
+                            else {
+                                canConvert = canConvert == true ? false : false;
+                                itemString += v.itemid + ",";
+                            }
+                        });
+                        return [2 /*return*/, canConvert];
+                }
+            });
+        });
+    };
+    WorkflowService.prototype.inventryTransUpdate = function (reqData) {
+        return __awaiter(this, void 0, void 0, function () {
+            var batches, _i, batches_1, batch;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.inventtransDAO.findAll({
+                            invoiceid: reqData.salesId,
+                        })];
+                    case 1:
+                        batches = _a.sent();
+                        batches = batches.filter(function (v) { return v.qty < 0; });
+                        _i = 0, batches_1 = batches;
+                        _a.label = 2;
+                    case 2:
+                        if (!(_i < batches_1.length)) return [3 /*break*/, 5];
+                        batch = batches_1[_i];
+                        batch.qty = Math.abs(batch.qty);
+                        return [4 /*yield*/, this.updateInventoryService.updateUnReserveQty(batch)];
+                    case 3:
+                        _a.sent();
+                        _a.label = 4;
+                    case 4:
+                        _i++;
+                        return [3 /*break*/, 2];
+                    case 5: return [2 /*return*/];
+                }
+            });
+        });
     };
     return WorkflowService;
 }());

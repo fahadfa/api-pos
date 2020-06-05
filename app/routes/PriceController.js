@@ -154,11 +154,11 @@ var PriceController = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 5, , 6]);
                         reqData = void 0;
-                        this.discountService.sessionInfo = request.body.sessionInfo;
+                        this.returnOrderAmountService.sessionInfo = request.body.sessionInfo;
                         result = null;
-                        App_1.App.PrintLog(this.constructor.name, "Search", this.discountService.sessionInfo);
+                        App_1.App.PrintLog(this.constructor.name, "Search", this.returnOrderAmountService.sessionInfo);
                         reqData = request.body ? request.body.data : {};
-                        return [4 /*yield*/, App_1.App.ValildateUserAccess(this.discountService.sessionInfo, this.componentName, Props_1.Props.ACCESS_READ)];
+                        return [4 /*yield*/, App_1.App.ValildateUserAccess(this.returnOrderAmountService.sessionInfo, this.componentName, Props_1.Props.ACCESS_READ)];
                     case 1:
                         if (!_a.sent()) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.returnOrderAmountService.returnAmount(reqData, null)];
@@ -186,11 +186,11 @@ var PriceController = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 5, , 6]);
                         reqData = void 0;
-                        this.discountService.sessionInfo = request.body.sessionInfo;
+                        this.returnOrderAmountService.sessionInfo = request.body.sessionInfo;
                         result = null;
-                        App_1.App.PrintLog(this.constructor.name, "Search", this.discountService.sessionInfo);
+                        App_1.App.PrintLog(this.constructor.name, "Search", this.returnOrderAmountService.sessionInfo);
                         reqData = request.body ? request.body.data : {};
-                        return [4 /*yield*/, App_1.App.ValildateUserAccess(this.discountService.sessionInfo, this.componentName, Props_1.Props.ACCESS_READ)];
+                        return [4 /*yield*/, App_1.App.ValildateUserAccess(this.returnOrderAmountService.sessionInfo, this.componentName, Props_1.Props.ACCESS_READ)];
                     case 1:
                         if (!_a.sent()) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.returnOrderAmountService.returnAmount(reqData, "purchasereturn")];

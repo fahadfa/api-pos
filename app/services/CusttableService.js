@@ -182,6 +182,7 @@ var CusttableService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
+                        item.salesmanid = this.sessionInfo.salesmanid;
                         additionalcustomer = this.sessionInfo.additionalcustomer
                             ? this.sessionInfo.additionalcustomer.split(",")
                             : [];

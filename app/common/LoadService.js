@@ -38,10 +38,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var Props_1 = require("../../constants/Props");
 var RawQuery_1 = require("./RawQuery");
+var MenuGroupDAO_1 = require("../repos/MenuGroupDAO");
 var LoadService = /** @class */ (function () {
     function LoadService() {
         this.db = typeorm_1.getManager();
         this.rawQuery = new RawQuery_1.RawQuery();
+        this.menuGroupRepository = new MenuGroupDAO_1.MenuGroupDAO();
     }
     LoadService.prototype.customer = function (param) {
         return __awaiter(this, void 0, void 0, function () {
@@ -1583,6 +1585,63 @@ var LoadService = /** @class */ (function () {
                         query = "select accountid as \"accountId\", ledgeraccount as \"ledgerAccount\", currencycode as \"currenyCode\", name as \"nameAr\", accountnum as \"accountNum\" \n      from bankaccounttable\n      where ( accountid ILIKE '%" + param.key + "%' or  name ILIKE '%" + param.key + "%' )";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    LoadService.prototype.menu = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var menuList;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.menuGroupRepository.search({
+                            group: { groupid: this.sessionInfo.groupid },
+                            active: true,
+                            isMobile: true,
+                        })];
+                    case 1:
+                        menuList = _a.sent();
+                        return [4 /*yield*/, this.unflatten(menuList)];
+                    case 2:
+                        menuList = _a.sent();
+                        return [2 /*return*/, menuList];
+                }
+            });
+        });
+    };
+    LoadService.prototype.unflatten = function (arr) {
+        var newData = [];
+        var _loop_1 = function (item) {
+            if (!item.menu.parentId) {
+                var children = arr.filter(function (v) { return v.menu.parentId == item.menu.id; });
+                item.children = children;
+                newData.push(item);
+            }
+        };
+        for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {
+            var item = arr_1[_i];
+            _loop_1(item);
+        }
+        return newData;
+    };
+    LoadService.prototype.isexportexcel = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data, err_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        query = "select is_export_excel as \"isExportExcel\" from usergroupconfig where id = '" + this.sessionInfo.usergroupconfigid + "'";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        data = data.length > 0 ? data[0] : {};
+                        return [2 /*return*/, data.isExportExcel ? true : false];
+                    case 2:
+                        err_1 = _a.sent();
+                        console.log(err_1);
+                        return [2 /*return*/, false];
+                    case 3: return [2 /*return*/];
                 }
             });
         });

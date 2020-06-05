@@ -46,6 +46,10 @@ var Menu = /** @class */ (function () {
         __metadata("design:type", Number)
     ], Menu.prototype, "priority", void 0);
     __decorate([
+        typeorm_1.Column({ name: "is_mobile" }),
+        __metadata("design:type", Boolean)
+    ], Menu.prototype, "isMobile", void 0);
+    __decorate([
         typeorm_1.Column({ name: "created_by" }),
         __metadata("design:type", String)
     ], Menu.prototype, "createdBy", void 0);

@@ -38,29 +38,35 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var App_1 = require("../../utils/App");
 var SalesTableService_1 = require("../services/SalesTableService");
+var RedeemService_1 = require("../services/RedeemService");
 var RawQuery_1 = require("../common/RawQuery");
 var RedeemPointsReport = /** @class */ (function () {
     function RedeemPointsReport() {
         this.db = typeorm_1.getManager();
         this.salesTableService = new SalesTableService_1.SalesTableService();
         this.rawQuery = new RawQuery_1.RawQuery();
+        this.redeemService = new RedeemService_1.RedeemService();
     }
     RedeemPointsReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, error_1;
+            var data, reqData, balancePoints, arr, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
                         data = params;
-                        return [4 /*yield*/, this.query_to_data(params)];
+                        reqData = {
+                            mobile: params.mobileNo.length == 9 ? "0" + params.mobileNo : params.mobileNo,
+                            // mobile: "0550590391",
+                            // inventLocationId: params.inventlocationid,
+                            inventLocationId: "RMAW-0010"
+                        };
+                        return [4 /*yield*/, this.redeemService.getCustomerPoints(reqData)];
                     case 1:
-                        data = _a.sent();
-                        data.map(function (item) {
-                            item.lastModifiedDate = App_1.App.convertUTCDateToLocalDate(new Date(item.lastModifiedDate), parseInt(params.timeZoneOffSet)).toLocaleString();
-                        });
-                        console.log(data);
-                        return [2 /*return*/, data];
+                        balancePoints = _a.sent();
+                        arr = [];
+                        arr.push(balancePoints);
+                        return [2 /*return*/, arr];
                     case 2:
                         error_1 = _a.sent();
                         throw error_1;

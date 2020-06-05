@@ -75,6 +75,7 @@ var SalesOrderReport = /** @class */ (function () {
                                 data_1.paymentModeAr = "ائتمان";
                             }
                         }
+                        data_1.twoCopies = data_1.originalPrinted ? false : true;
                         // console.log(data.status);
                         if (data_1.status != "RESERVED") {
                             data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
@@ -167,6 +168,7 @@ var SalesOrderReport = /** @class */ (function () {
             var renderData, file;
             return __generator(this, function (_a) {
                 renderData = result;
+                console.log(renderData);
                 file = params.lang == "en" ? "test-so-en" : "test-so-ar";
                 try {
                     return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];
