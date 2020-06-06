@@ -257,12 +257,51 @@ var WorkflowService = /** @class */ (function () {
                     case 23:
                         // console.log(item.statusId);
                         if (status_1 == "accept" || status_1 == null) {
-                            if (item.statusId == Props_1.Props.WORKFLOW_STATUSID.PENDINGRMAPPROVAL[0] ||
-                                item.statusId == Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYDESIGNER[0]) {
-                                item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRM[0];
-                                if (RM_AND_RA.ra) {
-                                    // console.log(RM_AND_RA);
-                                    if (condition.raApprovalRequired) {
+                            if (salesData.transkind == "RETURNORDER") {
+                                console.log("================11111");
+                                if (item.statusId == Props_1.Props.WORKFLOW_STATUSID.PENDINGRMAPPROVAL[0] ||
+                                    item.statusId == Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYDESIGNER[0]) {
+                                    item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRM[0];
+                                    if (RM_AND_RA.ra) {
+                                        // console.log(RM_AND_RA);
+                                        if (condition.raApprovalRequired) {
+                                            item.pendingWith = RM_AND_RA.ra;
+                                        }
+                                        else {
+                                            item.pendingWith = null;
+                                            item.statusId = "APPROVED";
+                                        }
+                                    }
+                                    else {
+                                        throw { message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
+                                    }
+                                }
+                                else if (item.statusId == Props_1.Props.WORKFLOW_STATUSID.PENDINGRAAPPROVAL[0] ||
+                                    item.statusId == Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRM[0]) {
+                                    console.log("====================================");
+                                    item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRA[0];
+                                    item.pendingWith = null;
+                                }
+                                else if (item.statusId == Props_1.Props.WORKFLOW_STATUSID.PENDINGINGFORDESIGNERAPPROVAL[0]) {
+                                    if (condition.rmApprovalRequired) {
+                                        item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYDESIGNER[0];
+                                        item.pendingWith = RM_AND_RA.rm;
+                                    }
+                                    else if (condition.rmApprovalRequired) {
+                                        item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRA[0];
+                                        item.pendingWith = RM_AND_RA.ra;
+                                    }
+                                    else {
+                                        item.statusId = "APPROVED";
+                                        item.pendingWith = null;
+                                    }
+                                }
+                            }
+                            else {
+                                if (item.statusId == Props_1.Props.WORKFLOW_STATUSID.PENDINGRMAPPROVAL[0] ||
+                                    item.statusId == Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYDESIGNER[0]) {
+                                    item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRM[0];
+                                    if (RM_AND_RA.ra) {
                                         item.pendingWith = RM_AND_RA.ra;
                                     }
                                     else {
@@ -270,28 +309,24 @@ var WorkflowService = /** @class */ (function () {
                                         item.statusId = "APPROVED";
                                     }
                                 }
-                                else {
-                                    throw { message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
-                                }
-                            }
-                            else if (item.statusId == Props_1.Props.WORKFLOW_STATUSID.PENDINGRAAPPROVAL[0] ||
-                                item.statusId == Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRM[0]) {
-                                console.log("====================================");
-                                item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRA[0];
-                                item.pendingWith = null;
-                            }
-                            else if (item.statusId == Props_1.Props.WORKFLOW_STATUSID.PENDINGINGFORDESIGNERAPPROVAL[0]) {
-                                if (condition.rmApprovalRequired) {
-                                    item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYDESIGNER[0];
-                                    item.pendingWith = RM_AND_RA.rm;
-                                }
-                                else if (condition.rmApprovalRequired) {
+                                else if (item.statusId == Props_1.Props.WORKFLOW_STATUSID.PENDINGRAAPPROVAL[0] ||
+                                    item.statusId == Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRM[0]) {
                                     item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRA[0];
-                                    item.pendingWith = RM_AND_RA.ra;
-                                }
-                                else {
-                                    item.statusId = "APPROVED";
                                     item.pendingWith = null;
+                                }
+                                else if (item.statusId == Props_1.Props.WORKFLOW_STATUSID.PENDINGINGFORDESIGNERAPPROVAL[0]) {
+                                    if (RM_AND_RA.rm) {
+                                        item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYDESIGNER[0];
+                                        item.pendingWith = RM_AND_RA.rm;
+                                    }
+                                    else if (RM_AND_RA.ra) {
+                                        item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRA[0];
+                                        item.pendingWith = RM_AND_RA.ra;
+                                    }
+                                    else {
+                                        item.statusId = "APPROVED";
+                                        item.pendingWith = null;
+                                    }
                                 }
                             }
                         }
@@ -316,7 +351,7 @@ var WorkflowService = /** @class */ (function () {
                         salesSaveData = {};
                         salesSaveData.salesId = item.orderId;
                         salesSaveData.status = item.statusId;
-                        salesSaveData.lastModifiedDate = item.lastModifiedDate;
+                        salesSaveData.lastModifiedDate = new Date(App_1.App.DateNow());
                         console.log("lastModifiedDate", salesSaveData.lastModifiedDate, salesSaveData.status);
                         promistList.push(this.workflowDAO.save(item), this.salesTableDAO.save(salesSaveData));
                         // let salesTableData: any = await this.salesTableDAO.save(salesData);
@@ -483,14 +518,14 @@ var WorkflowService = /** @class */ (function () {
     };
     WorkflowService.prototype.workflowUpdate = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var salesData, reqData, offlineSystems, salesData, reqData;
+            var salesData, reqData, offlineSystems, salesData, reqData, salesSaveData;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log("TODO", data);
                         if (!(data && data.statusid.includes("REJECTED"))) return [3 /*break*/, 10];
                         if (!(process.env.ENV_STORE_ID && data.inventlocationid)) return [3 /*break*/, 4];
-                        console.log("TODO", data.orderid);
+                        // console.log("TODO", data.orderid);
+                        console.log("11111111============================offline============");
                         return [4 /*yield*/, this.salesTableDAO.entity(data.orderid)];
                     case 1:
                         salesData = _a.sent();
@@ -506,13 +541,12 @@ var WorkflowService = /** @class */ (function () {
                     case 4: return [4 /*yield*/, this.rawQuery.offlineSystems()];
                     case 5:
                         offlineSystems = _a.sent();
-                        // console.log(offlineSystems);
-                        offlineSystems = offlineSystems.find(function (v) {
-                            v.id == data.inventlocationid;
-                        });
+                        console.log(offlineSystems);
+                        offlineSystems = offlineSystems.find(function (v) { return v.id == data.inventlocationid; });
+                        console.log(offlineSystems);
                         if (!!offlineSystems) return [3 /*break*/, 9];
-                        console.log("online");
-                        console.log("TODO", data.orderid);
+                        console.log("22222222online");
+                        console.log("TODO", data.orderid, data);
                         return [4 /*yield*/, this.salesTableDAO.entity(data.orderid)];
                     case 6:
                         salesData = _a.sent();
@@ -526,9 +560,18 @@ var WorkflowService = /** @class */ (function () {
                         _a.label = 8;
                     case 8: return [3 /*break*/, 10];
                     case 9:
-                        console.log("offline");
+                        console.log("33333333offline");
                         _a.label = 10;
-                    case 10: return [2 /*return*/];
+                    case 10:
+                        salesSaveData = {
+                            salesId: data.orderid,
+                            status: data.statusid,
+                            lastModifiedDate: new Date(App_1.App.DateNow()),
+                        };
+                        return [4 /*yield*/, this.salesTableDAO.save(salesSaveData)];
+                    case 11:
+                        _a.sent();
+                        return [2 /*return*/];
                 }
             });
         });
