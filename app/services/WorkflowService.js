@@ -518,60 +518,81 @@ var WorkflowService = /** @class */ (function () {
     };
     WorkflowService.prototype.workflowUpdate = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var salesData, reqData, offlineSystems, salesData, reqData, salesSaveData;
+            var salesData, reqData, salesSaveData, offlineSystems, salesData, reqData, salesSaveData, salesSaveData;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!(data && data.statusid.includes("REJECTED"))) return [3 /*break*/, 10];
-                        if (!(process.env.ENV_STORE_ID && data.inventlocationid)) return [3 /*break*/, 4];
+                        if (!(data && data.statusid.includes("REJECTED"))) return [3 /*break*/, 13];
+                        if (!(process.env.ENV_STORE_ID && data.inventlocationid == process.env.ENV_STORE_ID)) return [3 /*break*/, 5];
                         // console.log("TODO", data.orderid);
                         console.log("11111111============================offline============");
                         return [4 /*yield*/, this.salesTableDAO.entity(data.orderid)];
                     case 1:
                         salesData = _a.sent();
-                        if (!(salesData.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 3];
+                        if (!(salesData.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 4];
                         reqData = {
                             salesId: data.orderid,
                         };
                         return [4 /*yield*/, this.inventryTransUpdate(reqData)];
                     case 2:
                         _a.sent();
-                        _a.label = 3;
-                    case 3: return [3 /*break*/, 10];
-                    case 4: return [4 /*yield*/, this.rawQuery.offlineSystems()];
-                    case 5:
+                        salesSaveData = {
+                            salesId: data.orderid,
+                            status: data.statusid,
+                        };
+                        return [4 /*yield*/, this.salesTableDAO.save(salesSaveData)];
+                    case 3:
+                        _a.sent();
+                        _a.label = 4;
+                    case 4: return [3 /*break*/, 12];
+                    case 5: return [4 /*yield*/, this.rawQuery.offlineSystems()];
+                    case 6:
                         offlineSystems = _a.sent();
                         console.log(offlineSystems);
                         offlineSystems = offlineSystems.find(function (v) { return v.id == data.inventlocationid; });
                         console.log(offlineSystems);
-                        if (!!offlineSystems) return [3 /*break*/, 9];
+                        if (!!offlineSystems) return [3 /*break*/, 10];
                         console.log("22222222online");
                         console.log("TODO", data.orderid, data);
                         return [4 /*yield*/, this.salesTableDAO.entity(data.orderid)];
-                    case 6:
+                    case 7:
                         salesData = _a.sent();
-                        if (!(salesData.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 8];
+                        if (!(salesData.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 9];
                         reqData = {
                             salesId: data.orderid,
                         };
                         return [4 /*yield*/, this.inventryTransUpdate(reqData)];
-                    case 7:
+                    case 8:
                         _a.sent();
-                        _a.label = 8;
-                    case 8: return [3 /*break*/, 10];
-                    case 9:
-                        console.log("33333333offline");
-                        _a.label = 10;
+                        _a.label = 9;
+                    case 9: return [3 /*break*/, 12];
                     case 10:
+                        console.log("33333333offline");
+                        if (!(process.env.ENV_STORE_ID && data.inventlocationid == process.env.ENV_STORE_ID)) return [3 /*break*/, 12];
+                        // console.log("TODO", data.orderid);
+                        console.log("44444============================offline============");
                         salesSaveData = {
                             salesId: data.orderid,
                             status: data.statusid,
-                            lastModifiedDate: new Date(App_1.App.DateNow()),
                         };
                         return [4 /*yield*/, this.salesTableDAO.save(salesSaveData)];
                     case 11:
                         _a.sent();
-                        return [2 /*return*/];
+                        _a.label = 12;
+                    case 12: return [3 /*break*/, 15];
+                    case 13:
+                        if (!(process.env.ENV_STORE_ID && data.inventlocationid == process.env.ENV_STORE_ID)) return [3 /*break*/, 15];
+                        // console.log("TODO", data.orderid);
+                        console.log("44444============================offline============");
+                        salesSaveData = {
+                            salesId: data.orderid,
+                            status: data.statusid,
+                        };
+                        return [4 /*yield*/, this.salesTableDAO.save(salesSaveData)];
+                    case 14:
+                        _a.sent();
+                        _a.label = 15;
+                    case 15: return [2 /*return*/];
                 }
             });
         });
