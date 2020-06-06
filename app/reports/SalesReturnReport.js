@@ -144,7 +144,7 @@ var SalesReturnReport = /** @class */ (function () {
                                 query += " and s.status in ('RESERVED') ";
                             }
                             else if (params.status == "APPROVED") {
-                                query += " and s.status in ('APPROVEDBYRA','APPROVEDBYRM') ";
+                                query += " and s.status in ('APPROVEDBYRA','APPROVEDBYRM','APPROVED') ";
                             }
                             else if (params.status == "SAVED") {
                                 query += " and s.status in ('SAVED') ";

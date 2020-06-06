@@ -44,8 +44,11 @@ var SalesTableDAO_1 = require("../repos/SalesTableDAO");
 var UsergroupconfigDAO_1 = require("../repos/UsergroupconfigDAO");
 var UpdateInventoryService_1 = require("../services/UpdateInventoryService");
 var InventTransDAO_1 = require("../repos/InventTransDAO");
+var Watcher_1 = require("../../utils/Watcher");
+var ENV_STORE_ID = process.env ? process.env.ENV_STORE_ID : null;
 var WorkflowService = /** @class */ (function () {
     function WorkflowService() {
+        var _this = this;
         this.workflowDAO = new WorkflowDAO_1.WorkflowDAO();
         this.rawQuery = new RawQuery_1.RawQuery();
         this.usergroupconfigDAO = new UsergroupconfigDAO_1.UsergroupconfigDAO();
@@ -53,6 +56,9 @@ var WorkflowService = /** @class */ (function () {
         this.updateInventoryService = new UpdateInventoryService_1.UpdateInventoryService();
         this.inventtransDAO = new InventTransDAO_1.InventorytransDAO();
         this.db = typeorm_1.getManager();
+        Watcher_1.DBEvent().on("workflow", function (value) {
+            _this.workflowUpdate(value);
+        });
     }
     WorkflowService.prototype.entity = function (id) {
         return __awaiter(this, void 0, void 0, function () {
@@ -471,6 +477,58 @@ var WorkflowService = /** @class */ (function () {
                         _i++;
                         return [3 /*break*/, 2];
                     case 5: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    WorkflowService.prototype.workflowUpdate = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var salesData, reqData, offlineSystems, salesData, reqData;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        console.log("TODO", data);
+                        if (!(data && data.statusid.includes("REJECTED"))) return [3 /*break*/, 10];
+                        if (!(process.env.ENV_STORE_ID && data.inventlocationid)) return [3 /*break*/, 4];
+                        console.log("TODO", data.orderid);
+                        return [4 /*yield*/, this.salesTableDAO.entity(data.orderid)];
+                    case 1:
+                        salesData = _a.sent();
+                        if (!(salesData.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 3];
+                        reqData = {
+                            salesId: data.orderid,
+                        };
+                        return [4 /*yield*/, this.inventryTransUpdate(reqData)];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3: return [3 /*break*/, 10];
+                    case 4: return [4 /*yield*/, this.rawQuery.offlineSystems()];
+                    case 5:
+                        offlineSystems = _a.sent();
+                        // console.log(offlineSystems);
+                        offlineSystems = offlineSystems.find(function (v) {
+                            v.id == data.inventlocationid;
+                        });
+                        if (!!offlineSystems) return [3 /*break*/, 9];
+                        console.log("online");
+                        console.log("TODO", data.orderid);
+                        return [4 /*yield*/, this.salesTableDAO.entity(data.orderid)];
+                    case 6:
+                        salesData = _a.sent();
+                        if (!(salesData.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 8];
+                        reqData = {
+                            salesId: data.orderid,
+                        };
+                        return [4 /*yield*/, this.inventryTransUpdate(reqData)];
+                    case 7:
+                        _a.sent();
+                        _a.label = 8;
+                    case 8: return [3 /*break*/, 10];
+                    case 9:
+                        console.log("offline");
+                        _a.label = 10;
+                    case 10: return [2 /*return*/];
                 }
             });
         });

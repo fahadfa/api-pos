@@ -51,6 +51,7 @@ var AppExpress_1 = __importDefault(require("./apex/AppExpress"));
 var typeorm_1 = require("typeorm");
 var Config = __importStar(require("./utils/Config"));
 var Log_1 = require("./utils/Log");
+var Watcher_1 = require("./utils/Watcher");
 //import { main } from "./sync";
 var http = require("http");
 var Store_1 = require("./utils/Store");
@@ -68,6 +69,7 @@ var run = function () { return __awaiter(_this, void 0, void 0, function () {
                 _a.trys.push([0, 3, , 4]);
                 Log_1.log.log(Config.dbOptions);
                 if (!(!conn || !conn.isConnected)) return [3 /*break*/, 2];
+                Watcher_1.WatcherInit();
                 return [4 /*yield*/, typeorm_1.createConnection(Config.dbOptions)];
             case 1:
                 conn = _a.sent();

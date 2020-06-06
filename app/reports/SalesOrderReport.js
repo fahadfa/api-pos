@@ -132,6 +132,7 @@ var SalesOrderReport = /** @class */ (function () {
                                 isbreak: data_1.isbreak,
                                 vatGrand: data_1.vatamount,
                                 paymentType: data_1.paymentType,
+                                shippedDate: data_1.lastmodifieddate.split(",")[0],
                                 paymentMode: data_1.paymentType == "ONLINE" ? "Online" : data_1.paymentMode,
                                 paymentModeAr: data_1.paymentType == "ONLINE" ? "عبر الانترنت" : data_1.paymentMode,
                                 lines: [],
@@ -150,6 +151,7 @@ var SalesOrderReport = /** @class */ (function () {
                             newSalesline_1.push(lines);
                         });
                         data_1.salesLine = newSalesline_1;
+                        // data.salesLine.shippedDate = data.lastmodifieddate.split(",")[0];
                         data_1.quantity = 0;
                         data_1.salesLine.map(function (v) {
                             data_1.quantity += parseInt(v.quantity);
@@ -168,7 +170,7 @@ var SalesOrderReport = /** @class */ (function () {
             var renderData, file;
             return __generator(this, function (_a) {
                 renderData = result;
-                console.log(renderData);
+                console.log("data:----------", renderData);
                 file = params.lang == "en" ? "test-so-en" : "test-so-ar";
                 try {
                     return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];
