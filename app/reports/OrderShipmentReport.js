@@ -41,6 +41,7 @@ var SalesTableService_1 = require("../services/SalesTableService");
 var RawQuery_1 = require("../common/RawQuery");
 var InventTransDAO_1 = require("../repos/InventTransDAO");
 var UpdateInventoryService_1 = require("../services/UpdateInventoryService");
+// var QRCode = require("qrcode");
 var OrderShipmentReport = /** @class */ (function () {
     function OrderShipmentReport() {
         this.db = typeorm_1.getManager();
@@ -55,6 +56,8 @@ var OrderShipmentReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        // try {
+                        console.log("OrderShipmentReport");
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
                     case 1:
@@ -85,6 +88,7 @@ var OrderShipmentReport = /** @class */ (function () {
                         _a.label = 4;
                     case 4:
                         console.log(App_1.App.DateNow(), new Date(App_1.App.DateNow()), new Date().toISOString());
+                        //data.qr = await QRCode.toString(JSON.stringify(data));
                         return [2 /*return*/, data];
                 }
             });

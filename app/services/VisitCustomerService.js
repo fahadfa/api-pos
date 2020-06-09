@@ -252,7 +252,7 @@ var VisitCustomerService = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         data.data.map(function (v) {
-                            v.dateOfVisit = v.dateOfVisit.toDateString("yyyy-MM-dd");
+                            v.dateOfVisit = v.dateOfVisit;
                         });
                         return [2 /*return*/, { count: data.count, data: data.data }];
                     case 2:
@@ -274,7 +274,7 @@ var VisitCustomerService = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         data.map(function (v) {
-                            v.dateOfVisit = v.dateOfVisit.toDateString("yyyy-MM-dd");
+                            v.dateOfVisit = v.dateOfVisit;
                         });
                         return [2 /*return*/, data];
                     case 2:

@@ -42,6 +42,7 @@ var QuotationReport_1 = require("./QuotationReport");
 var SalesTableDAO_1 = require("../repos/SalesTableDAO");
 var RawQuery_1 = require("../common/RawQuery");
 var CusttableDAO_1 = require("../repos/CusttableDAO");
+//var QRCode = require("qrcode");
 var TransferOrderReport = /** @class */ (function () {
     function TransferOrderReport() {
         this.db = typeorm_1.getManager();
@@ -59,6 +60,7 @@ var TransferOrderReport = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 4, , 5]);
+                        console.log("TransferOrderReport");
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
                     case 1:
@@ -82,6 +84,7 @@ var TransferOrderReport = /** @class */ (function () {
                         data_1.salesLine.map(function (v) {
                             data_1.quantity += parseInt(v.salesQty);
                         });
+                        // data.qr =  await QRCode.toDataURL(JSON.stringify(data));
                         return [2 /*return*/, data_1];
                     case 4:
                         error_1 = _a.sent();

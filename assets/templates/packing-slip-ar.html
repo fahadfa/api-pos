@@ -88,6 +88,7 @@
         border: 1px solid #000;
         font-weight: 600;
         padding: 10px;
+        margin: 20px;
       }
 
       .item-table,
@@ -188,207 +189,416 @@
   </head>
 
   <body>
-    <div id="bg__watermark">
-      <p id="bg__text__watermark">فقط للاختبار</p>
-    </div>
-    <!-- 
-    <div class="page-header" style="text-align: center;"></div>
+    <section style="page-break-before: always;">
+      <div id="bg__watermark">
+        <p id="bg__text__watermark">فقط للاختبار</p>
+      </div>
+      <!-- 
+      <div class="page-header" style="text-align: center;"></div>
+  
+      <div class="page-footer"></div> -->
+      {{#each salesLine}}
+      <table>
+        <thead>
+          <tr>
+            <td>
+              <div class="page-header-space"></div>
+            </td>
+          </tr>
+        </thead>
 
-    <div class="page-footer"></div> -->
-    {{#each salesLine}}
-    <table>
-      <thead>
-        <tr>
-          <td>
-            <div class="page-header-space"></div>
-          </td>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td>
-            <div class="page">
-              <table align="center" width="98%">
-                <tr class="header">
-                  <td style="width: 35%;">
-                    <table align="left">
-                      {{#if wname}}
-                      <tr class="billing">
-                        <td>من</td>
-                        <td>:</td>
-                        <td>
-                          {{wname}}
-                        </td>
-                      </tr>
-                      {{/if}} {{#if cphone}}
-                      <tr class="billing">
-                        <td>الهاتف</td>
-                        <td>:</td>
-                        <td>
-                          {{cphone}}
-                        </td>
-                      </tr>
-                      {{/if}} {{#if fax}}
-                      <tr class="billing">
-                        <td>الفاكس</td>
-                        <td>:</td>
-                        <td><!-- 03 234567 -->{{fax}}</td>
-                      </tr>
-                      {{/if}} {{#if cname}}
-                      <tr class="billing">
-                        <td>العميل</td>
-                        <td>:</td>
-                        <td>
-                          {{cname}}
-                        </td>
-                      </tr>
+        <tbody>
+          <tr>
+            <td>
+              <div class="page">
+                <table align="center" width="98%">
+                  <tr class="header">
+                    <td style="width: 35%;">
+                      <table align="left">
+                        {{#if wname}}
+                        <tr class="billing">
+                          <td>من</td>
+                          <td>:</td>
+                          <td>
+                            {{wname}}
+                          </td>
+                        </tr>
+                        {{/if}} {{#if cphone}}
+                        <tr class="billing">
+                          <td>الهاتف</td>
+                          <td>:</td>
+                          <td>
+                            {{cphone}}
+                          </td>
+                        </tr>
+                        {{/if}} {{#if fax}}
+                        <tr class="billing">
+                          <td>الفاكس</td>
+                          <td>:</td>
+                          <td><!-- 03 234567 -->{{fax}}</td>
+                        </tr>
+                        {{/if}} {{#if cname}}
+                        <tr class="billing">
+                          <td>العميل</td>
+                          <td>:</td>
+                          <td>
+                            {{cname}}
+                          </td>
+                        </tr>
+                        {{/if}}
+                      </table>
+                    </td>
+                    <td style="width: 30%;" align="center">
+                      {{#if documentStatus}}
+                      <span class="copy-text">نسخ</span>
                       {{/if}}
-                    </table>
-                  </td>
-                  <td style="width: 30%;" align="center">
-                    {{#if documentStatus}}
-                    <span class="copy-text">نسخ</span>
-                    {{/if}}
-                    <br />
-                    <table style="text-align: center; border: 1px dotted #ccc;">
-                      <tr>
-                        <td><span>سند تسليم</span></td>
-                      </tr>
                       <br />
-                      <tr>
-                        <span style="font-weight: 600;">
-                          <td><span>{{salesId}} </span></td>
-                        </span>
-                      </tr>
-                    </table>
-                  </td>
-                  <td align="left" style="width: 35%;">
-                    <table align="right">
-                      {{#if createdby}}
-                      <tr class="billing">
-                        <td>المستخدم</td>
-                        <td>:</td>
-                        <td>
-                          {{createdby}}
-                        </td>
-                      </tr>
+                      <table style="text-align: center; border: 1px dotted #ccc;">
+                        <tr>
+                          <td><span>سند تسليم</span></td>
+                        </tr>
+                        <br />
+                        <tr>
+                          <span style="font-weight: 600;">
+                            <td><span>{{salesId}} </span></td>
+                          </span>
+                        </tr>
+                      </table>
+                    </td>
+                    <td align="left" style="width: 35%;">
+                      <table align="right">
+                        {{#if createdby}}
+                        <tr class="billing">
+                          <td>المستخدم</td>
+                          <td>:</td>
+                          <td>
+                            {{createdby}}
+                          </td>
+                        </tr>
+                        {{/if}}
+                        <tr class="billing">
+                          <td>الصفحة</td>
+                          <td>:</td>
+                          <td>{{this.page}} | {{this.totalPages}}</td>
+                        </tr>
+                        <tr class="billing">
+                          <td class="quotation-date">تاريخ الفاتورة</td>
+                          <td>:</td>
+                          <td class="quotation-date">
+                            {{createddatetime}}
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+
+                <table style="width: 100%; margin: auto;" class="item-table">
+                  <tr>
+                    <th class="th">الرقم</th>
+                    <th class="th">رقم العنصر</th>
+                    <th class="th">الوصف</th>
+                    <th class="th">اللون</th>
+                    <th class="th">الحجم</th>
+                    <th class="th">رقم التشغيلة,</th>
+                    <th class="th">تلوين</th>
+                    <th class="th">الكمية</th>
+                  </tr>
+                  {{#each lines}}
+                  <tr class="tab-data">
+                    <td class="td">{{this.sNo}}</td>
+                    <td class="td">
+                      <div style="font-size: 13px;">
+                        {{this.itemid}}
+                      </div>
+                    </td>
+                    <td class="td description-data">
+                      <span style="font-size: 14px;">
+                        {{this.prodNameAr}}
+                      </span>
+                    </td>
+                    <td class="td">{{this.configid}}</td>
+                    <td class="td">
+                      {{this.inventsizeid}}
+                    </td>
+                    <td class="td">
+                      {{this.batchno}}
+                    </td>
+                    <td class="td">
+                      {{this.colorantid}}
+                    </td>
+                    <td class="td">
+                      {{this.salesQty}}
+                    </td>
+                  </tr>
+                  {{/ each}}
+                </table>
+
+                <table width="100%" style="text-align: left; margin-top: 8px;">
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>
+                      الكمية الإجمالية:{{ quantity }}
+                    </td>
+                  </tr>
+                </table>
+
+                <table style="width: 100%; border-collapse: collapse;">
+                  <tr style="border: 1px dotted #ccc !important;">
+                    <td style="font-size: 13px;" align="right" colspan="2">
+                      نؤكد أننا تلقينا جميع العناصر دون أي ضرر
+                    </td>
+
+                    <td align="left">{{quantity}}</td>
+                  </tr>
+                </table>
+
+                {{/each}}
+                <table style="width: 100%; border-collapse: collapse;">
+                  <!-- <tr style="border: 1px dotted #ccc !important;">
+                    <td style="font-size: 13px;" align="right" colspan="2">
+                      نؤكد أننا تلقينا جميع العناصر دون أي ضرر
+                    </td>
+  
+                    <td align="left">{{quantity}}</td>
+                  </tr> -->
+                  <tr>
+                    <td style="font-size: 14px; width: 33%;" align="right">
+                      مستلم
+                    </td>
+                    <td style="font-size: 14px; width: 33%;" align="middle">
+                      بائع
+                    </td>
+                    <td style="font-size: 14px; width: 33%;" align="left">
+                      ركة
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="width: 33%;" align="right">اسم المتلقي :</td>
+                    <td style="width: 33%;" align="middle">{{this.salesman}}</td>
+                    <td style="width: 33%;" align="left"></td>
+                  </tr>
+                  <tr>
+                    <td>تاريخ :</td>
+                  </tr>
+                  <tr>
+                    <td>التوقيع :</td>
+                  </tr>
+                </table>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    {{#unless documentStatus}}
+    <section style="page-break-before: always;">
+      <div id="bg__watermark">
+        <p id="bg__text__watermark">فقط للاختبار</p>
+      </div>
+      <!-- 
+      <div class="page-header" style="text-align: center;"></div>
+  
+      <div class="page-footer"></div> -->
+      {{#each salesLine}}
+      <table>
+        <thead>
+          <tr>
+            <td>
+              <div class="page-header-space"></div>
+            </td>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>
+              <div class="page">
+                <table align="center" width="98%">
+                  <tr class="header">
+                    <td style="width: 35%;">
+                      <table align="left">
+                        {{#if wname}}
+                        <tr class="billing">
+                          <td>من</td>
+                          <td>:</td>
+                          <td>
+                            {{wname}}
+                          </td>
+                        </tr>
+                        {{/if}} {{#if cphone}}
+                        <tr class="billing">
+                          <td>الهاتف</td>
+                          <td>:</td>
+                          <td>
+                            {{cphone}}
+                          </td>
+                        </tr>
+                        {{/if}} {{#if fax}}
+                        <tr class="billing">
+                          <td>الفاكس</td>
+                          <td>:</td>
+                          <td><!-- 03 234567 -->{{fax}}</td>
+                        </tr>
+                        {{/if}} {{#if cname}}
+                        <tr class="billing">
+                          <td>العميل</td>
+                          <td>:</td>
+                          <td>
+                            {{cname}}
+                          </td>
+                        </tr>
+                        {{/if}}
+                      </table>
+                    </td>
+                    <td style="width: 30%;" align="center">
+                      {{#if documentStatus}}
+                      <span class="copy-text">نسخ</span>
                       {{/if}}
-                      <tr class="billing">
-                        <td>الصفحة</td>
-                        <td>:</td>
-                        <td>{{this.page}} | {{this.totalPages}}</td>
-                      </tr>
-                      <tr class="billing">
-                        <td class="quotation-date">تاريخ الفاتورة</td>
-                        <td>:</td>
-                        <td class="quotation-date">
-                          {{createddatetime}}
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
+                      <br />
+                      <table style="text-align: center; border: 1px dotted #ccc;">
+                        <tr>
+                          <td><span>سند تسليم</span></td>
+                        </tr>
+                        <br />
+                        <tr>
+                          <span style="font-weight: 600;">
+                            <td><span>{{salesId}} </span></td>
+                          </span>
+                        </tr>
+                      </table>
+                    </td>
+                    <td align="left" style="width: 35%;">
+                      <table align="right">
+                        {{#if createdby}}
+                        <tr class="billing">
+                          <td>المستخدم</td>
+                          <td>:</td>
+                          <td>
+                            {{createdby}}
+                          </td>
+                        </tr>
+                        {{/if}}
+                        <tr class="billing">
+                          <td>الصفحة</td>
+                          <td>:</td>
+                          <td>{{this.page}} | {{this.totalPages}}</td>
+                        </tr>
+                        <tr class="billing">
+                          <td class="quotation-date">تاريخ الفاتورة</td>
+                          <td>:</td>
+                          <td class="quotation-date">
+                            {{createddatetime}}
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
 
-              <table style="width: 100%; margin: auto;" class="item-table">
-                <tr>
-                  <th class="th">الرقم</th>
-                  <th class="th">رقم العنصر</th>
-                  <th class="th">الوصف</th>
-                  <th class="th">اللون</th>
-                  <th class="th">الحجم</th>
-                  <th class="th">رقم التشغيلة,</th>
-                  <th class="th">تلوين</th>
-                  <th class="th">الكمية</th>
-                </tr>
-                {{#each lines}}
-                <tr class="tab-data">
-                  <td class="td">{{this.sNo}}</td>
-                  <td class="td">
-                    <div style="font-size: 13px;">
-                      {{this.itemid}}
-                    </div>
-                  </td>
-                  <td class="td description-data">
-                    <span style="font-size: 14px;">
-                      {{this.prodNameAr}}
-                    </span>
-                  </td>
-                  <td class="td">{{this.configid}}</td>
-                  <td class="td">
-                    {{this.inventsizeid}}
-                  </td>
-                  <td class="td">
-                    {{this.batchno}}
-                  </td>
-                  <td class="td">
-                    {{this.colorantid}}
-                  </td>
-                  <td class="td">
-                    {{this.salesQty}}
-                  </td>
-                </tr>
-                {{/ each}}
-              </table>
+                <table style="width: 100%; margin: auto;" class="item-table">
+                  <tr>
+                    <th class="th">الرقم</th>
+                    <th class="th">رقم العنصر</th>
+                    <th class="th">الوصف</th>
+                    <th class="th">اللون</th>
+                    <th class="th">الحجم</th>
+                    <th class="th">رقم التشغيلة,</th>
+                    <th class="th">تلوين</th>
+                    <th class="th">الكمية</th>
+                  </tr>
+                  {{#each lines}}
+                  <tr class="tab-data">
+                    <td class="td">{{this.sNo}}</td>
+                    <td class="td">
+                      <div style="font-size: 13px;">
+                        {{this.itemid}}
+                      </div>
+                    </td>
+                    <td class="td description-data">
+                      <span style="font-size: 14px;">
+                        {{this.prodNameAr}}
+                      </span>
+                    </td>
+                    <td class="td">{{this.configid}}</td>
+                    <td class="td">
+                      {{this.inventsizeid}}
+                    </td>
+                    <td class="td">
+                      {{this.batchno}}
+                    </td>
+                    <td class="td">
+                      {{this.colorantid}}
+                    </td>
+                    <td class="td">
+                      {{this.salesQty}}
+                    </td>
+                  </tr>
+                  {{/ each}}
+                </table>
 
-              <table width="100%" style="text-align: left; margin-top: 8px;">
-                <tr>
-                  <td>&nbsp;</td>
-                  <td>&nbsp;</td>
-                  <td>&nbsp;</td>
-                  <td>
-                    الكمية الإجمالية:{{ quantity }}
-                  </td>
-                </tr>
-              </table>
+                <table width="100%" style="text-align: left; margin-top: 8px;">
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>
+                      الكمية الإجمالية:{{ quantity }}
+                    </td>
+                  </tr>
+                </table>
 
-              <table style="width: 100%;border-collapse: collapse;">
-                <tr style="border: 1px dotted #ccc !important;">
-                  <td style="font-size: 13px;" align="right" colspan="2">
-                    نؤكد أننا تلقينا جميع العناصر دون أي ضرر
-                  </td>
+                <table style="width: 100%; border-collapse: collapse;">
+                  <tr style="border: 1px dotted #ccc !important;">
+                    <td style="font-size: 13px;" align="right" colspan="2">
+                      نؤكد أننا تلقينا جميع العناصر دون أي ضرر
+                    </td>
 
-                  <td align="left">{{quantity}}</td>
-                </tr>
-              </table>
+                    <td align="left">{{quantity}}</td>
+                  </tr>
+                </table>
 
-              {{/each}}
-              <table style="width: 100%;border-collapse: collapse;">
-                <!-- <tr style="border: 1px dotted #ccc !important;">
-                  <td style="font-size: 13px;" align="right" colspan="2">
-                    نؤكد أننا تلقينا جميع العناصر دون أي ضرر
-                  </td>
-
-                  <td align="left">{{quantity}}</td>
-                </tr> -->
-                <tr>
-                  <td style="font-size: 14px;width:33%" align="right">
-                    مستلم
-                  </td>
-                  <td style="font-size: 14px;width:33%" align="middle">
-                    بائع
-                  </td>
-                  <td style="font-size: 14px;width:33%" align="left">
-                    ركة
-                  </td>
-                </tr>
-                <tr>
-                  <td style="width:33%" align="right">اسم المتلقي :</td>
-                  <td style="width:33%" align="middle">{{this.salesman}}</td>
-                  <td style="width:33%" align="left"></td>
-                </tr>
-                <tr>
-                  <td>تاريخ :</td>
-                </tr>
-                <tr>
-                  <td>التوقيع :</td>
-                </tr>
-              </table>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+                {{/each}}
+                <table style="width: 100%; border-collapse: collapse;">
+                  <!-- <tr style="border: 1px dotted #ccc !important;">
+                    <td style="font-size: 13px;" align="right" colspan="2">
+                      نؤكد أننا تلقينا جميع العناصر دون أي ضرر
+                    </td>
+  
+                    <td align="left">{{quantity}}</td>
+                  </tr> -->
+                  <tr>
+                    <td style="font-size: 14px; width: 33%;" align="right">
+                      مستلم
+                    </td>
+                    <td style="font-size: 14px; width: 33%;" align="middle">
+                      بائع
+                    </td>
+                    <td style="font-size: 14px; width: 33%;" align="left">
+                      ركة
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="width: 33%;" align="right">اسم المتلقي :</td>
+                    <td style="width: 33%;" align="middle">{{this.salesman}}</td>
+                    <td style="width: 33%;" align="left"></td>
+                  </tr>
+                  <tr>
+                    <td>تاريخ :</td>
+                  </tr>
+                  <tr>
+                    <td>التوقيع :</td>
+                  </tr>
+                </table>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    {{/unless}}
   </body>
 </html>

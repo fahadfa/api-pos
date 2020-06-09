@@ -577,6 +577,9 @@ var DiscountService = /** @class */ (function () {
                                         item.netAmount = item.priceAfterVat;
                                         _a.label = 24;
                                     case 24:
+                                        appliedDiscounts.map(function (v) {
+                                            v.percentage = parseFloat(v.percentage);
+                                        });
                                         item.appliedDiscounts = appliedDiscounts;
                                         _a.label = 25;
                                     case 25: return [2 /*return*/];

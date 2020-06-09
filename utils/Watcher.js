@@ -17,10 +17,12 @@ exports.WatcherInit = function () {
         if (err) {
             console.log(err);
         }
-        client.on("notification", function (msg) {
-            dbEmitter(msg.payload);
-        });
-        client.query("LISTEN notify_table");
+        if (client != null) {
+            client.on("notification", function (msg) {
+                dbEmitter(msg.payload);
+            });
+            client.query("LISTEN notify_table");
+        }
     });
 };
 exports.DBEvent = function () {
