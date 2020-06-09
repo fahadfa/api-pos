@@ -1449,7 +1449,7 @@ var LoadService = /** @class */ (function () {
                         if (!param.key)
                             return [2 /*return*/, "key is required!"];
                         offset = param.param ? param.param : 0;
-                        return [4 /*yield*/, this.db.query("select configid from pricedisctable where itemrelation = 'HSN-00001' \n        and configid ilike '%" + param.key + "%' group by configid limit 15 offset " + offset)];
+                        return [4 /*yield*/, this.db.query("select c.configid from configtable c where c.itemid = 'HSN-00001' \n        and c.configid ilike '%" + param.key + "%' \n        group by configid limit 15 offset " + offset)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });

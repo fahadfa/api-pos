@@ -57,6 +57,7 @@ var WorkflowService = /** @class */ (function () {
         this.inventtransDAO = new InventTransDAO_1.InventorytransDAO();
         this.db = typeorm_1.getManager();
         Watcher_1.DBEvent().on("workflow", function (value) {
+            console.log("&&&&&&&&&&&&&&&&workflow watcher&&&&&&&&&&&&&&&&&&&: ", value);
             _this.workflowUpdate(value);
         });
     }
@@ -338,6 +339,7 @@ var WorkflowService = /** @class */ (function () {
                             else if (RM_AND_RA.ra == this.sessionInfo.groupid) {
                                 item.statusId = Props_1.Props.WORKFLOW_STATUSID.REJECTEDBYRA[0];
                             }
+                            item.pendingWith = null;
                             // await this.inventryTransUpdate(salesData);
                         }
                         _a.label = 24;
@@ -503,7 +505,7 @@ var WorkflowService = /** @class */ (function () {
                     case 2:
                         if (!(_i < batches_2.length)) return [3 /*break*/, 5];
                         batch = batches_2[_i];
-                        batch.qty = Math.abs(batch.qty);
+                        batch.qty = batch.qty;
                         return [4 /*yield*/, this.updateInventoryService.updateUnReserveQty(batch)];
                     case 3:
                         _a.sent();

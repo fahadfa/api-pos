@@ -79,7 +79,7 @@ var UpdateInventoryService = /** @class */ (function () {
                                 configid: reqData.configid,
                                 batchno: reqData.batchno,
                                 dataareaid: reqData.dataareaid,
-                                inventlocationid: reqData.inventlocationid
+                                inventlocationid: reqData.inventlocationid,
                             })];
                     case 1:
                         inventoryOnHandData = _a.sent();
@@ -157,7 +157,7 @@ var UpdateInventoryService = /** @class */ (function () {
                                 configid: reqData.configid,
                                 batchno: reqData.batchno,
                                 dataareaid: reqData.dataareaid,
-                                inventlocationid: reqData.inventlocationid
+                                inventlocationid: reqData.inventlocationid,
                             })];
                     case 18:
                         inventoryOnHandData = _a.sent();
@@ -184,18 +184,21 @@ var UpdateInventoryService = /** @class */ (function () {
                             configid: reqData.configid,
                             batchno: reqData.batchno,
                             dataareaid: reqData.dataareaid,
-                            inventlocationid: reqData.inventlocationid
+                            inventlocationid: reqData.inventlocationid,
+                            qty: Math.abs(reqData.qty),
                         })];
                     case 1:
                         inventoryOnHandData = _a.sent();
-                        console.log("==========updateInventoryOnhandData=================", inventoryOnHandData);
+                        console.log("==========updateInventoryOnhandData=================", inventoryOnHandData, reqData.qty);
+                        if (!inventoryOnHandData) return [3 /*break*/, 3];
                         inventoryOnHandData.qtyReserved = inventoryOnHandData.qtyReserved - Math.abs(reqData.qty);
                         inventoryOnHandData.updatedOn = new Date(App_1.App.DateNow());
                         inventoryOnHandData.updatedBy = this.sessionInfo ? this.sessionInfo.userName : "SYSTEM";
                         return [4 /*yield*/, this.inventoryOnhandDAO.save(inventoryOnHandData)];
                     case 2:
                         _a.sent();
-                        return [2 /*return*/];
+                        _a.label = 3;
+                    case 3: return [2 /*return*/];
                 }
             });
         });

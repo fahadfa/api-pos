@@ -29,6 +29,7 @@ exports.DBEvent = function () {
     return event;
 };
 var dbEmitter = function (payload) {
+    console.log("WATCHER", payload);
     var data = JSON.parse(payload);
     exports.DBEvent().emit(data.name, data.record);
 };

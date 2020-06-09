@@ -46,10 +46,7 @@ var InventoryOnhandDAO = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.dao
-                            .createQueryBuilder("inventoryonhand")
-                            .where(data)
-                            .getMany()];
+                    case 0: return [4 /*yield*/, this.dao.createQueryBuilder("inventoryonhand").where(data).getMany()];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -79,10 +76,7 @@ var InventoryOnhandDAO = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.dao
-                            .createQueryBuilder("inventoryonhand")
-                            .where({ id: id })
-                            .getOne()];
+                    case 0: return [4 /*yield*/, this.dao.createQueryBuilder("inventoryonhand").where({ id: id }).getOne()];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -105,7 +99,7 @@ var InventoryOnhandDAO = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.dao
                             .createQueryBuilder("inventoryonhand")
                             .where({})
-                            .andWhere("LOWER(inventoryonhand.itemid) = LOWER('" + data.itemid + "') and \n                       LOWER(inventoryonhand.inventsizeid) = LOWER('" + data.inventsizeid + "') and\n                       LOWER(inventoryonhand.configid) = LOWER('" + data.configid + "') and \n                       LOWER(inventoryonhand.batchno) = LOWER('" + data.batchno + "') and \n                       LOWER(inventoryonhand.dataareaid) = LOWER('" + data.dataareaid + "') and\n                       LOWER(inventoryonhand.inventlocationid) = LOWER('" + data.inventlocationid + "')")
+                            .andWhere("LOWER(inventoryonhand.itemid) = LOWER('" + data.itemid + "') and \n                       LOWER(inventoryonhand.inventsizeid) = LOWER('" + data.inventsizeid + "') and\n                       LOWER(inventoryonhand.configid) = LOWER('" + data.configid + "') and \n                       LOWER(inventoryonhand.batchno) = LOWER('" + data.batchno + "') and \n                       LOWER(inventoryonhand.dataareaid) = LOWER('" + data.dataareaid + "') and\n                       LOWER(inventoryonhand.inventlocationid) = LOWER('" + data.inventlocationid + "') \n                       " + (data.qty ? "and inventoryonhand.qtyReserved >= " + data.qty : "") + " \n                       ")
                             .getOne()];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
@@ -126,7 +120,8 @@ var InventoryOnhandDAO = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.dao.createQueryBuilder("onhand")
+                    case 0: return [4 /*yield*/, this.dao
+                            .createQueryBuilder("onhand")
                             .select("onhand.itemid")
                             .addGroupBy("onhand.itemid")
                             .addGroupBy("onhand.id")

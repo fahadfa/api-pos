@@ -107,7 +107,7 @@ var SyncDMLService = /** @class */ (function () {
                     case 1:
                         utcDate = _a.sent();
                         utcDateTime = utcDate.rows[0]["utc_date"];
-                        currentTime = moment().subtract("3", "minutes").format();
+                        currentTime = type == "M" ? moment().subtract("3", "minutes").format() : moment().format();
                         log.info("Db Date: " + utcDateTime);
                         log.info("Sys Date: " + currentTime);
                         // log.info("currentTime Date: ", currentTime);
