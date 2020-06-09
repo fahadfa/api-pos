@@ -560,6 +560,19 @@ var SalesTableService = /** @class */ (function () {
                                         newData_1.push(item);
                                     }
                                 }
+                                else if (item.transkind == "TRANSFERORDER") {
+                                    if (item.slSalesId != null) {
+                                        if (item.custAccount == _this.sessionInfo.inventlocationid && item.status != "CREATED") {
+                                            newData_1.push(item);
+                                        }
+                                        else if (item.inventLocationId == _this.sessionInfo.inventlocationid) {
+                                            newData_1.push(item);
+                                        }
+                                        else if (item.jazeeraWarehouse == _this.sessionInfo.inventlocationid) {
+                                            newData_1.push(item);
+                                        }
+                                    }
+                                }
                             }
                             else {
                                 if (item.custAccount == _this.sessionInfo.inventlocationid && item.status != "CREATED") {
