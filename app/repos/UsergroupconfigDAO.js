@@ -37,7 +37,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var Usergroupconfig_1 = require("../../entities/Usergroupconfig");
-var App_1 = require("../../utils/App");
 var UsergroupconfigDAO = /** @class */ (function () {
     function UsergroupconfigDAO() {
         this.dao = typeorm_1.getRepository(Usergroupconfig_1.Usergroupconfig);
@@ -138,7 +137,7 @@ var UsergroupconfigDAO = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         console.log(data);
-                        query = " update usergroupconfig set \n                        special_products_for_colorant_option = '" + data.specialproductsforcolorantoption + "', \n                        blocklistedbasecolor = '" + data.blocklistedbasecolor + "',\n                        sabic_customers = '" + data.sabiccustomers + "',\n                        nocolorantcheckgroup = '" + data.nocolorantcheckgroup + "',\n                        workflowcustomers = '" + data.workflowcustomers + "',\n                        lastmodifieddate = '" + App_1.App.dateNow() + "'\n                        ";
+                        query = " update usergroupconfig set \n                        special_products_for_colorant_option = '" + data.specialproductsforcolorantoption + "', \n                        blocklistedbasecolor = '" + data.blocklistedbasecolor + "',\n                        sabic_customers = '" + data.sabiccustomers + "',\n                        nocolorantcheckgroup = '" + data.nocolorantcheckgroup + "',\n                        workflowcustomers = '" + data.workflowcustomers + "',\n                        lastmodifieddate = '" + new Date().toISOString() + "'\n                        ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         _a.sent();

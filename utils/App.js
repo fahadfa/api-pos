@@ -277,9 +277,6 @@ var App = /** @class */ (function () {
     App.PrintLog = function (routerName, routerType, sessionInfo) {
         Log_1.log.info(new Date().toISOString() + " : " + routerName + " :  " + routerType + " : " + JSON.stringify(sessionInfo));
     };
-    App.dateNow = function () {
-        return new Date().toISOString();
-    };
     App.HashSync = function (data) {
         return bcryptjs_1.hashSync(data, 8);
     };

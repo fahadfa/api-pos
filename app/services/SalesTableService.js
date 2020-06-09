@@ -2414,6 +2414,7 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.salestableDAO.entity(reqData.salesId)];
                     case 1:
                         transferorder = _a.sent();
+                        transferorder.lastModifiedDate = new Date(App_1.App.DateNow());
                         transferorder.status = reqData.status ? reqData.status : "REQUESTED";
                         return [4 /*yield*/, this.salestableDAO.save(transferorder)];
                     case 2:
@@ -2442,6 +2443,7 @@ var SalesTableService = /** @class */ (function () {
                     case 1:
                         transferorder = _a.sent();
                         transferorder.status = "REJECTED";
+                        transferorder.lastModifiedDate = new Date(App_1.App.DateNow());
                         return [4 /*yield*/, this.salestableDAO.save(transferorder)];
                     case 2:
                         transferorder = _a.sent();
