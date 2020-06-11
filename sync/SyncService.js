@@ -347,7 +347,7 @@ var SyncService = /** @class */ (function () {
                                 return [4 /*yield*/, this.syncDMLService.fallBackData()];
                             case 2:
                                 data = _a.sent();
-                                log.debud(data);
+                                log.debug(data);
                                 if (!(data && data.id)) return [3 /*break*/, 4];
                                 return [4 /*yield*/, this.syncDMLService.execute("M", 0, data)];
                             case 3:
