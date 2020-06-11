@@ -153,7 +153,7 @@ var sync = function () {
     child_process.fork(sync1File);
     Log_1.log.warn("syncFile:", sync1File);
     var syncFFile = __dirname + "/syncF.ts";
-    sync1File = fs.existsSync(syncFFile) ? __dirname + "/syncF.ts" : __dirname + "/syncF.js";
+    syncFFile = fs.existsSync(syncFFile) ? __dirname + "/syncF.ts" : __dirname + "/syncF.js";
     child_process.fork(syncFFile);
     Log_1.log.warn("syncFile:", syncFFile);
 };
