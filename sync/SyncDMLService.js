@@ -117,7 +117,7 @@ var SyncDMLService = /** @class */ (function () {
                         }
                         _a.label = 2;
                     case 2:
-                        _a.trys.push([2, 7, , 8]);
+                        _a.trys.push([2, 6, , 7]);
                         if (stageDbConfig.host == localDbConfig.host)
                             throw { message: "Invalid DB config Data" };
                         if (fallback == null) {
@@ -139,7 +139,7 @@ var SyncDMLService = /** @class */ (function () {
                         log.debug(JSON.stringify(syncResults, null, 2));
                         if (!syncResults)
                             return [2 /*return*/, Promise.resolve("")];
-                        if (!(syncResults.source_id != syncResults.target_id)) return [3 /*break*/, 6];
+                        if (!(syncResults.source_id != syncResults.target_id)) return [3 /*break*/, 5];
                         sourceDB = syncResults.source_id == STAGING_ID ? stageDbConfig : localDbConfig;
                         targetDB = syncResults.target_id == STORE_ID ? localDbConfig : stageDbConfig;
                         // if (syncResults.source_id != STAGING_ID) {
@@ -151,21 +151,18 @@ var SyncDMLService = /** @class */ (function () {
                         if (fallback != null) {
                             syncResults.cond = fallback.cond;
                             syncResults.last_update = fallback.from_date;
+                            log.debug(JSON.stringify(syncResults, null, 2));
                         }
                         return [4 /*yield*/, this.syncDb(sourceDB, targetDB, syncResults, currentTime)];
                     case 4:
                         _a.sent();
-                        if (!(fallback != null)) return [3 /*break*/, 6];
-                        return [4 /*yield*/, this.fallBackDataUpdate(fallback.id)];
-                    case 5:
-                        _a.sent();
-                        _a.label = 6;
-                    case 6: return [3 /*break*/, 8];
-                    case 7:
+                        _a.label = 5;
+                    case 5: return [3 /*break*/, 7];
+                    case 6:
                         error_1 = _a.sent();
                         log.error(error_1);
                         throw error_1;
-                    case 8:
+                    case 7:
                         log.info("###########################################");
                         return [2 /*return*/];
                 }

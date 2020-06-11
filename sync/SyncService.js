@@ -337,42 +337,45 @@ var SyncService = /** @class */ (function () {
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                _a.trys.push([0, 9, , 10]);
-                                if (!(isFallBackProceed == true)) return [3 /*break*/, 7];
+                                _a.trys.push([0, 10, , 11]);
+                                if (!(isFallBackProceed == true)) return [3 /*break*/, 8];
                                 isFallBackProceed = false;
                                 log.debug("(((((((((( SYNC FALLBACK START))))))))))");
                                 return [4 /*yield*/, this.checkInternet()];
                             case 1:
-                                if (!_a.sent()) return [3 /*break*/, 5];
+                                if (!_a.sent()) return [3 /*break*/, 6];
                                 return [4 /*yield*/, this.syncDMLService.fallBackData()];
                             case 2:
                                 data = _a.sent();
                                 log.debug(data);
-                                if (!(data && data.id)) return [3 /*break*/, 4];
+                                if (!(data && data.id)) return [3 /*break*/, 5];
                                 return [4 /*yield*/, this.syncDMLService.execute("M", 0, data)];
                             case 3:
                                 _a.sent();
-                                _a.label = 4;
-                            case 4: return [3 /*break*/, 6];
-                            case 5:
-                                log.warn(">>>>>>>>>>>>>>>>> No Internet connection <<<<<<<<<<<<<<<<<<<<");
-                                _a.label = 6;
+                                return [4 /*yield*/, this.syncDMLService.fallBackDataUpdate(data.id)];
+                            case 4:
+                                _a.sent();
+                                _a.label = 5;
+                            case 5: return [3 /*break*/, 7];
                             case 6:
+                                log.warn(">>>>>>>>>>>>>>>>> No Internet connection <<<<<<<<<<<<<<<<<<<<");
+                                _a.label = 7;
+                            case 7:
                                 log.debug("(((((((((( SYNC CLOSE FALLBACK ))))))))))");
                                 isFallBackProceed = true;
-                                return [3 /*break*/, 8];
-                            case 7:
+                                return [3 /*break*/, 9];
+                            case 8:
                                 log.warn("FALLBACK still processing ...................................");
-                                _a.label = 8;
-                            case 8: return [3 /*break*/, 10];
-                            case 9:
+                                _a.label = 9;
+                            case 9: return [3 /*break*/, 11];
+                            case 10:
                                 error_5 = _a.sent();
                                 isFallBackProceed = true;
                                 log.error("--------- CRON FALLBACK ERROR ---------");
                                 log.error(error_5);
                                 log.error("--------- CRON FALLBACK ERROR ---------");
-                                return [3 /*break*/, 10];
-                            case 10: return [2 /*return*/];
+                                return [3 /*break*/, 11];
+                            case 11: return [2 /*return*/];
                         }
                     });
                 }); });
