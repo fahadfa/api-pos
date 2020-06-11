@@ -129,7 +129,7 @@ var SyncDMLService = /** @class */ (function () {
                             }
                         }
                         else {
-                            sql = " select * from sync_table \n        where (target_id = '" + STORE_ID + "' ) \n        and active = true \n        and map_table = " + fallback.table_name + " \n        order by updated_on  ASC \n        limit 1";
+                            sql = " select * from sync_table \n        where (target_id = '" + STORE_ID + "' ) \n        and active = true \n        and map_table = '" + fallback.table_name + "' \n        order by updated_on  ASC \n        limit 1";
                         }
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(stageDbConfig, sql)];
                     case 3:
