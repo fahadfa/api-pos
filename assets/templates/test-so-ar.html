@@ -493,34 +493,46 @@
       </table>
       <table id="gtotal" class="textbold" align="left" width="100%" cellpadding="0" cellspacing="0">
         <tr class="tdright">
-          <td class="tdcenter">طلب المبيعات</td>
-          <td class="tdleft">المجموع الكلي</td>
-          <td>{{this.quantity}}</td>
-          <td>
+          <td class="tdcenter" colspan="2">طلب المبيعات</td>
+          <td class="tdleft" colspan="1">المجموع الكلي</td>
+          <td colspan="1">{{this.quantity}}</td>
+          <td colspan="1">
             {{this.amount}}
           </td>
         </tr>
         <tr class="tdright">
-          <td rowspan="4">&nbsp;</td>
-          <td colspan="2" class="tdleft">رسوم الشحن</td>
+          <!-- <td rowspan="4">&nbsp;</td> -->
+          <td class="tdright">مبلغ نقدي</td>
+          <td class="tdright">{{ this.cashAmount}}</td>
+          <td class="tdcenter borderNone"></td>
+          <td class="tdleft borderLeftNone">رسوم الشحن</td>
           <td>
             {{this.shippingamount}}
           </td>
         </tr>
         <tr class="tdright">
-          <td colspan="2" class="tdleft">الخصم</td>
+          <td class="tdright">مبلغ البطاقة</td>
+          <td class="tdright">{{ this.cardAmount }}</td>
+          <td class="tdcenter borderNone"></td>
+          <td class="tdleft borderLeftNone">الخصم</td>
           <td>
             {{this.disc}}
           </td>
         </tr>
         <tr class="tdright">
-          <td colspan="2" class="tdleft">ضريبة القيمة المضافة (5%)</td>
+          <td class="tdright" style="font-size:13px">مبلغ خدمة تنسيق الوان</td>
+          <td class="tdright">{{ this.designServiceRedeemAmount }}</td>
+          <td class="tdcenter borderNone"></td>
+          <td class="tdleft borderLeftNone" style="font-size:13px">ضريبة القيمة المضافة (5%)</td>
           <td>
             {{this.vatGrand}}
           </td>
         </tr>
         <tr class="tdright">
-          <td colspan="2" class="tdleft">المبلغ الصافي</td>
+          <td class="tdright">استرداد القيمة</td>
+          <td class="tdright">{{this.redeemAmount}}</td>
+          <td class="tdcenter borderNone"></td>
+          <td class="tdleft borderLeftNone">المبلغ الصافي</td>
           <td>
             {{this.netAmount}}
           </td>
@@ -860,34 +872,46 @@
       </table>
       <table id="gtotal" class="textbold" align="left" width="100%" cellpadding="0" cellspacing="0">
         <tr class="tdright">
-          <td class="tdcenter">طلب المبيعات</td>
-          <td class="tdleft">المجموع الكلي</td>
-          <td>{{this.quantity}}</td>
-          <td>
+          <td class="tdcenter" colspan="2">طلب المبيعات</td>
+          <td class="tdleft" colspan="1">المجموع الكلي</td>
+          <td colspan="1">{{this.quantity}}</td>
+          <td colspan="1">
             {{this.amount}}
           </td>
         </tr>
         <tr class="tdright">
-          <td rowspan="4">&nbsp;</td>
-          <td colspan="2" class="tdleft">رسوم الشحن</td>
+          <!-- <td rowspan="4">&nbsp;</td> -->
+          <td class="tdright">مبلغ نقدي</td>
+          <td class="tdright">{{ this.cashAmount}}</td>
+          <td class="tdcenter borderNone"></td>
+          <td class="tdleft borderLeftNone">رسوم الشحن</td>
           <td>
             {{this.shippingamount}}
           </td>
         </tr>
         <tr class="tdright">
-          <td colspan="2" class="tdleft">الخصم</td>
+          <td class="tdright">مبلغ البطاقة</td>
+          <td class="tdright">{{ this.cardAmount }}</td>
+          <td class="tdcenter borderNone"></td>
+          <td class="tdleft borderLeftNone">الخصم</td>
           <td>
             {{this.disc}}
           </td>
         </tr>
         <tr class="tdright">
-          <td colspan="2" class="tdleft">ضريبة القيمة المضافة (5%)</td>
+          <td class="tdright" style="font-size:13px">مبلغ خدمة تنسيق الوان</td>
+          <td class="tdright">{{ this.designServiceRedeemAmount }}</td>
+          <td class="tdcenter borderNone"></td>
+          <td class="tdleft borderLeftNone" style="font-size:13px">ضريبة القيمة المضافة (5%)</td>
           <td>
             {{this.vatGrand}}
           </td>
         </tr>
         <tr class="tdright">
-          <td colspan="2" class="tdleft">المبلغ الصافي</td>
+          <td class="tdright">استرداد القيمة</td>
+          <td class="tdright">{{this.redeemAmount}}</td>
+          <td class="tdcenter borderNone"></td>
+          <td class="tdleft borderLeftNone">المبلغ الصافي</td>
           <td>
             {{this.netAmount}}
           </td>

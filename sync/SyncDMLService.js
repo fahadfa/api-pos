@@ -90,7 +90,7 @@ var SyncDMLService = /** @class */ (function () {
             });
         });
     };
-    SyncDMLService.prototype.execute = function (type, priority) {
+    SyncDMLService.prototype.execute = function (type, priority, fallback) {
         if (priority === void 0) { priority = 9; }
         return __awaiter(this, void 0, void 0, function () {
             var stageDbConfig, localDbConfig, sql, utcDate, utcDateTime, currentTime, syncResults, sourceDB, targetDB, error_1;
@@ -107,7 +107,7 @@ var SyncDMLService = /** @class */ (function () {
                     case 1:
                         utcDate = _a.sent();
                         utcDateTime = utcDate.rows[0]["utc_date"];
-                        currentTime = type == "M" ? moment().subtract("3", "minutes").toISOString() : moment().toISOString();
+                        currentTime = moment().toISOString();
                         log.info("Db Date: " + utcDateTime);
                         log.info("Sys Date: " + currentTime);
                         // log.info("currentTime Date: ", currentTime);
@@ -117,14 +117,19 @@ var SyncDMLService = /** @class */ (function () {
                         }
                         _a.label = 2;
                     case 2:
-                        _a.trys.push([2, 6, , 7]);
+                        _a.trys.push([2, 7, , 8]);
                         if (stageDbConfig.host == localDbConfig.host)
                             throw { message: "Invalid DB config Data" };
-                        if (type == "M") {
-                            sql = " select * from sync_table \n        where (target_id = '" + STORE_ID + "' ) \n        and active = true\n        and priority = " + priority + " \n        order by updated_on  ASC \n        limit 1";
+                        if (fallback == null) {
+                            if (type == "M") {
+                                sql = " select * from sync_table \n          where (target_id = '" + STORE_ID + "' ) \n          and active = true \n          and priority = " + priority + " \n          order by updated_on  ASC \n          limit 1";
+                            }
+                            else {
+                                sql = " select * from sync_table \n          where (source_id = '" + STORE_ID + "' ) \n          and active = true \n          and priority = " + priority + "\n          order by updated_on  ASC \n          limit 1";
+                            }
                         }
                         else {
-                            sql = " select * from sync_table \n        where (source_id = '" + STORE_ID + "' ) \n        and active = true \n        and priority = " + priority + "\n        order by updated_on  ASC \n        limit 1";
+                            sql = " select * from sync_table \n        where (target_id = '" + STORE_ID + "' ) \n        and active = true \n        and map_table = " + fallback.table_name + " \n        order by updated_on  ASC \n        limit 1";
                         }
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(stageDbConfig, sql)];
                     case 3:
@@ -134,7 +139,7 @@ var SyncDMLService = /** @class */ (function () {
                         log.debug(JSON.stringify(syncResults, null, 2));
                         if (!syncResults)
                             return [2 /*return*/, Promise.resolve("")];
-                        if (!(syncResults.source_id != syncResults.target_id)) return [3 /*break*/, 5];
+                        if (!(syncResults.source_id != syncResults.target_id)) return [3 /*break*/, 6];
                         sourceDB = syncResults.source_id == STAGING_ID ? stageDbConfig : localDbConfig;
                         targetDB = syncResults.target_id == STORE_ID ? localDbConfig : stageDbConfig;
                         // if (syncResults.source_id != STAGING_ID) {
@@ -143,16 +148,24 @@ var SyncDMLService = /** @class */ (function () {
                         //     .split("+")[0];
                         // }
                         log.warn("\n\n((((((<<<< " + syncResults.map_table + "::" + syncResults.last_update + " >>>>))))))\n\n");
+                        if (fallback != null) {
+                            syncResults.cond = fallback.cond;
+                            syncResults.last_update = fallback.from_date;
+                        }
                         return [4 /*yield*/, this.syncDb(sourceDB, targetDB, syncResults, currentTime)];
                     case 4:
                         _a.sent();
-                        _a.label = 5;
-                    case 5: return [3 /*break*/, 7];
-                    case 6:
+                        if (!(fallback != null)) return [3 /*break*/, 6];
+                        return [4 /*yield*/, this.fallBackDataUpdate(fallback.id)];
+                    case 5:
+                        _a.sent();
+                        _a.label = 6;
+                    case 6: return [3 /*break*/, 8];
+                    case 7:
                         error_1 = _a.sent();
                         log.error(error_1);
                         throw error_1;
-                    case 7:
+                    case 8:
                         log.info("###########################################");
                         return [2 /*return*/];
                 }
@@ -171,6 +184,8 @@ var SyncDMLService = /** @class */ (function () {
                         offset = 0;
                         isTableUpdated = true;
                         lastUpdate = currentTime;
+                        //let lastUpdate = await this.buildLastUpdatedDate(sourceDb, sync);
+                        log.info("************* Last Update: " + lastUpdate + " *************");
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 17, , 20]);
@@ -277,8 +292,88 @@ var SyncDMLService = /** @class */ (function () {
             });
         });
     };
+    SyncDMLService.prototype.fallBackData = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var stageDbConfig, sql, soruceRes, err_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        stageDbConfig = SyncServiceHelper_1.SyncServiceHelper.StageDBOptions();
+                        sql = "select *  from sync_fallback where target_id='" + STORE_ID + "' and is_synced = false order by from_date asc limit 1";
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(stageDbConfig, sql)];
+                    case 2:
+                        soruceRes = _a.sent();
+                        if (soruceRes && soruceRes.rows && soruceRes.rows[0]) {
+                            return [2 /*return*/, soruceRes.rows[0]];
+                        }
+                        else {
+                            return [2 /*return*/, null];
+                        }
+                        return [3 /*break*/, 4];
+                    case 3:
+                        err_3 = _a.sent();
+                        throw err_3;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    SyncDMLService.prototype.fallBackDataUpdate = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var stageDbConfig, sql, soruceRes, err_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        stageDbConfig = SyncServiceHelper_1.SyncServiceHelper.StageDBOptions();
+                        sql = "update sync_fallback set is_synced = true  where id = '" + id + "'";
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(stageDbConfig, [sql])];
+                    case 2:
+                        soruceRes = _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        err_4 = _a.sent();
+                        throw err_4;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    SyncDMLService.prototype.buildLastUpdatedDate = function (sourceDb, sync) {
+        return __awaiter(this, void 0, void 0, function () {
+            var sql, soruceRes, err_5;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        sql = "select " + sync.sync_column + " as updated_date from " + sync.map_table + " order by  " + sync.sync_column + " desc limit 1";
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(sourceDb, sql)];
+                    case 2:
+                        soruceRes = _a.sent();
+                        if (soruceRes && soruceRes.rows && soruceRes.rows[0]) {
+                            return [2 /*return*/, soruceRes.rows[0]["updated_date"]];
+                        }
+                        else {
+                            return [2 /*return*/, moment().toISOString()];
+                        }
+                        return [3 /*break*/, 4];
+                    case 3:
+                        err_5 = _a.sent();
+                        throw err_5;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
     SyncDMLService.prototype.buildDMLSelectQuery = function (sync, offset) {
-        var sql = "select * from " + sync.map_table + " where " + sync.cond + "  \n    and " + sync.sync_column + " >= '" + sync.last_update + "' \n    offset " + offset + " limit " + this.limitData;
+        var sql = "select * from " + sync.map_table + " where " + sync.cond + "  \n    and " + sync.sync_column + " > '" + sync.last_update + "' \n    offset " + offset + " limit " + this.limitData;
         return sql;
     };
     SyncDMLService.prototype.buildDMLSyncDeleteQuery = function (deleteData) {

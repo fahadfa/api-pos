@@ -47,6 +47,7 @@ var SalesLineDAO_1 = require("../repos/SalesLineDAO");
 var uuid = require("uuid");
 var UsergroupconfigDAO_1 = require("../repos/UsergroupconfigDAO");
 var RawQuery_1 = require("../common/RawQuery");
+var SalesTableService_1 = require("./SalesTableService");
 var PurchaseOrderFromAxaptaService = /** @class */ (function () {
     function PurchaseOrderFromAxaptaService() {
         this.axios = require("axios");
@@ -56,6 +57,7 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
         this.salesTableDAO = new SalesTableDAO_1.SalesTableDAO();
         this.salesLineDAO = new SalesLineDAO_1.SalesLineDAO();
         this.usergroupconfigDAO = new UsergroupconfigDAO_1.UsergroupconfigDAO();
+        this.salesTableService = new SalesTableService_1.SalesTableService();
         this.rawQuery = new RawQuery_1.RawQuery();
     }
     PurchaseOrderFromAxaptaService.prototype.get = function (purchaseID) {
@@ -165,7 +167,7 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                         if (!salesData) return [3 /*break*/, 2];
                         throw { message: "ALREADY_RECEIVED" };
                     case 2: return [4 /*yield*/, this.usergroupconfigDAO.findOne({
-                            groupid: this.sessionInfo.groupid
+                            groupid: this.sessionInfo.groupid,
                         })];
                     case 3:
                         usergroupconfig = _a.sent();
@@ -187,8 +189,8 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                         item.batch = [
                             {
                                 batchNo: item.batches.batchno,
-                                quantity: item.batches.qty
-                            }
+                                quantity: item.batches.qty,
+                            },
                         ];
                         batches = item.batches;
                         batches.invoiceid = salesData.salesId;
@@ -246,9 +248,143 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
             });
         });
     };
+    PurchaseOrderFromAxaptaService.prototype.getAgentOrder = function (purchaseID) {
+        return __awaiter(this, void 0, void 0, function () {
+            var axaptaData, error_5;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 5, , 6]);
+                        return [4 /*yield*/, this.getAgentPurchaseOrder(purchaseID)];
+                    case 1:
+                        axaptaData = _a.sent();
+                        console.log("data-----------------", axaptaData);
+                        if (!(axaptaData.invent_location_id == this.sessionInfo.inventlocationid)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.mapAgentpurcaseOrder(axaptaData)];
+                    case 2: return [2 /*return*/, _a.sent()];
+                    case 3: throw { status: 0, message: "ORDER_NOT_RELATED_TO_THIS_STORE" };
+                    case 4: return [3 /*break*/, 6];
+                    case 5:
+                        error_5 = _a.sent();
+                        throw error_5;
+                    case 6: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    PurchaseOrderFromAxaptaService.prototype.getAgentPurchaseOrder = function (purchID) {
+        return __awaiter(this, void 0, void 0, function () {
+            var token, url, data, error_6;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, this.getToken()];
+                    case 1:
+                        token = _a.sent();
+                        console.log(token);
+                        url = Props_1.Props.AXAPTA_URL + ("AgentPurchaseOrder?purchID=" + purchID);
+                        console.log("axpta url :  ", url);
+                        this.axios.defaults.headers["Token"] = token;
+                        console.log(this.axios.defaults.headers);
+                        return [4 /*yield*/, this.axios.get(url)];
+                    case 2:
+                        data = _a.sent();
+                        console.log(Object.keys(data));
+                        console.log();
+                        return [2 /*return*/, data.data];
+                    case 3:
+                        error_6 = _a.sent();
+                        throw { status: 0, message: error_6.response.data.Message };
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    PurchaseOrderFromAxaptaService.prototype.mapAgentpurcaseOrder = function (data) {
+        var salesData = {};
+        salesData.salesId = data.purch_id;
+        salesData.salesName = data.cust_name;
+        salesData.custAccount = data.cust_account;
+        salesData.deliveryAddress = data.deilvery_address;
+        salesData.custGroup = data.cust_group;
+        salesData.invoiceDate = data.order_date;
+        salesData.currencyCode = data.currency_code;
+        salesData.payment = data.payment_terms;
+        salesData.priceGroupId = data.price_group_id;
+        // salesData.inventLocationId = data.invent_location_id;
+        salesData.inventLocationId = "HYD-001";
+        salesData.taxGroup = data.tax_group;
+        salesData.amount = data.gross_amount;
+        salesData.disc = data.total_disc;
+        salesData.vatamount = data.total_vat_amount;
+        salesData.netAmount = data.net_amount;
+        salesData.dataareaid = data.data_area_id;
+        var salesLine = [];
+        data.agentOrderLines.map(function (v) {
+            var line = {};
+            line.salesId = v.purch_id;
+            line.custAccount = v.cust_account;
+            line.lineNum = v.line_num;
+            line.itemid = v.item_id;
+            line.name = v.name;
+            line.configId = v.config_id;
+            line.inventsizeid = v.invent_size_id;
+            line.taxGroup = v.tax_group;
+            line.taxItemGroup = v.tax_item_group;
+            line.salesprice = v.unit_price;
+            line.salesQty = v.qty;
+            line.lineTotalDisc = v.line_disc;
+            line.lineAmount = v.line_amount;
+            line.vat = v.line_vat_percent;
+            line.vatamount = v.line_vat;
+            line.currencyCode = v.currency_code;
+            line.dataareaid = salesData.dataareaid;
+            line.inventLocationId = salesData.inventLocationId;
+            salesLine.push(line);
+        });
+        salesData.salesLine = salesLine;
+        return salesData;
+    };
+    PurchaseOrderFromAxaptaService.prototype.saveAgentOrder = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var salesData, error_7;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 7, , 8]);
+                        console.log(data);
+                        if (!(data.inventLocationId == this.sessionInfo.inventlocationid)) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.salesTableDAO.findOne({ interCompanyOriginalSalesId: data.salesId })];
+                    case 1:
+                        salesData = _a.sent();
+                        if (!salesData) return [3 /*break*/, 2];
+                        throw { message: "ALREADY_RECEIVED" };
+                    case 2:
+                        salesData = data;
+                        salesData.interCompanyOriginalSalesId = data.salesId;
+                        salesData.status = "CREATED";
+                        salesData.transkind = "SALESORDER";
+                        delete salesData.salesId;
+                        this.salesTableService.sessionInfo = this.sessionInfo;
+                        return [4 /*yield*/, this.salesTableService.save(salesData)];
+                    case 3:
+                        _a.sent();
+                        return [2 /*return*/, { status: 1, id: salesData.salesId, message: Props_1.Props.SAVED_SUCCESSFULLY }];
+                    case 4: return [3 /*break*/, 6];
+                    case 5: throw { status: 0, message: "INVALID_DATA" };
+                    case 6: return [3 /*break*/, 8];
+                    case 7:
+                        error_7 = _a.sent();
+                        throw error_7;
+                    case 8: return [2 /*return*/];
+                }
+            });
+        });
+    };
     PurchaseOrderFromAxaptaService.prototype.getToken = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var token, url, data, error_5;
+            var token, url, data, error_8;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -262,8 +398,8 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                         token = data.headers.token;
                         return [2 /*return*/, token];
                     case 2:
-                        error_5 = _a.sent();
-                        throw { status: 0, message: error_5 };
+                        error_8 = _a.sent();
+                        throw { status: 0, message: error_8 };
                     case 3: return [2 /*return*/];
                 }
             });

@@ -54,18 +54,24 @@ var SalesOrdersReport = /** @class */ (function () {
                         data.map(function (v) {
                             v.paymentMode = v.paymentType == "ONLINE" ? "Online" : v.paymentMode;
                             v.paymentTypeAr = v.paymentType == "ONLINE" ? "عبر الانترنت" : v.paymentMode;
+                            v.paymentMode = v.iscash ? "CASH" : v.paymtermid;
+                            v.paymentModeAr = v.iscash ? "السيولة النقدية" : v.paymtermid;
                             v.grossAmount = v.grossAmount ? v.grossAmount : 0;
                             v.discount = v.discount ? v.discount : 0;
                             v.vatAmount = v.vatAmount ? v.vatAmount : 0;
                             v.netAmount = v.netAmount ? v.netAmount : 0;
                             v.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(v.lastmodifieddate), parseInt(params.timeZoneOffSet)).toLocaleString();
-                            v.phone = v.phone && v.phone != 'null' ? v.phone : null;
+                            v.phone = v.phone && v.phone != "null" ? v.phone : null;
                         });
                         resData_1 = {
                             grossAmount: 0,
                             discount: 0,
                             vatAmount: 0,
                             netAmount: 0,
+                            cashAmount: 0,
+                            cardAmount: 0,
+                            designServiceRedeemAmount: 0,
+                            redeemAmount: 0
                         };
                         data.map(function (v) {
                             resData_1.grossAmount += parseFloat(v.grossAmount);
@@ -77,6 +83,10 @@ var SalesOrdersReport = /** @class */ (function () {
                         resData_1.discount = resData_1.discount.toFixed(2);
                         resData_1.vatAmount = resData_1.vatAmount.toFixed(2);
                         resData_1.netAmount = resData_1.netAmount.toFixed(2);
+                        resData_1.cashAmount = resData_1.cashAmount.toFixed(2);
+                        resData_1.cardAmount = resData_1.cardAmount.toFixed(2);
+                        resData_1.designServiceRedeemAmount = resData_1.designServiceRedeemAmount.toFixed(2);
+                        resData_1.redeemAmount = resData_1.redeemAmount.toFixed(2);
                         // console.log("salesorders  ", data);
                         resData_1.data = data;
                         return [2 /*return*/, resData_1];
@@ -159,7 +169,7 @@ var SalesOrdersReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "\n            select \n            distinct\n              s.salesid as \"salesId\",\n              \n              s.dimension6_ as \"salesManId\",\n              s.inventlocationid as \"fromWareHouse\",\n              s.custaccount as \"custaccount\",\n              to_char(s.createddatetime, 'DD-MM-YYYY') as \"createddatetime\",\n              s.lastmodifieddate as \"lastmodifieddate\",\n              s.status as status,              \n              als.en as \"statusEn\",\n              als.ar as \"statusAr\",              \n              alt.en as \"transkindEn\",\n              alt.ar as \"transkindAr\",\n              to_char(s.disc , 'FM999999999990.00') as discount,\n              s.salesname as name,\n              s.salesname as \"nameAlias\",\n              to_char(s.amount , 'FM999999999990.00') as \"grossAmount\",\n              to_char(s.netamount , 'FM999999999990.00') as \"netAmount\",\n              to_char(s.vatamount , 'FM999999999990.00') as \"vatAmount\",\n              w.name as \"wareHouseNameAr\",\n              w.namealias as \"wareHouseNameEn\",\n              s.payment as \"paymentMode\",\n              alp.en as \"paymentModeEn\",\n            \talp.ar as \"paymentModeAr\",              \n              c.walkincustomer as \"walkincustomer\",\n              s.mobileno as phone,\n              s.createddatetime,\n              s.transkind as type,\n              s.payment_type as \"paymentType\",\n              s.voucherdiscchecked as \"voucherdiscchecked\",\n              s.vouchernum as \"vouchernum\",\n              coalesce(s.deliveryaddress, '') || coalesce(s.citycode, '') || coalesce(s.districtcode, '') || coalesce(s.country_code, '') as deliveryaddress,\n              concat(d.num,' - ', d.description) as salesman\n            from salestable s\n              left join inventlocation w on w.inventlocationid=s.inventlocationid\n              left join custtable c on c.accountnum=s.custaccount\n              left join app_lang als on als.id = s.status\n              left join app_lang alt on alt.id = s.transkind\n              left join app_lang alp on alp.id = s.payment\n              left join dimensions d on s.dimension6_ = d.num\n            where s.transkind in ('SALESORDER', 'DESIGNERSERVICE')\n            and s.lastmodifieddate >= '" + params.fromDate + "' ::date\n            AND  s.lastmodifieddate < ('" + params.toDate + "' ::date + '1 day'::interval) \n            ";
+                        query = "\n            select \n            distinct\n              s.salesid as \"salesId\",\n              s.dimension6_ as \"salesManId\",\n              s.inventlocationid as \"fromWareHouse\",\n              s.custaccount as \"custaccount\",\n              to_char(s.createddatetime, 'DD-MM-YYYY') as \"createddatetime\",\n              s.lastmodifieddate as \"lastmodifieddate\",\n              s.status as status,              \n              als.en as \"statusEn\",\n              als.ar as \"statusAr\",              \n              alt.en as \"transkindEn\",\n              alt.ar as \"transkindAr\",\n              to_char(s.disc , 'FM999999999990.00') as discount,\n              s.salesname as name,\n              s.salesname as \"nameAlias\",\n              to_char(s.amount , 'FM999999999990.00') as \"grossAmount\",\n              to_char(s.netamount , 'FM999999999990.00') as \"netAmount\",\n              to_char(s.vatamount , 'FM999999999990.00') as \"vatAmount\",\n              w.name as \"wareHouseNameAr\",\n              w.namealias as \"wareHouseNameEn\",\n              s.payment as \"paymentMode\",\n              alp.en as \"paymentModeEn\",\n            \talp.ar as \"paymentModeAr\",              \n              c.walkincustomer as \"walkincustomer\",\n              s.mobileno as phone,\n              s.createddatetime,\n              s.iscash,\n              c.paymtermid,\n              s.transkind as type,\n              s.payment_type as \"paymentType\",\n              s.voucherdiscchecked as \"voucherdiscchecked\",\n              s.vouchernum as \"vouchernum\",\n              s.cash_amount as \"cashAmount\",\n              s.card_amount as \"cardAmount\",\n              s.shipping_amount as \"shippingAmount\",\n              s.online_amount as \"onlineAmount\",\n              s.redeemptsamt as \"redeemAmount\",\n              s.design_service_redeem_amount as \"designServiceRedeemAmount\",\n              coalesce(s.deliveryaddress, '') || coalesce(s.citycode, '') || coalesce(s.districtcode, '') || coalesce(s.country_code, '') as deliveryaddress,\n              concat(d.num,' - ', d.description) as salesman\n            from salestable s\n              left join inventlocation w on w.inventlocationid=s.inventlocationid\n              left join custtable c on c.accountnum=s.custaccount\n              left join app_lang als on als.id = s.status\n              left join app_lang alt on alt.id = s.transkind\n              left join app_lang alp on alp.id = s.payment\n              left join dimensions d on s.dimension6_ = d.num\n            where s.transkind in ('SALESORDER', 'DESIGNERSERVICE')\n            and s.lastmodifieddate >= '" + params.fromDate + "' ::date\n            AND  s.lastmodifieddate < ('" + params.toDate + "' ::date + '1 day'::interval) \n            ";
                         if (!(params.inventlocationid == "ALL")) return [3 /*break*/, 2];
                         warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
                         return [4 /*yield*/, this.db.query(warehouseQuery)];
@@ -191,6 +201,14 @@ var SalesOrdersReport = /** @class */ (function () {
                             }
                             else if (params.status == "PAID") {
                                 query += " and s.status in ('PAID','POSTED') ";
+                            }
+                        }
+                        if (params.paymentMode != "ALL") {
+                            if (params.paymentMode == "CASH") {
+                                query += " and (s.iscash = true or c.paymtermid = 'CASH') ";
+                            }
+                            else if (params.paymentMode == "CREDIT") {
+                                query += " and s.iscash != true and c.paymtermid != 'CASH' ";
                             }
                         }
                         if (params.accountnum) {

@@ -44,17 +44,21 @@ var ReturnOrderAmountService = /** @class */ (function () {
     }
     ReturnOrderAmountService.prototype.returnAmount = function (reqData, type) {
         return __awaiter(this, void 0, void 0, function () {
-            var salesOrderData, customer, condition, salesLine, salesLineIds, grossAmount, total, discount, vat, sendForApproval, totalGrossAmountAfterReturnItems, filteredSalesLine, promotionalDiscountItems, promotionalreturnItems, discountConditions, _i, salesLine_1, item, checkForPromotional, _loop_1, _a, _b, item, result, _loop_2, _c, result_1, item, returnOrderData, lineNum, _loop_3, this_1, _d, _e, item;
+            var salesOrderData, prevReturnOrderAmounts, customer, condition, salesLine, salesLineIds, grossAmount, total, discount, vat, sendForApproval, totalGrossAmountAfterReturnItems, filteredSalesLine, promotionalDiscountItems, promotionalreturnItems, discountConditions, _i, salesLine_1, item, checkForPromotional, _loop_1, _a, _b, item, result, _loop_2, _c, result_1, item, returnOrderData, lineNum, _loop_3, this_1, _d, _e, item, cashAmount, redeemAmount, designServiceRedeemAmount;
             return __generator(this, function (_f) {
                 switch (_f.label) {
                     case 0: return [4 /*yield*/, this.salesTableDAO.entity(reqData.salesid.toUpperCase())];
                     case 1:
                         salesOrderData = _f.sent();
-                        return [4 /*yield*/, this.rawQuery.getCustomer(salesOrderData.custAccount)];
+                        console.log(salesOrderData.cashAmount);
+                        return [4 /*yield*/, this.rawQuery.getPrevReturnOrderAmount(reqData.salesid.toUpperCase())];
                     case 2:
+                        prevReturnOrderAmounts = _f.sent();
+                        return [4 /*yield*/, this.rawQuery.getCustomer(salesOrderData.custAccount)];
+                    case 3:
                         customer = _f.sent();
                         return [4 /*yield*/, this.rawQuery.workflowconditions(this.sessionInfo.usergroupconfigid)];
-                    case 3:
+                    case 4:
                         condition = _f.sent();
                         salesLine = salesOrderData.salesLine;
                         salesLineIds = [];
@@ -158,7 +162,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             _loop_2(item);
                         }
                         return [4 /*yield*/, this.allocateReturnOrderData(salesOrderData, type)];
-                    case 4:
+                    case 5:
                         returnOrderData = _f.sent();
                         returnOrderData.salesLine = [];
                         lineNum = 1;
@@ -300,17 +304,41 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             item = _e[_d];
                             _loop_3(item);
                         }
+                        cashAmount = 0;
+                        redeemAmount = 0;
+                        designServiceRedeemAmount = 0;
+                        if (prevReturnOrderAmounts) {
+                            cashAmount = salesOrderData.cashAmount + salesOrderData.cardAmount - prevReturnOrderAmounts.cashAmount;
+                            redeemAmount = salesOrderData.redeemAmount - prevReturnOrderAmounts.redeemAmount;
+                            designServiceRedeemAmount =
+                                salesOrderData.designServiceRedeemAmount - prevReturnOrderAmounts.designServiceRedeemAmount;
+                        }
+                        else {
+                            cashAmount = parseFloat(salesOrderData.cashAmount);
+                            redeemAmount = parseFloat(salesOrderData.redeemAmount);
+                            designServiceRedeemAmount = parseFloat(salesOrderData.designServiceRedeemAmount);
+                        }
+                        if (cashAmount >= total) {
+                            returnOrderData.cashAmount = total;
+                            returnOrderData.redeemAmount = 0;
+                            returnOrderData.designServiceRedeemAmount = 0;
+                        }
+                        else if (cashAmount < total) {
+                            returnOrderData.cashAmount = cashAmount;
+                            if (designServiceRedeemAmount >= total - cashAmount) {
+                                returnOrderData.designServiceRedeemAmount = total - cashAmount;
+                                returnOrderData.redeemAmount = 0;
+                            }
+                            else if (designServiceRedeemAmount < total - cashAmount) {
+                                returnOrderData.designServiceRedeemAmount = designServiceRedeemAmount;
+                                returnOrderData.redeemAmount = total - cashAmount - designServiceRedeemAmount;
+                            }
+                        }
                         returnOrderData.amount = grossAmount;
                         returnOrderData.netAmount = total;
                         returnOrderData.disc = discount;
                         returnOrderData.vatamount = vat;
                         returnOrderData.sumTax = vat;
-                        returnOrderData.cashAmount = salesOrderData.designServiceRedeemAmount > 0 ? 0 : returnOrderData.netAmount;
-                        returnOrderData.designServiceRedeemAmount =
-                            salesOrderData.designServiceRedeemAmount > 0 ? returnOrderData.netAmount : 0;
-                        returnOrderData.shippingAmount = 0;
-                        returnOrderData.redeemAmount = 0;
-                        returnOrderData.cardAmount = 0;
                         console.log(sendForApproval, condition);
                         if (returnOrderData.designServiceRedeemAmount > 0) {
                             sendForApproval = true;
@@ -327,6 +355,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                 grossTotal: grossAmount,
                                 discount: discount,
                                 vatPrice: vat,
+                                cashAmount: returnOrderData.cashAmount,
+                                redeemAmount: returnOrderData.redeemAmount,
+                                designServiceRedeemAmount: returnOrderData.designServiceRedeemAmount,
                                 sendForApproval: sendForApproval,
                                 returnOrderData: returnOrderData,
                             }];

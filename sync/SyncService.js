@@ -81,6 +81,9 @@ var SyncService = /** @class */ (function () {
             case "1":
                 log = Log_1.s1log;
                 break;
+            case "F":
+                log = Log_1.sflog;
+                break;
             default:
                 break;
         }
@@ -108,6 +111,9 @@ var SyncService = /** @class */ (function () {
                         break;
                     case "1":
                         this.priority1();
+                        break;
+                    case "F":
+                        this.fallback();
                         break;
                     default:
                         break;
@@ -313,6 +319,60 @@ var SyncService = /** @class */ (function () {
                                 log.error("--------- CRON PRIORITY ERROR ---------");
                                 return [3 /*break*/, 8];
                             case 8: return [2 /*return*/];
+                        }
+                    });
+                }); });
+                return [2 /*return*/];
+            });
+        });
+    };
+    SyncService.prototype.fallback = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var isFallBackProceed;
+            var _this = this;
+            return __generator(this, function (_a) {
+                isFallBackProceed = true;
+                cron.schedule("*/23 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
+                    var data, error_5;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                _a.trys.push([0, 9, , 10]);
+                                if (!(isFallBackProceed == true)) return [3 /*break*/, 7];
+                                isFallBackProceed = false;
+                                log.debug("(((((((((( SYNC FALLBACK START))))))))))");
+                                return [4 /*yield*/, this.checkInternet()];
+                            case 1:
+                                if (!_a.sent()) return [3 /*break*/, 5];
+                                return [4 /*yield*/, this.syncDMLService.fallBackData()];
+                            case 2:
+                                data = _a.sent();
+                                log.debud(data);
+                                if (!(data && data.id)) return [3 /*break*/, 4];
+                                return [4 /*yield*/, this.syncDMLService.execute("M", 0, data)];
+                            case 3:
+                                _a.sent();
+                                _a.label = 4;
+                            case 4: return [3 /*break*/, 6];
+                            case 5:
+                                log.warn(">>>>>>>>>>>>>>>>> No Internet connection <<<<<<<<<<<<<<<<<<<<");
+                                _a.label = 6;
+                            case 6:
+                                log.debug("(((((((((( SYNC CLOSE FALLBACK ))))))))))");
+                                isFallBackProceed = true;
+                                return [3 /*break*/, 8];
+                            case 7:
+                                log.warn("FALLBACK still processing ...................................");
+                                _a.label = 8;
+                            case 8: return [3 /*break*/, 10];
+                            case 9:
+                                error_5 = _a.sent();
+                                isFallBackProceed = true;
+                                log.error("--------- CRON FALLBACK ERROR ---------");
+                                log.error(error_5);
+                                log.error("--------- CRON FALLBACK ERROR ---------");
+                                return [3 /*break*/, 10];
+                            case 10: return [2 /*return*/];
                         }
                     });
                 }); });

@@ -48,8 +48,8 @@ var express_fileupload_1 = __importDefault(require("express-fileupload"));
 var AppExpress = /** @class */ (function () {
     function AppExpress() {
         this.addSessionInfo = function (req) {
-            var sessionInfo = App_1.App.DecodeJWT(req.headers["authorization"]);
             Log_1.log.info("-----------------------------------------------------");
+            var sessionInfo = App_1.App.DecodeJWT(req.headers["authorization"]);
             Log_1.log.info("sessionInfo: ", sessionInfo);
             Log_1.log.info("-----------------------------------------------------");
             if (!req.body) {

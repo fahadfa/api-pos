@@ -36,7 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
-var App_1 = require("../../utils/App");
 var moment = require("moment");
 var RawQuery = /** @class */ (function () {
     function RawQuery() {
@@ -982,7 +981,17 @@ var RawQuery = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.db.query("update salestable set status = '" + status + "', lastmodifieddate = '" + App_1.App.DateNow() + "' where salesid='" + salesId + "'")];
+                    case 0: return [4 /*yield*/, this.db.query("update salestable set status = '" + status + "', lastmodifieddate = '" + new Date().toISOString() + "' where salesid='" + salesId + "'")];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    RawQuery.prototype.updateSalesLine = function (salesId, status) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.db.query("update salesline set status = '" + status + "', lastmodifieddate = '" + new Date().toISOString() + "' where salesid='" + salesId + "'")];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -1261,6 +1270,21 @@ var RawQuery = /** @class */ (function () {
             });
         });
     };
+    RawQuery.prototype.getCustomerTax = function (taxcode) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "select tg.taxcode, t.taxvalue as vat\n                  from taxgroupdata tg \n                  inner join taxdata t on tg.taxcode =t.taxcode where tg.taxgroup = '" + taxcode + "'";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, data.length > 0 ? data[0] : null];
+                }
+            });
+        });
+    };
     RawQuery.prototype.offlineSystems = function () {
         return __awaiter(this, void 0, void 0, function () {
             var query, data, err_1;
@@ -1277,6 +1301,21 @@ var RawQuery = /** @class */ (function () {
                         err_1 = _a.sent();
                         return [2 /*return*/, Promise.resolve([])];
                     case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    RawQuery.prototype.getPrevReturnOrderAmount = function (salesId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "select \n                sum(coalesce(cash_amount,0)) as \"cashAmount\", \n                sum(coalesce(redeemptsamt,0)) as \"redeemAmount\",\n                sum(coalesce(design_service_redeem_amount,0)) as \"designServiceRedeemAmount\",\n                sum(coalesce(card_amount,0)) as \"cardAmount\"\n                from salestable s where intercompanyoriginalsalesid = '" + salesId + "'\n                group by intercompanyoriginalsalesid ";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, data.length > 0 ? data[0] : null];
                 }
             });
         });

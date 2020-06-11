@@ -172,6 +172,13 @@
         margin: 2cm 0.5cm 1cm 0.5cm;
       }
     }
+    .borderNone {
+      border: none !important;
+      border-bottom: 1px solid #eae8e8 !important;
+    }
+    .borderLeftNone {
+      border-left: none !important;
+    }
   </style>
 
   <body>
@@ -408,10 +415,10 @@
       </table>
       <table id="gtotal" class="textbold" align="right" width="100%" cellpadding="0" cellspacing="0">
         <tr class="tdright">
-          <td class="tdcenter">Sales Order</td>
-          <td class="tdright">Gross Total</td>
-          <td>{{this.quantity}}</td>
-          <td>
+          <td class="tdcenter" colspan="2">Sales Order</td>
+          <td class="tdright" colspan="1">Gross Total</td>
+          <td colspan="1">{{this.quantity}}</td>
+          <td colspan="1">
             {{this.amount}}
           </td>
         </tr>
@@ -425,26 +432,43 @@
               </td>
           </tr> -->
         <tr class="tdright">
-          <td rowspan="4">&nbsp;</td>
-          <td colspan="2" class="tdright">Shipping Charges</td>
-          <td>
+          <!-- <td rowspan="4">&nbsp;</td> -->
+
+          <td class="tdleft">Cash Amount</td>
+          <td class="tdleft">{{this.cashAmount}}</td>
+          <td class="tdcenter borderNone"></td>
+
+          <td class="tdright borderLeftNone">Shipping Charges</td>
+          <td class="tdright">
             {{this.shippingamount}}
           </td>
         </tr>
         <tr class="tdright">
-          <td colspan="2" class="tdright">Discount</td>
+          <td class="tdleft">Card Amount</td>
+          <td class="tdleft">{{this.cardAmount}}</td>
+          <td class="tdcenter borderNone"></td>
+
+          <td class="tdright borderLeftNone">Discount</td>
           <td>
             {{this.disc}}
           </td>
         </tr>
         <tr class="tdright">
-          <td colspan="2" class="tdright">VAT (5%)</td>
+          <td class="tdleft">design Service RedeemAmount</td>
+          <td class="tdleft">{{this.designServiceRedeemAmount}}</td>
+          <td class="tdcenter borderNone"></td>
+
+          <td class="tdright borderLeftNone">VAT (5%)</td>
           <td>
             {{this.vatGrand}}
           </td>
         </tr>
         <tr class="tdright">
-          <td colspan="2" class="tdright">Net Amount</td>
+          <td class="tdleft">RedeemAmount</td>
+          <td class="tdleft">{{this.redeemAmount}}</td>
+          <td class="tdcenter borderNone"></td>
+
+          <td class="tdright borderLeftNone">Net Amount</td>
           <td>
             {{this.netAmount}}
           </td>
@@ -704,43 +728,60 @@
       </table>
       <table id="gtotal" class="textbold" align="right" width="100%" cellpadding="0" cellspacing="0">
         <tr class="tdright">
-          <td class="tdcenter">Sales Order</td>
-          <td class="tdright">Gross Total</td>
-          <td>{{this.quantity}}</td>
-          <td>
+          <td class="tdcenter" colspan="2">Sales Order</td>
+          <td class="tdright" colspan="1">Gross Total</td>
+          <td colspan="1">{{this.quantity}}</td>
+          <td colspan="1">
             {{this.amount}}
           </td>
         </tr>
 
         <!-- <tr class="tdright">
-              <td rowspan="4">&nbsp;</td>
-              <td class="tdright">Total Quantity</td>
-              <td>:</td>
-              <td>
-                  {{this.quantity}}
-              </td>
-          </tr> -->
+                <td rowspan="4">&nbsp;</td>
+                <td class="tdright">Total Quantity</td>
+                <td>:</td>
+                <td>
+                    {{this.quantity}}
+                </td>
+            </tr> -->
         <tr class="tdright">
-          <td rowspan="4">&nbsp;</td>
-          <td colspan="2" class="tdright">Shipping Charges</td>
-          <td>
+          <!-- <td rowspan="4">&nbsp;</td> -->
+
+          <td class="tdleft">Cash Amount</td>
+          <td class="tdleft">1500</td>
+          <td class="tdcenter borderNone"></td>
+
+          <td class="tdright borderLeftNone">Shipping Charges</td>
+          <td class="tdright">
             {{this.shippingamount}}
           </td>
         </tr>
         <tr class="tdright">
-          <td colspan="2" class="tdright">Discount</td>
+          <td class="tdleft">Card Amount</td>
+          <td class="tdleft">1500</td>
+          <td class="tdcenter borderNone"></td>
+
+          <td class="tdright borderLeftNone">Discount</td>
           <td>
             {{this.disc}}
           </td>
         </tr>
         <tr class="tdright">
-          <td colspan="2" class="tdright">VAT (5%)</td>
+          <td class="tdleft">design Service RedeemAmount</td>
+          <td class="tdleft">1500</td>
+          <td class="tdcenter borderNone"></td>
+
+          <td class="tdright borderLeftNone">VAT (5%)</td>
           <td>
             {{this.vatGrand}}
           </td>
         </tr>
         <tr class="tdright">
-          <td colspan="2" class="tdright">Net Amount</td>
+          <td class="tdleft">RedeemAmount</td>
+          <td class="tdleft">1500</td>
+          <td class="tdcenter borderNone"></td>
+
+          <td class="tdright borderLeftNone">Net Amount</td>
           <td>
             {{this.netAmount}}
           </td>

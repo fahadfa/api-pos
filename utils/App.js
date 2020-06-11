@@ -185,7 +185,7 @@ var App = /** @class */ (function () {
     App.DecodeJWT = function (token) {
         if (token) {
             try {
-                token = token.replace("jwt ", "").replace("JWT ", "");
+                token = token.includes(" ") ? token.replace("jwt ", "").replace("JWT ", "") : token;
                 var userInfo_1 = jwt.verify(token, "SwanInfo");
                 return userInfo_1;
             }

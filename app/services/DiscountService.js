@@ -49,11 +49,11 @@ var DiscountService = /** @class */ (function () {
     }
     DiscountService.prototype.getDiscount = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var result, checkCustomer, discountBlockItems, checkCustomer_1, discountBlockItemsArray_1, sabicCustomers, ARAMKO_THAKAKOM_DISCOUNT, aramkoTahkomDiscounts, error_1;
+            var result, checkCustomer, discountBlockItems, checkCustomer_1, vatData, discountBlockItemsArray_1, sabicCustomers, ARAMKO_THAKAKOM_DISCOUNT, aramkoTahkomDiscounts, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 17, , 18]);
+                        _a.trys.push([0, 18, , 19]);
                         result = void 0;
                         checkCustomer = void 0;
                         discountBlockItems = void 0;
@@ -88,15 +88,19 @@ var DiscountService = /** @class */ (function () {
                         reqData.paymtermid = checkCustomer.paymtermid;
                         reqData.custtype = checkCustomer.custtype;
                         reqData.custgroup = checkCustomer.custgroup;
-                        return [4 /*yield*/, this.rawQuery.getDiscountBlockItems(checkCustomer.custgroup, checkCustomer.accountnum, this.sessionInfo.inventlocationid)];
+                        return [4 /*yield*/, this.rawQuery.getCustomerTax(checkCustomer.taxgroup)];
                     case 5:
+                        vatData = _a.sent();
+                        reqData.vat = vatData ? vatData.vat : 5;
+                        return [4 /*yield*/, this.rawQuery.getDiscountBlockItems(checkCustomer.custgroup, checkCustomer.accountnum, this.sessionInfo.inventlocationid)];
+                    case 6:
                         discountBlockItems = _a.sent();
                         discountBlockItemsArray_1 = [];
                         discountBlockItems.map(function (v) {
                             discountBlockItemsArray_1.push(v.itemid);
                         });
                         return [4 /*yield*/, this.sessionInfo.sabiccustomers];
-                    case 6:
+                    case 7:
                         sabicCustomers = _a.sent();
                         if (sabicCustomers) {
                             if (sabicCustomers.split(",").includes(reqData.custaccount)) {
@@ -108,40 +112,40 @@ var DiscountService = /** @class */ (function () {
                         }
                         ARAMKO_THAKAKOM_DISCOUNT = false;
                         return [4 /*yield*/, this.rawQuery.getAramkoTahkomDiscounts(reqData.custaccount, this.sessionInfo.dataareaid)];
-                    case 7:
+                    case 8:
                         aramkoTahkomDiscounts = _a.sent();
                         if (aramkoTahkomDiscounts.length > 0) {
                             ARAMKO_THAKAKOM_DISCOUNT = true;
                         }
                         return [4 /*yield*/, this.allocateData(reqData)];
-                    case 8:
+                    case 9:
                         _a.sent();
                         console.log(reqData.selectedItems);
-                        if (!(reqData.selectedItems && reqData.selectedItems.length > 0)) return [3 /*break*/, 15];
-                        if (!sabicCustomers) return [3 /*break*/, 10];
+                        if (!(reqData.selectedItems && reqData.selectedItems.length > 0)) return [3 /*break*/, 16];
+                        if (!sabicCustomers) return [3 /*break*/, 11];
                         return [4 /*yield*/, this.sabicCustomersDiscount(reqData, discountBlockItemsArray_1)];
-                    case 9:
-                        result = _a.sent();
-                        return [3 /*break*/, 14];
                     case 10:
-                        if (!ARAMKO_THAKAKOM_DISCOUNT) return [3 /*break*/, 12];
-                        return [4 /*yield*/, this.aramkoTahkomDiscount(reqData, aramkoTahkomDiscounts, discountBlockItemsArray_1)];
+                        result = _a.sent();
+                        return [3 /*break*/, 15];
                     case 11:
+                        if (!ARAMKO_THAKAKOM_DISCOUNT) return [3 /*break*/, 13];
+                        return [4 /*yield*/, this.aramkoTahkomDiscount(reqData, aramkoTahkomDiscounts, discountBlockItemsArray_1)];
+                    case 12:
                         result = _a.sent();
-                        return [3 /*break*/, 14];
-                    case 12: return [4 /*yield*/, this.calDiscount(reqData, discountBlockItemsArray_1)];
-                    case 13:
+                        return [3 /*break*/, 15];
+                    case 13: return [4 /*yield*/, this.calDiscount(reqData, discountBlockItemsArray_1)];
+                    case 14:
                         result = _a.sent();
-                        _a.label = 14;
-                    case 14: return [3 /*break*/, 16];
-                    case 15:
+                        _a.label = 15;
+                    case 15: return [3 /*break*/, 17];
+                    case 16:
                         result = reqData;
-                        _a.label = 16;
-                    case 16: return [2 /*return*/, result];
-                    case 17:
+                        _a.label = 17;
+                    case 17: return [2 /*return*/, result];
+                    case 18:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 18: return [2 /*return*/];
+                    case 19: return [2 /*return*/];
                 }
             });
         });
@@ -327,7 +331,7 @@ var DiscountService = /** @class */ (function () {
                                                             0;
                                                     reqData.selectedItems[i].lineTotalDisc = 0;
                                                     reqData.selectedItems[i].lineamountafterdiscount = parseFloat(reqData.selectedItems[i].priceAfterdiscount);
-                                                    reqData.selectedItems[i].vat = 5;
+                                                    reqData.selectedItems[i].vat = reqData.vat;
                                                     reqData.selectedItems[i].vatamount =
                                                         parseFloat(reqData.selectedItems[i].priceAfterdiscount) * (reqData.selectedItems[i].vat / 100);
                                                     reqData.selectedItems[i].priceAfterVat =
@@ -385,7 +389,7 @@ var DiscountService = /** @class */ (function () {
                                                         reqData.selectedItems[i].buyOneGetOneDiscount;
                                                 reqData.selectedItems[i].lineTotalDisc = reqData.selectedItems[i].buyOneGetOneDiscount;
                                                 reqData.selectedItems[i].lineamountafterdiscount = parseFloat(reqData.selectedItems[i].priceAfterdiscount);
-                                                reqData.selectedItems[i].vat = 5;
+                                                reqData.selectedItems[i].vat = reqData.vat;
                                                 reqData.selectedItems[i].vatamount =
                                                     parseFloat(reqData.selectedItems[i].priceAfterdiscount) * (reqData.selectedItems[i].vat / 100);
                                                 reqData.selectedItems[i].priceAfterVat =
@@ -566,7 +570,7 @@ var DiscountService = /** @class */ (function () {
                                         _a.label = 22;
                                     case 22:
                                         item.lineamountafterdiscount = parseFloat(item.priceAfterdiscount);
-                                        item.vat = 5;
+                                        item.vat = reqData.vat;
                                         item.vatamount = parseFloat(item.priceAfterdiscount) * (item.vat / 100);
                                         item.priceAfterVat = parseFloat(item.priceAfterdiscount) + parseFloat(item.vatamount);
                                         total += item.priceAfterVat;
@@ -578,7 +582,7 @@ var DiscountService = /** @class */ (function () {
                                         _a.label = 24;
                                     case 24:
                                         appliedDiscounts.map(function (v) {
-                                            v.percentage = parseFloat(v.percentage);
+                                            v.percentage = v.percentage ? parseFloat(v.percentage) : v.percentage;
                                         });
                                         item.appliedDiscounts = appliedDiscounts;
                                         _a.label = 25;
@@ -766,7 +770,7 @@ var DiscountService = /** @class */ (function () {
                                             (parseFloat(item.price) + parseFloat(item.colorantprice)) * item.quantity -
                                                 parseFloat(item.aramkoTahkomDiscount);
                                         item.lineamountafterdiscount = parseFloat(item.priceAfterdiscount);
-                                        item.vat = 5;
+                                        item.vat = reqData.vat;
                                         item.vatamount = parseFloat(item.priceAfterdiscount) * (item.vat / 100);
                                         item.priceAfterVat = parseFloat(item.priceAfterdiscount) + parseFloat(item.vatamount);
                                         item.lineTotalDisc = item.lineTotalDisc ? parseFloat(item.lineTotalDisc) : 0;
@@ -820,7 +824,7 @@ var DiscountService = /** @class */ (function () {
                 item.priceAfterdiscount =
                     (parseFloat(item.price) + parseFloat(item.colorantprice)) * item.quantity - parseFloat(item.voucherdiscamt);
                 item.lineamountafterdiscount = parseFloat(item.priceAfterdiscount);
-                item.vat = 5;
+                item.vat = reqData.vat;
                 item.vatamount = parseFloat(item.priceAfterdiscount) * (item.vat / 100);
                 item.priceAfterVat = parseFloat(item.priceAfterdiscount) + parseFloat(item.vatamount);
                 item.lineTotalDisc = item.lineTotalDisc ? parseFloat(item.lineTotalDisc) : 0;
@@ -839,7 +843,7 @@ var DiscountService = /** @class */ (function () {
                 item.priceAfterdiscount =
                     (parseFloat(item.price) + parseFloat(item.colorantprice)) * item.quantity - parseFloat(item.instantdiscamt);
                 item.lineamountafterdiscount = parseFloat(item.priceAfterdiscount);
-                item.vat = 5;
+                item.vat = reqData.vat;
                 item.vatamount = parseFloat(item.priceAfterdiscount) * (item.vat / 100);
                 item.priceAfterVat = parseFloat(item.priceAfterdiscount) + parseFloat(item.vatamount);
                 item.lineTotalDisc = item.lineTotalDisc ? parseFloat(item.lineTotalDisc) : 0;
@@ -880,7 +884,7 @@ var DiscountService = /** @class */ (function () {
                             (parseFloat(item.price) + parseFloat(item.colorantprice)) * item.quantity -
                                 parseFloat(item.sabicCustomerDiscount);
                         item.lineamountafterdiscount = parseFloat(item.priceAfterdiscount);
-                        item.vat = 5;
+                        item.vat = reqData.vat;
                         item.vatamount = parseFloat(item.priceAfterdiscount) * (item.vat / 100);
                         item.priceAfterVat = parseFloat(item.priceAfterdiscount) + parseFloat(item.vatamount);
                         item.lineTotalDisc = item.lineTotalDisc ? parseFloat(item.lineTotalDisc) : 0;
@@ -920,7 +924,7 @@ var DiscountService = /** @class */ (function () {
                 item.priceAfterdiscount = (parseFloat(item.price) + parseFloat(item.colorantprice)) * item.quantity;
                 // console.log(item.quantity, item.price, item.priceAfterdiscount);
                 item.lineamountafterdiscount = parseFloat(item.priceAfterdiscount);
-                item.vat = 5;
+                item.vat = reqData.vat;
                 item.vatamount = parseFloat(item.priceAfterdiscount) * (item.vat / 100);
                 item.priceAfterVat = parseFloat(item.priceAfterdiscount) + parseFloat(item.vatamount);
                 item.lineTotalDisc += item.lineTotalDisc ? parseFloat(item.lineTotalDisc) : 0;
@@ -978,12 +982,14 @@ var DiscountService = /** @class */ (function () {
     };
     DiscountService.prototype.calData = function (reqData) {
         reqData.vatamount = 0;
+        reqData.vat = parseFloat(reqData.vat);
         for (var _i = 0, _a = reqData.selectedItems; _i < _a.length; _i++) {
             var ele = _a[_i];
             ele.lineamount = (ele.price + ele.colorantprice) * ele.quantity + ele.vatamount - ele.lineTotalDisc;
             ele.priceAfterdiscount = ele.priceAfterdiscount;
             ele.lineamountafterdiscount = ele.lineamountafterdiscount;
             ele.vatamount = Math.round((ele.vatamount + Number.EPSILON) * 100) / 100;
+            ele.vat = parseFloat(ele.vat);
             ele.priceAfterVat = ele.priceAfterVat;
             ele.lineTotalDisc = Math.round((ele.lineTotalDisc + Number.EPSILON) * 100) / 100;
             ele.lineamount = Math.round((ele.lineamount + Number.EPSILON) * 100) / 100;
