@@ -1660,9 +1660,10 @@ var SalesTableService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        _a.trys.push([0, 3, , 4]);
                         redeemData = {
                             TransactionId: reqData.salesId,
-                            MobileNo: reqData.mobileNo.length == 9 ? "0" + reqData.mobileNo : reqData.mobileNo,
+                            MobileNo: reqData.mobileNo && reqData.mobileNo.length == 9 ? "0" + reqData.mobileNo : reqData.mobileNo,
                             InvoiceNo: reqData.salesId,
                             InvoiceAmount: reqData.netAmount,
                             RedeemPoints: reqData.redeemPoints,
@@ -1670,13 +1671,12 @@ var SalesTableService = /** @class */ (function () {
                             InventLocationId: this.sessionInfo.inventlocationid,
                             LoyaltyStatus: 0,
                         };
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 4]);
+                        if (!(reqData.mobileNo && reqData.mobileNo != "")) return [3 /*break*/, 2];
                         return [4 /*yield*/, this.redeemService.Redeem(redeemData)];
-                    case 2:
+                    case 1:
                         _a.sent();
-                        return [3 /*break*/, 4];
+                        _a.label = 2;
+                    case 2: return [3 /*break*/, 4];
                     case 3:
                         error_11 = _a.sent();
                         console.error(error_11);
