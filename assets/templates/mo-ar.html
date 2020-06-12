@@ -68,25 +68,26 @@
         }
 
         #bg__watermark {
-               display: block;
-               min-width: 100%;
-               opacity: 0.5;               
-           }
-           #bg__text__watermark {
-               color: lightgrey;
-               font-size: 120px;
-               text-align: center;
-                transform: rotate(-45deg);
-				transform-origin: 50% 50%;
-                -webkit-transform: rotate(-45deg);
-				-webkit-transform-origin: 50% 50%;
-               opacity: 0.9;
-               filter: alpha(opacity=50);
-               background-color: transparent;
-               background-size: 100%;
-               position: fixed;
-               margin: 50% auto;
-           }
+            display: block;
+            min-width: 100%;
+            opacity: 0.5;
+        }
+
+        #bg__text__watermark {
+            color: lightgrey;
+            font-size: 120px;
+            text-align: center;
+            transform: rotate(-45deg);
+            transform-origin: 50% 50%;
+            -webkit-transform: rotate(-45deg);
+            -webkit-transform-origin: 50% 50%;
+            opacity: 0.9;
+            filter: alpha(opacity=50);
+            background-color: transparent;
+            background-size: 100%;
+            position: fixed;
+            margin: 50% auto;
+        }
     </style>
 </head>
 
@@ -119,19 +120,6 @@
                         <td>
                             {{salesName}}
                         </td>
-                    </tr>
-                    <tr class="billing">
-                        <td>نوع المخزون</td>
-                        <td>:</td>
-                        {{#if isMovementIn}}
-                        <td>
-                            جرد في
-                        </td>
-                        {{else}}
-                        <td>
-                            المخزون خارج
-                        </td>
-                        {{/if}}
                     </tr>
                 </table>
             </td>
