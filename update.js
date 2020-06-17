@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var Log_1 = require("./utils/Log");
 var Store_1 = require("./utils/Store");
+var SyncServiceHelper_1 = require("./sync/SyncServiceHelper");
 var cmd = require("node-cmd");
 var cron = require("node-cron");
 var UpdateSyncService = function () {
@@ -126,6 +127,8 @@ exports.UpdateService = function () {
 };
 var main = function () {
     Log_1.ulog.info("Update Started ... ");
+    Log_1.ulog.info("Version: " + process.env.npm_package_version);
+    SyncServiceHelper_1.SyncServiceHelper.UpdateCall("VERSION", process.env.npm_package_version);
     Store_1.setItem("syncdate", new Date().toISOString(), "sync -> main");
     try {
         UpdateSyncService();

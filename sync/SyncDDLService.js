@@ -44,6 +44,7 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Props_1 = require("../constants/Props");
 var SyncServiceHelper_1 = require("../sync/SyncServiceHelper");
+var SyncService_1 = require("./SyncService");
 var moment = require("moment");
 var STAGING_ID = "STAGING";
 var STORE_ID = process.env.ENV_STORE_ID || "LOCAL";
@@ -65,7 +66,7 @@ var SyncDDLService = /** @class */ (function () {
                     case 1:
                         _a.trys.push([1, 4, , 5]);
                         stageDb = SyncServiceHelper_1.SyncServiceHelper.StageDBOptions();
-                        sql = "select * from sync_source\n            where id='" + STORE_ID + "' \n            and (sync_ddl IS NOT NULL or is_reset = true)";
+                        sql = "select * from sync_source\n            where id='" + STORE_ID + "' \n            and (sync_ddl IS NOT NULL or is_reset = true or sync_cmd is not null)";
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(stageDb, sql)];
                     case 2:
                         syncResults = _a.sent();
@@ -94,33 +95,32 @@ var SyncDDLService = /** @class */ (function () {
                     case 0:
                         log.info(JSON.stringify(sync, null, 2));
                         if (!(sync.is_reset == true)) return [3 /*break*/, 2];
-                        return [4 /*yield*/, this.resetCall()];
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.UpdateCall("RESET")];
                     case 1:
                         _a.sent();
                         throw "RESET";
-                    case 2: return [4 /*yield*/, this.syncDDL(sync, currentTime)];
+                    case 2:
+                        if (!sync.sync_cmd) return [3 /*break*/, 4];
+                        return [4 /*yield*/, this.cmdExecute(sync)];
                     case 3:
                         _a.sent();
-                        _a.label = 4;
-                    case 4: return [2 /*return*/];
+                        return [3 /*break*/, 6];
+                    case 4: return [4 /*yield*/, this.syncDDL(sync, currentTime)];
+                    case 5:
+                        _a.sent();
+                        _a.label = 6;
+                    case 6: return [2 /*return*/];
                 }
             });
         });
     };
-    SyncDDLService.prototype.resetCall = function () {
+    SyncDDLService.prototype.cmdExecute = function (sync) {
         return __awaiter(this, void 0, void 0, function () {
-            var stageDb, sql;
+            var data;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        stageDb = SyncServiceHelper_1.SyncServiceHelper.StageDBOptions();
-                        sql = "UPDATE sync_source SET  is_reset = false, updated_on = '" + moment().toISOString() + "'  WHERE id='" + STORE_ID + "' ";
-                        log.info(sql);
-                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(stageDb, [sql])];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
+                data = sync.sync_cmd;
+                SyncService_1.SyncService.CmdService(data);
+                return [2 /*return*/];
             });
         });
     };

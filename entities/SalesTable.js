@@ -426,6 +426,10 @@ var SalesTable = /** @class */ (function () {
         typeorm_1.ManyToOne(function (type) { return MovemenntType_1.MovementType; }),
         __metadata("design:type", MovemenntType_1.MovementType)
     ], SalesTable.prototype, "movementType", void 0);
+    __decorate([
+        typeorm_1.Column({ name: "info", type: "json" }),
+        __metadata("design:type", Object)
+    ], SalesTable.prototype, "info", void 0);
     SalesTable = __decorate([
         typeorm_1.Entity("salestable")
     ], SalesTable);

@@ -45,29 +45,6 @@ var cmd = require("node-cmd");
 var log;
 var SyncService = /** @class */ (function () {
     function SyncService(type) {
-        this.ResetService = function () {
-            cmd.get("sc query  jpos-offline", function (err, data) {
-                if (err)
-                    log.error(err);
-                log.warn(data);
-                if (data && data.includes("STOPPED")) {
-                    log.warn("net start jpos-offline");
-                    cmd.run("net start jpos-offline");
-                    setTimeout(function () {
-                        log.warn("net stop jpos-alt");
-                        cmd.run("net stop jpos-alt");
-                    }, 1000);
-                }
-                else {
-                    log.warn("net start jpos-alt");
-                    cmd.run("net start jpos-alt");
-                    setTimeout(function () {
-                        log.warn("net stop jpos-offline");
-                        cmd.run("net stop jpos-offline");
-                    }, 1000);
-                }
-            });
-        };
         switch (type) {
             case "D":
                 log = Log_1.sdlog;
@@ -130,11 +107,11 @@ var SyncService = /** @class */ (function () {
                 cron.schedule("0 0 0 * * *", function () { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0: return [4 /*yield*/, this.syncDDLService.resetCall()];
+                            case 0: return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.UpdateCall("RESET")];
                             case 1:
                                 _a.sent();
                                 log.warn("MID NIGHT RESET SERVER");
-                                this.ResetService();
+                                SyncService.ResetService();
                                 return [2 /*return*/];
                         }
                     });
@@ -169,7 +146,7 @@ var SyncService = /** @class */ (function () {
                                 log.error("--------- CRON DEFINE ERROR ---------");
                                 if (typeof error_1 == "string" && error_1 == "RESET") {
                                     log.warn("HARD RESET SERVER");
-                                    this.ResetService();
+                                    SyncService.ResetService();
                                 }
                                 return [3 /*break*/, 7];
                             case 7: return [2 /*return*/];
@@ -391,6 +368,76 @@ var SyncService = /** @class */ (function () {
                         .then(function () { return true; })
                         .catch(function () { return false; })];
             });
+        });
+    };
+    SyncService.CmdService = function (cmdObj) {
+        return __awaiter(this, void 0, void 0, function () {
+            var cmdData, _i, cmdData_1, ele;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        log.warn(JSON.stringify(cmdObj, null, 2));
+                        cmdData = cmdObj.cmd ? cmdObj.cmd : null;
+                        if (!cmdData) return [3 /*break*/, 10];
+                        if (!(typeof cmdData == "string")) return [3 /*break*/, 4];
+                        if (!(cmdData && cmdData.includes("npm"))) return [3 /*break*/, 3];
+                        return [4 /*yield*/, cmd.run(cmdData)];
+                    case 1:
+                        _a.sent();
+                        log.warn("cmd: " + cmdData);
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.UpdateCall("JSON")];
+                    case 2:
+                        _a.sent();
+                        SyncService.ResetService();
+                        _a.label = 3;
+                    case 3: return [3 /*break*/, 10];
+                    case 4:
+                        if (!Array.isArray(cmdData)) return [3 /*break*/, 10];
+                        _i = 0, cmdData_1 = cmdData;
+                        _a.label = 5;
+                    case 5:
+                        if (!(_i < cmdData_1.length)) return [3 /*break*/, 8];
+                        ele = cmdData_1[_i];
+                        if (!(ele && ele.includes("npm"))) return [3 /*break*/, 7];
+                        return [4 /*yield*/, cmd.run(ele)];
+                    case 6:
+                        _a.sent();
+                        log.warn("cmd: " + ele);
+                        _a.label = 7;
+                    case 7:
+                        _i++;
+                        return [3 /*break*/, 5];
+                    case 8: return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.UpdateCall("JSON")];
+                    case 9:
+                        _a.sent();
+                        SyncService.ResetService();
+                        _a.label = 10;
+                    case 10: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    SyncService.ResetService = function () {
+        cmd.get("sc query  jpos-offline", function (err, data) {
+            if (err)
+                log.error(err);
+            log.warn(data);
+            if (data && data.includes("STOPPED")) {
+                log.warn("net start jpos-offline");
+                cmd.run("net start jpos-offline");
+                setTimeout(function () {
+                    log.warn("net stop jpos-alt");
+                    cmd.run("net stop jpos-alt");
+                }, 1000);
+            }
+            else {
+                log.warn("net start jpos-alt");
+                cmd.run("net start jpos-alt");
+                setTimeout(function () {
+                    log.warn("net stop jpos-offline");
+                    cmd.run("net stop jpos-offline");
+                }, 1000);
+            }
         });
     };
     return SyncService;

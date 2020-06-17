@@ -88,7 +88,7 @@ var LoadService = /** @class */ (function () {
                             //     query += `where dataareaid='${this.sessionInfo.dataareaid}' `;
                         }
                         if (param.type == "DESIGNERSERVICE") {
-                            query += " and c.paymtermid = 'CASH' ";
+                            query += " and (c.paymtermid = 'CASH' or c.walkincustomer = true) ";
                         }
                         if (param.custgroup || param.additionalcustomer || param.sabiccustomers) {
                             query += "and ( c.walkincustomer = true ";
@@ -1655,6 +1655,28 @@ var LoadService = /** @class */ (function () {
                         return [2 /*return*/, false];
                     case 3: return [2 /*return*/];
                 }
+            });
+        });
+    };
+    LoadService.prototype.banklist = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var data;
+            return __generator(this, function (_a) {
+                data = [
+                    {
+                        name: "bank1",
+                    },
+                    {
+                        name: "bank2",
+                    },
+                    {
+                        name: "bank3",
+                    },
+                    {
+                        name: "bank4",
+                    },
+                ];
+                return [2 /*return*/, data];
             });
         });
     };

@@ -55,6 +55,7 @@ var App_1 = require("../utils/App");
 var Log_1 = require("../utils/Log");
 var format = require("pg-format");
 var STORE_ID = process.env.ENV_STORE_ID || "LOCAL";
+var moment = require("moment");
 pg_1.types.setTypeParser(1114, function (stringValue) {
     return stringValue.replace(" ", "T");
 });
@@ -414,6 +415,37 @@ var SyncServiceHelper = /** @class */ (function () {
             password: Config.localDbOptions.password,
             database: Config.localDbOptions.database,
         };
+    };
+    SyncServiceHelper.UpdateCall = function (type, data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var sql, stageDb;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        sql = null;
+                        stageDb = SyncServiceHelper.StageDBOptions();
+                        if (type == "RESET") {
+                            sql = "UPDATE sync_source SET  is_reset = false, updated_on = '" + moment().toISOString() + "'  WHERE id='" + STORE_ID + "' ";
+                        }
+                        else if (type == "CMD") {
+                            sql = data;
+                        }
+                        else if (type == "JSON") {
+                            sql = "UPDATE sync_source SET  sync_cmd = null, updated_on = '" + moment().toISOString() + "'  WHERE id='" + STORE_ID + "' ";
+                        }
+                        else if (type == "VERSION") {
+                            sql = "UPDATE sync_source SET  type = 'v" + data + "', updated_on = '" + moment().toISOString() + "'  WHERE id='" + STORE_ID + "' ";
+                        }
+                        log.info(sql);
+                        if (!sql) return [3 /*break*/, 2];
+                        return [4 /*yield*/, SyncServiceHelper.BatchQuery(stageDb, [sql])];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2: return [2 /*return*/];
+                }
+            });
+        });
     };
     SyncServiceHelper.synTableColumns = "*";
     SyncServiceHelper.synTableName = "sync_table";
