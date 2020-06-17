@@ -92,6 +92,7 @@ var DiscountService = /** @class */ (function () {
                     case 5:
                         vatData = _a.sent();
                         reqData.vat = vatData ? vatData.vat : 5;
+                        reqData.vat = parseFloat(reqData.vat);
                         return [4 /*yield*/, this.rawQuery.getDiscountBlockItems(checkCustomer.custgroup, checkCustomer.accountnum, this.sessionInfo.inventlocationid)];
                     case 6:
                         discountBlockItems = _a.sent();
@@ -898,7 +899,7 @@ var DiscountService = /** @class */ (function () {
                         item.appliedDiscounts = [
                             {
                                 discountType: "SABIC_CUSTOMER_DISCOUNT",
-                                percentage: totalPercentage,
+                                percentage: parseFloat(totalPercentage),
                                 discountAmount: item.sabicCustomerDiscount,
                             },
                         ];

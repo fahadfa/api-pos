@@ -414,20 +414,25 @@ var CusttableDAO = /** @class */ (function () {
                         if (data.type == "designerservice") {
                             query += " and( c.paymtermid = 'CASH' or c.walkincustomer=true) ";
                         }
-                        query += " and (";
-                        if (data.customergroup.length > 0) {
-                            query += "(c.custgroup in (" + data.customergroup + ") or c.walkincustomer = true) ";
+                        else if (data.type == "walkincustomer") {
+                            query += " and (c.walkincustomer=true) ";
                         }
-                        if (data.additionalcustomer.length > 0) {
-                            query += "OR (c.accountnum in (" + data.additionalcustomer + ") or c.walkincustomer = true) ";
+                        else {
+                            query += " and (";
+                            if (data.customergroup.length > 0) {
+                                query += "(c.custgroup in (" + data.customergroup + ") or c.walkincustomer = true) ";
+                            }
+                            if (data.additionalcustomer.length > 0) {
+                                query += "OR (c.accountnum in (" + data.additionalcustomer + ") or c.walkincustomer = true) ";
+                            }
+                            if (data.sabiccustomers.length > 0) {
+                                query += "OR (c.accountnum in (" + data.sabiccustomers + ") or c.walkincustomer = true) ";
+                            }
+                            if (data.defaultcustomerid) {
+                                query += " or (c.accountnum='" + data.defaultcustomerid + " or c.walkincustomer = true') ";
+                            }
+                            query += ")";
                         }
-                        if (data.sabiccustomers.length > 0) {
-                            query += "OR (c.accountnum in (" + data.sabiccustomers + ") or c.walkincustomer = true) ";
-                        }
-                        if (data.defaultcustomerid) {
-                            query += " or (c.accountnum='" + data.defaultcustomerid + " or c.walkincustomer = true') ";
-                        }
-                        query += ")";
                         if (data.filter) {
                             query += " and (c.accountnum ILike '%" + data.filter + "%' or \n            c.name ILike '%" + data.filter + "%' or \n            c.namealias ILike '%" + data.filter + "%')";
                         }

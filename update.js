@@ -127,8 +127,15 @@ exports.UpdateService = function () {
 };
 var main = function () {
     Log_1.ulog.info("Update Started ... ");
-    Log_1.ulog.info("Version: " + process.env.npm_package_version);
-    SyncServiceHelper_1.SyncServiceHelper.UpdateCall("VERSION", process.env.npm_package_version);
+    cmd.get("npm run env | grep npm_package_version | cut -d '=' -f 2", function (err, data) {
+        Log_1.ulog.info("Version: " + data);
+        if (!err) {
+            SyncServiceHelper_1.SyncServiceHelper.UpdateCall("VERSION", data);
+        }
+        else {
+            Log_1.ulog.error(err);
+        }
+    });
     Store_1.setItem("syncdate", new Date().toISOString(), "sync -> main");
     try {
         UpdateSyncService();
