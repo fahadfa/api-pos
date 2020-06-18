@@ -55,7 +55,7 @@ var QuotationReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 11, , 12]);
+                        _a.trys.push([0, 13, , 14]);
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
                     case 1:
@@ -68,7 +68,7 @@ var QuotationReport = /** @class */ (function () {
                     case 2:
                         _a.sent();
                         data_1.isCopy = true;
-                        return [3 /*break*/, 9];
+                        return [3 /*break*/, 11];
                     case 3:
                         if (!(data_1.originalPrinted && data_1.status == "CREATED")) return [3 /*break*/, 5];
                         status_1 = "POSTED";
@@ -76,7 +76,7 @@ var QuotationReport = /** @class */ (function () {
                     case 4:
                         _a.sent();
                         data_1.isCopy = true;
-                        return [3 /*break*/, 9];
+                        return [3 /*break*/, 11];
                     case 5:
                         if (!(data_1.originalPrinted == false && data_1.status == "CONVERTED")) return [3 /*break*/, 7];
                         status_1 = "CONVERTED";
@@ -84,7 +84,7 @@ var QuotationReport = /** @class */ (function () {
                     case 6:
                         _a.sent();
                         data_1.isCopy = false;
-                        return [3 /*break*/, 9];
+                        return [3 /*break*/, 11];
                     case 7:
                         if (!(data_1.originalPrinted == false && data_1.status == "CREATED")) return [3 /*break*/, 9];
                         status_1 = "POSTED";
@@ -92,9 +92,17 @@ var QuotationReport = /** @class */ (function () {
                     case 8:
                         _a.sent();
                         data_1.isCopy = true;
-                        _a.label = 9;
-                    case 9: return [4 /*yield*/, this.salesline_query_to_data(id)];
+                        return [3 /*break*/, 11];
+                    case 9:
+                        if (!(data_1.status == "SAVED")) return [3 /*break*/, 11];
+                        status_1 = "POSTED";
+                        return [4 /*yield*/, this.rawQuery.updateSalesTable(id.toUpperCase(), status_1, new Date().toISOString())];
                     case 10:
+                        _a.sent();
+                        data_1.isCopy = true;
+                        _a.label = 11;
+                    case 11: return [4 /*yield*/, this.salesline_query_to_data(id)];
+                    case 12:
                         salesLine = _a.sent();
                         // salesLine = salesLine.length > 0 ? salesLine : [];
                         data_1.salesLine = salesLine;
@@ -106,10 +114,10 @@ var QuotationReport = /** @class */ (function () {
                             data_1.quantity += parseInt(v.salesQty);
                         });
                         return [2 /*return*/, data_1];
-                    case 11:
+                    case 13:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 12: return [2 /*return*/];
+                    case 14: return [2 /*return*/];
                 }
             });
         });

@@ -112,12 +112,12 @@ var PackingSlipReport = /** @class */ (function () {
                                 paymentType: data_1.paymentType,
                                 paymentMode: data_1.paymentType == "ONLINE" ? "Online" : data_1.paymentMode,
                                 paymentModeAr: data_1.paymentType == "ONLINE" ? "عبر الانترنت" : data_1.paymentMode,
-                                lines: []
+                                lines: [],
                             };
                             data_1.isbreak = val.length > 5 ? true : false;
                             val.map(function (v) {
                                 lines.quantity += parseInt(v.salesQty);
-                                v.colorantid = val.colorantid;
+                                v.colorantid = v.colorantid;
                                 v.sNo = sNo_1;
                                 lines.lines.push(v);
                                 sNo_1 += 1;

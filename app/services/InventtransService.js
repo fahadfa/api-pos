@@ -143,9 +143,25 @@ var InventtransService = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         console.log(data);
-                        result = this.groupBy(data, function (item) {
-                            return [item.itemid, item.batchno, item.configid, item.inventsizeid, item.isItemFree, item.colorantId];
-                        });
+                        result = void 0;
+                        if (params.type == "INVENTORYMOVEMENT") {
+                            result = this.groupBy(data, function (item) {
+                                return [
+                                    item.itemid,
+                                    item.batchno,
+                                    item.configid,
+                                    item.inventsizeid,
+                                    item.isItemFree,
+                                    item.colorantId,
+                                    item.salesLineId,
+                                ];
+                            });
+                        }
+                        else {
+                            result = this.groupBy(data, function (item) {
+                                return [item.itemid, item.batchno, item.configid, item.inventsizeid, item.isItemFree, item.colorantId];
+                            });
+                        }
                         new_data_1 = [];
                         result.forEach(function (groupitem) {
                             var qty = groupitem.reduce(function (res, item) { return res + parseInt(item.qty); }, 0);

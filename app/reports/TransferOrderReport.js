@@ -42,7 +42,7 @@ var QuotationReport_1 = require("./QuotationReport");
 var SalesTableDAO_1 = require("../repos/SalesTableDAO");
 var RawQuery_1 = require("../common/RawQuery");
 var CusttableDAO_1 = require("../repos/CusttableDAO");
-//var QRCode = require("qrcode");
+var QRCode = require("qrcode");
 var TransferOrderReport = /** @class */ (function () {
     function TransferOrderReport() {
         this.db = typeorm_1.getManager();
@@ -55,21 +55,21 @@ var TransferOrderReport = /** @class */ (function () {
     }
     TransferOrderReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, status_1, data_1, shipOrderData, salesLine, error_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var id, status_1, data_1, shipOrderData, salesLine, _a, error_1;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _a.trys.push([0, 4, , 5]);
+                        _b.trys.push([0, 5, , 6]);
                         console.log("TransferOrderReport");
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
                     case 1:
-                        data_1 = _a.sent();
+                        data_1 = _b.sent();
                         data_1 = data_1.length >= 0 ? data_1[0] : {};
                         data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
                         return [4 /*yield*/, this.db.query("select salesid, custaccount,transkind, inventlocationid from salestable where intercompanyoriginalsalesid = '" + id + "'")];
                     case 2:
-                        shipOrderData = _a.sent();
+                        shipOrderData = _b.sent();
                         console.log(shipOrderData);
                         // shipOrderData = shipOrderData.length > 0 ? shipOrderData[0] : null
                         if (data_1.status != "POSTED" && shipOrderData.length != 0) {
@@ -77,19 +77,22 @@ var TransferOrderReport = /** @class */ (function () {
                         }
                         return [4 /*yield*/, this.salesline_query_to_data(id)];
                     case 3:
-                        salesLine = _a.sent();
+                        salesLine = _b.sent();
                         // salesLine = salesLine.length > 0 ? salesLine : [];
                         data_1.salesLine = salesLine;
                         data_1.quantity = 0;
                         data_1.salesLine.map(function (v) {
                             data_1.quantity += parseInt(v.salesQty);
                         });
-                        // data.qr =  await QRCode.toDataURL(JSON.stringify(data));
-                        return [2 /*return*/, data_1];
+                        _a = data_1;
+                        return [4 /*yield*/, QRCode.toDataURL(JSON.stringify(data_1))];
                     case 4:
-                        error_1 = _a.sent();
+                        _a.qr = _b.sent();
+                        return [2 /*return*/, data_1];
+                    case 5:
+                        error_1 = _b.sent();
                         throw error_1;
-                    case 5: return [2 /*return*/];
+                    case 6: return [2 /*return*/];
                 }
             });
         });

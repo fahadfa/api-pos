@@ -19,6 +19,12 @@
         thead {
             display: table-header-group;
         }
+        .td {
+            background: hotpink;
+            display: table-cell;
+            height: 8px;
+            width: 200px;
+        }
 
         #invoiceDetails td,
         #invoiceDetails th {
@@ -98,27 +104,9 @@
         <tr>
             <td width="40%">
                 <table style="text-align:left;">
-                    <tr class="billing">
-                        <td valign="top">From</td>
-                        <td valign="top">:</td>
-                        <td>
-                            {{fwnamealias}}
-                        </td>
-                    </tr>
-                    <tr class="billing">
-                        <td>To</td>
-                        <td>:</td>
-                        <td>
-                            {{twnamealias}}
-                        </td>
-                    </tr>
-                    <tr class="billing">
-                        <td>Transfer Order Id</td>
-                        <td>:</td>
-                        <td>
-                            {{interCompanyOriginalSalesId}}
-                        </td>
-                    </tr>
+                    <tr class="billing">                       
+                        <img src="{{qr}}" height="200" width="200">
+                    </tr>                    
                 </table>
             </td>
             <td width="20%" style="text-align:center">
@@ -153,6 +141,27 @@
                         <td>:</td>
                         <td class="quotation-date">
                             {{createddatetime}}
+                        </td>
+                    </tr>
+                    <tr class="billing">
+                        <td valign="top">From</td>
+                        <td valign="top">:</td>
+                        <td>
+                            {{fwnamealias}}
+                        </td>
+                    </tr>
+                    <tr class="billing">
+                        <td>To</td>
+                        <td>:</td>
+                        <td>
+                            {{twnamealias}}
+                        </td>
+                    </tr>
+                    <tr class="billing">
+                        <td>Transfer Order Id</td>
+                        <td>:</td>
+                        <td>
+                            {{interCompanyOriginalSalesId}}
                         </td>
                     </tr>
                 </table>

@@ -254,20 +254,19 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
+                        _a.trys.push([0, 3, , 4]);
                         return [4 /*yield*/, this.getAgentPurchaseOrder(purchaseID)];
                     case 1:
                         axaptaData = _a.sent();
                         console.log("data-----------------", axaptaData);
-                        if (!(axaptaData.invent_location_id == this.sessionInfo.inventlocationid)) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.mapAgentpurcaseOrder(axaptaData)];
-                    case 2: return [2 /*return*/, _a.sent()];
-                    case 3: throw { status: 0, message: "ORDER_NOT_RELATED_TO_THIS_STORE" };
-                    case 4: return [3 /*break*/, 6];
-                    case 5:
+                    case 2: 
+                    // if (axaptaData.invent_location_id.trim() == this.sessionInfo.inventlocationid) {
+                    return [2 /*return*/, _a.sent()];
+                    case 3:
                         error_5 = _a.sent();
                         throw error_5;
-                    case 6: return [2 /*return*/];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -313,7 +312,7 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
         salesData.payment = data.payment_terms;
         salesData.priceGroupId = data.price_group_id;
         // salesData.inventLocationId = data.invent_location_id;
-        salesData.inventLocationId = "HYD-001";
+        salesData.inventLocationId = this.sessionInfo.inventlocationid;
         salesData.taxGroup = data.tax_group;
         salesData.amount = data.gross_amount;
         salesData.disc = data.total_disc;
@@ -352,9 +351,8 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 7, , 8]);
+                        _a.trys.push([0, 5, , 6]);
                         console.log(data);
-                        if (!(data.inventLocationId == this.sessionInfo.inventlocationid)) return [3 /*break*/, 5];
                         return [4 /*yield*/, this.salesTableDAO.findOne({ interCompanyOriginalSalesId: data.salesId })];
                     case 1:
                         salesData = _a.sent();
@@ -367,17 +365,16 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                         salesData.transkind = "SALESORDER";
                         delete salesData.salesId;
                         this.salesTableService.sessionInfo = this.sessionInfo;
+                        salesData.inventLocationId = this.sessionInfo.inventlocationid;
                         return [4 /*yield*/, this.salesTableService.save(salesData)];
                     case 3:
                         _a.sent();
                         return [2 /*return*/, { status: 1, id: salesData.salesId, message: Props_1.Props.SAVED_SUCCESSFULLY }];
                     case 4: return [3 /*break*/, 6];
-                    case 5: throw { status: 0, message: "INVALID_DATA" };
-                    case 6: return [3 /*break*/, 8];
-                    case 7:
+                    case 5:
                         error_7 = _a.sent();
                         throw error_7;
-                    case 8: return [2 /*return*/];
+                    case 6: return [2 /*return*/];
                 }
             });
         });

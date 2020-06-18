@@ -1320,6 +1320,21 @@ var RawQuery = /** @class */ (function () {
             });
         });
     };
+    RawQuery.prototype.getVendorCustomerAccount = function (accountnum) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "\n    select \n    accountnum, name, vendgroup as custgroup, custaccount,\n    pricegroup, enddisc, linedisc, multilinedisc from vendortable where accountnum='" + accountnum + "' limit 1\n    ";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, data.length > 0 ? data[0].custaccount : null];
+                }
+            });
+        });
+    };
     return RawQuery;
 }());
 exports.RawQuery = RawQuery;

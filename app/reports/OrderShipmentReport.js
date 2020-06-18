@@ -41,7 +41,7 @@ var SalesTableService_1 = require("../services/SalesTableService");
 var RawQuery_1 = require("../common/RawQuery");
 var InventTransDAO_1 = require("../repos/InventTransDAO");
 var UpdateInventoryService_1 = require("../services/UpdateInventoryService");
-// var QRCode = require("qrcode");
+var QRCode = require("qrcode");
 var OrderShipmentReport = /** @class */ (function () {
     function OrderShipmentReport() {
         this.db = typeorm_1.getManager();
@@ -52,51 +52,49 @@ var OrderShipmentReport = /** @class */ (function () {
     }
     OrderShipmentReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, status_1, data_1, salesLine, cond, batches, _i, batches_1, item, error_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var id, status, data, salesLine, batches, _i, batches_1, item, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _a.trys.push([0, 7, , 8]);
-                        console.log("OrderShipmentReport");
+                        // try {
+                        console.log("OrderShipmentReport===================");
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
                     case 1:
-                        data_1 = _a.sent();
-                        data_1 = data_1.length >= 1 ? data_1[0] : {};
-                        data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
+                        data = _b.sent();
+                        console.log("----------------", data);
+                        data = data.length >= 1 ? data[0] : {};
+                        data.originalPrinted = data.originalPrinted ? data.originalPrinted : false;
                         return [4 /*yield*/, this.salesline_query_to_data(id)];
                     case 2:
-                        salesLine = _a.sent();
+                        salesLine = _b.sent();
                         // salesLine = salesLine.length > 0 ? salesLine : [];
                         console.log(salesLine);
-                        data_1.salesLine = salesLine;
-                        data_1.quantity = 0;
+                        data.salesLine = salesLine;
+                        data.quantity = 0;
                         salesLine.map(function (v) {
-                            data_1.quantity += parseInt(v.salesQty);
+                            data.quantity += parseInt(v.salesQty);
                         });
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 6];
-                        return [4 /*yield*/, this.stockOnHandCheck(params.salesId.toUpperCase(), data_1.inventLocationId)];
-                    case 3:
-                        cond = _a.sent();
-                        if (!cond) return [3 /*break*/, 5];
+                        if (!(data.status != "POSTED")) return [3 /*break*/, 4];
                         this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED", new Date().toISOString());
                         return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
-                    case 4:
-                        batches = _a.sent();
+                    case 3:
+                        batches = _b.sent();
                         for (_i = 0, batches_1 = batches; _i < batches_1.length; _i++) {
                             item = batches_1[_i];
                             item.transactionClosed = true;
+                            // this.inventTransDAO.save(item);
                             this.updateInventoryService.updateInventtransTable(item);
                         }
+                        _b.label = 4;
+                    case 4:
                         console.log(App_1.App.DateNow(), new Date(App_1.App.DateNow()), new Date().toISOString());
-                        //data.qr = await QRCode.toString(JSON.stringify(data));
-                        return [2 /*return*/, data_1];
-                    case 5: throw { message: "CANT_PRINT_INVENTORY_NOT_AVAILABLE" };
-                    case 6: return [3 /*break*/, 8];
-                    case 7:
-                        error_1 = _a.sent();
-                        throw error_1;
-                    case 8: return [2 /*return*/];
+                        console.log("---------", data);
+                        _a = data;
+                        return [4 /*yield*/, QRCode.toDataURL(JSON.stringify(data))];
+                    case 5:
+                        _a.qr = _b.sent();
+                        return [2 /*return*/, data];
                 }
             });
         });
@@ -125,59 +123,8 @@ var OrderShipmentReport = /** @class */ (function () {
                 renderData.printDate = App_1.App.convertUTCDateToLocalDate(new Date(App_1.App.DateNow()), parseInt(params.timeZoneOffSet)).toLocaleString();
                 console.log(params.lang);
                 file = params.lang == "en" ? "os-en" : "os-ar";
-                try {
-                    return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];
-                }
-                catch (error) {
-                    throw error;
-                }
-                return [2 /*return*/];
-            });
-        });
-    };
-    OrderShipmentReport.prototype.stockOnHandCheck = function (salesId, inventLocationId) {
-        return __awaiter(this, void 0, void 0, function () {
-            var lines, canConvert_1, colors_1, items_1, sizes_1, batches_2, itemString_1, itemsInStock_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: salesId })];
-                    case 1:
-                        lines = _a.sent();
-                        lines = lines.filter(function (v) { return v.qty < 0; });
-                        if (!(lines.length > 0)) return [3 /*break*/, 3];
-                        canConvert_1 = true;
-                        colors_1 = [];
-                        items_1 = [];
-                        sizes_1 = [];
-                        batches_2 = [];
-                        itemString_1 = "";
-                        lines.map(function (v) {
-                            items_1.push(v.itemid), colors_1.push(v.configid), sizes_1.push(v.inventsizeid), batches_2.push(v.batchno);
-                        });
-                        return [4 /*yield*/, this.rawQuery.checkBatchAvailability(inventLocationId, items_1, colors_1, sizes_1, batches_2)];
-                    case 2:
-                        itemsInStock_1 = _a.sent();
-                        lines.map(function (v) {
-                            var index = itemsInStock_1.findIndex(function (value) {
-                                return value.itemid.toLowerCase() == v.itemid.toLowerCase() &&
-                                    value.configid.toLowerCase() == v.configid.toLowerCase() &&
-                                    value.inventsizeid.toLowerCase() == v.inventsizeid.toLowerCase() &&
-                                    value.batchno.toLowerCase() == v.batchno.toLowerCase();
-                            });
-                            if (index >= 0) {
-                                if (Math.abs(parseInt(v.qty)) > parseInt(itemsInStock_1[index].qty)) {
-                                    canConvert_1 = canConvert_1 == true ? false : false;
-                                    itemString_1 += v.itemid + ",";
-                                }
-                            }
-                            else {
-                                canConvert_1 = canConvert_1 == true ? false : false;
-                                itemString_1 += v.itemid + ",";
-                            }
-                        });
-                        return [2 /*return*/, canConvert_1];
-                    case 3: return [2 /*return*/, true];
-                }
+                // try {
+                return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];
             });
         });
     };

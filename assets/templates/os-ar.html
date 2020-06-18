@@ -99,28 +99,10 @@
         <tr>
             <td width="40%">
                 <table style="text-align:right;">
-                    <tr class="billing">
-                        <td>من عند</td>
-                        <td>:</td>
-                        <td>
-                            {{fwname}}
-                        </td>
-                    </tr>
-                    <tr class="billing">
-                        <td>إلى المستودع</td>
-                        <td>:</td>
-
-                        <td>
-                            {{twname}}
-                        </td>
-                    </tr>
-                    <tr class="billing">
-                        <td>رقم التحويل</td>
-                        <td>:</td>
-                        <td>
-                            {{interCompanyOriginalSalesId}}
-                        </td>
-                    </tr>
+                    <tr class="billing">                       
+                        <img src="{{qr}}" height="200" width="200">
+                    </tr> 
+                    
                 </table>
             </td>
             <td width="20%" style="text-align:center">
@@ -157,7 +139,28 @@
                             {{createddatetime}}
                         </td>
                     </tr>
+                    <tr class="billing">
+                        <td>من عند</td>
+                        <td>:</td>
+                        <td>
+                            {{fwname}}
+                        </td>
+                    </tr>
+                    <tr class="billing">
+                        <td>إلى المستودع</td>
+                        <td>:</td>
 
+                        <td>
+                            {{twname}}
+                        </td>
+                    </tr>
+                    <tr class="billing">
+                        <td>رقم التحويل</td>
+                        <td>:</td>
+                        <td>
+                            {{interCompanyOriginalSalesId}}
+                        </td>
+                    </tr>
                 </table>
             </td>
         </tr>
