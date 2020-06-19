@@ -1294,7 +1294,7 @@ var SalesTableService = /** @class */ (function () {
                         if (!(cond == true)) return [3 /*break*/, 4];
                         reqData.payment = reqData.transkind == "DESIGNERSERVICE" ? "CASH" : false;
                         reqData.status =
-                            reqData.status == "CREATED" || reqData.status == "" || reqData.status == null ? "SAVED" : reqData.status;
+                            reqData.status != "CREATED" || reqData.status == "" || reqData.status == null ? "SAVED" : reqData.status;
                         reqData.salesType = reqData.transkind == "TRANSFERORDER" ? 1 : null;
                         reqData.inventLocationId = this.sessionInfo.inventlocationid;
                         return [4 /*yield*/, this.salestableDAO.save(reqData)];
