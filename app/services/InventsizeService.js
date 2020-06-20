@@ -70,7 +70,7 @@ var InventsizeService = /** @class */ (function () {
                         _a.trys.push([0, 8, , 9]);
                         data = void 0;
                         console.log(reqData);
-                        if (!(reqData.itemid || reqData.configid)) return [3 /*break*/, 6];
+                        if (!(reqData.itemid && reqData.configid)) return [3 /*break*/, 6];
                         return [4 /*yield*/, this.rawQuery.getSizeCodes(reqData)];
                     case 1:
                         items_1 = _a.sent();
@@ -107,7 +107,7 @@ var InventsizeService = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 6, , 7]);
                         console.log(params);
-                        if (!(params.itemid || params.configid)) return [3 /*break*/, 4];
+                        if (!(params.itemid && params.configid)) return [3 /*break*/, 4];
                         t0 = new Date().getTime();
                         params.inventlocationid = this.sessionInfo.inventlocationid;
                         return [4 /*yield*/, this.rawQuery.getSizeCodesInStock(params)];
@@ -144,7 +144,7 @@ var InventsizeService = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 7, , 8]);
                         console.log(params);
-                        if (!(params.itemid || params.configid)) return [3 /*break*/, 5];
+                        if (!(params.itemid && params.configid)) return [3 /*break*/, 5];
                         t0 = new Date().getTime();
                         data = [];
                         params.inventlocationid = this.sessionInfo.inventlocationid;
@@ -200,7 +200,7 @@ var InventsizeService = /** @class */ (function () {
                             pricegroup: reqData.pricegroup,
                             configid: reqData.configid,
                             currency: "SAR",
-                            inventsizeids: []
+                            inventsizeids: [],
                         };
                         for (_i = 0, _a = reqData.sizes; _i < _a.length; _i++) {
                             size = _a[_i];

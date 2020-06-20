@@ -183,13 +183,18 @@ var App = /** @class */ (function () {
         return jwt.sign(data, "SwanInfo");
     };
     App.DecodeJWT = function (token) {
+        Log_1.log.info("token: " + token);
         if (token) {
             try {
                 token = token.includes(" ") ? token.replace("jwt ", "").replace("JWT ", "") : token;
+                Log_1.log.info("After token: " + token);
                 var userInfo_1 = jwt.verify(token, "SwanInfo");
                 return userInfo_1;
             }
             catch (err) {
+                Log_1.log.error("--------- token error ------------->");
+                Log_1.log.error(err);
+                Log_1.log.error("<--------- token error -------------");
                 return err;
             }
         }

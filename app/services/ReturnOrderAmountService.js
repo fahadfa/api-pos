@@ -427,7 +427,6 @@ var ReturnOrderAmountService = /** @class */ (function () {
         returnItem.linkId = item.linkId;
         returnItem.colors = item.colors;
         returnItem.baseSizes = item.baseSizes;
-        returnItem.configId = item.configId;
         returnItem.numberSequenceGroupId = item.numberSequenceGroupId;
         returnItem.vat = item.vat;
         returnItem.appliedDiscounts = [];

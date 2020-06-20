@@ -257,6 +257,60 @@ var InventtransService = /** @class */ (function () {
             });
         });
     };
+    InventtransService.prototype.stockOnHandCheck = function (salesLine) {
+        return __awaiter(this, void 0, void 0, function () {
+            var colors_1, items_1, sizes_1, result_2, itemsInStock_1, err_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        colors_1 = [];
+                        items_1 = [];
+                        sizes_1 = [];
+                        result_2 = [];
+                        salesLine.map(function (v) {
+                            if (v.itemid && v.configId && v.inventsizeid) {
+                                items_1.push(v.itemid), colors_1.push(v.configId), sizes_1.push(v.inventsizeid);
+                            }
+                            else {
+                                result_2.push({
+                                    itemid: v.itemid,
+                                    configId: v.configId,
+                                    inventsizeid: v.inventsizeid,
+                                    availabilty: 0,
+                                });
+                            }
+                        });
+                        return [4 /*yield*/, this.rawQuery.checkItems(this.sessionInfo.inventlocationid, items_1, colors_1, sizes_1)];
+                    case 1:
+                        itemsInStock_1 = _a.sent();
+                        salesLine.map(function (v) {
+                            var index = itemsInStock_1.findIndex(function (value) {
+                                return value.itemid.toLowerCase() == v.itemid.toLowerCase() &&
+                                    value.configid.toLowerCase() == v.configId.toLowerCase() &&
+                                    value.inventsizeid.toLowerCase() == v.inventsizeid.toLowerCase();
+                            });
+                            if (index >= 0) {
+                                if (parseInt(v.salesQty) > parseInt(itemsInStock_1[index].qty)) {
+                                    result_2.push({
+                                        itemid: v.itemid,
+                                        configId: v.configId,
+                                        inventsizeid: v.inventsizeid,
+                                        selectedQuantity: v.salesQty,
+                                        availabilty: itemsInStock_1[index].qty,
+                                    });
+                                }
+                            }
+                        });
+                        return [2 /*return*/, result_2];
+                    case 2:
+                        err_1 = _a.sent();
+                        throw { message: err_1 };
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
     return InventtransService;
 }());
 exports.InventtransService = InventtransService;

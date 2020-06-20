@@ -1,5 +1,5 @@
-/inventtrans:
-  put:
+/inventtrans/checkinventory:
+  post:
     tags:
       - Inventtrans
     description: save.
