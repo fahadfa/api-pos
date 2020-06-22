@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var AuthService_1 = require("../services/AuthService");
+var Log_1 = require("../../utils/Log");
 var AuthController = /** @class */ (function () {
     function AuthController() {
         this.router = express_1.Router();
@@ -94,6 +95,7 @@ var AuthController = /** @class */ (function () {
         this.router.post("/", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
             var reqData, sessionInfo, result;
             return __generator(this, function (_a) {
+                Log_1.log.info("signin Controller ");
                 reqData = request.body;
                 sessionInfo = {};
                 result = null;
@@ -106,9 +108,11 @@ var AuthController = /** @class */ (function () {
                 }
                 //App.Send(request, response, result);
                 result.then(function (data) {
+                    Log_1.log.info("signin Controller response");
                     response.send(data);
                 });
                 result.catch(function (error) {
+                    Log_1.log.info("signin Controller error");
                     response.send({ status: 0, error: error });
                 });
                 return [2 /*return*/];
