@@ -301,6 +301,15 @@ var InventtransService = /** @class */ (function () {
                                     });
                                 }
                             }
+                            else {
+                                result_2.push({
+                                    itemid: v.itemid,
+                                    configId: v.configId,
+                                    inventsizeid: v.inventsizeid,
+                                    selectedQuantity: v.salesQty,
+                                    availabilty: 0,
+                                });
+                            }
                         });
                         return [2 /*return*/, result_2];
                     case 2:

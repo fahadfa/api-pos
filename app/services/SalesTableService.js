@@ -1294,7 +1294,7 @@ var SalesTableService = /** @class */ (function () {
                         if (!(cond == true)) return [3 /*break*/, 4];
                         reqData.payment = reqData.transkind == "DESIGNERSERVICE" ? "CASH" : false;
                         reqData.status =
-                            reqData.status != "CREATED" || reqData.status == "" || reqData.status == null ? "SAVED" : reqData.status;
+                            reqData.status == "CREATED" || reqData.status == "" || reqData.status == null ? "SAVED" : reqData.status;
                         reqData.salesType = reqData.transkind == "TRANSFERORDER" ? 1 : null;
                         reqData.inventLocationId = this.sessionInfo.inventlocationid;
                         return [4 /*yield*/, this.salestableDAO.save(reqData)];
@@ -1614,6 +1614,7 @@ var SalesTableService = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.rawQuery.getPaymTermDays(reqData.paymtermid)];
                     case 1:
                         paymTerDays = _a.sent();
+                        if (!(paymTerDays.length > 0)) return [3 /*break*/, 3];
                         days = paymTerDays[0].numofdays;
                         now = new Date(App_1.App.DateNow());
                         dueDate = new Date(App_1.App.DateNow());
@@ -1636,7 +1637,8 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.overDueDAO.createOverDue(overDue)];
                     case 2:
                         overDueSaved = _a.sent();
-                        return [2 /*return*/];
+                        _a.label = 3;
+                    case 3: return [2 /*return*/];
                 }
             });
         });
