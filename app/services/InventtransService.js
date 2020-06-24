@@ -142,7 +142,11 @@ var InventtransService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.getSelectedBatches(params)];
                     case 1:
                         data = _a.sent();
-                        console.log(data);
+                        data.map(function (v) {
+                            v.itemid = v.itemid.toUpperCase();
+                            v.configid = v.configid.toUpperCase();
+                            v.inventsizeid = v.inventsizeid.toUpperCase();
+                        });
                         result = void 0;
                         if (params.type == "INVENTORYMOVEMENT") {
                             result = this.groupBy(data, function (item) {

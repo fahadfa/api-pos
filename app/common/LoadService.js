@@ -523,6 +523,29 @@ var LoadService = /** @class */ (function () {
             });
         });
     };
+    LoadService.prototype.salesmaneditablecustomers = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, salesmanQuery, reqData, ids;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        salesmanQuery = "select salesman_editable_customers as customers from usergroupconfig where id = '" + this.sessionInfo.usergroupconfigid + "'";
+                        return [4 /*yield*/, this.db.query(salesmanQuery)];
+                    case 1:
+                        reqData = _a.sent();
+                        reqData = reqData.length > 0 ? reqData[0].customers : null;
+                        if (reqData != null) {
+                            ids = reqData.split(",");
+                            return [2 /*return*/, ids];
+                        }
+                        else {
+                            return [2 /*return*/, []];
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     LoadService.prototype.locationsalesman = function (param) {
         return __awaiter(this, void 0, void 0, function () {
             var query, data, error_9;

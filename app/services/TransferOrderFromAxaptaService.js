@@ -124,6 +124,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                                 salesLine.dataareaid = v.data_area_id;
                                 salesLine.inventLocationId = data.invent_location_id_to;
                                 salesLine.batchNo = v.batch_no;
+                                salesLine.custAccount = data.invent_location_id_from;
                                 // salesLine.colors = await this.colorsDAO.findOne({ code: v.config_id });
                                 // salesLine.baseSizes = await this.baseSizeDAO.findOneforaxaptadata({ base: { code: v.item_id }, sizes: { code: v.invent_size_id } });
                                 salesLine.lastModifiedDate = new Date(App_1.App.DateNow());
@@ -281,6 +282,87 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         throw { status: 0, message: error_4.response.data.Message };
                     case 4: return [2 /*return*/];
                 }
+            });
+        });
+    };
+    TransferOrderFromAxaptaService.prototype.getQrStringToData = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.qrToData(data.qrStringList)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    TransferOrderFromAxaptaService.prototype.qrToData = function (qrStringList) {
+        return __awaiter(this, void 0, void 0, function () {
+            var dataList, _i, qrStringList_1, qrString, list, header, warehousearray, salestable, salesLine_1, _a, _b, item, salesline, lineArray, batches, salesData, salesLine, i;
+            return __generator(this, function (_c) {
+                dataList = [];
+                for (_i = 0, qrStringList_1 = qrStringList; _i < qrStringList_1.length; _i++) {
+                    qrString = qrStringList_1[_i];
+                    list = qrString.split("|");
+                    header = list[0];
+                    warehousearray = header.split("^");
+                    salestable = {
+                        salesId: header.substring(header.lastIndexOf("$") + 1, header.indexOf("^")),
+                        custAccount: warehousearray[1],
+                        inventLocationId: warehousearray[2],
+                    };
+                    salesLine_1 = [];
+                    for (_a = 0, _b = list[1].split("*"); _a < _b.length; _a++) {
+                        item = _b[_a];
+                        salesline = {};
+                        lineArray = item.split("+");
+                        salesline.salesId = salestable.salesId;
+                        salesline.itemid = lineArray[0];
+                        salesline.configId = lineArray[1];
+                        salesline.inventsizeid = lineArray[2];
+                        salesline.batch = { batchNo: lineArray[3], quantity: lineArray[4] };
+                        salesline.salesQty = lineArray[4];
+                        salesline.lastModifiedDate = new Date(App_1.App.DateNow());
+                        salesline.createddatetime = new Date(App_1.App.DateNow());
+                        salesline.inventLocationId = salestable.inventLocationId;
+                        salesline.batchNo = lineArray[3];
+                        salesline.dataareaid = this.sessionInfo.dataareaid;
+                        salesline.custAccount = salestable.custAccount;
+                        batches = {};
+                        batches.qty = salesline.salesQty;
+                        batches.itemid = salesline.itemid;
+                        batches.transrefid = salesline.salesId;
+                        batches.invoiceid = salesline.salesId;
+                        batches.batchno = salesline.batchNo;
+                        batches.configid = salesline.configId;
+                        batches.inventsizeid = salesline.inventsizeid;
+                        batches.inventlocationid = salesline.inventLocationId;
+                        batches.dataareaid = salesline.dataareaid;
+                        batches.transactionClosed = false;
+                        batches.dateinvent = new Date(App_1.App.DateNow());
+                        salesline.batches = batches;
+                        salesLine_1.push(salesline);
+                    }
+                    salestable.salesLine = salesLine_1;
+                    dataList.push(salestable);
+                }
+                salesData = dataList[0];
+                salesLine = [];
+                dataList.map(function (v) {
+                    salesLine.push.apply(salesLine, v.salesLine);
+                });
+                i = 1;
+                salesLine.map(function (v) {
+                    v.lineNum = i;
+                    i += 1;
+                });
+                salesData.lastModifiedDate = new Date(App_1.App.DateNow());
+                salesData.createddatetime = new Date(App_1.App.DateNow());
+                salesData.transkind = "ORDERSHIPMENT";
+                salesData.saleStatus = "RECEIVED";
+                salesData.dataareaid = this.sessionInfo.dataareaid;
+                salesData.salesType = 4;
+                salesData.salesLines = salesLine;
+                return [2 /*return*/, salesData];
             });
         });
     };

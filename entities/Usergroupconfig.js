@@ -389,6 +389,10 @@ var Usergroupconfig = /** @class */ (function () {
         typeorm_1.Column({ name: "is_export_excel" }),
         __metadata("design:type", Boolean)
     ], Usergroupconfig.prototype, "isExportExcel", void 0);
+    __decorate([
+        typeorm_1.Column({ name: "salesman_editable_customers" }),
+        __metadata("design:type", String)
+    ], Usergroupconfig.prototype, "salesmanEditableCustomers", void 0);
     Usergroupconfig = __decorate([
         typeorm_1.Entity("usergroupconfig")
     ], Usergroupconfig);

@@ -1254,7 +1254,7 @@ var SalesTableService = /** @class */ (function () {
                     case 3:
                         if (!(_i < batches_2.length)) return [3 /*break*/, 6];
                         item = batches_2[_i];
-                        item.reserveStatus = salesData.status;
+                        item.reserveStatus = "UNRESERVED";
                         item.transactionClosed = false;
                         item.dateinvent = new Date(App_1.App.DateNow());
                         return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(item)];
@@ -1439,7 +1439,8 @@ var SalesTableService = /** @class */ (function () {
                             }
                         }
                         promiseList.push(this.inventTransDAO.delete(batches));
-                        return [2 /*return*/, Promise.all(promiseList)];
+                        return [4 /*yield*/, Promise.all(promiseList)];
+                    case 2: return [2 /*return*/, _a.sent()];
                 }
             });
         });
@@ -2053,6 +2054,7 @@ var SalesTableService = /** @class */ (function () {
                             status: reqData.status,
                         };
                         //console.log(returnData);
+                        console.log(reqData);
                         return [2 /*return*/, returnData];
                     case 10: return [2 /*return*/];
                 }

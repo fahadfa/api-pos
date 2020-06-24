@@ -308,10 +308,14 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         redeemAmount = 0;
                         designServiceRedeemAmount = 0;
                         if (prevReturnOrderAmounts) {
-                            cashAmount = salesOrderData.cashAmount + salesOrderData.cardAmount - prevReturnOrderAmounts.cashAmount;
-                            redeemAmount = salesOrderData.redeemAmount - prevReturnOrderAmounts.redeemAmount;
+                            cashAmount =
+                                parseFloat(salesOrderData.cashAmount) +
+                                    parseFloat(salesOrderData.cardAmount) -
+                                    parseFloat(prevReturnOrderAmounts.cashAmount);
+                            redeemAmount = parseFloat(salesOrderData.redeemAmount) - parseFloat(prevReturnOrderAmounts.redeemAmount);
                             designServiceRedeemAmount =
-                                salesOrderData.designServiceRedeemAmount - prevReturnOrderAmounts.designServiceRedeemAmount;
+                                parseFloat(salesOrderData.designServiceRedeemAmount) -
+                                    parseFloat(prevReturnOrderAmounts.designServiceRedeemAmount);
                         }
                         else {
                             cashAmount = parseFloat(salesOrderData.cashAmount);
@@ -334,12 +338,12 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                 returnOrderData.redeemAmount = total - cashAmount - designServiceRedeemAmount;
                             }
                         }
+                        console.log(cashAmount);
                         returnOrderData.amount = grossAmount;
                         returnOrderData.netAmount = total;
                         returnOrderData.disc = discount;
                         returnOrderData.vatamount = vat;
                         returnOrderData.sumTax = vat;
-                        console.log(sendForApproval, condition);
                         if (returnOrderData.designServiceRedeemAmount > 0) {
                             sendForApproval = true;
                         }

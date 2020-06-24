@@ -189,9 +189,12 @@ var UpdateInventoryService = /** @class */ (function () {
                         })];
                     case 1:
                         inventoryOnHandData = _a.sent();
-                        console.log("==========updateInventoryOnhandData=================", inventoryOnHandData, reqData.qty);
+                        console.log("==========updateUnReserveQty=================", inventoryOnHandData, reqData.qty);
                         if (!inventoryOnHandData) return [3 /*break*/, 3];
-                        inventoryOnHandData.qtyReserved = inventoryOnHandData.qtyReserved - Math.abs(reqData.qty);
+                        inventoryOnHandData.qtyReserved =
+                            inventoryOnHandData.qtyReserved > Math.abs(reqData.qty)
+                                ? inventoryOnHandData.qtyReserved - Math.abs(reqData.qty)
+                                : 0;
                         inventoryOnHandData.updatedOn = new Date(App_1.App.DateNow());
                         inventoryOnHandData.updatedBy = this.sessionInfo ? this.sessionInfo.userName : "SYSTEM";
                         return [4 /*yield*/, this.inventoryOnhandDAO.save(inventoryOnHandData)];
