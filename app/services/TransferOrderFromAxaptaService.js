@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -297,7 +308,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
     };
     TransferOrderFromAxaptaService.prototype.qrToData = function (qrStringList) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataList, _i, qrStringList_1, qrString, list, header, warehousearray, salestable, salesLine_1, _a, _b, item, salesline, lineArray, batches, salesData, salesLine, i;
+            var dataList, _i, qrStringList_1, qrString, list, header, warehousearray, salestable, salesLines, _a, _b, item, salesline, lineArray, batches, salesData, salesLine, i;
             return __generator(this, function (_c) {
                 dataList = [];
                 for (_i = 0, qrStringList_1 = qrStringList; _i < qrStringList_1.length; _i++) {
@@ -310,7 +321,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         custAccount: warehousearray[1],
                         inventLocationId: warehousearray[2],
                     };
-                    salesLine_1 = [];
+                    salesLines = [];
                     for (_a = 0, _b = list[1].split("*"); _a < _b.length; _a++) {
                         item = _b[_a];
                         salesline = {};
@@ -340,12 +351,13 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         batches.transactionClosed = false;
                         batches.dateinvent = new Date(App_1.App.DateNow());
                         salesline.batches = batches;
-                        salesLine_1.push(salesline);
+                        salesLines.push(salesline);
                     }
-                    salestable.salesLine = salesLine_1;
+                    salestable.salesLine = salesLines;
                     dataList.push(salestable);
                 }
-                salesData = dataList[0];
+                salesData = __assign({}, dataList[0]);
+                delete salesData.salesLine;
                 salesLine = [];
                 dataList.map(function (v) {
                     salesLine.push.apply(salesLine, v.salesLine);

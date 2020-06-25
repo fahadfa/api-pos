@@ -139,7 +139,7 @@ var SalesOrderReport = /** @class */ (function () {
                                 cardAmount: data_1.cardAmount,
                                 designServiceRedeemAmount: data_1.designServiceRedeemAmount,
                                 redeemAmount: data_1.redeemAmount,
-                                lines: []
+                                lines: [],
                             };
                             data_1.isbreak = val.length > 5 ? true : false;
                             val.map(function (v) {

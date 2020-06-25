@@ -52,48 +52,119 @@ var OrderShipmentReport = /** @class */ (function () {
     }
     OrderShipmentReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, status, data, salesLine, batches, _i, batches_1, item, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var id, status, data, batches, _i, batches_1, item, salesLine, list, chunkArray, newSalesline, sNo, quantity, _loop_1, this_1, _a, list_1, val, _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
                         // try {
                         console.log("OrderShipmentReport===================");
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
                     case 1:
-                        data = _b.sent();
-                        console.log("----------------", data);
+                        data = _c.sent();
+                        // console.log("----------------", data);
                         data = data.length >= 1 ? data[0] : {};
                         data.originalPrinted = data.originalPrinted ? data.originalPrinted : false;
-                        return [4 /*yield*/, this.salesline_query_to_data(id)];
-                    case 2:
-                        salesLine = _b.sent();
-                        // salesLine = salesLine.length > 0 ? salesLine : [];
-                        console.log(salesLine);
-                        data.salesLine = salesLine;
-                        data.quantity = 0;
-                        salesLine.map(function (v) {
-                            data.quantity += parseInt(v.salesQty);
-                        });
-                        if (!(data.status != "POSTED")) return [3 /*break*/, 4];
+                        if (!(data.status != "POSTED")) return [3 /*break*/, 3];
                         this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED", new Date().toISOString());
                         return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
-                    case 3:
-                        batches = _b.sent();
+                    case 2:
+                        batches = _c.sent();
                         for (_i = 0, batches_1 = batches; _i < batches_1.length; _i++) {
                             item = batches_1[_i];
                             item.transactionClosed = true;
                             // this.inventTransDAO.save(item);
                             this.updateInventoryService.updateInventtransTable(item);
                         }
-                        _b.label = 4;
+                        _c.label = 3;
+                    case 3: return [4 /*yield*/, this.salesline_query_to_data(id)];
                     case 4:
-                        console.log(App_1.App.DateNow(), new Date(App_1.App.DateNow()), new Date().toISOString());
-                        console.log("---------", data);
-                        _a = data;
-                        return [4 /*yield*/, QRCode.toDataURL(JSON.stringify(data))];
+                        salesLine = _c.sent();
+                        list = [];
+                        return [4 /*yield*/, this.chunkArray(salesLine, 10)];
                     case 5:
-                        _a.qr = _b.sent();
+                        chunkArray = _c.sent();
+                        // console.log(chunkArray);
+                        list = list.concat(chunkArray);
+                        newSalesline = [];
+                        sNo = 1;
+                        quantity = 0;
+                        _loop_1 = function (val) {
+                            var lines, qrString, _a;
+                            return __generator(this, function (_b) {
+                                switch (_b.label) {
+                                    case 0:
+                                        lines = {
+                                            salesId: data.salesId,
+                                            quantity: 0,
+                                            custAccount: data.custAccount,
+                                            status: data.status,
+                                            transkind: data.transkind,
+                                            createddatetime: data.createddatetime,
+                                            originalPrinted: data.originalPrinted,
+                                            inventLocationId: data.inventLocationId,
+                                            fwnamealias: data.fwnamealias,
+                                            fwname: data.fwname,
+                                            twnamealias: data.twnamealias,
+                                            twname: data.twname,
+                                            interCompanyOriginalSalesId: data.interCompanyOriginalSalesId,
+                                            page: 1,
+                                            totalPages: list.length,
+                                            lines: [],
+                                        };
+                                        val.map(function (v) {
+                                            lines.quantity += parseInt(v.salesQty);
+                                            v.sNo = sNo;
+                                            lines.lines.push(v);
+                                            sNo += 1;
+                                        });
+                                        lines.page = list.indexOf(val) + 1;
+                                        lines.quantity = lines.quantity + quantity;
+                                        quantity = lines.quantity;
+                                        return [4 /*yield*/, this_1.dataToQrString(lines)];
+                                    case 1:
+                                        qrString = _b.sent();
+                                        _a = lines;
+                                        return [4 /*yield*/, QRCode.toDataURL(qrString)];
+                                    case 2:
+                                        _a.qr = _b.sent();
+                                        newSalesline.push(lines);
+                                        return [2 /*return*/];
+                                }
+                            });
+                        };
+                        this_1 = this;
+                        _a = 0, list_1 = list;
+                        _c.label = 6;
+                    case 6:
+                        if (!(_a < list_1.length)) return [3 /*break*/, 9];
+                        val = list_1[_a];
+                        return [5 /*yield**/, _loop_1(val)];
+                    case 7:
+                        _c.sent();
+                        _c.label = 8;
+                    case 8:
+                        _a++;
+                        return [3 /*break*/, 6];
+                    case 9:
+                        console.log("#####", newSalesline, "######");
+                        data.salesLine = newSalesline;
+                        data.quantity = 0;
+                        salesLine.map(function (v) {
+                            data.quantity += parseInt(v.quantity);
+                        });
+                        // console.log(App.DateNow(), new Date(App.DateNow()), new Date().toISOString());
+                        // console.log("---------", data);
+                        // let qrString = await this.dataToQrString(data);
+                        // console.log(qrString);
+                        _b = data;
+                        return [4 /*yield*/, QRCode.toDataURL("{name: 'naveen'}")];
+                    case 10:
+                        // console.log(App.DateNow(), new Date(App.DateNow()), new Date().toISOString());
+                        // console.log("---------", data);
+                        // let qrString = await this.dataToQrString(data);
+                        // console.log(qrString);
+                        _b.qr = _c.sent();
                         return [2 /*return*/, data];
                 }
             });
@@ -147,8 +218,65 @@ var OrderShipmentReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        salesQuery = "\n    select\n    ROW_NUMBER()  OVER (ORDER BY  ln.salesid) As \"sNo\",\n    ln.salesid,\n    ln.itemid,\n    ln.batchno,\n    ln.configid,\n    ln.inventsizeid,\n    ln.status,\n    to_char(ln.salesqty, 'FM999,999,999,999D') as \"salesQty\",\n    ln.prodnamear as \"prodNameAr\",\n    ln.prodnameen as \"prodNameEn\",\n    ln.colNameAr as \"colNameAr\",\n    ln.colNameEn as \"colNameEn\",\n    ln.sizeNameEn as \"sizeNameEn\",\n    ln.sizeNameAr as \"sizeNameAr\"\n    from\n    (\n        select\n        distinct\n        i.invoiceid as salesid,\n        i.batchno,\n        i.itemid,\n        i.configid,\n        i.inventsizeid,\n        st.status as status,\n        ABS(i.qty) as salesqty,\n        b.itemname as prodnamear,\n        b.namealias as prodnameen,\n        c.name as colNameAr,\n        c.name as colNameEn,\n        s.description as sizeNameEn,\n        s.name as sizeNameAr,\n        sl.colorantid as  colorantid,\n        sl.linenum\n        from inventtrans i\n        left join salestable st on st.salesid = i.invoiceid\n        left join salesline sl on sl.id = i.sales_line_id\n        left join inventtable b on i.itemid=b.itemid\n        left join inventsize s on s.itemid = i.itemid and i.inventsizeid = s.inventsizeid\n        left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n    where invoiceid='" + id + "'\n    ) as ln\n    ";
+                        salesQuery = "\n    select\n    ROW_NUMBER()  OVER (ORDER BY  ln.salesid) As \"sNo\",\n    ln.salesid,\n    ln.itemid,\n    ln.batchno,\n    ln.configid,\n    ln.inventsizeid,\n    ln.status,\n    to_char(ln.salesqty, 'FM999,999,999,999D') as \"salesQty\",\n    ln.prodnamear as \"prodNameAr\",\n    ln.prodnameen as \"prodNameEn\",\n    ln.colNameAr as \"colNameAr\",\n    ln.colNameEn as \"colNameEn\",\n    ln.sizeNameEn as \"sizeNameEn\",\n    ln.sizeNameAr as \"sizeNameAr\"\n    from\n    (\n        select\n        distinct\n        i.invoiceid as salesid,\n        i.batchno,\n        i.itemid,\n        i.configid,\n        i.inventsizeid,\n        st.status as status,\n        ABS(i.qty) as salesqty,\n        b.itemname as prodnamear,\n        b.namealias as prodnameen,\n        c.name as colNameAr,\n        c.name as colNameEn,\n        s.description as sizeNameEn,\n        s.name as sizeNameAr,\n        sl.colorantid as  colorantid,\n        sl.linenum\n        from inventtrans i\n        left join salestable st on st.salesid = i.invoiceid\n        left join salesline sl on sl.id = i.sales_line_id\n        left join inventtable b on i.itemid=b.itemid\n        left join inventsize s on s.itemid = i.itemid and i.inventsizeid = s.inventsizeid\n        left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n    where invoiceid='" + id + "' order by sl.linenum DESC\n    ) as ln\n    ";
                         return [4 /*yield*/, this.db.query(salesQuery)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    OrderShipmentReport.prototype.dataToQrString = function (data) {
+        console.log(data);
+        var header = data.page +
+            "%" +
+            data.totalPages +
+            "$" +
+            data.salesId +
+            "^" +
+            data.inventLocationId +
+            "^" +
+            data.custAccount +
+            "|";
+        var lines = "";
+        for (var _i = 0, _a = data.lines; _i < _a.length; _i++) {
+            var item = _a[_i];
+            if (lines.length != 0) {
+                lines += "*";
+            }
+            var line = item.itemid +
+                "+" +
+                item.configid +
+                "+" +
+                item.inventsizeid +
+                "+" +
+                item.batchno +
+                "+" +
+                item.salesQty +
+                "+" +
+                0 +
+                "+" +
+                0 +
+                "+" +
+                0;
+            lines += line;
+        }
+        return header + lines;
+    };
+    OrderShipmentReport.prototype.chunkArray = function (myArray, chunk_size) {
+        return __awaiter(this, void 0, void 0, function () {
+            var index, arrayLength, tempArray, myChunk;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        index = 0;
+                        arrayLength = myArray.length;
+                        tempArray = [];
+                        for (index = 0; index < arrayLength; index += chunk_size) {
+                            myChunk = myArray.slice(index, index + chunk_size);
+                            // Do something if you want with the group
+                            tempArray.push(myChunk);
+                        }
+                        return [4 /*yield*/, tempArray];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
