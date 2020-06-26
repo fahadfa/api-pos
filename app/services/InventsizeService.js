@@ -105,9 +105,9 @@ var InventsizeService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 6, , 7]);
+                        _a.trys.push([0, 8, , 9]);
                         console.log(params);
-                        if (!(params.itemid && params.configid)) return [3 /*break*/, 4];
+                        if (!(params.itemid && params.configid)) return [3 /*break*/, 6];
                         t0 = new Date().getTime();
                         params.inventlocationid = this.sessionInfo.inventlocationid;
                         return [4 /*yield*/, this.rawQuery.getSizeCodesInStock(params)];
@@ -117,6 +117,7 @@ var InventsizeService = /** @class */ (function () {
                         items_2.map(function (v) {
                             items_2.push(v.toLowerCase());
                         });
+                        if (!(items_2.length > 0)) return [3 /*break*/, 4];
                         return [4 /*yield*/, this.inventsizeDAO.search(params, items_2)];
                     case 2:
                         data = _a.sent();
@@ -126,12 +127,14 @@ var InventsizeService = /** @class */ (function () {
                         params.sizes = data;
                         return [4 /*yield*/, this.getPrices(params)];
                     case 3: return [2 /*return*/, _a.sent()];
-                    case 4: throw { message: "itemid and configid Required" };
+                    case 4: return [2 /*return*/, []];
                     case 5: return [3 /*break*/, 7];
-                    case 6:
+                    case 6: throw { message: "itemid and configid Required" };
+                    case 7: return [3 /*break*/, 9];
+                    case 8:
                         error_3 = _a.sent();
                         throw error_3;
-                    case 7: return [2 /*return*/];
+                    case 9: return [2 /*return*/];
                 }
             });
         });

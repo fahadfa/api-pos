@@ -98,26 +98,30 @@ var ConfigtableService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
-                        if (!params.itemid) return [3 /*break*/, 3];
+                        _a.trys.push([0, 6, , 7]);
+                        if (!params.itemid) return [3 /*break*/, 4];
                         // var t0 = new Date().getTime();
                         params.inventlocationid = this.sessionInfo.inventlocationid;
                         return [4 /*yield*/, this.rawQuery.getColorCodesInStock(params)];
                     case 1:
                         Items = _a.sent();
+                        data = [];
+                        if (!(Items.length > 0)) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.configtableDAO.search(params, Items)];
                     case 2:
                         data = _a.sent();
                         console.log(data.length);
-                        // var t1 = new Date().getTime();
-                        // console.log("took " + (t1 - t0) / 1000 + " milliseconds.");
-                        return [2 /*return*/, data];
-                    case 3: throw "itemid Required";
-                    case 4: return [3 /*break*/, 6];
-                    case 5:
+                        _a.label = 3;
+                    case 3: 
+                    // var t1 = new Date().getTime();
+                    // console.log("took " + (t1 - t0) / 1000 + " milliseconds.");
+                    return [2 /*return*/, data];
+                    case 4: throw "itemid Required";
+                    case 5: return [3 /*break*/, 7];
+                    case 6:
                         error_3 = _a.sent();
                         throw error_3;
-                    case 6: return [2 /*return*/];
+                    case 7: return [2 /*return*/];
                 }
             });
         });

@@ -82,6 +82,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         discountConditions = {};
                         for (_i = 0, salesLine_1 = salesLine; _i < salesLine_1.length; _i++) {
                             item = salesLine_1[_i];
+                            item.appliedDiscounts = item.appliedDiscounts ? item.appliedDiscounts : [];
                             checkForPromotional = item.appliedDiscounts.filter(function (v) { return v.discountType == "PROMOTIONAL_DISCOUNT"; });
                             if (checkForPromotional.length > 0) {
                                 promotionalDiscountItems.push(item);

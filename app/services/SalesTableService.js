@@ -987,7 +987,7 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.convertToSalesOrder = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var salesData, canConvert, colors, items, sizes, itemsInStock, itemString, reqData;
+            var salesData, canConvert, colors, items, sizes, itemsInStock, itemString, reqData, customer;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.salestableDAO.entity(data.salesId)];
@@ -1023,7 +1023,7 @@ var SalesTableService = /** @class */ (function () {
                             }
                         });
                         console.log(canConvert);
-                        if (!canConvert) return [3 /*break*/, 5];
+                        if (!canConvert) return [3 /*break*/, 6];
                         salesData.status = "CONVERTED";
                         return [4 /*yield*/, this.salestableDAO.save(salesData)];
                     case 3:
@@ -1031,17 +1031,21 @@ var SalesTableService = /** @class */ (function () {
                         salesData.interCompanyOriginalSalesId = salesData.salesId;
                         delete salesData.salesId;
                         reqData = __assign({}, salesData);
+                        return [4 /*yield*/, this.rawQuery.getCustomer(reqData.custAccount)];
+                    case 4:
+                        customer = _a.sent();
+                        reqData.payment = customer.paymtermid;
                         reqData.transkind = "SALESORDER";
                         reqData.status = "CREATED";
                         reqData.message = "CONVERTED";
                         reqData.inventLocationId = this.sessionInfo.inventlocationid;
                         reqData.salesLine = salesData.salesLine;
                         return [4 /*yield*/, this.save(reqData)];
-                    case 4:
+                    case 5:
                         data = _a.sent();
                         data.status = "CONVERTED";
                         return [2 /*return*/, data];
-                    case 5: throw {
+                    case 6: throw {
                         message: "CANNOT_CONVERT_TO_SALESORDER",
                     };
                 }
@@ -1081,11 +1085,11 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.convertPurchaseOrderToSalesOrder = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var salesData, convertedData, canConvert, colors_1, items_1, sizes_1, itemString, reqData, custAccount, error_8;
+            var salesData, convertedData, canConvert, colors_1, items_1, sizes_1, itemString, reqData, custAccount, customer, error_8;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 9, , 10]);
+                        _a.trys.push([0, 10, , 11]);
                         return [4 /*yield*/, this.salestableDAO.entity(data.salesId)];
                     case 1:
                         salesData = _a.sent();
@@ -1139,21 +1143,25 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.get_vedor_related_custaccount(salesData.custAccount)];
                     case 5:
                         custAccount = _a.sent();
-                        if (!custAccount) return [3 /*break*/, 7];
+                        if (!custAccount) return [3 /*break*/, 8];
+                        return [4 /*yield*/, this.rawQuery.getCustomer(custAccount)];
+                    case 6:
+                        customer = _a.sent();
                         reqData.custAccount = custAccount;
                         reqData.salesLine = salesData.salesLine;
+                        reqData.payment = customer.paymtermid;
                         return [4 /*yield*/, this.save(reqData)];
-                    case 6:
+                    case 7:
                         data = _a.sent();
                         console.log(reqData);
                         data.message = "CONVERTED";
                         return [2 /*return*/, data];
-                    case 7: throw { message: "NO_VENDOR_FOR_CUSTOMER" };
-                    case 8: return [3 /*break*/, 10];
-                    case 9:
+                    case 8: throw { message: "NO_VENDOR_FOR_CUSTOMER" };
+                    case 9: return [3 /*break*/, 11];
+                    case 10:
                         error_8 = _a.sent();
                         throw { message: error_8 };
-                    case 10: return [2 /*return*/];
+                    case 11: return [2 /*return*/];
                 }
             });
         });
