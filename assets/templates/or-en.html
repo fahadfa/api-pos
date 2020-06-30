@@ -207,10 +207,9 @@
             <td>
                 <span style="font-size:13px">
                     {{this.prodNameEn}},
-                    {{# if this.colorant}}
-                    {{this.colorant}},
-                    {{else}}
                     {{this.configid}},
+                    {{#if this.colorantid}}
+                    {{this.colorantid}},
                     {{/if}}
                     {{this.inventsizeid}}
                 </span>

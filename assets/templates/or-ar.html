@@ -188,60 +188,59 @@
         </tr>
     </table>
 
-        
-                <table class="dash" width="100%" cellpadding="0" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>الرقم</th>
-                            <th>رقم المنتج</th>
-                            <th>وصف المنتج</th>
-                            <th>رقم الدفعة</th>
-                            <th>كمية</th>
-                        </tr>
-                    </thead>
-                    {{#each salesLine}}
-                    <tr class="tab-data" style="font-size:13px !important">
-                        <td>{{this.sNo}}</td>
-                        <td>
-                            <div style="font-size:13px">
-                                {{this.itemid}}
-                            </div>
-                        </td>
-                        <td>
-                            <span style="font-size:13px">
-                                {{this.prodNameAr}},
-                                {{# if this.colorant}}
-                                {{this.colorant}},
-                                {{else}}
-                                {{this.configid}},
-                                {{/if}}
-                                {{this.inventsizeid}}
-                            </span>                            
-                        </td>
-                        <td>{{this.batchno}}</td>
-                        <td>{{this.salesQty}}</td>
-                    </tr>
-                    {{/each}}
 
-                    <tr class="textbold">
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>الكمية الإجمالية</td>
-                        <td>{{ quantity }}</td>
-                    </tr>
+    <table class="dash" width="100%" cellpadding="0" cellspacing="0">
+        <thead>
+            <tr>
+                <th>الرقم</th>
+                <th>رقم المنتج</th>
+                <th>وصف المنتج</th>
+                <th>رقم الدفعة</th>
+                <th>كمية</th>
+            </tr>
+        </thead>
+        {{#each salesLine}}
+        <tr class="tab-data" style="font-size:13px !important">
+            <td>{{this.sNo}}</td>
+            <td>
+                <div style="font-size:13px">
+                    {{this.itemid}}
+                </div>
+            </td>
+            <td>
+                <span style="font-size:13px">
+                    {{this.prodNameAr}},
+                    {{this.configid}},
+                    {{#if this.colorantid}}
+                    {{this.colorantid}},
+                    {{/if}}
+                    {{this.inventsizeid}}
+                </span>
+            </td>
+            <td>{{this.batchno}}</td>
+            <td>{{this.salesQty}}</td>
+        </tr>
+        {{/each}}
 
-                </table>               
+        <tr class="textbold">
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>الكمية الإجمالية</td>
+            <td>{{ quantity }}</td>
+        </tr>
 
-                <table id="headertbl">
-                    <tr>
-                        <td width="33%">المستلم</td>
-                        <td width="33%" class="tdcenter">البائع</td>
-                        <td width="33%" class="tdleft">الشركة</td>
-                    </tr>
-                </table>
+    </table>
 
-           
+    <table id="headertbl">
+        <tr>
+            <td width="33%">المستلم</td>
+            <td width="33%" class="tdcenter">البائع</td>
+            <td width="33%" class="tdleft">الشركة</td>
+        </tr>
+    </table>
+
+
 </body>
 
 </html>

@@ -178,15 +178,15 @@
             </tr>
             <tr>
                 <td colspan="3">
-                    <table id="invoiceDetails" style="margin-top: 40px;" width="100%" class="item-table" cellpadding="0"
+                    <table id="invoiceDetails" style="margin-top: 10px;" width="100%" class="item-table" cellpadding="0"
                         cellspacing="0">
                         <thead>
                             <tr>
-                                <th class="th">S.No</th>
-                                <th class="th">Item No</th>
+                                <th class="th" width="10%">S.No</th>
+                                <th class="th" width="20%">Item No</th>
                                 <th class="th">Description</th>
-                                <th class="th">Batch No</th>
-                                <th class="th">Qty</th>
+                                <th class="th" width="20%">Batch No</th>
+                                <th class="th" width="10%">Qty</th>
                         </thead>
                         {{#each lines}}
                         <tr class="tab-data">
@@ -199,10 +199,9 @@
                             <td class="td description-data">
                                 <span style="font-size:12px">
                                     {{this.prodNameEn}},
-                                    {{# if this.colorant}}
-                                    {{this.colorant}},
-                                    {{else}}
                                     {{this.configid}},
+                                    {{#if this.colorantid}}
+                                    {{this.colorantid}},
                                     {{/if}}
                                     {{this.inventsizeid}}
                                 </span>

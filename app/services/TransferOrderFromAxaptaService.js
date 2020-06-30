@@ -331,32 +331,38 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                             item = _b[_a];
                             salesline = {};
                             lineArray = item.split("+");
-                            salesline.salesId = salestable.salesId;
-                            salesline.itemid = lineArray[0];
-                            salesline.configId = lineArray[1];
-                            salesline.inventsizeid = lineArray[2];
-                            salesline.batch = { batchNo: lineArray[3], quantity: lineArray[4] };
-                            salesline.salesQty = lineArray[4];
-                            salesline.lastModifiedDate = new Date(App_1.App.DateNow());
-                            salesline.createddatetime = new Date(App_1.App.DateNow());
-                            salesline.inventLocationId = salestable.inventLocationId;
-                            salesline.batchNo = lineArray[3];
-                            salesline.dataareaid = this.sessionInfo.dataareaid;
-                            salesline.custAccount = salestable.custAccount;
-                            batches = {};
-                            batches.qty = salesline.salesQty;
-                            batches.itemid = salesline.itemid;
-                            batches.transrefid = salesline.salesId;
-                            batches.invoiceid = salesline.salesId;
-                            batches.batchno = salesline.batchNo;
-                            batches.configid = salesline.configId;
-                            batches.inventsizeid = salesline.inventsizeid;
-                            batches.inventlocationid = salesline.inventLocationId;
-                            batches.dataareaid = salesline.dataareaid;
-                            batches.transactionClosed = false;
-                            batches.dateinvent = new Date(App_1.App.DateNow());
-                            salesline.batches = batches;
-                            salesLines.push(salesline);
+                            if (lineArray[0] == "HSN-00001") {
+                                salesLines[salesLines.length - 1].colorantId = lineArray[1];
+                            }
+                            else {
+                                salesline.salesId = salestable.salesId;
+                                salesline.itemid = lineArray[0];
+                                salesline.configId = lineArray[1];
+                                salesline.inventsizeid = lineArray[2];
+                                salesline.batch = { batchNo: lineArray[3], quantity: lineArray[4] };
+                                salesline.salesQty = lineArray[4];
+                                salesline.lastModifiedDate = new Date(App_1.App.DateNow());
+                                salesline.createddatetime = new Date(App_1.App.DateNow());
+                                salesline.inventLocationId = salestable.inventLocationId;
+                                salesline.batchNo = lineArray[3];
+                                salesline.dataareaid = this.sessionInfo.dataareaid;
+                                salesline.custAccount = salestable.custAccount;
+                                batches = {};
+                                batches.qty = salesline.salesQty;
+                                batches.itemid = salesline.itemid;
+                                batches.transrefid = salesline.salesId;
+                                batches.invoiceid = salesline.salesId;
+                                batches.batchno = salesline.batchNo;
+                                batches.configid = salesline.configId;
+                                batches.inventsizeid = salesline.inventsizeid;
+                                batches.inventlocationid = salesline.inventLocationId;
+                                batches.dataareaid = salesline.dataareaid;
+                                batches.transactionClosed = false;
+                                batches.dateinvent = new Date(App_1.App.DateNow());
+                                salesline.batches = batches;
+                                console.log("===", salesLines.length);
+                                salesLines.push(salesline);
+                            }
                         }
                         salestable.salesLine = salesLines;
                         dataList.push(salestable);

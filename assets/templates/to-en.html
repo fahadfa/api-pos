@@ -69,8 +69,9 @@
         #bg__watermark {
             display: block;
             min-width: 100%;
-            opacity: 0.5;               
+            opacity: 0.5;
         }
+
         #bg__text__watermark {
             color: lightgrey;
             font-size: 120px;
@@ -97,9 +98,23 @@
         <tr>
             <td width="40%">
                 <table style="text-align:left;">
-                    <tr class="billing">                       
+                    <!-- <tr class="billing">                       
                         <img src="{{qr}}" height="200" width="200">
-                    </tr> 
+                    </tr>  -->
+                    <tr class="billing">
+                        <td valign="top">From</td>
+                        <td valign="top">:</td>
+                        <td>
+                            {{fwnamealias}}
+                        </td>
+                    </tr>
+                    <tr class="billing">
+                        <td>To</td>
+                        <td>:</td>
+                        <td>
+                            {{twnamealias}}
+                        </td>
+                    </tr>
                 </table>
             </td>
             <td width="20%" style="text-align:center">
@@ -136,25 +151,12 @@
                             {{createddatetime}}
                         </td>
                     </tr>
-                    <tr class="billing">
-                        <td valign="top">From</td>
-                        <td valign="top">:</td>
-                        <td>
-                            {{fwnamealias}}
-                        </td>
-                    </tr>
-                    <tr class="billing">
-                        <td>To</td>
-                        <td>:</td>
-                        <td>
-                            {{twnamealias}}
-                        </td>
-                    </tr>
+
                     <tr class="billing">
                         <td class="textboldtd">Notes</td>
                         <td>:</td>
                         <td>{{this.notes}}</td>
-                      </tr>
+                    </tr>
                 </table>
             </td>
         </tr>
@@ -180,13 +182,11 @@
                         <td class="td description-data">
                             <span style="font-size:13px">
                                 {{this.prodNameEn}},
-                                {{# if this.colorant}}
-                                {{this.colorant}},
-                                {{else}}
                                 {{this.configid}},
+                                {{# if this.colorantid}}
+                                {{this.colorantid}},
                                 {{/if}}
-                                {{this.inventsizeid}},
-                                {{this.batchno}}
+                                {{this.inventsizeid}}
                             </span>
                         </td>
                         <td class="td">
@@ -199,8 +199,8 @@
 
 
                 <table width="100%" style="text-align:right; border-bottom:1px dotted #8a8989;margin-top: 8px;">
-                
-                <tr>
+
+                    <tr>
                     <tr>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
@@ -209,26 +209,26 @@
                             Total Quantity:{{ quantity }}
                         </td>
                     </tr>
-                </tr>
-                </table>
+        </tr>
+    </table>
 
 
-                <table width="100%" style="background: #fff;">
-                    <tr>
-                        <td style="width:33%;font-size:15px; text-align: left;">
-                            Recipient
-                        </td>
-                        <td style="width:33%;font-size:15px; text-align: center;">
-                            Seller
-                        </td>
-                        <td style="width:33%;font-size:15px;text-align: right;">
-                            Company
-                        </td>
-                    </tr>
-                </table>
-
+    <table width="100%" style="background: #fff;">
+        <tr>
+            <td style="width:33%;font-size:15px; text-align: left;">
+                Recipient
+            </td>
+            <td style="width:33%;font-size:15px; text-align: center;">
+                Seller
+            </td>
+            <td style="width:33%;font-size:15px;text-align: right;">
+                Company
             </td>
         </tr>
+    </table>
+
+    </td>
+    </tr>
     </table>
 </body>
 

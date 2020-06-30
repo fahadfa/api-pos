@@ -41,7 +41,9 @@ var SalesTableService_1 = require("../services/SalesTableService");
 var RawQuery_1 = require("../common/RawQuery");
 var InventTransDAO_1 = require("../repos/InventTransDAO");
 var UpdateInventoryService_1 = require("../services/UpdateInventoryService");
-var QRCode = require("qrcode");
+//var QRCode = require("qrcode");
+var SvgToDataURL = require("svg-to-dataurl");
+var QRCode = require("qrcode-svg");
 var OrderShipmentReport = /** @class */ (function () {
     function OrderShipmentReport() {
         this.db = typeorm_1.getManager();
@@ -52,16 +54,16 @@ var OrderShipmentReport = /** @class */ (function () {
     }
     OrderShipmentReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, status, data, batches, _i, batches_1, item, salesLine, list, chunkArray, newSalesline, sNo, quantity, _loop_1, this_1, _a, list_1, val, _b;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+            var id, status, data, batches, _i, batches_1, item, salesLine, list, chunkArray, newSalesline, sNo, quantity, _loop_1, this_1, _a, list_1, val;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         // try {
                         console.log("OrderShipmentReport===================");
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
                     case 1:
-                        data = _c.sent();
+                        data = _b.sent();
                         // console.log("----------------", data);
                         data = data.length >= 1 ? data[0] : {};
                         data.originalPrinted = data.originalPrinted ? data.originalPrinted : false;
@@ -69,21 +71,21 @@ var OrderShipmentReport = /** @class */ (function () {
                         this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED", new Date().toISOString());
                         return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
                     case 2:
-                        batches = _c.sent();
+                        batches = _b.sent();
                         for (_i = 0, batches_1 = batches; _i < batches_1.length; _i++) {
                             item = batches_1[_i];
                             item.transactionClosed = true;
                             // this.inventTransDAO.save(item);
                             this.updateInventoryService.updateInventtransTable(item);
                         }
-                        _c.label = 3;
+                        _b.label = 3;
                     case 3: return [4 /*yield*/, this.salesline_query_to_data(id)];
                     case 4:
-                        salesLine = _c.sent();
+                        salesLine = _b.sent();
                         list = [];
                         return [4 /*yield*/, this.chunkArray(salesLine, 10)];
                     case 5:
-                        chunkArray = _c.sent();
+                        chunkArray = _b.sent();
                         // console.log(chunkArray);
                         list = list.concat(chunkArray);
                         newSalesline = [];
@@ -125,7 +127,7 @@ var OrderShipmentReport = /** @class */ (function () {
                                     case 1:
                                         qrString = _b.sent();
                                         _a = lines;
-                                        return [4 /*yield*/, QRCode.toDataURL(qrString)];
+                                        return [4 /*yield*/, this_1.genrateQRCode(qrString)];
                                     case 2:
                                         _a.qr = _b.sent();
                                         newSalesline.push(lines);
@@ -135,19 +137,19 @@ var OrderShipmentReport = /** @class */ (function () {
                         };
                         this_1 = this;
                         _a = 0, list_1 = list;
-                        _c.label = 6;
+                        _b.label = 6;
                     case 6:
                         if (!(_a < list_1.length)) return [3 /*break*/, 9];
                         val = list_1[_a];
                         return [5 /*yield**/, _loop_1(val)];
                     case 7:
-                        _c.sent();
-                        _c.label = 8;
+                        _b.sent();
+                        _b.label = 8;
                     case 8:
                         _a++;
                         return [3 /*break*/, 6];
                     case 9:
-                        console.log("#####", newSalesline, "######");
+                        // console.log("#####", newSalesline, "######");
                         data.salesLine = newSalesline;
                         data.quantity = 0;
                         salesLine.map(function (v) {
@@ -157,15 +159,40 @@ var OrderShipmentReport = /** @class */ (function () {
                         // console.log("---------", data);
                         // let qrString = await this.dataToQrString(data);
                         // console.log(qrString);
-                        _b = data;
-                        return [4 /*yield*/, QRCode.toDataURL("{name: 'naveen'}")];
-                    case 10:
-                        // console.log(App.DateNow(), new Date(App.DateNow()), new Date().toISOString());
-                        // console.log("---------", data);
-                        // let qrString = await this.dataToQrString(data);
-                        // console.log(qrString);
-                        _b.qr = _c.sent();
+                        //data.qr = await QRCode.toDataURL("{name: 'naveen'}");
                         return [2 /*return*/, data];
+                }
+            });
+        });
+    };
+    OrderShipmentReport.prototype.genrateQRCode = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var dataurl, QRSVG, dataFile;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        dataurl = null;
+                        return [4 /*yield*/, new QRCode({
+                                content: data,
+                                padding: 4,
+                                width: 180,
+                                height: 180,
+                                color: "#000000",
+                                background: "#ffffff",
+                                ecl: "L",
+                            })];
+                    case 1:
+                        QRSVG = _a.sent();
+                        dataFile = QRSVG.svg();
+                        //console.log(QRSVG.svg());
+                        // const Base64File = require("js-base64-file");
+                        // const image = new Base64File();
+                        // dataurl = image.loadSync("sample.svg");
+                        // let dataFile = fs.readFileSync("sample.svg", { encoding: "utf8", flag: "r" });
+                        // console.log("dataFile", dataFile);
+                        dataurl = SvgToDataURL(dataFile);
+                        // console.log(dataurl);
+                        return [2 /*return*/, dataurl];
                 }
             });
         });
@@ -192,7 +219,6 @@ var OrderShipmentReport = /** @class */ (function () {
                 // console.log(result.salesLine[0].product.nameEnglish);
                 renderData = result;
                 renderData.printDate = App_1.App.convertUTCDateToLocalDate(new Date(App_1.App.DateNow()), parseInt(params.timeZoneOffSet)).toLocaleString();
-                console.log(params.lang);
                 file = params.lang == "en" ? "os-en" : "os-ar";
                 // try {
                 return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];
@@ -218,7 +244,7 @@ var OrderShipmentReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        salesQuery = "\n    select\n    ROW_NUMBER()  OVER (ORDER BY  ln.salesid) As \"sNo\",\n    ln.salesid,\n    ln.itemid,\n    ln.batchno,\n    ln.configid,\n    ln.inventsizeid,\n    ln.status,\n    to_char(ln.salesqty, 'FM999,999,999,999D') as \"salesQty\",\n    ln.prodnamear as \"prodNameAr\",\n    ln.prodnameen as \"prodNameEn\",\n    ln.colNameAr as \"colNameAr\",\n    ln.colNameEn as \"colNameEn\",\n    ln.sizeNameEn as \"sizeNameEn\",\n    ln.sizeNameAr as \"sizeNameAr\"\n    from\n    (\n        select\n        distinct\n        i.invoiceid as salesid,\n        i.batchno,\n        i.itemid,\n        i.configid,\n        i.inventsizeid,\n        st.status as status,\n        ABS(i.qty) as salesqty,\n        b.itemname as prodnamear,\n        b.namealias as prodnameen,\n        c.name as colNameAr,\n        c.name as colNameEn,\n        s.description as sizeNameEn,\n        s.name as sizeNameAr,\n        sl.colorantid as  colorantid,\n        sl.linenum\n        from inventtrans i\n        left join salestable st on st.salesid = i.invoiceid\n        left join salesline sl on sl.id = i.sales_line_id\n        left join inventtable b on i.itemid=b.itemid\n        left join inventsize s on s.itemid = i.itemid and i.inventsizeid = s.inventsizeid\n        left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n    where invoiceid='" + id + "' order by sl.linenum DESC\n    ) as ln\n    ";
+                        salesQuery = "\n    select\n    ROW_NUMBER()  OVER (ORDER BY  ln.salesid) As \"sNo\",\n    ln.salesid,\n    ln.itemid,\n    ln.batchno,\n    ln.configid,\n    ln.inventsizeid,\n    ln.status,\n    ln.colorantid,\n    to_char(ln.salesqty, 'FM999,999,999,999D') as \"salesQty\",\n    ln.prodnamear as \"prodNameAr\",\n    ln.prodnameen as \"prodNameEn\",\n    ln.colNameAr as \"colNameAr\",\n    ln.colNameEn as \"colNameEn\",\n    ln.sizeNameEn as \"sizeNameEn\",\n    ln.sizeNameAr as \"sizeNameAr\"\n    from\n    (\n        select\n        distinct\n        i.invoiceid as salesid,\n        i.batchno,\n        i.itemid,\n        i.configid,\n        i.inventsizeid,\n        st.status as status,\n        ABS(i.qty) as salesqty,\n        b.itemname as prodnamear,\n        b.namealias as prodnameen,\n        c.name as colNameAr,\n        c.name as colNameEn,\n        s.description as sizeNameEn,\n        s.name as sizeNameAr,\n        sl.colorantid as  colorantid,\n        sl.linenum\n        from inventtrans i\n        left join salestable st on st.salesid = i.invoiceid\n        left join salesline sl on sl.id = i.sales_line_id\n        left join inventtable b on i.itemid=b.itemid\n        left join inventsize s on s.itemid = i.itemid and i.inventsizeid = s.inventsizeid\n        left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n    where invoiceid='" + id + "' order by sl.linenum DESC\n    ) as ln\n    ";
                         return [4 /*yield*/, this.db.query(salesQuery)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
@@ -258,6 +284,25 @@ var OrderShipmentReport = /** @class */ (function () {
                 0 +
                 "+" +
                 0;
+            if (item.colorantid) {
+                line +=
+                    "*" +
+                        "HSN-00001" +
+                        "+" +
+                        item.colorantid +
+                        "+" +
+                        "GROUP" +
+                        "+" +
+                        "-" +
+                        "+" +
+                        item.salesQty +
+                        "+" +
+                        0 +
+                        "+" +
+                        0 +
+                        "+" +
+                        0;
+            }
             lines += line;
         }
         return header + lines;

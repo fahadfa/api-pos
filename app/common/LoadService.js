@@ -477,14 +477,14 @@ var LoadService = /** @class */ (function () {
             });
         });
     };
-    LoadService.prototype.salesman = function (param) {
+    LoadService.prototype.salesman = function () {
         return __awaiter(this, void 0, void 0, function () {
             var query, data, error_8;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        query = "select name as \"name\",\n                description as \"nameAlias\",\n                dimensioncode as  dimensioncode,\n                num as salesmanid\n                from dimensions where num = (select salesmanid from usergroupconfig where id = '" + this.sessionInfo.usergroupconfigid + "')";
+                        query = "select concat(num,' - ', description) as salesman, num as salesmanid\n      from dimensions where dimensioncode IN (102)";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();

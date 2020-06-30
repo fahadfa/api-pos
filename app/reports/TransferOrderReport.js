@@ -55,21 +55,21 @@ var TransferOrderReport = /** @class */ (function () {
     }
     TransferOrderReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, status_1, data_1, shipOrderData, salesLine, _a, error_1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var id, status_1, data_1, shipOrderData, salesLine, error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        _b.trys.push([0, 5, , 6]);
+                        _a.trys.push([0, 4, , 5]);
                         console.log("TransferOrderReport");
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
                     case 1:
-                        data_1 = _b.sent();
+                        data_1 = _a.sent();
                         data_1 = data_1.length >= 0 ? data_1[0] : {};
                         data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
                         return [4 /*yield*/, this.db.query("select salesid, custaccount,transkind, inventlocationid from salestable where intercompanyoriginalsalesid = '" + id + "'")];
                     case 2:
-                        shipOrderData = _b.sent();
+                        shipOrderData = _a.sent();
                         console.log(shipOrderData);
                         // shipOrderData = shipOrderData.length > 0 ? shipOrderData[0] : null
                         if (data_1.status != "POSTED" && shipOrderData.length != 0) {
@@ -77,22 +77,19 @@ var TransferOrderReport = /** @class */ (function () {
                         }
                         return [4 /*yield*/, this.salesline_query_to_data(id)];
                     case 3:
-                        salesLine = _b.sent();
+                        salesLine = _a.sent();
                         // salesLine = salesLine.length > 0 ? salesLine : [];
                         data_1.salesLine = salesLine;
                         data_1.quantity = 0;
                         data_1.salesLine.map(function (v) {
                             data_1.quantity += parseInt(v.salesQty);
                         });
-                        _a = data_1;
-                        return [4 /*yield*/, QRCode.toDataURL(JSON.stringify(data_1))];
-                    case 4:
-                        _a.qr = _b.sent();
+                        // data.qr =  await QRCode.toDataURL(JSON.stringify(data));
                         return [2 /*return*/, data_1];
-                    case 5:
-                        error_1 = _b.sent();
+                    case 4:
+                        error_1 = _a.sent();
                         throw error_1;
-                    case 6: return [2 /*return*/];
+                    case 5: return [2 /*return*/];
                 }
             });
         });
@@ -149,7 +146,7 @@ var TransferOrderReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        salesQuery = "\n            select\n            distinct\n            ROW_NUMBER()  OVER (ORDER BY  ln.salesid) As \"sNo\",\n            ln.itemid as itemid,\n            ln.inventsizeid as inventsizeid,\n            ln.configid as configid,\n            to_char(ln.salesqty,'FM999,999,999,999D') as \"salesQty\",\n            b.itemname as \"prodNameAr\",\n            b.namealias as \"prodNameEn\",\n            c.name as \"colNameAr\",\n            c.name as \"colNameEn\",\n            s.description as \"sizeNameEn\",\n            s.name as \"sizeNameAr\"\n            from salesline ln\n            inner join inventtable b on b.itemid = ln.itemid\n            inner join configtable c on c.configid = ln.configid and c.itemid = ln.itemid\n            inner join inventsize s on s.inventsizeid=ln.inventsizeid and s.itemid = ln.itemid\n            where ln.salesid = '" + id + "'\n            ";
+                        salesQuery = "\n            select\n            distinct\n            ROW_NUMBER()  OVER (ORDER BY  ln.salesid) As \"sNo\",\n            ln.itemid as itemid,\n            ln.inventsizeid as inventsizeid,\n            ln.configid as configid,\n            ln.colorantid,\n            to_char(ln.salesqty,'FM999,999,999,999D') as \"salesQty\",\n            b.itemname as \"prodNameAr\",\n            b.namealias as \"prodNameEn\",\n            c.name as \"colNameAr\",\n            c.name as \"colNameEn\",\n            s.description as \"sizeNameEn\",\n            s.name as \"sizeNameAr\"\n            from salesline ln\n            inner join inventtable b on b.itemid = ln.itemid\n            inner join configtable c on c.configid = ln.configid and c.itemid = ln.itemid\n            inner join inventsize s on s.inventsizeid=ln.inventsizeid and s.itemid = ln.itemid\n            where ln.salesid = '" + id + "'\n            ";
                         return [4 /*yield*/, this.db.query(salesQuery)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
