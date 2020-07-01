@@ -567,7 +567,8 @@ var SalesTableService = /** @class */ (function () {
                                 else if (item.transkind == "TRANSFERORDER") {
                                     if (item.slSalesId != null) {
                                         if (item.custAccount == _this.sessionInfo.inventlocationid &&
-                                            (item.status != "CREATED" || item.status != "SAVED")) {
+                                            item.status != "CREATED" &&
+                                            item.status != "SAVED") {
                                             newData_1.push(item);
                                         }
                                         else if (item.inventLocationId == _this.sessionInfo.inventlocationid) {
@@ -590,7 +591,8 @@ var SalesTableService = /** @class */ (function () {
                             }
                             else {
                                 if (item.custAccount == _this.sessionInfo.inventlocationid &&
-                                    (item.status != "CREATED" || item.status != "SAVED")) {
+                                    item.status != "CREATED" &&
+                                    item.status != "SAVED") {
                                     newData_1.push(item);
                                 }
                                 else if (item.inventLocationId == _this.sessionInfo.inventlocationid) {

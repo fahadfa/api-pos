@@ -273,6 +273,7 @@ var InventtransService = /** @class */ (function () {
                         sizes_1 = [];
                         result_2 = [];
                         salesLine.map(function (v) {
+                            // console.log(v);
                             if (v.itemid && v.configId && v.inventsizeid) {
                                 items_1.push(v.itemid), colors_1.push(v.configId), sizes_1.push(v.inventsizeid);
                             }

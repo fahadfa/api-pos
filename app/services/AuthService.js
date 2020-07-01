@@ -250,7 +250,7 @@ var AuthService = /** @class */ (function () {
     };
     AuthService.prototype.resetPassword = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var profileObj, error_4;
+            var profileObj, data, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -273,8 +273,8 @@ var AuthService = /** @class */ (function () {
                         profileObj.resetkey = null;
                         return [4 /*yield*/, this.userinfoDAO.save(profileObj)];
                     case 4:
-                        _a.sent();
-                        return [3 /*break*/, 6];
+                        data = _a.sent();
+                        return [2 /*return*/, { message: "SAVED_SUCCESSFULLY", status: 1 }];
                     case 5: throw { message: "INVALID_TOKEN", status: 0 };
                     case 6: return [2 /*return*/, { message: "PASSWORD_UPDATED", status: 0 }];
                     case 7:
