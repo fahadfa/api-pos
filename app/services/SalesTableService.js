@@ -566,7 +566,8 @@ var SalesTableService = /** @class */ (function () {
                                 }
                                 else if (item.transkind == "TRANSFERORDER") {
                                     if (item.slSalesId != null) {
-                                        if (item.custAccount == _this.sessionInfo.inventlocationid && item.status != "CREATED") {
+                                        if (item.custAccount == _this.sessionInfo.inventlocationid &&
+                                            (item.status != "CREATED" || item.status != "SAVED")) {
                                             newData_1.push(item);
                                         }
                                         else if (item.inventLocationId == _this.sessionInfo.inventlocationid) {
@@ -588,7 +589,8 @@ var SalesTableService = /** @class */ (function () {
                                 }
                             }
                             else {
-                                if (item.custAccount == _this.sessionInfo.inventlocationid && item.status != "CREATED") {
+                                if (item.custAccount == _this.sessionInfo.inventlocationid &&
+                                    (item.status != "CREATED" || item.status != "SAVED")) {
                                     newData_1.push(item);
                                 }
                                 else if (item.inventLocationId == _this.sessionInfo.inventlocationid) {
@@ -1497,7 +1499,7 @@ var SalesTableService = /** @class */ (function () {
                         batch.itemid = item.itemid;
                         batch.transrefid = item.salesId;
                         batch.invoiceid = item.salesId;
-                        batch.batchno = batch.batchNo;
+                        batch.batchno = batch.batchNo ? batch.batchNo : batch.batchno;
                         batch.configid = item.configId;
                         batch.inventsizeid = item.inventsizeid;
                         batch.inventlocationid = this.sessionInfo.inventlocationid;
@@ -2030,7 +2032,7 @@ var SalesTableService = /** @class */ (function () {
                                             batches.transrefid = reqData.interCompanyOriginalSalesId;
                                             batches.invoiceid = item.salesId;
                                             batches.qty = reqData.transkind == "PURCHASERETURN" ? -batches.returnQuantity : batches.returnQuantity;
-                                            batches.batchno = batches.batchno;
+                                            batches.batchno = batches.batchNo ? batches.batchNo : batches.batchno;
                                             batches.configid = item.configId;
                                             batches.inventsizeid = item.inventsizeid;
                                             batches.dataareaid = this.sessionInfo.dataareaid;
@@ -2136,7 +2138,7 @@ var SalesTableService = /** @class */ (function () {
                                     : reqData.salesId;
                                 batches.invoiceid = reqData.salesId;
                                 batches.qty = -parseInt(batches.quantity);
-                                batches.batchno = batches.batchNo;
+                                batches.batchno = batches.batchNo ? batches.batchNo : batches.batchno;
                                 batches.configid = item.configId;
                                 batches.inventsizeid = item.inventsizeid;
                                 batches.inventlocationid = reqData.inventLocationId;
@@ -2304,7 +2306,7 @@ var SalesTableService = /** @class */ (function () {
                                                 : reqData.salesId;
                                             batches_8.invoiceid = reqData.salesId;
                                             batches_8.qty = parseInt(batches_8.quantity);
-                                            batches_8.batchno = batches_8.batchNo;
+                                            batches_8.batchno = batches_8.batchNo ? batches_8.batchNo : batches_8.batchno;
                                             batches_8.configid = item.configId;
                                             batches_8.inventsizeid = item.inventsizeid;
                                             batches_8.inventlocationid = reqData.inventLocationId;
@@ -2398,7 +2400,7 @@ var SalesTableService = /** @class */ (function () {
                             : reqData.salesId;
                         batches.invoiceid = reqData.salesId;
                         batches.qty = reqData.status == "PURCHASEORDER" ? parseInt(batches.quantity) : parseInt(batches.quantity);
-                        batches.batchno = batches.batchNo;
+                        batches.batchno = batches.batchNo ? batches.batchNo : batches.batchno;
                         batches.configid = item.configId;
                         batches.inventsizeid = item.inventsizeid;
                         batches.inventlocationid = this.sessionInfo.inventlocationid;

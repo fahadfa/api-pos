@@ -179,7 +179,7 @@ var OrderShipmentReport = /** @class */ (function () {
                                 height: 180,
                                 color: "#000000",
                                 background: "#ffffff",
-                                ecl: "L",
+                                ecl: "M",
                             })];
                     case 1:
                         QRSVG = _a.sent();

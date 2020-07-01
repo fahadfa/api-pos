@@ -502,7 +502,7 @@ var DiscountService = /** @class */ (function () {
                                         grossTotal += (parseFloat(item.price) + parseFloat(item.colorantprice)) * parseInt(item.quantity);
                                         return [3 /*break*/, 23];
                                     case 11:
-                                        if (!isTotalDiscount) return [3 /*break*/, 13];
+                                        if (!(isTotalDiscount && !isMultiLineDiscount)) return [3 /*break*/, 13];
                                         return [4 /*yield*/, this_1.totalDiscount(item, reqData, checkDiscounts, totalPercentage)];
                                     case 12:
                                         _a.sent();
@@ -514,7 +514,7 @@ var DiscountService = /** @class */ (function () {
                                         });
                                         _a.label = 13;
                                     case 13:
-                                        if (!(isLineDiscount && !isNoDiscount)) return [3 /*break*/, 15];
+                                        if (!(isLineDiscount && !isNoDiscount && !isMultiLineDiscount)) return [3 /*break*/, 15];
                                         return [4 /*yield*/, this_1.lineDiscount(item, reqData, checkDiscounts, linePercentage)];
                                     case 14:
                                         _a.sent();
@@ -543,7 +543,7 @@ var DiscountService = /** @class */ (function () {
                                         item.multilnPercent;
                                         _a.label = 18;
                                     case 18:
-                                        if (!(isPromotionDiscount && !isNoDiscount)) return [3 /*break*/, 20];
+                                        if (!(isPromotionDiscount && !isNoDiscount && !isMultiLineDiscount)) return [3 /*break*/, 20];
                                         if (!(promotionalDiscountAmount > 0)) return [3 /*break*/, 20];
                                         // console.log(promotionalDiscountAmount);
                                         item.promotionalDiscount = promotionalDiscountAmount;
@@ -564,7 +564,7 @@ var DiscountService = /** @class */ (function () {
                                         });
                                         _a.label = 20;
                                     case 20:
-                                        if (!(isBuyOneGetOneDiscount && !isNoDiscount)) return [3 /*break*/, 22];
+                                        if (!(isBuyOneGetOneDiscount && !isNoDiscount && !isMultiLineDiscount)) return [3 /*break*/, 22];
                                         item.buyOneGetOneDiscount = buy_one_get_one;
                                         return [4 /*yield*/, this_1.buyOneGetOneDiscount(item, reqData)];
                                     case 21:

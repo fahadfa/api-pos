@@ -319,7 +319,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                     parseFloat(prevReturnOrderAmounts.designServiceRedeemAmount);
                         }
                         else {
-                            cashAmount = parseFloat(salesOrderData.cashAmount);
+                            cashAmount = parseFloat(salesOrderData.cashAmount) + parseFloat(salesOrderData.cardAmount);
                             redeemAmount = parseFloat(salesOrderData.redeemAmount);
                             designServiceRedeemAmount = parseFloat(salesOrderData.designServiceRedeemAmount);
                         }

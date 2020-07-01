@@ -180,7 +180,8 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 19, , 20]);
-                        if (!data.inventLocationId) return [3 /*break*/, 17];
+                        console.log(data);
+                        if (!(data.inventLocationId == this.sessionInfo.inventlocationid)) return [3 /*break*/, 17];
                         return [4 /*yield*/, this.salesTableDAO.findOne({ interCompanyOriginalSalesId: data.salesId })];
                     case 1:
                         salesData = _a.sent();
@@ -202,8 +203,6 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         if (!(seqData && seqData.format)) return [3 /*break*/, 6];
                         hashString = seqData.format.slice(seqData.format.indexOf("#"), seqData.format.lastIndexOf("#") + 1);
                         date = new Date(seqData.lastmodifieddate).toLocaleString();
-                        console.log(date);
-                        console.log(seqData);
                         prevYear = new Date(seqData.lastmodifieddate).getFullYear().toString().substr(2, 2);
                         year = new Date().getFullYear().toString().substr(2, 2);
                         seqData.nextrec = prevYear == year ? seqData.nextrec : "000001";
@@ -241,6 +240,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                             },
                         ];
                         batches = item.batches;
+                        console.log("==========================================================", batches);
                         batches.invoiceid = salesData.salesId;
                         batches.salesLineId = item.id;
                         return [4 /*yield*/, this.salesLineDAO.save(item)];
@@ -255,7 +255,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         return [3 /*break*/, 11];
                     case 15: return [2 /*return*/, { status: 1, id: salesData.salesId, message: Props_1.Props.SAVED_SUCCESSFULLY }];
                     case 16: return [3 /*break*/, 18];
-                    case 17: throw { status: 0, message: "INVALID_DATA" };
+                    case 17: throw { status: 0, message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
                     case 18: return [3 /*break*/, 20];
                     case 19:
                         error_3 = _a.sent();
@@ -308,11 +308,13 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
     };
     TransferOrderFromAxaptaService.prototype.qrToData = function (qrStringList) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataList, pageCount, _i, qrStringList_1, qrString, list, header, warehousearray, pages, salestable, salesLines, _a, _b, item, salesline, lineArray, batches, salesData, salesLine_1, i_1;
+            var dataList, pageCount, salesId, scannedPages_1, _i, qrStringList_1, qrString, list, header, warehousearray, pages, salestable, salesLines, _a, _b, item, salesline, lineArray, batches, salesData, salesLine_1, i_1, totalPages, missingPages_1, i;
             return __generator(this, function (_c) {
                 try {
                     dataList = [];
                     pageCount = 0;
+                    salesId = "0";
+                    scannedPages_1 = [];
                     for (_i = 0, qrStringList_1 = qrStringList; _i < qrStringList_1.length; _i++) {
                         qrString = qrStringList_1[_i];
                         list = qrString.split("|");
@@ -326,6 +328,13 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                             inventLocationId: warehousearray[2],
                             page: pages[0],
                         };
+                        scannedPages_1.push(parseInt(salestable.page));
+                        if (salesId == "0") {
+                            salesId = salestable.salesId;
+                        }
+                        else if (salesId != salestable.salesId) {
+                            throw { message: "PLEASE_SCAN_ALL_PAGES_WITH_SAME_ORDER_ID" };
+                        }
                         salesLines = [];
                         for (_a = 0, _b = list[1].split("*"); _a < _b.length; _a++) {
                             item = _b[_a];
@@ -393,10 +402,23 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         salesData.dataareaid = this.sessionInfo.dataareaid;
                         salesData.salesType = 4;
                         salesData.salesLines = salesLine_1;
+                        console.log(scannedPages_1);
                         return [2 /*return*/, salesData];
                     }
                     else {
-                        throw { message: "PLEASE_SCAN_ALL_PAGES" };
+                        console.log(scannedPages_1);
+                        totalPages = [];
+                        missingPages_1 = [];
+                        for (i = 1; i <= pageCount; i++) {
+                            totalPages.push(i);
+                        }
+                        totalPages.map(function (v) {
+                            if (!scannedPages_1.includes(v)) {
+                                missingPages_1.push(v);
+                            }
+                        });
+                        console.log(totalPages, scannedPages_1);
+                        throw { message: "PLEASE_SCAN_ALL_PAGES", missingPages: missingPages_1 };
                     }
                 }
                 catch (err) {
