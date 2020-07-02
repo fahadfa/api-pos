@@ -1364,7 +1364,7 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.stockOnHandCheck = function (salesLine, reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var canConvert_1, colors_2, items_2, sizes_2, itemString_1, itemsInStock_1;
+            var canConvert_1, colors_2, items_2, sizes_2, itemString_1, groupSalesLines, newSalesline_1, itemsInStock_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -1375,7 +1375,16 @@ var SalesTableService = /** @class */ (function () {
                         items_2 = [];
                         sizes_2 = [];
                         itemString_1 = "";
-                        salesLine.map(function (v) {
+                        groupSalesLines = this.groupBy(salesLine, function (item) {
+                            return [item.itemid, item.configId, item.inventsizeid];
+                        });
+                        newSalesline_1 = [];
+                        groupSalesLines.forEach(function (groupitem) {
+                            var qty = groupitem.reduce(function (res, item) { return res + parseInt(item.salesQty); }, 0);
+                            groupitem[0].salesQty = Math.abs(qty);
+                            newSalesline_1.push(__assign({}, groupitem[0]));
+                        });
+                        newSalesline_1.map(function (v) {
                             if (v.itemid && v.configId && v.inventsizeid) {
                                 items_2.push(v.itemid), colors_2.push(v.configId), sizes_2.push(v.inventsizeid);
                             }
@@ -1386,7 +1395,7 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.checkItems(this.sessionInfo.inventlocationid, items_2, colors_2, sizes_2)];
                     case 1:
                         itemsInStock_1 = _a.sent();
-                        salesLine.map(function (v) {
+                        newSalesline_1.map(function (v) {
                             var index = itemsInStock_1.findIndex(function (value) {
                                 return value.itemid.toLowerCase() == v.itemid.toLowerCase() &&
                                     value.configid.toLowerCase() == v.configId.toLowerCase() &&
@@ -1404,7 +1413,7 @@ var SalesTableService = /** @class */ (function () {
                             }
                         });
                         if (!canConvert_1) {
-                            throw { message: "CANNOT_CREATE_SALESORDER" };
+                            throw { message: "SOME_OF_THE_ITEMS_ARE_OUT_OF_STOCK" };
                         }
                         _a.label = 2;
                     case 2: return [2 /*return*/];

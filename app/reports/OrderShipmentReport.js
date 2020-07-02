@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -54,23 +65,36 @@ var OrderShipmentReport = /** @class */ (function () {
     }
     OrderShipmentReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, status, data, batches, _i, batches_1, item, salesLine, list, chunkArray, newSalesline, sNo, quantity, _loop_1, this_1, _a, list_1, val;
+            var id, status_1, data_1, salesLine, list, chunkArray, cond, batches, _i, batches_1, item, newSalesline, sNo_1, quantity, _loop_1, this_1, _a, list_1, val, error_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        // try {
+                        _b.trys.push([0, 12, , 13]);
                         console.log("OrderShipmentReport===================");
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
                     case 1:
-                        data = _b.sent();
+                        data_1 = _b.sent();
                         // console.log("----------------", data);
-                        data = data.length >= 1 ? data[0] : {};
-                        data.originalPrinted = data.originalPrinted ? data.originalPrinted : false;
-                        if (!(data.status != "POSTED")) return [3 /*break*/, 3];
+                        data_1 = data_1.length >= 1 ? data_1[0] : {};
+                        data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
+                        return [4 /*yield*/, this.salesline_query_to_data(id)];
+                    case 2:
+                        salesLine = _b.sent();
+                        list = [];
+                        return [4 /*yield*/, this.chunkArray(salesLine, 10)];
+                    case 3:
+                        chunkArray = _b.sent();
+                        // console.log(chunkArray);
+                        list = list.concat(chunkArray);
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 7];
+                        return [4 /*yield*/, this.stockOnHandCheck(salesLine, data_1.inventLocationId)];
+                    case 4:
+                        cond = _b.sent();
+                        if (!cond) return [3 /*break*/, 6];
                         this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED", new Date().toISOString());
                         return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
-                    case 2:
+                    case 5:
                         batches = _b.sent();
                         for (_i = 0, batches_1 = batches; _i < batches_1.length; _i++) {
                             item = batches_1[_i];
@@ -78,18 +102,11 @@ var OrderShipmentReport = /** @class */ (function () {
                             // this.inventTransDAO.save(item);
                             this.updateInventoryService.updateInventtransTable(item);
                         }
-                        _b.label = 3;
-                    case 3: return [4 /*yield*/, this.salesline_query_to_data(id)];
-                    case 4:
-                        salesLine = _b.sent();
-                        list = [];
-                        return [4 /*yield*/, this.chunkArray(salesLine, 10)];
-                    case 5:
-                        chunkArray = _b.sent();
-                        // console.log(chunkArray);
-                        list = list.concat(chunkArray);
+                        return [3 /*break*/, 7];
+                    case 6: throw { message: "SOME_OF_THE_ITEMS_ARE_OUT_OF_STOCK" };
+                    case 7:
                         newSalesline = [];
-                        sNo = 1;
+                        sNo_1 = 1;
                         quantity = 0;
                         _loop_1 = function (val) {
                             var lines, qrString, _a;
@@ -97,28 +114,28 @@ var OrderShipmentReport = /** @class */ (function () {
                                 switch (_b.label) {
                                     case 0:
                                         lines = {
-                                            salesId: data.salesId,
+                                            salesId: data_1.salesId,
                                             quantity: 0,
-                                            custAccount: data.custAccount,
-                                            status: data.status,
-                                            transkind: data.transkind,
-                                            createddatetime: data.createddatetime,
-                                            originalPrinted: data.originalPrinted,
-                                            inventLocationId: data.inventLocationId,
-                                            fwnamealias: data.fwnamealias,
-                                            fwname: data.fwname,
-                                            twnamealias: data.twnamealias,
-                                            twname: data.twname,
-                                            interCompanyOriginalSalesId: data.interCompanyOriginalSalesId,
+                                            custAccount: data_1.custAccount,
+                                            status: data_1.status,
+                                            transkind: data_1.transkind,
+                                            createddatetime: data_1.createddatetime,
+                                            originalPrinted: data_1.originalPrinted,
+                                            inventLocationId: data_1.inventLocationId,
+                                            fwnamealias: data_1.fwnamealias,
+                                            fwname: data_1.fwname,
+                                            twnamealias: data_1.twnamealias,
+                                            twname: data_1.twname,
+                                            interCompanyOriginalSalesId: data_1.interCompanyOriginalSalesId,
                                             page: 1,
                                             totalPages: list.length,
                                             lines: [],
                                         };
                                         val.map(function (v) {
                                             lines.quantity += parseInt(v.salesQty);
-                                            v.sNo = sNo;
+                                            v.sNo = sNo_1;
                                             lines.lines.push(v);
-                                            sNo += 1;
+                                            sNo_1 += 1;
                                         });
                                         lines.page = list.indexOf(val) + 1;
                                         lines.quantity = lines.quantity + quantity;
@@ -137,30 +154,34 @@ var OrderShipmentReport = /** @class */ (function () {
                         };
                         this_1 = this;
                         _a = 0, list_1 = list;
-                        _b.label = 6;
-                    case 6:
-                        if (!(_a < list_1.length)) return [3 /*break*/, 9];
-                        val = list_1[_a];
-                        return [5 /*yield**/, _loop_1(val)];
-                    case 7:
-                        _b.sent();
                         _b.label = 8;
                     case 8:
-                        _a++;
-                        return [3 /*break*/, 6];
+                        if (!(_a < list_1.length)) return [3 /*break*/, 11];
+                        val = list_1[_a];
+                        return [5 /*yield**/, _loop_1(val)];
                     case 9:
+                        _b.sent();
+                        _b.label = 10;
+                    case 10:
+                        _a++;
+                        return [3 /*break*/, 8];
+                    case 11:
                         // console.log("#####", newSalesline, "######");
-                        data.salesLine = newSalesline;
-                        data.quantity = 0;
+                        data_1.salesLine = newSalesline;
+                        data_1.quantity = 0;
                         salesLine.map(function (v) {
-                            data.quantity += parseInt(v.quantity);
+                            data_1.quantity += parseInt(v.quantity);
                         });
                         // console.log(App.DateNow(), new Date(App.DateNow()), new Date().toISOString());
                         // console.log("---------", data);
                         // let qrString = await this.dataToQrString(data);
                         // console.log(qrString);
                         //data.qr = await QRCode.toDataURL("{name: 'naveen'}");
-                        return [2 /*return*/, data];
+                        return [2 /*return*/, data_1];
+                    case 12:
+                        error_1 = _b.sent();
+                        throw error_1;
+                    case 13: return [2 /*return*/];
                 }
             });
         });
@@ -325,6 +346,70 @@ var OrderShipmentReport = /** @class */ (function () {
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
+        });
+    };
+    OrderShipmentReport.prototype.stockOnHandCheck = function (salesLine, inventlocationid) {
+        return __awaiter(this, void 0, void 0, function () {
+            var canConvert, colors, items, sizes, groupSalesLines, newSalesline, itemsInStock;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        canConvert = true;
+                        colors = [];
+                        items = [];
+                        sizes = [];
+                        groupSalesLines = this.groupBy(salesLine, function (item) {
+                            return [item.itemid, item.configid, item.inventsizeid, item.batchno];
+                        });
+                        newSalesline = [];
+                        groupSalesLines.forEach(function (groupitem) {
+                            var qty = groupitem.reduce(function (res, item) { return res + parseInt(item.salesQty); }, 0);
+                            groupitem[0].salesQty = Math.abs(qty);
+                            newSalesline.push(__assign({}, groupitem[0]));
+                        });
+                        newSalesline.map(function (v) {
+                            if (v.itemid && v.configid && v.inventsizeid) {
+                                items.push(v.itemid), colors.push(v.configid), sizes.push(v.inventsizeid);
+                            }
+                            else {
+                                return false;
+                            }
+                        });
+                        return [4 /*yield*/, this.rawQuery.checkItems(inventlocationid, items, colors, sizes)];
+                    case 1:
+                        itemsInStock = _a.sent();
+                        newSalesline.map(function (v) {
+                            var index = itemsInStock.findIndex(function (value) {
+                                return value.itemid.toLowerCase() == v.itemid.toLowerCase() &&
+                                    value.configid.toLowerCase() == v.configid.toLowerCase() &&
+                                    value.inventsizeid.toLowerCase() == v.inventsizeid.toLowerCase();
+                            });
+                            if (index >= 0) {
+                                if (parseInt(v.salesQty) > parseInt(itemsInStock[index].qty)) {
+                                    canConvert = canConvert == true ? false : false;
+                                }
+                            }
+                            else {
+                                canConvert = canConvert == true ? false : false;
+                            }
+                        });
+                        if (!canConvert) {
+                            return [2 /*return*/, false];
+                        }
+                        return [2 /*return*/, canConvert];
+                }
+            });
+        });
+    };
+    OrderShipmentReport.prototype.groupBy = function (array, f) {
+        var groups = {};
+        array.forEach(function (o) {
+            var group = JSON.stringify(f(o));
+            groups[group] = groups[group] || [];
+            groups[group].push(o);
+        });
+        return Object.keys(groups).map(function (group) {
+            return groups[group];
         });
     };
     return OrderShipmentReport;
