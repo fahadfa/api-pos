@@ -8,7 +8,7 @@ exports.dbOptions = {
     port: 5432,
     username: "postgres",
     password: "Mpos1234",
-    database: "mpso_db",
+    database: "mpos_db",
     logging: true,
     synchronize: false,
     entities: [__dirname + "/../entities/**/*{.ts,.js}"],
