@@ -49,31 +49,31 @@ var DiscountService = /** @class */ (function () {
     }
     DiscountService.prototype.getDiscount = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var result, checkCustomer, discountBlockItems, vendorCustomerAccount, vatData, discountBlockItemsArray_1, sabicCustomers, ARAMKO_THAKAKOM_DISCOUNT, aramkoTahkomDiscounts, error_1;
+            var result, checkCustomer, discountBlockItems, vendorCustomerAccount, defaultCustomer, vatData, discountBlockItemsArray_1, sabicCustomers, ARAMKO_THAKAKOM_DISCOUNT, aramkoTahkomDiscounts, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 20, , 21]);
+                        _a.trys.push([0, 23, , 24]);
                         result = void 0;
                         checkCustomer = void 0;
                         discountBlockItems = void 0;
                         vendorCustomerAccount = void 0;
                         reqData.grossTotal = 0;
+                        return [4 /*yield*/, this.custtableDAO.entity(this.sessionInfo.defaultcustomerid)];
+                    case 1:
+                        defaultCustomer = _a.sent();
                         reqData.selectedItems.map(function (v) {
                             reqData.grossTotal += (parseFloat(v.price) + parseFloat(v.colorantprice)) * parseFloat(v.quantity);
                         });
-                        if (!(reqData.orderType == "purchase")) return [3 /*break*/, 2];
+                        if (!(reqData.orderType == "purchase")) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.rawQuery.getVendorCustomerAccount(reqData.custaccount)];
-                    case 1:
+                    case 2:
                         vendorCustomerAccount = _a.sent();
                         reqData.custaccount = vendorCustomerAccount;
-                        _a.label = 2;
-                    case 2:
-                        if (!!reqData.custaccount) return [3 /*break*/, 4];
-                        return [4 /*yield*/, this.custtableDAO.entity(this.sessionInfo.defaultcustomerid)];
+                        _a.label = 3;
                     case 3:
-                        checkCustomer = _a.sent();
-                        console.log(checkCustomer);
+                        if (!!reqData.custaccount) return [3 /*break*/, 4];
+                        checkCustomer = defaultCustomer;
                         reqData.currency = checkCustomer.currency;
                         reqData.custaccount = checkCustomer.accountnum;
                         reqData.taxgroup = checkCustomer.taxgroup;
@@ -99,20 +99,28 @@ var DiscountService = /** @class */ (function () {
                         reqData.paymtermid = checkCustomer.paymtermid;
                         reqData.custtype = checkCustomer.custtype;
                         reqData.custgroup = checkCustomer.custgroup;
-                        return [4 /*yield*/, this.rawQuery.getCustomerTax(checkCustomer.taxgroup)];
+                        vatData = void 0;
+                        if (!(reqData.walkincustomer == true)) return [3 /*break*/, 8];
+                        return [4 /*yield*/, this.rawQuery.getCustomerTax(defaultCustomer.taxgroup)];
                     case 7:
                         vatData = _a.sent();
-                        reqData.vat = vatData ? vatData.vat : 5;
+                        return [3 /*break*/, 10];
+                    case 8: return [4 /*yield*/, this.rawQuery.getCustomerTax(checkCustomer.taxgroup)];
+                    case 9:
+                        vatData = _a.sent();
+                        _a.label = 10;
+                    case 10:
+                        reqData.vat = vatData ? vatData.vat : 15;
                         reqData.vat = parseFloat(reqData.vat);
                         return [4 /*yield*/, this.rawQuery.getDiscountBlockItems(checkCustomer.custgroup, checkCustomer.accountnum, this.sessionInfo.inventlocationid)];
-                    case 8:
+                    case 11:
                         discountBlockItems = _a.sent();
                         discountBlockItemsArray_1 = [];
                         discountBlockItems.map(function (v) {
                             discountBlockItemsArray_1.push(v.itemid);
                         });
                         return [4 /*yield*/, this.sessionInfo.sabiccustomers];
-                    case 9:
+                    case 12:
                         sabicCustomers = _a.sent();
                         if (sabicCustomers) {
                             if (sabicCustomers.split(",").includes(reqData.custaccount)) {
@@ -124,40 +132,40 @@ var DiscountService = /** @class */ (function () {
                         }
                         ARAMKO_THAKAKOM_DISCOUNT = false;
                         return [4 /*yield*/, this.rawQuery.getAramkoTahkomDiscounts(reqData.custaccount, this.sessionInfo.dataareaid)];
-                    case 10:
+                    case 13:
                         aramkoTahkomDiscounts = _a.sent();
                         if (aramkoTahkomDiscounts.length > 0) {
                             ARAMKO_THAKAKOM_DISCOUNT = true;
                         }
                         return [4 /*yield*/, this.allocateData(reqData)];
-                    case 11:
+                    case 14:
                         _a.sent();
                         console.log(reqData.selectedItems);
-                        if (!(reqData.selectedItems && reqData.selectedItems.length > 0)) return [3 /*break*/, 18];
-                        if (!sabicCustomers) return [3 /*break*/, 13];
+                        if (!(reqData.selectedItems && reqData.selectedItems.length > 0)) return [3 /*break*/, 21];
+                        if (!sabicCustomers) return [3 /*break*/, 16];
                         return [4 /*yield*/, this.sabicCustomersDiscount(reqData, discountBlockItemsArray_1)];
-                    case 12:
+                    case 15:
                         result = _a.sent();
-                        return [3 /*break*/, 17];
-                    case 13:
-                        if (!ARAMKO_THAKAKOM_DISCOUNT) return [3 /*break*/, 15];
-                        return [4 /*yield*/, this.aramkoTahkomDiscount(reqData, aramkoTahkomDiscounts, discountBlockItemsArray_1)];
-                    case 14:
-                        result = _a.sent();
-                        return [3 /*break*/, 17];
-                    case 15: return [4 /*yield*/, this.calDiscount(reqData, discountBlockItemsArray_1)];
+                        return [3 /*break*/, 20];
                     case 16:
+                        if (!ARAMKO_THAKAKOM_DISCOUNT) return [3 /*break*/, 18];
+                        return [4 /*yield*/, this.aramkoTahkomDiscount(reqData, aramkoTahkomDiscounts, discountBlockItemsArray_1)];
+                    case 17:
                         result = _a.sent();
-                        _a.label = 17;
-                    case 17: return [3 /*break*/, 19];
-                    case 18:
+                        return [3 /*break*/, 20];
+                    case 18: return [4 /*yield*/, this.calDiscount(reqData, discountBlockItemsArray_1)];
+                    case 19:
+                        result = _a.sent();
+                        _a.label = 20;
+                    case 20: return [3 /*break*/, 22];
+                    case 21:
                         result = reqData;
-                        _a.label = 19;
-                    case 19: return [2 /*return*/, result];
-                    case 20:
+                        _a.label = 22;
+                    case 22: return [2 /*return*/, result];
+                    case 23:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 21: return [2 /*return*/];
+                    case 24: return [2 /*return*/];
                 }
             });
         });
