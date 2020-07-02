@@ -132,7 +132,7 @@ var InventtransService = /** @class */ (function () {
     };
     InventtransService.prototype.getSelectedBatches = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var t0, data, result, new_data_1, error_4;
+            var t0, data, salesorderlines_1, returnorderlines_1, salesorderlinesresult, returnorderlinesresult, so_list_1, ro_list_1, resData_1, result, new_data_1, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -142,64 +142,129 @@ var InventtransService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.getSelectedBatches(params)];
                     case 1:
                         data = _a.sent();
+                        salesorderlines_1 = [];
+                        returnorderlines_1 = [];
                         data.map(function (v) {
                             v.itemid = v.itemid.toUpperCase();
                             v.configid = v.configid.toUpperCase();
                             v.inventsizeid = v.inventsizeid.toUpperCase();
+                            if (params.type == "SALESORDER") {
+                                if (parseInt(v.qty) > 0) {
+                                    returnorderlines_1.push(v);
+                                }
+                                else if (parseInt(v.qty) < 0) {
+                                    salesorderlines_1.push(v);
+                                }
+                            }
                         });
-                        result = void 0;
-                        if (params.type == "INVENTORYMOVEMENT") {
-                            result = this.groupBy(data, function (item) {
-                                return [
-                                    item.itemid,
-                                    item.batchno,
-                                    item.configid,
-                                    item.inventsizeid,
-                                    item.isItemFree,
-                                    item.colorantId,
-                                    item.salesLineId,
-                                ];
-                            });
-                        }
-                        else {
-                            result = this.groupBy(data, function (item) {
+                        if ((params.type = "SALESORDER")) {
+                            salesorderlinesresult = void 0;
+                            returnorderlinesresult = void 0;
+                            salesorderlinesresult = this.groupBy(salesorderlines_1, function (item) {
                                 return [item.itemid, item.batchno, item.configid, item.inventsizeid, item.isItemFree, item.colorantId];
                             });
-                        }
-                        new_data_1 = [];
-                        result.forEach(function (groupitem) {
-                            var qty = groupitem.reduce(function (res, item) { return res + parseInt(item.qty); }, 0);
-                            if (params.type == "SALESORDER" || params.type == "PURCHASERETURN" || params.type == "INVENTORYMOVEMENT") {
-                                if (qty <= 0 && params.type != "INVENTORYMOVEMENT") {
-                                    groupitem[0].qty = Math.abs(qty);
-                                    groupitem[0].returnQuantity = 0;
-                                    new_data_1.push(__assign({}, groupitem[0]));
-                                }
-                                else if (qty > 0 && params.type == "SALESORDER") {
-                                    groupitem[0].qty = Math.abs(qty);
-                                    groupitem[0].returnQuantity = 0;
-                                    new_data_1.push(__assign({}, groupitem[0]));
-                                }
-                                else if (params.type == "INVENTORYMOVEMENT") {
-                                    groupitem[0].qty = parseInt(qty);
-                                    groupitem[0].returnQuantity = 0;
-                                    new_data_1.push(__assign({}, groupitem[0]));
-                                }
+                            returnorderlinesresult = this.groupBy(returnorderlines_1, function (item) {
+                                return [item.itemid, item.batchno, item.configid, item.inventsizeid, item.isItemFree, item.colorantId];
+                            });
+                            so_list_1 = [];
+                            ro_list_1 = [];
+                            salesorderlinesresult.forEach(function (groupitem) {
+                                var qty = groupitem.reduce(function (res, item) { return res + parseInt(item.qty); }, 0);
+                                groupitem[0].qty = Math.abs(qty);
+                                groupitem[0].returnQuantity = 0;
+                                so_list_1.push(__assign({}, groupitem[0]));
+                            });
+                            returnorderlinesresult.forEach(function (groupitem) {
+                                var qty = groupitem.reduce(function (res, item) { return res + parseInt(item.qty); }, 0);
+                                groupitem[0].qty = Math.abs(qty);
+                                groupitem[0].returnQuantity = 0;
+                                ro_list_1.push(__assign({}, groupitem[0]));
+                            });
+                            if (ro_list_1.length > 0) {
+                                resData_1 = [];
+                                so_list_1.forEach(function (v) {
+                                    var ro_data = ro_list_1.find(function (i) {
+                                        return v.itemid == i.itemid &&
+                                            v.configid == i.configid &&
+                                            v.inventsizeid == i.inventsizeid &&
+                                            v.batchno == i.batchno &&
+                                            v.isItemFree == i.isItemFree &&
+                                            v.colorantId == i.colorantId;
+                                    });
+                                    console.log("=============1", ro_data, v.qty);
+                                    if (ro_data) {
+                                        if (v.qty > ro_data.qty) {
+                                            v.qty = v.qty - ro_data.qty;
+                                        }
+                                        else {
+                                            v.qty = 0;
+                                        }
+                                    }
+                                    console.log("==========3", v);
+                                    resData_1.push(v);
+                                });
+                                return [2 /*return*/, resData_1];
                             }
                             else {
-                                if (qty > 0) {
-                                    groupitem[0].qty = Math.abs(qty);
-                                    groupitem[0].returnQuantity = 0;
-                                    new_data_1.push(__assign({}, groupitem[0]));
-                                }
-                                else if (qty <= 0) {
-                                    groupitem[0].qty = Math.abs(qty);
-                                    groupitem[0].returnQuantity = 0;
-                                    new_data_1.push(__assign({}, groupitem[0]));
-                                }
+                                return [2 /*return*/, so_list_1];
                             }
-                        });
-                        return [2 /*return*/, new_data_1];
+                        }
+                        else {
+                            result = void 0;
+                            if (params.type == "INVENTORYMOVEMENT") {
+                                result = this.groupBy(data, function (item) {
+                                    return [
+                                        item.itemid,
+                                        item.batchno,
+                                        item.configid,
+                                        item.inventsizeid,
+                                        item.isItemFree,
+                                        item.colorantId,
+                                        item.salesLineId,
+                                    ];
+                                });
+                            }
+                            else {
+                                result = this.groupBy(data, function (item) {
+                                    return [item.itemid, item.batchno, item.configid, item.inventsizeid, item.isItemFree, item.colorantId];
+                                });
+                            }
+                            new_data_1 = [];
+                            result.forEach(function (groupitem) {
+                                var qty = groupitem.reduce(function (res, item) { return res + parseInt(item.qty); }, 0);
+                                if (params.type == "SALESORDER" || params.type == "PURCHASERETURN" || params.type == "INVENTORYMOVEMENT") {
+                                    if (qty <= 0 && params.type != "INVENTORYMOVEMENT") {
+                                        groupitem[0].qty = Math.abs(qty);
+                                        groupitem[0].returnQuantity = 0;
+                                        new_data_1.push(__assign({}, groupitem[0]));
+                                    }
+                                    else if (qty > 0 && params.type == "SALESORDER") {
+                                        groupitem[0].qty = Math.abs(qty);
+                                        groupitem[0].returnQuantity = 0;
+                                        new_data_1.push(__assign({}, groupitem[0]));
+                                    }
+                                    else if (params.type == "INVENTORYMOVEMENT") {
+                                        groupitem[0].qty = parseInt(qty);
+                                        groupitem[0].returnQuantity = 0;
+                                        new_data_1.push(__assign({}, groupitem[0]));
+                                    }
+                                }
+                                else {
+                                    if (qty > 0) {
+                                        groupitem[0].qty = Math.abs(qty);
+                                        groupitem[0].returnQuantity = 0;
+                                        new_data_1.push(__assign({}, groupitem[0]));
+                                    }
+                                    else if (qty <= 0) {
+                                        groupitem[0].qty = Math.abs(qty);
+                                        groupitem[0].returnQuantity = 0;
+                                        new_data_1.push(__assign({}, groupitem[0]));
+                                    }
+                                }
+                            });
+                            return [2 /*return*/, new_data_1];
+                        }
+                        return [3 /*break*/, 3];
                     case 2:
                         error_4 = _a.sent();
                         throw error_4;
