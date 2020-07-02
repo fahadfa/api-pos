@@ -157,7 +157,7 @@ var InventtransService = /** @class */ (function () {
                                 }
                             }
                         });
-                        if ((params.type = "SALESORDER")) {
+                        if (params.type == "SALESORDER") {
                             salesorderlinesresult = void 0;
                             returnorderlinesresult = void 0;
                             salesorderlinesresult = this.groupBy(salesorderlines_1, function (item) {
