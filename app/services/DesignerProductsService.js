@@ -67,21 +67,42 @@ var DesignerProductsService = /** @class */ (function () {
     };
     DesignerProductsService.prototype.search = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, error_2;
+            var data, vat_1, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
+                        _a.trys.push([0, 3, , 4]);
                         console.log(params);
                         params.dataareaid = this.sessionInfo.dataareaid;
                         return [4 /*yield*/, this.designerProductsDAO.search(params.dataareaid)];
                     case 1:
                         data = _a.sent();
-                        return [2 /*return*/, data];
+                        return [4 /*yield*/, this.gettax()];
                     case 2:
+                        vat_1 = _a.sent();
+                        data.map(function (v) {
+                            v.vat = vat_1;
+                        });
+                        return [2 /*return*/, data];
+                    case 3:
                         error_2 = _a.sent();
                         throw error_2;
-                    case 3: return [2 /*return*/];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    DesignerProductsService.prototype.gettax = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "select CAST(td.taxvalue AS INTEGER) as tax from custtable c\n        left join taxgroupdata tg on tg.taxgroup = c.taxgroup\n        left join taxdata td on td.taxcode = tg.taxcode where c.accountnum = '" + this.sessionInfo.defaultcustomerid + "' ";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, data.length > 0 ? data[0].tax : 15];
                 }
             });
         });

@@ -75,7 +75,7 @@ var LoadService = /** @class */ (function () {
                                 .join(",")
                             : null;
                         console.log(param);
-                        query = "select \n            c.accountnum, \n            c.name as name, \n            c.namealias, \n            c.address, \n            (CASE \n              WHEN c.phone='null' THEN NULL\n              ELSE c.phone\n          END\n           )as phone,\n            c.districtcode,\n            c.citycode, \n            c.rcusttype, \n            c.pricegroup,\n            c.inventlocation,\n            c.walkincustomer,\n            c.custgroup,\n            c.cashdisc,\n            c.salesgroup,\n            c.currency,\n            c.vendaccount,\n            c.vatnum,\n            c.countryregionid,\n            c.inventlocation,\n            c.email,\n            c.blocked,\n            c.taxgroup,\n            c.paymmode,\n            c.paymtermid,\n            c.creditmax,\n            c.bankaccount,\n            c.invoiceaddress,\n            c.city,\n            c.custtype,\n            c.walkincustomer,\n            c.dimension as regionid,\n            c.dimension2_ as departmentid,\n            c.dimension3_ as costcenterid,\n            c.dimension4_ as employeeid,\n            c.dimension5_ as projectid,\n            (CASE \n              WHEN c.dimension6_!='' THEN concat(d.num,' - ', d.description)\n              ELSE '" + (this.sessionInfo.salesmanid.length > 0 ? this.sessionInfo.salesmanid[0].salesman : null) + "'\n          END\n           ) as salesman,\n           (CASE \n            WHEN c.dimension6_!='' THEN concat(d.num)\n            ELSE '" + (this.sessionInfo.salesmanid.length > 0 ? this.sessionInfo.salesmanid[0].salesmanid : null) + "'\n        END\n         ) as salesmanid,\n           c.dimension7_ as brandid,\n           c.dimension8_ as productlineid\n           from custtable c\n           left join dimensions d on c.dimension6_ = d.num ";
+                        query = "select \n            c.accountnum, \n            c.name as name, \n            c.namealias, \n            c.address, \n            (CASE \n              WHEN c.phone='null' THEN NULL\n              ELSE c.phone\n          END\n           )as phone,\n            c.districtcode,\n            c.citycode, \n            c.rcusttype, \n            c.pricegroup,\n            c.inventlocation,\n            c.walkincustomer,\n            c.custgroup,\n            c.cashdisc,\n            c.salesgroup,\n            c.currency,\n            c.vendaccount,\n            c.vatnum,\n            c.countryregionid,\n            c.inventlocation,\n            c.email,\n            c.blocked,\n            c.taxgroup,\n            c.paymmode,\n            c.paymtermid,\n            c.creditmax,\n            c.bankaccount,\n            c.invoiceaddress,\n            c.city,\n            c.custtype,\n            CAST(td.taxvalue AS INTEGER) as tax,\n            c.walkincustomer,\n            c.dimension as regionid,\n            c.dimension2_ as departmentid,\n            c.dimension3_ as costcenterid,\n            c.dimension4_ as employeeid,\n            c.dimension5_ as projectid,\n            (CASE \n              WHEN c.dimension6_!='' THEN concat(d.num,' - ', d.description)\n              ELSE '" + (this.sessionInfo.salesmanid.length > 0 ? this.sessionInfo.salesmanid[0].salesman : null) + "'\n          END\n           ) as salesman,\n           (CASE \n            WHEN c.dimension6_!='' THEN concat(d.num)\n            ELSE '" + (this.sessionInfo.salesmanid.length > 0 ? this.sessionInfo.salesmanid[0].salesmanid : null) + "'\n        END\n         ) as salesmanid,\n           c.dimension7_ as brandid,\n           c.dimension8_ as productlineid\n           from custtable c\n           left join dimensions d on c.dimension6_ = d.num\n           left join taxgroupdata tg on tg.taxgroup = c.taxgroup\n           left join taxdata td on td.taxcode = tg.taxcode ";
                         if (param.key == "customer") {
                             query += "where (c.name ILike '%" + param.param + "%' or c.namealias ILike '%" + param.param + "%' or c.accountnum ILike '%" + param.param + "%' or c.phone ILike '%" + param.param + "%') and c.dataareaid='" + this.sessionInfo.dataareaid + "' ";
                         }
@@ -1700,6 +1700,21 @@ var LoadService = /** @class */ (function () {
                     },
                 ];
                 return [2 /*return*/, data];
+            });
+        });
+    };
+    LoadService.prototype.gettax = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "select CAST(td.taxvalue AS INTEGER) as tax from custtable c\n    left join taxgroupdata tg on tg.taxgroup = c.taxgroup\n    left join taxdata td on td.taxcode = tg.taxcode where c.accountnum = '" + this.sessionInfo.defaultcustomerid + "' ";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, data.length > 0 ? data[0].tax : 15];
+                }
             });
         });
     };
