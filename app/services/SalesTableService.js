@@ -1093,7 +1093,7 @@ var SalesTableService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 10, , 11]);
+                        _a.trys.push([0, 9, , 10]);
                         return [4 /*yield*/, this.salestableDAO.entity(data.salesId)];
                     case 1:
                         salesData = _a.sent();
@@ -1144,28 +1144,26 @@ var SalesTableService = /** @class */ (function () {
                         reqData.status = "CREATED";
                         reqData.inventLocationId = salesData.jazeeraWarehouse;
                         reqData.warehouse.inventLocationId = salesData.jazeeraWarehouse;
-                        return [4 /*yield*/, this.rawQuery.get_vedor_related_custaccount(salesData.custAccount)];
+                        return [4 /*yield*/, this.rawQuery.getCustomer(salesData.invoiceAccount)];
                     case 5:
                         custAccount = _a.sent();
-                        if (!custAccount) return [3 /*break*/, 8];
-                        return [4 /*yield*/, this.rawQuery.getCustomer(custAccount)];
-                    case 6:
-                        customer = _a.sent();
-                        reqData.custAccount = custAccount;
+                        if (!custAccount) return [3 /*break*/, 7];
+                        customer = custAccount;
+                        reqData.custAccount = custAccount.accountnum;
                         reqData.salesLine = salesData.salesLine;
                         reqData.payment = customer.paymtermid;
                         return [4 /*yield*/, this.save(reqData)];
-                    case 7:
+                    case 6:
                         data = _a.sent();
                         console.log(reqData);
                         data.message = "CONVERTED";
                         return [2 /*return*/, data];
-                    case 8: throw { message: "NO_VENDOR_FOR_CUSTOMER" };
-                    case 9: return [3 /*break*/, 11];
-                    case 10:
+                    case 7: throw { message: "NO_VENDOR_FOR_CUSTOMER" };
+                    case 8: return [3 /*break*/, 10];
+                    case 9:
                         error_8 = _a.sent();
                         throw { message: error_8 };
-                    case 11: return [2 /*return*/];
+                    case 10: return [2 /*return*/];
                 }
             });
         });

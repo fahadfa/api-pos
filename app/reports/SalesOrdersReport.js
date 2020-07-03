@@ -71,7 +71,7 @@ var SalesOrdersReport = /** @class */ (function () {
                             cashAmount: 0,
                             cardAmount: 0,
                             designServiceRedeemAmount: 0,
-                            redeemAmount: 0
+                            redeemAmount: 0,
                         };
                         data.map(function (v) {
                             resData_1.grossAmount += parseFloat(v.grossAmount);

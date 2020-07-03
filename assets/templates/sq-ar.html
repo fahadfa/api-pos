@@ -16,10 +16,11 @@
             width: 98%;
             direction: rtl;
         }
+
         thead {
             display: table-header-group;
         }
-        
+
         #invoiceDetails td,
         #invoiceDetails th {
             text-align: center;
@@ -34,8 +35,8 @@
             padding: 0px !important;
             margin: 0px !important;
         }
-        
-        .copy-text{
+
+        .copy-text {
             color: #000;
             font-size: 20px;
             border: 1px solid #000;
@@ -67,26 +68,26 @@
         }
 
         #bg__watermark {
-        display: block;
-        min-width: 100%;
-        opacity: 0.5;               
-    }
-    #bg__text__watermark {
-        color: lightgrey;
-        font-size: 120px;
-        text-align: center;
-        transform: rotate(-45deg);
-        transform-origin: 50% 50%;
-        -webkit-transform: rotate(-45deg);
-        -webkit-transform-origin: 50% 50%;
-        opacity: 0.9;
-        filter: alpha(opacity=50);
-        background-color: transparent;
-        background-size: 100%;
-        position: fixed;
-        margin: 50% auto;
-    }
+            display: block;
+            min-width: 100%;
+            opacity: 0.5;
+        }
 
+        #bg__text__watermark {
+            color: lightgrey;
+            font-size: 120px;
+            text-align: center;
+            transform: rotate(-45deg);
+            transform-origin: 50% 50%;
+            -webkit-transform: rotate(-45deg);
+            -webkit-transform-origin: 50% 50%;
+            opacity: 0.9;
+            filter: alpha(opacity=50);
+            background-color: transparent;
+            background-size: 100%;
+            position: fixed;
+            margin: 50% auto;
+        }
     </style>
 </head>
 
@@ -104,7 +105,7 @@
                         <td>من</td>
                         <td>:</td>
                         <td>
-                                {{wname}}
+                            {{wname}}
                         </td>
                     </tr>
                     <tr class="billing">
@@ -112,7 +113,7 @@
                         <td>:</td>
 
                         <td>
-                                {{custmobilenumber}}
+                            {{custmobilenumber}}
                         </td>
                     </tr>
                     <tr class="billing">
@@ -126,27 +127,27 @@
                         <td>عميل</td>
                         <td>:</td>
                         <td>
-                                {{customername}} 
+                            {{customername}}
                         </td>
                     </tr>
                     <tr class="billing">
                         <td>الرقم الضريبي للعميل </td>
                         <td>:</td>
                         <td>
-                                {{cvatNum}}
+                            {{cvatNum}}
                         </td>
                     </tr>
                     <tr class="billing">
-                            <td>عنوان التوصيل</td>
-                            <td>:</td>
-                            <td>
-                                {{deliveryaddress}}
-                            </td>
-                        </tr>
+                        <td>عنوان التوصيل</td>
+                        <td>:</td>
+                        <td>
+                            {{deliveryaddress}}
+                        </td>
+                    </tr>
                 </table>
             </td>
             <td width="20%" style="text-align:center">
-                
+
                 <table style="text-align:center">
                     {{#if originalPrinted}}
                     <tr>
@@ -157,9 +158,9 @@
                         <td><span style="font-size:15px !important">تسعير المبيعات</span></td>
                     </tr><br>
                     <tr>
-                      <span style="font-weight:600"> 
-                            <td>   <span style="font-size:13px"> {{salesId}} </span></td>
-                    </span> 
+                        <span style="font-weight:600">
+                            <td> <span style="font-size:13px"> {{salesId}} </span></td>
+                        </span>
                     </tr>
                 </table>
             </td>
@@ -169,7 +170,7 @@
                         <td>اسم المستخدم</td>
                         <td>:</td>
                         <td>
-                                {{cnamealias}}
+                            {{cnamealias}}
                         </td>
                     </tr>
                     <tr class="billing">
@@ -181,20 +182,20 @@
                         <td class="quotation-date">تاريخ الفاتورة</td>
                         <td>:</td>
                         <td class="quotation-date">
-                                {{createddatetime}}
+                            {{createddatetime}}
                         </td>
                     </tr>
                     <tr class="billing">
-                        <td>الرقم الضريبي للشركة    </td>
+                        <td>الرقم الضريبي للشركة </td>
                         <td>:</td>
                         <td>300533832200003</td>
                     </tr>
 
                     <tr class="billing">
-                            <td>البائع</td>
-                            <td>:</td>
-                            <td>{{salesman}}</td>
-                        </tr>
+                        <td>البائع</td>
+                        <td>:</td>
+                        <td>{{salesman}}</td>
+                    </tr>
 
 
                 </table>
@@ -204,7 +205,8 @@
 
         <tr>
             <td colspan="3">
-                <table id="invoiceDetails" style="margin-top: 40px;" width="100%" class="item-table" cellpadding="0" cellspacing="0">
+                <table id="invoiceDetails" style="margin-top: 40px;" width="100%" class="item-table" cellpadding="0"
+                    cellspacing="0">
                     <thead>
                         <tr>
                             <th class="th">الرقم</th>
@@ -216,72 +218,80 @@
                             <th class="th">سعر اللون</th>
                             <th class="th">الخصم</th>
                             <th class="th">الاجمالي</th>
-                            <th class="th"> 
-                                    <table style="border-collapse: collapse !important;border:none !important;width:100%">
-                                            <tr class="td">
-                                               <td class="inline-table" style="border-collapse: collapse !important;border-top:none;border-left:none;border-right:none"> ضريبة القيمة المضافة %</td>
-                                            </tr>
-                                            <tr class=""><td class="td" style="border-collapse: collapse !important;border:none !important"> المبلغ</td></tr>
-                                        </table>
+                            <th class="th">
+                                <table style="border-collapse: collapse !important;border:none !important;width:100%">
+                                    <tr class="td">
+                                        <td class="inline-table"
+                                            style="border-collapse: collapse !important;border-top:none;border-left:none;border-right:none">
+                                            ضريبة القيمة المضافة %</td>
+                                    </tr>
+                                    <tr class="">
+                                        <td class="td"
+                                            style="border-collapse: collapse !important;border:none !important"> المبلغ
+                                        </td>
+                                    </tr>
+                                </table>
                             </th>
                             <th class="th">المبلغ الكلي</th>
                         </tr>
-                </thead>
+                    </thead>
                     {{#each salesLine}}
                     <tr class="tab-data" style="font-size:13px !important">
                         <td class="td">{{this.sNo}}</td>
                         <td class="td">
                             <div style="font-size:13px">
-                                    {{this.itemid}}
+                                {{this.itemid}}
                             </div>
                         </td>
                         <td class="td description-data">
-                          
-                                        <span style="font-size:13px">
-                                            {{this.prodNameAr}},
-                                            {{# if this.colorant}}
-                                            {{this.colorant}},
-                                            {{else}}
-                                            {{this.configid}},
-                                            {{/if}}
-                                            {{this.inventsizeid}},
-                                            {{this.batchno}}
-                                        </span>
-                                        <span>
-                                         
-                                        </span>
+
+                            <span style="font-size:13px">
+                                {{this.prodNameAr}},
+                                {{# if this.colorant}}
+                                {{this.colorant}},
+                                {{else}}
+                                {{this.configid}},
+                                {{/if}}
+                                {{this.inventsizeid}},
+                                {{this.batchno}}
+                            </span>
+                            <span>
+
+                            </span>
                         </td>
 
                         <!-- <td class="td">{{deliveryDate}}</td> -->
                         <td class="td">
 
-                                {{this.salesQty}}
+                            {{this.salesQty}}
                         </td>
                         <td class="td">
 
-                                {{this.salesprice}}
+                            {{this.salesprice}}
                         </td>
                         <td class="td">
 
                             {{this.colorantprice}}
-                       </td>
+                        </td>
                         <td class="td">
-                                {{this.lineTotalDisc}}
+                            {{this.lineTotalDisc}}
                         </td>
                         <td class="td">{{this.lineAmountBeforeVat}}</td>
                         <td class="td">
-                                <table style="border-collapse: collapse;border:none !important;width:100%">
-                                        <tr class="td inline-table">
-                                           <td class="inline-table" style="border:none;"> 5% </td>
-                                        </tr>
-                                        <tr><td class="td" style="border:none !important;">  {{this.vatAmount}} </td></tr>
-                                    </table>
+                            <table style="border-collapse: collapse;border:none !important;width:100%">
+                                <tr class="td inline-table">
+                                    <td class="inline-table" style="border:none;"> {{this.vat}}% </td>
+                                </tr>
+                                <tr>
+                                    <td class="td" style="border:none !important;"> {{this.vatAmount}} </td>
+                                </tr>
+                            </table>
 
                         </td>
                         <td class="td">
                             {{this.lineAmount}}
                         </td>
-                        
+
                     </tr>
                     {{/each}}
 
@@ -300,15 +310,15 @@
                                     <td width="80%" style="font-size:15px;font-weight:600">المجموع الكلي </td>
                                     <td width="2%">:</td>
                                     <td width="18%" style="font-size:13px;font-weight:600">
-                                            {{amount}} 
+                                        {{amount}}
                                     </td>
                                 </tr>
 
-                                  <tr class="billing" style="border-top: 1px solid black">
+                                <tr class="billing" style="border-top: 1px solid black">
                                     <td style="font-size:15px;font-weight:600">الكمية الإجمالية </td>
                                     <td>:</td>
                                     <td style="font-size:13px;font-weight:600">
-                                           {{quantity}}
+                                        {{quantity}}
                                     </td>
                                 </tr>
 
@@ -317,21 +327,21 @@
                                     <td style="font-size:15px;font-weight:600">الخصم</td>
                                     <td>:</td>
                                     <td style="font-size:13px;font-weight:600">
-                                            {{disc}} 
+                                        {{disc}}
                                     </td>
                                 </tr>
                                 <tr class="billing">
-                                    <td style="font-size:15px;font-weight:600">(5%)ضريبة القيمة المضافة</td>
+                                    <td style="font-size:15px;font-weight:600">({{this.vat}}%)ضريبة القيمة المضافة</td>
                                     <td>:</td>
                                     <td style="font-size:13px;font-weight:600">
-                                            {{vatamount}} 
+                                        {{vatamount}}
                                     </td>
                                 </tr>
                                 <tr class="billing">
                                     <td style="font-size:15px;font-weight:600">المبلغ الصافي </td>
                                     <td>:</td>
                                     <td style="font-size:13px;font-weight:600">
-                                            {{netAmount}} 
+                                        {{netAmount}}
                                     </td>
                                 </tr>
                             </table>
@@ -343,14 +353,14 @@
                 <table width="100%" style="background: #fff;">
                     <tr>
                         <td style="width:33%;font-size:15px; text-align: right;">
-                           المستلم
-                           <!-- receipt -->
+                            المستلم
+                            <!-- receipt -->
                         </td>
                         <td style="width:33%;font-size:15px; text-align:center;">
                             البائع
                         </td>
                         <td style="width:33%;font-size:15px; text-align: left;">
-                           الشركة
+                            الشركة
                         </td>
                     </tr>
                 </table>

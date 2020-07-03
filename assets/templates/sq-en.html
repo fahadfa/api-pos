@@ -15,10 +15,11 @@
             font-weight: normal !important;
             width: 98%;
         }
+
         thead {
             display: table-header-group;
         }
-        
+
         #invoiceDetails td,
         #invoiceDetails th {
             text-align: center;
@@ -33,8 +34,8 @@
             padding: 0px !important;
             margin: 0px !important;
         }
-        
-        .copy-text{
+
+        .copy-text {
             color: #000;
             font-size: 20px;
             border: 1px solid #000;
@@ -68,8 +69,9 @@
         #bg__watermark {
             display: block;
             min-width: 100%;
-            opacity: 0.5;               
+            opacity: 0.5;
         }
+
         #bg__text__watermark {
             color: lightgrey;
             font-size: 120px;
@@ -85,7 +87,6 @@
             position: fixed;
             margin: 50% auto;
         }
-
     </style>
 </head>
 
@@ -144,7 +145,7 @@
                 </table>
             </td>
             <td width="20%" style="text-align:center">
-                
+
                 <table style="text-align:center">
                     {{#if originalPrinted}}
                     <tr>
@@ -202,33 +203,35 @@
 
         <tr>
             <td colspan="3">
-                <table id="invoiceDetails" style="margin-top: 40px;" width="100%" class="item-table" cellpadding="0" cellspacing="0">
+                <table id="invoiceDetails" style="margin-top: 40px;" width="100%" class="item-table" cellpadding="0"
+                    cellspacing="0">
                     <thead>
-                    <tr>
-                        <th class="th">S.No</th>
-                        <th class="th">Item No</th>
-                        <th class="th">Description</th>
-                        <th class="th">Qty</th>
-                        <th class="th">Price</th>
-                        <th class="th">Colarant Price</th>
-                        <th class="th">Discount</th>
-                        <th class="th">Net Amnt Before VAT</th>
-                        <th class="th">
-                            <table style="border-collapse: collapse !important;border:none !important;width:100%">
-                                <tr class="td">
-                                    <td class="inline-table"
-                                        style="border-collapse: collapse !important;border-top:none;border-left:none;border-right:none">
-                                        Vat %</td>
-                                </tr>
-                                <tr class="">
-                                    <td class="td" style="border-collapse: collapse !important;border:none !important">
-                                        Amount</td>
-                                </tr>
-                            </table>
-                        </th>
-                        <th class="th">Net Amnt after VAT</th>
-                    </tr>
-                </thead>
+                        <tr>
+                            <th class="th">S.No</th>
+                            <th class="th">Item No</th>
+                            <th class="th">Description</th>
+                            <th class="th">Qty</th>
+                            <th class="th">Price</th>
+                            <th class="th">Colarant Price</th>
+                            <th class="th">Discount</th>
+                            <th class="th">Net Amnt Before VAT</th>
+                            <th class="th">
+                                <table style="border-collapse: collapse !important;border:none !important;width:100%">
+                                    <tr class="td">
+                                        <td class="inline-table"
+                                            style="border-collapse: collapse !important;border-top:none;border-left:none;border-right:none">
+                                            Vat %</td>
+                                    </tr>
+                                    <tr class="">
+                                        <td class="td"
+                                            style="border-collapse: collapse !important;border:none !important">
+                                            Amount</td>
+                                    </tr>
+                                </table>
+                            </th>
+                            <th class="th">Net Amnt after VAT</th>
+                        </tr>
+                    </thead>
                     {{#each salesLine}}
                     <tr class="tab-data">
                         <td class="td">{{this.sNo}}</td>
@@ -265,7 +268,7 @@
                         <td class="td">
                             <table style="border-collapse: collapse;border:none !important;width:100%">
                                 <tr class="td inline-table">
-                                    <td class="inline-table" style="border:none;">5%</td>
+                                    <td class="inline-table" style="border:none;">{{this.vat}}%</td>
                                 </tr>
                                 <tr>
                                     <td class="td" style="border:none !important;"> {{this.vatAmount}} </td>
@@ -307,7 +310,7 @@
                                     </td>
                                 </tr>
                                 <tr class="billing">
-                                    <td>VAT (5%)</td>
+                                    <td>VAT ({{this.vat}}%)</td>
                                     <td>:</td>
                                     <td style="font-size:12px;font-weight:600">
                                         {{vatamount}} SAR

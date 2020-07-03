@@ -97,6 +97,7 @@ var SalesOrderReport = /** @class */ (function () {
                         sNo_1 = 1;
                         quantity_1 = 0;
                         list_1.map(function (val) {
+                            data_1.vat = val.length > 0 ? val[0].vat : "-";
                             val.colorantid = val.colorantid ? val.colorantid : "-";
                             var lines = {
                                 amount: parseFloat(data_1.amount).toFixed(2),
@@ -131,6 +132,7 @@ var SalesOrderReport = /** @class */ (function () {
                                 deliveryDate: data_1.deliveryDate,
                                 isbreak: data_1.isbreak,
                                 vatGrand: data_1.vatamount,
+                                vat: data_1.vat,
                                 paymentType: data_1.paymentType,
                                 shippedDate: data_1.lastmodifieddate.split(",")[0],
                                 paymentMode: data_1.paymentType == "ONLINE" ? "Online" : data_1.paymentMode,

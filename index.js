@@ -92,7 +92,7 @@ var run = function () { return __awaiter(_this, void 0, void 0, function () {
                         if (ENV_STORE_ID) {
                             var diff = syncTimeDiff();
                             Log_1.log.warn("sync Time Diff:", diff);
-                            if (diff > 3) {
+                            if (diff > 5) {
                                 Log_1.log.error("----->: sync time start : " + diff);
                                 sync();
                             }

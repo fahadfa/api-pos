@@ -39,6 +39,7 @@ var SyncDMLService_1 = require("./SyncDMLService");
 var SyncDDLService_1 = require("./SyncDDLService");
 var Log_1 = require("../utils/Log");
 var SyncServiceHelper_1 = require("./SyncServiceHelper");
+var sysService_1 = require("../sysService");
 var dns = require("dns").promises;
 var cron = require("node-cron");
 var cmd = require("node-cmd");
@@ -111,7 +112,9 @@ var SyncService = /** @class */ (function () {
                             case 1:
                                 _a.sent();
                                 log.warn("MID NIGHT RESET SERVER");
-                                SyncService.ResetService();
+                                return [4 /*yield*/, sysService_1.SysService.ResetService()];
+                            case 2:
+                                _a.sent();
                                 return [2 /*return*/];
                         }
                     });
@@ -121,7 +124,7 @@ var SyncService = /** @class */ (function () {
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                _a.trys.push([0, 6, , 7]);
+                                _a.trys.push([0, 6, , 9]);
                                 log.debug("(((((((((( SYNC START DEFINE))))))))))");
                                 return [4 /*yield*/, this.checkInternet()];
                             case 1:
@@ -138,18 +141,20 @@ var SyncService = /** @class */ (function () {
                                 _a.label = 5;
                             case 5:
                                 log.debug("(((((((((( SYNC CLOSE DEFINE ))))))))))");
-                                return [3 /*break*/, 7];
+                                return [3 /*break*/, 9];
                             case 6:
                                 error_1 = _a.sent();
                                 log.error("--------- CRON DEFINE ERROR ---------");
                                 log.error(error_1);
                                 log.error("--------- CRON DEFINE ERROR ---------");
-                                if (typeof error_1 == "string" && error_1 == "RESET") {
-                                    log.warn("HARD RESET SERVER");
-                                    SyncService.ResetService();
-                                }
-                                return [3 /*break*/, 7];
-                            case 7: return [2 /*return*/];
+                                if (!(typeof error_1 == "string" && error_1 == "RESET")) return [3 /*break*/, 8];
+                                log.warn("HARD RESET SERVER");
+                                return [4 /*yield*/, sysService_1.SysService.ResetService()];
+                            case 7:
+                                _a.sent();
+                                _a.label = 8;
+                            case 8: return [3 /*break*/, 9];
+                            case 9: return [2 /*return*/];
                         }
                     });
                 }); });
@@ -378,66 +383,47 @@ var SyncService = /** @class */ (function () {
                     case 0:
                         log.warn(JSON.stringify(cmdObj, null, 2));
                         cmdData = cmdObj.cmd ? cmdObj.cmd : null;
-                        if (!cmdData) return [3 /*break*/, 10];
-                        if (!(typeof cmdData == "string")) return [3 /*break*/, 4];
-                        if (!(cmdData && cmdData.includes("npm"))) return [3 /*break*/, 3];
-                        return [4 /*yield*/, cmd.run(cmdData)];
+                        if (!cmdData) return [3 /*break*/, 12];
+                        if (!(typeof cmdData == "string")) return [3 /*break*/, 5];
+                        if (!(cmdData && cmdData.includes("npm"))) return [3 /*break*/, 4];
+                        return [4 /*yield*/, sysService_1.SysService.CmdService(cmdData)];
                     case 1:
                         _a.sent();
                         log.warn("cmd: " + cmdData);
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.UpdateCall("JSON")];
                     case 2:
                         _a.sent();
-                        SyncService.ResetService();
-                        _a.label = 3;
-                    case 3: return [3 /*break*/, 10];
-                    case 4:
-                        if (!Array.isArray(cmdData)) return [3 /*break*/, 10];
-                        _i = 0, cmdData_1 = cmdData;
-                        _a.label = 5;
+                        return [4 /*yield*/, sysService_1.SysService.ResetService()];
+                    case 3:
+                        _a.sent();
+                        _a.label = 4;
+                    case 4: return [3 /*break*/, 12];
                     case 5:
-                        if (!(_i < cmdData_1.length)) return [3 /*break*/, 8];
-                        ele = cmdData_1[_i];
-                        if (!(ele && ele.includes("npm"))) return [3 /*break*/, 7];
-                        return [4 /*yield*/, cmd.run(ele)];
+                        if (!Array.isArray(cmdData)) return [3 /*break*/, 12];
+                        _i = 0, cmdData_1 = cmdData;
+                        _a.label = 6;
                     case 6:
+                        if (!(_i < cmdData_1.length)) return [3 /*break*/, 9];
+                        ele = cmdData_1[_i];
+                        if (!(ele && ele.includes("npm"))) return [3 /*break*/, 8];
+                        return [4 /*yield*/, sysService_1.SysService.CmdService(ele)];
+                    case 7:
                         _a.sent();
                         log.warn("cmd: " + ele);
-                        _a.label = 7;
-                    case 7:
+                        _a.label = 8;
+                    case 8:
                         _i++;
-                        return [3 /*break*/, 5];
-                    case 8: return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.UpdateCall("JSON")];
-                    case 9:
+                        return [3 /*break*/, 6];
+                    case 9: return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.UpdateCall("JSON")];
+                    case 10:
                         _a.sent();
-                        SyncService.ResetService();
-                        _a.label = 10;
-                    case 10: return [2 /*return*/];
+                        return [4 /*yield*/, sysService_1.SysService.ResetService()];
+                    case 11:
+                        _a.sent();
+                        _a.label = 12;
+                    case 12: return [2 /*return*/];
                 }
             });
-        });
-    };
-    SyncService.ResetService = function () {
-        cmd.get("sc query  jpos-offline", function (err, data) {
-            if (err)
-                log.error(err);
-            log.warn(data);
-            if (data && data.includes("STOPPED")) {
-                log.warn("net start jpos-offline");
-                cmd.run("net start jpos-offline");
-                setTimeout(function () {
-                    log.warn("net stop jpos-alt");
-                    cmd.run("net stop jpos-alt");
-                }, 1000);
-            }
-            else {
-                log.warn("net start jpos-alt");
-                cmd.run("net start jpos-alt");
-                setTimeout(function () {
-                    log.warn("net stop jpos-offline");
-                    cmd.run("net stop jpos-offline");
-                }, 1000);
-            }
         });
     };
     return SyncService;

@@ -253,7 +253,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                     case 14:
                         _i++;
                         return [3 /*break*/, 11];
-                    case 15: return [2 /*return*/, { status: 1, salesStatus: "RECEIVED", id: salesData.salesId, message: Props_1.Props.SAVED_SUCCESSFULLY }];
+                    case 15: return [2 /*return*/, { status: 1, id: salesData.salesId, message: Props_1.Props.SAVED_SUCCESSFULLY }];
                     case 16: return [3 /*break*/, 18];
                     case 17: throw { status: 0, message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
                     case 18: return [3 /*break*/, 20];
