@@ -60,7 +60,7 @@ var SyncDMLService = /** @class */ (function () {
                         _a.trys.push([1, 5, , 6]);
                         stageDbConfig = SyncServiceHelper_1.SyncServiceHelper.StageDBOptions();
                         localDbConfig = SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions();
-                        sql = "SELECT table_id, table_name, table_value, deleted_on FROM sync_delete_data ";
+                        sql = "SELECT table_id, table_name, table_value, deleted_on FROM sync_delete_data order by deleted_on asc limit 250";
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(localDbConfig, sql)];
                     case 2:
                         syncResults = _a.sent();
