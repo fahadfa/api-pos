@@ -110,7 +110,7 @@ var OpeningBalanceService = /** @class */ (function () {
                             host: reqData.server,
                             username: reqData.username,
                             password: reqData.password,
-                            database: reqData.database
+                            database: reqData.database,
                         };
                         syncDataDate = JSON.stringify(rawdata);
                         Log_1.log.info(syncDataDate);
@@ -141,7 +141,7 @@ var OpeningBalanceService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 8, , 9]);
-                        return [4 /*yield*/, this.rawQuery.deleteBalances()];
+                        return [4 /*yield*/, this.rawQuery.deleteBalances(this.sessionInfo.inventlocationid)];
                     case 1:
                         _a.sent();
                         return [4 /*yield*/, this.chunkArray(reqData, 100)];
@@ -195,7 +195,7 @@ var OpeningBalanceService = /** @class */ (function () {
                             ? __dirname + "/SyncPrevTransactionsServices.ts"
                             : __dirname + "/SyncPrevTransactionsServices.js";
                         child_process.fork(syncFile);
-                        returnData = { message: 'SAVED_SUCCESSFULLY' };
+                        returnData = { message: "SAVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
                     case 8:
                         err_2 = _a.sent();

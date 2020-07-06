@@ -175,17 +175,18 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
     };
     TransferOrderFromAxaptaService.prototype.save = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var salesData, usergroupconfig, seqNum, seqData, hashString, date, prevYear, year, salesLines, prevSalesLines, _i, salesLines_1, item, batches, error_3;
+            var salesData, prevSalesData, usergroupconfig, seqNum, seqData, hashString, date, prevYear, year, salesLines, _i, salesLines_1, item, batches, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 19, , 20]);
+                        _a.trys.push([0, 17, , 18]);
                         console.log(data);
-                        if (!(data.inventLocationId == this.sessionInfo.inventlocationid)) return [3 /*break*/, 17];
+                        if (!(data.inventLocationId == this.sessionInfo.inventlocationid)) return [3 /*break*/, 15];
+                        salesData = void 0;
                         return [4 /*yield*/, this.salesTableDAO.findOne({ interCompanyOriginalSalesId: data.salesId })];
                     case 1:
-                        salesData = _a.sent();
-                        if (!salesData) return [3 /*break*/, 2];
+                        prevSalesData = _a.sent();
+                        if (!prevSalesData) return [3 /*break*/, 2];
                         throw { message: "ALREADY_RECEIVED" };
                     case 2: return [4 /*yield*/, this.usergroupconfigDAO.findOne({
                             groupid: this.sessionInfo.groupid,
@@ -193,7 +194,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                     case 3:
                         usergroupconfig = _a.sent();
                         salesData = data;
-                        salesData.status = data.saleStatus;
+                        salesData.status = "RECEIVED";
                         salesData.interCompanyOriginalSalesId = salesData.salesId;
                         salesData.transkind = "ORDERRECEIVE";
                         seqNum = usergroupconfig.orderreceivesequencegroup;
@@ -220,16 +221,10 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         return [4 /*yield*/, this.salesTableDAO.save(salesData)];
                     case 8:
                         _a.sent();
-                        return [4 /*yield*/, this.salesLineDAO.findAll({ salesId: salesData.interCompanyOriginalSalesId })];
-                    case 9:
-                        prevSalesLines = _a.sent();
-                        return [4 /*yield*/, this.salesLineDAO.delete(prevSalesLines)];
-                    case 10:
-                        _a.sent();
                         _i = 0, salesLines_1 = salesLines;
-                        _a.label = 11;
-                    case 11:
-                        if (!(_i < salesLines_1.length)) return [3 /*break*/, 15];
+                        _a.label = 9;
+                    case 9:
+                        if (!(_i < salesLines_1.length)) return [3 /*break*/, 13];
                         item = salesLines_1[_i];
                         item.id = uuid();
                         item.salesId = salesData.salesId;
@@ -244,23 +239,23 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         batches.invoiceid = salesData.salesId;
                         batches.salesLineId = item.id;
                         return [4 /*yield*/, this.salesLineDAO.save(item)];
-                    case 12:
+                    case 10:
                         _a.sent();
                         return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches)];
-                    case 13:
+                    case 11:
                         _a.sent();
-                        _a.label = 14;
-                    case 14:
+                        _a.label = 12;
+                    case 12:
                         _i++;
-                        return [3 /*break*/, 11];
-                    case 15: return [2 /*return*/, { status: 1, id: salesData.salesId, message: Props_1.Props.SAVED_SUCCESSFULLY }];
+                        return [3 /*break*/, 9];
+                    case 13: return [2 /*return*/, { status: 1, id: salesData.salesId, message: Props_1.Props.SAVED_SUCCESSFULLY }];
+                    case 14: return [3 /*break*/, 16];
+                    case 15: throw { status: 0, message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
                     case 16: return [3 /*break*/, 18];
-                    case 17: throw { status: 0, message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
-                    case 18: return [3 /*break*/, 20];
-                    case 19:
+                    case 17:
                         error_3 = _a.sent();
                         throw error_3;
-                    case 20: return [2 /*return*/];
+                    case 18: return [2 /*return*/];
                 }
             });
         });

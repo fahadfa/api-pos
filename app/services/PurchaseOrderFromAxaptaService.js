@@ -93,57 +93,62 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                     case 1:
                         salesData = _a.sent();
                         console.log(data, this.sessionInfo.inventlocationid);
-                        // if (data[0].invent_location_id == this.sessionInfo.inventlocationid) {
-                        salesData = new SalesTable_1.SalesTable();
-                        salesData.salesId = data[0].purch_id;
-                        salesData.inventLocationId = data[0].invent_location_id;
-                        salesData.transkind = "PURCHASEORDER";
-                        salesData.saleStatus = "CREATED";
-                        salesData.custAccount = data[0].vend_account;
-                        salesData.invoiceDate = new Date(App_1.App.DateNow());
-                        salesData.shippingDateConfirmed = new Date(App_1.App.DateNow());
-                        salesData.dataareaid = data[0].data_area_id;
-                        salesData.lastModifiedDate = new Date(App_1.App.DateNow());
-                        salesData.createddatetime = new Date(App_1.App.DateNow());
-                        salesData.salesType = 4;
-                        salesData.salesLines = [];
-                        i = 1;
-                        for (_i = 0, data_1 = data; _i < data_1.length; _i++) {
-                            v = data_1[_i];
-                            salesLine = new SalesLine_1.SalesLine();
-                            salesLine.salesId = v.purch_id;
-                            salesLine.lineNum = i;
-                            salesLine.itemid = v.item_id;
-                            salesLine.salesprice = 0;
-                            salesLine.appliedDiscounts = [];
-                            salesLine.configId = v.config_id;
-                            salesLine.inventsizeid = v.invent_size_id;
-                            salesLine.salesQty = v.purch_qty;
-                            salesLine.dataareaid = v.data_area_id;
-                            salesLine.inventLocationId = v.invent_location_id;
-                            salesLine.batchNo = v.batch_no;
-                            salesLine.custAccount = v.vend_account;
-                            salesLine.lastModifiedDate = new Date(App_1.App.DateNow());
-                            salesLine.createddatetime = new Date(App_1.App.DateNow());
-                            batches = {};
-                            batches.qty = v.purch_qty;
-                            batches.itemid = salesLine.itemid;
-                            batches.transrefid = salesLine.salesId;
-                            batches.invoiceid = salesLine.salesId;
-                            batches.batchno = salesLine.batchNo;
-                            batches.configid = salesLine.configId;
-                            batches.inventsizeid = salesLine.inventsizeid;
-                            batches.inventlocationid = salesLine.inventLocationId;
-                            batches.dataareaid = salesLine.dataareaid;
-                            batches.transactionClosed = false;
-                            batches.dateinvent = new Date(App_1.App.DateNow());
-                            salesLine.batches = batches;
-                            salesData.salesLines.push(salesLine);
-                            i += 1;
+                        if (data[0].invent_location_id == this.sessionInfo.inventlocationid) {
+                            salesData = new SalesTable_1.SalesTable();
+                            salesData.salesId = data[0].purch_id;
+                            salesData.inventLocationId = data[0].invent_location_id;
+                            salesData.transkind = "PURCHASEORDER";
+                            salesData.saleStatus = "CREATED";
+                            salesData.custAccount = data[0].vend_account;
+                            salesData.invoiceDate = new Date(App_1.App.DateNow());
+                            salesData.shippingDateConfirmed = new Date(App_1.App.DateNow());
+                            salesData.dataareaid = data[0].data_area_id;
+                            salesData.lastModifiedDate = new Date(App_1.App.DateNow());
+                            salesData.createddatetime = new Date(App_1.App.DateNow());
+                            salesData.salesType = 4;
+                            salesData.salesLines = [];
+                            i = 1;
+                            for (_i = 0, data_1 = data; _i < data_1.length; _i++) {
+                                v = data_1[_i];
+                                salesLine = new SalesLine_1.SalesLine();
+                                salesLine.salesId = v.purch_id;
+                                salesLine.lineNum = i;
+                                salesLine.itemid = v.item_id;
+                                salesLine.salesprice = 0;
+                                salesLine.appliedDiscounts = [];
+                                salesLine.configId = v.config_id;
+                                salesLine.inventsizeid = v.invent_size_id;
+                                salesLine.salesQty = v.purch_qty;
+                                salesLine.dataareaid = v.data_area_id;
+                                salesLine.inventLocationId = v.invent_location_id;
+                                salesLine.batchNo = v.batch_no;
+                                salesLine.custAccount = v.vend_account;
+                                salesLine.lastModifiedDate = new Date(App_1.App.DateNow());
+                                salesLine.createddatetime = new Date(App_1.App.DateNow());
+                                batches = {};
+                                batches.qty = v.purch_qty;
+                                batches.itemid = salesLine.itemid;
+                                batches.transrefid = salesLine.salesId;
+                                batches.invoiceid = salesLine.salesId;
+                                batches.batchno = salesLine.batchNo;
+                                batches.configid = salesLine.configId;
+                                batches.inventsizeid = salesLine.inventsizeid;
+                                batches.inventlocationid = salesLine.inventLocationId;
+                                batches.dataareaid = salesLine.dataareaid;
+                                batches.transactionClosed = false;
+                                batches.dateinvent = new Date(App_1.App.DateNow());
+                                salesLine.batches = batches;
+                                salesData.salesLines.push(salesLine);
+                                i += 1;
+                            }
+                            salesData.status = 1;
+                            return [2 /*return*/, salesData];
                         }
-                        salesData.status = 1;
-                        return [2 /*return*/, salesData];
-                    case 2: throw { status: 1, message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
+                        else {
+                            throw { status: 1, message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
+                        }
+                        return [3 /*break*/, 3];
+                    case 2: throw { status: 1, message: "DATA_NOT_FOUND" };
                     case 3: return [3 /*break*/, 5];
                     case 4:
                         error_2 = _a.sent();
@@ -254,19 +259,20 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
+                        _a.trys.push([0, 5, , 6]);
                         return [4 /*yield*/, this.getAgentPurchaseOrder(purchaseID)];
                     case 1:
                         axaptaData = _a.sent();
                         console.log("data-----------------", axaptaData);
+                        if (!(axaptaData.invent_location_id.trim() == this.sessionInfo.inventlocationid)) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.mapAgentpurcaseOrder(axaptaData)];
-                    case 2: 
-                    // if (axaptaData.invent_location_id.trim() == this.sessionInfo.inventlocationid) {
-                    return [2 /*return*/, _a.sent()];
-                    case 3:
+                    case 2: return [2 /*return*/, _a.sent()];
+                    case 3: throw { status: 0, message: "ORDER_NOT_RELATED_TO_THIS_STORE" };
+                    case 4: return [3 /*break*/, 6];
+                    case 5:
                         error_5 = _a.sent();
                         throw error_5;
-                    case 4: return [2 /*return*/];
+                    case 6: return [2 /*return*/];
                 }
             });
         });
@@ -314,8 +320,8 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                 salesData.currencyCode = data.currency_code;
                 salesData.payment = data.payment_terms;
                 salesData.priceGroupId = data.price_group_id;
-                // salesData.inventLocationId = data.invent_location_id;
-                salesData.inventLocationId = this.sessionInfo.inventlocationid;
+                salesData.inventLocationId = data.invent_location_id;
+                // salesData.inventLocationId = this.sessionInfo.inventlocationid;
                 salesData.taxGroup = data.tax_group;
                 salesData.amount = data.gross_amount;
                 salesData.disc = data.total_disc;
@@ -356,8 +362,8 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
-                        console.log(data);
+                        _a.trys.push([0, 7, , 8]);
+                        if (!(data.inventLocationId == this.sessionInfo.inventlocationid)) return [3 /*break*/, 5];
                         return [4 /*yield*/, this.salesTableDAO.findOne({ interCompanyOriginalSalesId: data.salesId })];
                     case 1:
                         salesData = _a.sent();
@@ -370,16 +376,18 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                         salesData.transkind = "SALESORDER";
                         delete salesData.salesId;
                         this.salesTableService.sessionInfo = this.sessionInfo;
-                        salesData.inventLocationId = this.sessionInfo.inventlocationid;
+                        salesData.inventLocationId = data.inventLocationId;
                         return [4 /*yield*/, this.salesTableService.save(salesData)];
                     case 3:
                         _a.sent();
                         return [2 /*return*/, { status: 1, id: salesData.salesId, message: Props_1.Props.SAVED_SUCCESSFULLY }];
                     case 4: return [3 /*break*/, 6];
-                    case 5:
+                    case 5: throw { status: 0, message: "ORDER_NOT_RELATED_TO_THIS_STORE" };
+                    case 6: return [3 /*break*/, 8];
+                    case 7:
                         error_7 = _a.sent();
                         throw error_7;
-                    case 6: return [2 /*return*/];
+                    case 8: return [2 /*return*/];
                 }
             });
         });

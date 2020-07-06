@@ -82,6 +82,21 @@ var RawQuery = /** @class */ (function () {
             });
         });
     };
+    RawQuery.prototype.getCustomerTaxGroup = function (accountNum) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "select \n        accountnum, \n        taxgroup\n       from custtable where accountnum='" + accountNum + "' LIMIT 1";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, data.length > 0 ? data[0] : {}];
+                }
+            });
+        });
+    };
     RawQuery.prototype.customers_count = function () {
         return __awaiter(this, void 0, void 0, function () {
             var query, data;
@@ -1062,6 +1077,19 @@ var RawQuery = /** @class */ (function () {
             });
         });
     };
+    RawQuery.prototype.getItemTaxGroup = function (code) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.db.query("select taxitemgroupid from inventtablemodule where itemid = '" + code + "' and moduletype=2 limit 1")];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, data.length > 0 ? data[0] : {}];
+                }
+            });
+        });
+    };
     RawQuery.prototype.getsizeid = function (code) {
         return __awaiter(this, void 0, void 0, function () {
             var data;
@@ -1135,20 +1163,20 @@ var RawQuery = /** @class */ (function () {
             });
         });
     };
-    RawQuery.prototype.deleteBalances = function () {
+    RawQuery.prototype.deleteBalances = function (inventlocationid) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.db.query("delete from inventory_onhand")];
+                    case 0: return [4 /*yield*/, this.db.query("delete from inventory_onhand where inventlocationid = '" + inventlocationid + "'")];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, this.db.query("delete from inventtrans")];
+                        return [4 /*yield*/, this.db.query("delete from inventtrans where inventlocationid = '" + inventlocationid + "'")];
                     case 2:
                         _a.sent();
-                        return [4 /*yield*/, this.db.query("delete from salesline")];
+                        return [4 /*yield*/, this.db.query("delete from salesline where inventlocationid = '" + inventlocationid + "'")];
                     case 3:
                         _a.sent();
-                        return [4 /*yield*/, this.db.query("delete from salestable")];
+                        return [4 /*yield*/, this.db.query("delete from salestable where inventlocationid = '" + inventlocationid + "'")];
                     case 4:
                         _a.sent();
                         return [2 /*return*/];
