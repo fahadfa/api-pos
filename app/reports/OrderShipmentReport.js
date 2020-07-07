@@ -55,6 +55,7 @@ var UpdateInventoryService_1 = require("../services/UpdateInventoryService");
 //var QRCode = require("qrcode");
 var SvgToDataURL = require("svg-to-dataurl");
 var QRCode = require("qrcode-svg");
+var typeorm_2 = require("typeorm");
 var OrderShipmentReport = /** @class */ (function () {
     function OrderShipmentReport() {
         this.db = typeorm_1.getManager();
@@ -65,46 +66,74 @@ var OrderShipmentReport = /** @class */ (function () {
     }
     OrderShipmentReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, status_1, data_1, salesLine, list, chunkArray, cond, batches, _i, batches_1, item, newSalesline, sNo_1, quantity, _loop_1, this_1, _a, list_1, val, error_1;
+            var queryRunner, id, status_1, data_1, salesLine, list, chunkArray, cond, date, query, batches, _i, batches_1, item, newSalesline, sNo_1, quantity, _loop_1, this_1, _a, list_1, val, error_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _b.trys.push([0, 12, , 13]);
+                        queryRunner = typeorm_2.getConnection().createQueryRunner();
+                        return [4 /*yield*/, queryRunner.connect()];
+                    case 1:
+                        _b.sent();
+                        return [4 /*yield*/, queryRunner.startTransaction()];
+                    case 2:
+                        _b.sent();
+                        _b.label = 3;
+                    case 3:
+                        _b.trys.push([3, 21, 23, 25]);
                         console.log("OrderShipmentReport===================");
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
-                    case 1:
+                    case 4:
                         data_1 = _b.sent();
                         // console.log("----------------", data);
                         data_1 = data_1.length >= 1 ? data_1[0] : {};
                         data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
                         return [4 /*yield*/, this.salesline_query_to_data(id)];
-                    case 2:
+                    case 5:
                         salesLine = _b.sent();
                         list = [];
                         return [4 /*yield*/, this.chunkArray(salesLine, 10)];
-                    case 3:
+                    case 6:
                         chunkArray = _b.sent();
                         // console.log(chunkArray);
                         list = list.concat(chunkArray);
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 7];
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 15];
                         return [4 /*yield*/, this.stockOnHandCheck(salesLine, data_1.inventLocationId)];
-                    case 4:
-                        cond = _b.sent();
-                        if (!cond) return [3 /*break*/, 6];
-                        this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED", new Date().toISOString());
-                        return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
-                    case 5:
-                        batches = _b.sent();
-                        for (_i = 0, batches_1 = batches; _i < batches_1.length; _i++) {
-                            item = batches_1[_i];
-                            item.transactionClosed = true;
-                            // this.inventTransDAO.save(item);
-                            this.updateInventoryService.updateInventtransTable(item);
-                        }
-                        return [3 /*break*/, 7];
-                    case 6: throw { message: "SOME_OF_THE_ITEMS_ARE_OUT_OF_STOCK" };
                     case 7:
+                        cond = _b.sent();
+                        if (!cond) return [3 /*break*/, 14];
+                        date = new Date().toISOString();
+                        query = "UPDATE salestable SET originalprinted = '" + true + "', status = 'POSTED'";
+                        if (date) {
+                            query += ",lastmodifieddate = '" + date + "' ";
+                        }
+                        query += " WHERE salesid = '" + params.salesId.toUpperCase() + "'";
+                        return [4 /*yield*/, queryRunner.query(query)];
+                    case 8:
+                        _b.sent();
+                        return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
+                    case 9:
+                        batches = _b.sent();
+                        _i = 0, batches_1 = batches;
+                        _b.label = 10;
+                    case 10:
+                        if (!(_i < batches_1.length)) return [3 /*break*/, 13];
+                        item = batches_1[_i];
+                        item.transactionClosed = true;
+                        // this.inventTransDAO.save(item);
+                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(item, false, queryRunner)];
+                    case 11:
+                        // this.inventTransDAO.save(item);
+                        _b.sent();
+                        _b.label = 12;
+                    case 12:
+                        _i++;
+                        return [3 /*break*/, 10];
+                    case 13: return [3 /*break*/, 15];
+                    case 14: throw { message: "SOME_OF_THE_ITEMS_ARE_OUT_OF_STOCK" };
+                    case 15: return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 16:
+                        _b.sent();
                         newSalesline = [];
                         sNo_1 = 1;
                         quantity = 0;
@@ -155,18 +184,18 @@ var OrderShipmentReport = /** @class */ (function () {
                         };
                         this_1 = this;
                         _a = 0, list_1 = list;
-                        _b.label = 8;
-                    case 8:
-                        if (!(_a < list_1.length)) return [3 /*break*/, 11];
+                        _b.label = 17;
+                    case 17:
+                        if (!(_a < list_1.length)) return [3 /*break*/, 20];
                         val = list_1[_a];
                         return [5 /*yield**/, _loop_1(val)];
-                    case 9:
+                    case 18:
                         _b.sent();
-                        _b.label = 10;
-                    case 10:
+                        _b.label = 19;
+                    case 19:
                         _a++;
-                        return [3 /*break*/, 8];
-                    case 11:
+                        return [3 /*break*/, 17];
+                    case 20:
                         // console.log("#####", newSalesline, "######");
                         data_1.salesLine = newSalesline;
                         data_1.quantity = 0;
@@ -179,10 +208,17 @@ var OrderShipmentReport = /** @class */ (function () {
                         // console.log(qrString);
                         //data.qr = await QRCode.toDataURL("{name: 'naveen'}");
                         return [2 /*return*/, data_1];
-                    case 12:
+                    case 21:
                         error_1 = _b.sent();
+                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                    case 22:
+                        _b.sent();
                         throw error_1;
-                    case 13: return [2 /*return*/];
+                    case 23: return [4 /*yield*/, queryRunner.release()];
+                    case 24:
+                        _b.sent();
+                        return [7 /*endfinally*/];
+                    case 25: return [2 /*return*/];
                 }
             });
         });
@@ -266,7 +302,7 @@ var OrderShipmentReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        salesQuery = "\n    select\n    ROW_NUMBER()  OVER (ORDER BY  ln.salesid) As \"sNo\",\n    ln.salesid,\n    ln.itemid,\n    ln.batchno,\n    ln.configid,\n    ln.inventsizeid,\n    ln.status,\n    ln.colorantid,\n    to_char(ln.salesqty, 'FM999,999,999,999D') as \"salesQty\",\n    ln.prodnamear as \"prodNameAr\",\n    ln.prodnameen as \"prodNameEn\",\n    ln.colNameAr as \"colNameAr\",\n    ln.colNameEn as \"colNameEn\",\n    ln.sizeNameEn as \"sizeNameEn\",\n    ln.sizeNameAr as \"sizeNameAr\"\n    from\n    (\n        select\n        distinct on (i.invoiceid, i.itemid, i.configid, i.inventsizeid, i.batchno, i.qty, i.sales_line_id)\n        i.invoiceid as salesid,\n        i.batchno,\n        i.itemid,\n        i.configid,\n        i.inventsizeid,\n        st.status as status,\n        ABS(i.qty) as salesqty,\n        b.itemname as prodnamear,\n        b.namealias as prodnameen,\n        c.name as colNameAr,\n        c.name as colNameEn,\n        s.description as sizeNameEn,\n        s.name as sizeNameAr,\n        sl.colorantid as  colorantid,\n        sl.linenum\n        from inventtrans i\n        left join salestable st on st.salesid = i.invoiceid\n        left join salesline sl on sl.id = i.sales_line_id\n        left join inventtable b on i.itemid=b.itemid\n        left join inventsize s on s.itemid = i.itemid and i.inventsizeid = s.inventsizeid\n        left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n    where invoiceid='" + id + "' order by sl.linenum DESC\n    ) as ln\n    ";
+                        salesQuery = "\n    select\n    ln.salesid,\n    ln.itemid,\n    ln.batchno,\n    ln.configid,\n    ln.inventsizeid,\n    ln.status,\n    ln.colorantid,\n    to_char(ln.salesqty, 'FM999,999,999,999D') as \"salesQty\",\n    ln.prodnamear as \"prodNameAr\",\n    ln.prodnameen as \"prodNameEn\",\n    ln.colNameAr as \"colNameAr\",\n    ln.colNameEn as \"colNameEn\",\n    ln.sizeNameEn as \"sizeNameEn\",\n    ln.sizeNameAr as \"sizeNameAr\"\n    from\n    (\n        select\n        distinct on (i.invoiceid, i.itemid, i.configid, i.inventsizeid, i.batchno, i.qty, i.sales_line_id)\n        i.invoiceid as salesid,\n        i.batchno,\n        i.itemid,\n        i.configid,\n        i.inventsizeid,\n        st.status as status,\n        ABS(i.qty) as salesqty,\n        b.itemname as prodnamear,\n        b.namealias as prodnameen,\n        c.name as colNameAr,\n        c.name as colNameEn,\n        s.description as sizeNameEn,\n        s.name as sizeNameAr,\n        sl.colorantid as  colorantid,\n        sl.linenum\n        from inventtrans i\n        left join salestable st on st.salesid = i.invoiceid\n        left join salesline sl on sl.id = i.sales_line_id\n        left join inventtable b on i.itemid=b.itemid\n        left join inventsize s on s.itemid = i.itemid and i.inventsizeid = s.inventsizeid\n        left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n    where invoiceid='" + id + "' \n    ) as ln order by ln.linenum DESC\n    ";
                         return [4 /*yield*/, this.db.query(salesQuery)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }

@@ -41,6 +41,7 @@ var SalesTableService_1 = require("../services/SalesTableService");
 var RawQuery_1 = require("../common/RawQuery");
 var InventTransDAO_1 = require("../repos/InventTransDAO");
 var UpdateInventoryService_1 = require("../services/UpdateInventoryService");
+var typeorm_2 = require("typeorm");
 var OrderReceiveReport = /** @class */ (function () {
     function OrderReceiveReport() {
         this.db = typeorm_1.getManager();
@@ -51,43 +52,82 @@ var OrderReceiveReport = /** @class */ (function () {
     }
     OrderReceiveReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, status_1, data_1, salesLine, batches, _i, batches_1, item, error_1;
+            var queryRunner, id, status_1, data_1, salesLine, i_1, date, query, batches, _i, batches_1, item, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
+                        queryRunner = typeorm_2.getConnection().createQueryRunner();
+                        return [4 /*yield*/, queryRunner.connect()];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.startTransaction()];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        _a.trys.push([3, 13, 15, 17]);
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
-                    case 1:
+                    case 4:
                         data_1 = _a.sent();
                         data_1 = data_1.length >= 1 ? data_1[0] : {};
                         data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
                         return [4 /*yield*/, this.salesline_query_to_data(id)];
-                    case 2:
+                    case 5:
                         salesLine = _a.sent();
-                        // salesLine = salesLine.length > 0 ? salesLine : [];
+                        i_1 = 1;
+                        salesLine.map(function (v) {
+                            v.sNo += i_1;
+                            i_1 += 1;
+                        });
                         data_1.salesLine = salesLine;
                         data_1.quantity = 0;
                         salesLine.map(function (v) {
                             data_1.quantity += parseInt(v.salesQty);
                         });
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 4];
-                        this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED", new Date().toISOString());
-                        return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
-                    case 3:
-                        batches = _a.sent();
-                        for (_i = 0, batches_1 = batches; _i < batches_1.length; _i++) {
-                            item = batches_1[_i];
-                            item.transactionClosed = true;
-                            // this.inventTransDAO.save(item);
-                            this.updateInventoryService.updateInventtransTable(item);
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 11];
+                        date = new Date().toISOString();
+                        query = "UPDATE salestable SET originalprinted = '" + true + "', status = 'POSTED'";
+                        if (date) {
+                            query += ",lastmodifieddate = '" + date + "' ";
                         }
-                        _a.label = 4;
-                    case 4: return [2 /*return*/, data_1];
-                    case 5:
+                        query += " WHERE salesid = '" + params.salesId.toUpperCase() + "'";
+                        return [4 /*yield*/, queryRunner.query(query)];
+                    case 6:
+                        _a.sent();
+                        return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
+                    case 7:
+                        batches = _a.sent();
+                        _i = 0, batches_1 = batches;
+                        _a.label = 8;
+                    case 8:
+                        if (!(_i < batches_1.length)) return [3 /*break*/, 11];
+                        item = batches_1[_i];
+                        item.transactionClosed = true;
+                        // this.inventTransDAO.save(item);
+                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(item, false, queryRunner)];
+                    case 9:
+                        // this.inventTransDAO.save(item);
+                        _a.sent();
+                        _a.label = 10;
+                    case 10:
+                        _i++;
+                        return [3 /*break*/, 8];
+                    case 11: return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 12:
+                        _a.sent();
+                        return [2 /*return*/, data_1];
+                    case 13:
                         error_1 = _a.sent();
+                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                    case 14:
+                        _a.sent();
                         throw error_1;
-                    case 6: return [2 /*return*/];
+                    case 15: return [4 /*yield*/, queryRunner.release()];
+                    case 16:
+                        _a.sent();
+                        return [7 /*endfinally*/];
+                    case 17: return [2 /*return*/];
                 }
             });
         });
@@ -160,7 +200,7 @@ var OrderReceiveReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        salesQuery = "\n            select\n            ROW_NUMBER()  OVER (ORDER BY  ln.salesid) As \"sNo\",\n            ln.salesid,\n            ln.itemid,\n            ln.batchno,\n            ln.configid,\n            ln.inventsizeid,\n            ln.status,\n            ln.colorantid as  colorantid,\n            to_char(ln.salesqty, 'FM999,999,999,999D') as \"salesQty\",\n            ln.prodnamear as \"prodNameAr\",\n            ln.prodnameen as \"prodNameEn\",\n            ln.colNameAr as \"colNameAr\",\n            ln.colNameEn as \"colNameEn\",\n            ln.sizeNameEn as \"sizeNameEn\",\n            ln.sizeNameAr as \"sizeNameAr\"\n            from\n            (\n                select\n                distinct on (i.invoiceid, i.itemid, i.configid, i.inventsizeid, i.batchno, i.qty, i.sales_line_id)\n                i.invoiceid as salesid,\n                i.batchno,\n                i.itemid,\n                i.configid,\n                i.inventsizeid,\n                st.status as status,\n                ABS(i.qty) as salesqty,\n                b.itemname as prodnamear,\n                b.namealias as prodnameen,\n                c.name as colNameAr,\n                c.name as colNameEn,\n                s.description as sizeNameEn,\n                s.name as sizeNameAr,\n                sl.colorantid as  colorantid,\n                sl.linenum\n                from inventtrans i\n                left join salestable st on st.salesid = i.invoiceid\n                left join salesline sl on sl.id = i.sales_line_id\n                left join inventtable b on i.itemid=b.itemid\n                left join inventsize s on s.itemid = i.itemid and i.inventsizeid = s.inventsizeid\n                left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n            where invoiceid='" + id + "'\n            ) as ln\n            ";
+                        salesQuery = "\n            select\n            ln.salesid,\n            ln.itemid,\n            ln.batchno,\n            ln.configid,\n            ln.inventsizeid,\n            ln.status,\n            ln.colorantid as  colorantid,\n            to_char(ln.salesqty, 'FM999,999,999,999D') as \"salesQty\",\n            ln.prodnamear as \"prodNameAr\",\n            ln.prodnameen as \"prodNameEn\",\n            ln.colNameAr as \"colNameAr\",\n            ln.colNameEn as \"colNameEn\",\n            ln.sizeNameEn as \"sizeNameEn\",\n            ln.sizeNameAr as \"sizeNameAr\"\n            from\n            (\n                select\n                distinct on (i.invoiceid, i.itemid, i.configid, i.inventsizeid, i.batchno, i.qty, i.sales_line_id)\n                i.invoiceid as salesid,\n                i.batchno,\n                i.itemid,\n                i.configid,\n                i.inventsizeid,\n                st.status as status,\n                ABS(i.qty) as salesqty,\n                b.itemname as prodnamear,\n                b.namealias as prodnameen,\n                c.name as colNameAr,\n                c.name as colNameEn,\n                s.description as sizeNameEn,\n                s.name as sizeNameAr,\n                sl.colorantid as  colorantid,\n                sl.linenum\n                from inventtrans i\n                left join salestable st on st.salesid = i.invoiceid\n                left join salesline sl on sl.id = i.sales_line_id\n                left join inventtable b on i.itemid=b.itemid\n                left join inventsize s on s.itemid = i.itemid and i.inventsizeid = s.inventsizeid\n                left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n            where invoiceid='" + id + "'\n            ) as ln\n            ";
                         return [4 /*yield*/, this.db.query(salesQuery)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }

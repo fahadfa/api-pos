@@ -58,6 +58,7 @@ var SalesLineDAO_1 = require("../repos/SalesLineDAO");
 var uuid = require("uuid");
 var UsergroupconfigDAO_1 = require("../repos/UsergroupconfigDAO");
 var RawQuery_1 = require("../common/RawQuery");
+var typeorm_1 = require("typeorm");
 var TransferOrderFromAxaptaService = /** @class */ (function () {
     function TransferOrderFromAxaptaService() {
         this.axios = require("axios");
@@ -131,7 +132,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                                 salesLine.itemid = v.item_id;
                                 salesLine.configId = v.config_id;
                                 salesLine.inventsizeid = v.invent_size_id;
-                                salesLine.salesQty = v.shipped_qty;
+                                salesLine.salesQty = parseInt(v.shipped_qty);
                                 salesLine.dataareaid = v.data_area_id;
                                 salesLine.inventLocationId = data.invent_location_id_to;
                                 salesLine.batchNo = v.batch_no;
@@ -141,7 +142,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                                 salesLine.lastModifiedDate = new Date(App_1.App.DateNow());
                                 salesLine.createddatetime = new Date(App_1.App.DateNow());
                                 batches = {};
-                                batches.qty = v.shipped_qty;
+                                batches.qty = parseInt(v.shipped_qty);
                                 batches.itemid = salesLine.itemid;
                                 batches.transrefid = salesLine.salesId;
                                 batches.invoiceid = salesLine.salesId;
@@ -175,23 +176,32 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
     };
     TransferOrderFromAxaptaService.prototype.save = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var salesData, prevSalesData, usergroupconfig, seqNum, seqData, hashString, date, prevYear, year, salesLines, _i, salesLines_1, item, batches, error_3;
+            var queryRunner, salesData, prevSalesData, usergroupconfig, seqNum, seqData, hashString, date, prevYear, year, salesLines, _i, salesLines_1, item, batches, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 17, , 18]);
+                        queryRunner = typeorm_1.getConnection().createQueryRunner();
+                        return [4 /*yield*/, queryRunner.connect()];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.startTransaction()];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        _a.trys.push([3, 21, 23, 25]);
                         console.log(data);
-                        if (!(data.inventLocationId == this.sessionInfo.inventlocationid)) return [3 /*break*/, 15];
+                        if (!(data.inventLocationId == this.sessionInfo.inventlocationid)) return [3 /*break*/, 19];
                         salesData = void 0;
                         return [4 /*yield*/, this.salesTableDAO.findOne({ interCompanyOriginalSalesId: data.salesId })];
-                    case 1:
+                    case 4:
                         prevSalesData = _a.sent();
-                        if (!prevSalesData) return [3 /*break*/, 2];
+                        if (!prevSalesData) return [3 /*break*/, 5];
                         throw { message: "ALREADY_RECEIVED" };
-                    case 2: return [4 /*yield*/, this.usergroupconfigDAO.findOne({
+                    case 5: return [4 /*yield*/, this.usergroupconfigDAO.findOne({
                             groupid: this.sessionInfo.groupid,
                         })];
-                    case 3:
+                    case 6:
                         usergroupconfig = _a.sent();
                         salesData = data;
                         salesData.status = "RECEIVED";
@@ -199,9 +209,9 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         salesData.transkind = "ORDERRECEIVE";
                         seqNum = usergroupconfig.orderreceivesequencegroup;
                         return [4 /*yield*/, this.rawQuery.getNumberSequence(seqNum)];
-                    case 4:
+                    case 7:
                         seqData = _a.sent();
-                        if (!(seqData && seqData.format)) return [3 /*break*/, 6];
+                        if (!(seqData && seqData.format)) return [3 /*break*/, 9];
                         hashString = seqData.format.slice(seqData.format.indexOf("#"), seqData.format.lastIndexOf("#") + 1);
                         date = new Date(seqData.lastmodifieddate).toLocaleString();
                         prevYear = new Date(seqData.lastmodifieddate).getFullYear().toString().substr(2, 2);
@@ -210,52 +220,66 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         salesData.salesId = seqData.format.replace(hashString, year) + "-" + seqData.nextrec;
                         //console.log(salesId);
                         return [4 /*yield*/, this.rawQuery.updateNumberSequence(seqNum, seqData.nextrec)];
-                    case 5:
+                    case 8:
                         //console.log(salesId);
                         _a.sent();
-                        return [3 /*break*/, 7];
-                    case 6: throw { message: "CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE" };
-                    case 7:
+                        return [3 /*break*/, 10];
+                    case 9: throw { message: "CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE" };
+                    case 10:
                         salesLines = data.salesLines;
                         delete salesData.salesLines;
-                        return [4 /*yield*/, this.salesTableDAO.save(salesData)];
-                    case 8:
+                        // await this.salesTableDAO.save(salesData);
+                        return [4 /*yield*/, queryRunner.manager.getRepository(SalesTable_1.SalesTable).save(salesData)];
+                    case 11:
+                        // await this.salesTableDAO.save(salesData);
                         _a.sent();
                         _i = 0, salesLines_1 = salesLines;
-                        _a.label = 9;
-                    case 9:
-                        if (!(_i < salesLines_1.length)) return [3 /*break*/, 13];
+                        _a.label = 12;
+                    case 12:
+                        if (!(_i < salesLines_1.length)) return [3 /*break*/, 16];
                         item = salesLines_1[_i];
                         item.id = uuid();
                         item.salesId = salesData.salesId;
                         item.batch = [
                             {
                                 batchNo: item.batches.batchno,
-                                quantity: item.batches.qty,
+                                quantity: parseInt(item.batches.qty),
                             },
                         ];
                         batches = item.batches;
                         console.log("==========================================================", batches);
                         batches.invoiceid = salesData.salesId;
                         batches.salesLineId = item.id;
-                        return [4 /*yield*/, this.salesLineDAO.save(item)];
-                    case 10:
+                        // await this.salesLineDAO.save(item);
+                        return [4 /*yield*/, queryRunner.manager.getRepository(SalesLine_1.SalesLine).save(item)];
+                    case 13:
+                        // await this.salesLineDAO.save(item);
                         _a.sent();
-                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches)];
-                    case 11:
+                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches, false, queryRunner)];
+                    case 14:
                         _a.sent();
-                        _a.label = 12;
-                    case 12:
+                        _a.label = 15;
+                    case 15:
                         _i++;
-                        return [3 /*break*/, 9];
-                    case 13: return [2 /*return*/, { status: 1, id: salesData.salesId, message: Props_1.Props.SAVED_SUCCESSFULLY }];
-                    case 14: return [3 /*break*/, 16];
-                    case 15: throw { status: 0, message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
-                    case 16: return [3 /*break*/, 18];
+                        return [3 /*break*/, 12];
+                    case 16: return [4 /*yield*/, queryRunner.commitTransaction()];
                     case 17:
+                        _a.sent();
+                        return [2 /*return*/, { status: 1, id: salesData.salesId, message: Props_1.Props.SAVED_SUCCESSFULLY }];
+                    case 18: return [3 /*break*/, 20];
+                    case 19: throw { status: 0, message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
+                    case 20: return [3 /*break*/, 25];
+                    case 21:
                         error_3 = _a.sent();
+                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                    case 22:
+                        _a.sent();
                         throw error_3;
-                    case 18: return [2 /*return*/];
+                    case 23: return [4 /*yield*/, queryRunner.release()];
+                    case 24:
+                        _a.sent();
+                        return [7 /*endfinally*/];
+                    case 25: return [2 /*return*/];
                 }
             });
         });
@@ -343,8 +367,8 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                                 salesline.itemid = lineArray[0];
                                 salesline.configId = lineArray[1];
                                 salesline.inventsizeid = lineArray[2];
-                                salesline.batch = { batchNo: lineArray[3], quantity: lineArray[4] };
-                                salesline.salesQty = lineArray[4];
+                                salesline.batch = { batchNo: lineArray[3], quantity: parseInt(lineArray[4]) };
+                                salesline.salesQty = parseInt(lineArray[4]);
                                 salesline.lastModifiedDate = new Date(App_1.App.DateNow());
                                 salesline.createddatetime = new Date(App_1.App.DateNow());
                                 salesline.inventLocationId = salestable.inventLocationId;

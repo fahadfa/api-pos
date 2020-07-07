@@ -48,6 +48,7 @@ var uuid = require("uuid");
 var UsergroupconfigDAO_1 = require("../repos/UsergroupconfigDAO");
 var RawQuery_1 = require("../common/RawQuery");
 var SalesTableService_1 = require("./SalesTableService");
+var typeorm_1 = require("typeorm");
 var PurchaseOrderFromAxaptaService = /** @class */ (function () {
     function PurchaseOrderFromAxaptaService() {
         this.axios = require("axios");
@@ -118,7 +119,7 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                                 salesLine.appliedDiscounts = [];
                                 salesLine.configId = v.config_id;
                                 salesLine.inventsizeid = v.invent_size_id;
-                                salesLine.salesQty = v.purch_qty;
+                                salesLine.salesQty = parseInt(v.purch_qty);
                                 salesLine.dataareaid = v.data_area_id;
                                 salesLine.inventLocationId = v.invent_location_id;
                                 salesLine.batchNo = v.batch_no;
@@ -126,7 +127,7 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                                 salesLine.lastModifiedDate = new Date(App_1.App.DateNow());
                                 salesLine.createddatetime = new Date(App_1.App.DateNow());
                                 batches = {};
-                                batches.qty = v.purch_qty;
+                                batches.qty = parseInt(v.purch_qty);
                                 batches.itemid = salesLine.itemid;
                                 batches.transrefid = salesLine.salesId;
                                 batches.invoiceid = salesLine.salesId;
@@ -160,64 +161,87 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
     };
     PurchaseOrderFromAxaptaService.prototype.save = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var salesData, usergroupconfig, salesLines, _i, salesLines_1, item, batches, error_3;
+            var queryRunner, salesData, usergroupconfig, salesLines, _i, salesLines_1, item, batches, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 13, , 14]);
-                        if (!data.inventLocationId) return [3 /*break*/, 11];
-                        return [4 /*yield*/, this.salesTableDAO.findOne({ salesId: data.salesId })];
+                        queryRunner = typeorm_1.getConnection().createQueryRunner();
+                        return [4 /*yield*/, queryRunner.connect()];
                     case 1:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.startTransaction()];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        _a.trys.push([3, 17, 19, 21]);
+                        if (!data.inventLocationId) return [3 /*break*/, 15];
+                        return [4 /*yield*/, this.salesTableDAO.findOne({ salesId: data.salesId })];
+                    case 4:
                         salesData = _a.sent();
-                        if (!salesData) return [3 /*break*/, 2];
+                        if (!salesData) return [3 /*break*/, 5];
                         throw { message: "ALREADY_RECEIVED" };
-                    case 2: return [4 /*yield*/, this.usergroupconfigDAO.findOne({
+                    case 5: return [4 /*yield*/, this.usergroupconfigDAO.findOne({
                             groupid: this.sessionInfo.groupid,
                         })];
-                    case 3:
+                    case 6:
                         usergroupconfig = _a.sent();
                         salesData = data;
                         salesData.status = data.saleStatus;
                         salesData.transkind = "PURCHASEORDER";
                         salesLines = data.salesLines;
                         delete salesData.salesLines;
-                        return [4 /*yield*/, this.salesTableDAO.save(salesData)];
-                    case 4:
+                        // await this.salesTableDAO.save(salesData);
+                        return [4 /*yield*/, queryRunner.manager.getRepository(SalesTable_1.SalesTable).save(salesData)];
+                    case 7:
+                        // await this.salesTableDAO.save(salesData);
                         _a.sent();
                         _i = 0, salesLines_1 = salesLines;
-                        _a.label = 5;
-                    case 5:
-                        if (!(_i < salesLines_1.length)) return [3 /*break*/, 9];
+                        _a.label = 8;
+                    case 8:
+                        if (!(_i < salesLines_1.length)) return [3 /*break*/, 12];
                         item = salesLines_1[_i];
                         item.id = uuid();
                         item.salesId = salesData.salesId;
                         item.batch = [
                             {
                                 batchNo: item.batches.batchno,
-                                quantity: item.batches.qty,
+                                quantity: parseInt(item.batches.qty),
                             },
                         ];
                         batches = item.batches;
                         batches.invoiceid = salesData.salesId;
                         batches.salesLineId = item.id;
-                        return [4 /*yield*/, this.salesLineDAO.save(item)];
-                    case 6:
+                        // await this.salesLineDAO.save(item);
+                        return [4 /*yield*/, queryRunner.manager.getRepository(SalesLine_1.SalesLine).save(item)];
+                    case 9:
+                        // await this.salesLineDAO.save(item);
                         _a.sent();
-                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches)];
-                    case 7:
+                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches, false, queryRunner)];
+                    case 10:
                         _a.sent();
-                        _a.label = 8;
-                    case 8:
+                        _a.label = 11;
+                    case 11:
                         _i++;
-                        return [3 /*break*/, 5];
-                    case 9: return [2 /*return*/, { status: 1, id: salesData.salesId, message: Props_1.Props.SAVED_SUCCESSFULLY }];
-                    case 10: return [3 /*break*/, 12];
-                    case 11: throw { status: 0, message: "INVALID_DATA" };
-                    case 12: return [3 /*break*/, 14];
+                        return [3 /*break*/, 8];
+                    case 12: return [4 /*yield*/, queryRunner.commitTransaction()];
                     case 13:
+                        _a.sent();
+                        return [2 /*return*/, { status: 1, id: salesData.salesId, message: Props_1.Props.SAVED_SUCCESSFULLY }];
+                    case 14: return [3 /*break*/, 16];
+                    case 15: throw { status: 0, message: "INVALID_DATA" };
+                    case 16: return [3 /*break*/, 21];
+                    case 17:
                         error_3 = _a.sent();
+                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                    case 18:
+                        _a.sent();
                         throw error_3;
-                    case 14: return [2 /*return*/];
+                    case 19: return [4 /*yield*/, queryRunner.release()];
+                    case 20:
+                        _a.sent();
+                        return [7 /*endfinally*/];
+                    case 21: return [2 /*return*/];
                 }
             });
         });
@@ -341,7 +365,7 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                     line.taxGroup = v.tax_group;
                     line.taxItemGroup = v.tax_item_group;
                     line.salesprice = v.unit_price;
-                    line.salesQty = v.qty;
+                    line.salesQty = parseInt(v.qty);
                     line.lineTotalDisc = v.line_disc;
                     line.lineAmount = v.line_amount;
                     line.vat = v.line_vat_percent;
@@ -349,6 +373,19 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                     line.currencyCode = v.currency_code;
                     line.dataareaid = salesData.dataareaid;
                     line.inventLocationId = salesData.inventLocationId;
+                    // let batches: any = {};
+                    // batches.qty = parseInt(v.purch_qty);
+                    // batches.itemid = line.itemid;
+                    // batches.transrefid = line.salesId;
+                    // batches.invoiceid = line.salesId;
+                    // batches.batchno = line.batchNo;
+                    // batches.configid = line.configId;
+                    // batches.inventsizeid = line.inventsizeid;
+                    // batches.inventlocationid = line.inventLocationId;
+                    // batches.dataareaid = line.dataareaid;
+                    // batches.transactionClosed = false;
+                    // batches.dateinvent = new Date(App.DateNow());
+                    // line.batches = batches;
                     salesLine.push(line);
                 });
                 salesData.salesLine = salesLine;

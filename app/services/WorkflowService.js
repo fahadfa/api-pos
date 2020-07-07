@@ -45,6 +45,7 @@ var UsergroupconfigDAO_1 = require("../repos/UsergroupconfigDAO");
 var UpdateInventoryService_1 = require("../services/UpdateInventoryService");
 var InventTransDAO_1 = require("../repos/InventTransDAO");
 var Watcher_1 = require("../../utils/Watcher");
+var typeorm_2 = require("typeorm");
 var ENV_STORE_ID = process.env ? process.env.ENV_STORE_ID : null;
 var WorkflowService = /** @class */ (function () {
     function WorkflowService() {
@@ -119,40 +120,49 @@ var WorkflowService = /** @class */ (function () {
     WorkflowService.prototype.save = function (item, type) {
         if (type === void 0) { type = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var status_1, promistList, condition, usergroupid, salesData, RM_AND_RA, canSendForApproval, transactions, _i, transactions_1, v, salesSaveData, error_3;
+            var queryRunner, status_1, promistList, condition, usergroupid, salesData, RM_AND_RA, canSendForApproval, transactions, _i, transactions_1, v, salesSaveData, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 29, , 30]);
+                        queryRunner = typeorm_2.getConnection().createQueryRunner();
+                        return [4 /*yield*/, queryRunner.connect()];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.startTransaction()];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        _a.trys.push([3, 33, 35, 37]);
                         status_1 = item.status;
                         promistList = [];
                         return [4 /*yield*/, this.rawQuery.workflowconditions(this.sessionInfo.usergroupconfigid)];
-                    case 1:
+                    case 4:
                         condition = _a.sent();
                         usergroupid = this.sessionInfo.groupid;
-                        if (!(item.id || item.orderId)) return [3 /*break*/, 27];
-                        if (!item.id) return [3 /*break*/, 3];
+                        if (!(item.id || item.orderId)) return [3 /*break*/, 31];
+                        if (!item.id) return [3 /*break*/, 6];
                         return [4 /*yield*/, this.workflowDAO.entity(item.id)];
-                    case 2:
+                    case 5:
                         item = _a.sent();
                         if (item) {
                             usergroupid = item.usergroupid;
                         }
-                        _a.label = 3;
-                    case 3: return [4 /*yield*/, this.salesTableDAO.entity(item.orderId)];
-                    case 4:
+                        _a.label = 6;
+                    case 6: return [4 /*yield*/, this.salesTableDAO.entity(item.orderId)];
+                    case 7:
                         salesData = _a.sent();
                         if (!salesData) {
                             throw Props_1.Props.ORDER_NOT_FOUND;
                         }
                         return [4 /*yield*/, this.rawQuery.getRmAndRa(usergroupid)];
-                    case 5:
+                    case 8:
                         RM_AND_RA = _a.sent();
-                        if (!(type == "sendforapproval")) return [3 /*break*/, 23];
+                        if (!(type == "sendforapproval")) return [3 /*break*/, 26];
                         return [4 /*yield*/, this.allocateData(item, salesData)];
-                    case 6:
+                    case 9:
                         _a.sent();
-                        if (!(salesData.transkind == "RETURNORDER")) return [3 /*break*/, 7];
+                        if (!(salesData.transkind == "RETURNORDER")) return [3 /*break*/, 10];
                         if (condition.rmApprovalRequired) {
                             item.statusId = Props_1.Props.WORKFLOW_STATUSID.PENDINGRMAPPROVAL[0];
                             if (RM_AND_RA.rm && RM_AND_RA.rm != "") {
@@ -171,15 +181,15 @@ var WorkflowService = /** @class */ (function () {
                                 throw { message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
                             }
                         }
-                        return [3 /*break*/, 22];
-                    case 7:
-                        if (!(salesData.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 21];
+                        return [3 /*break*/, 25];
+                    case 10:
+                        if (!(salesData.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 24];
                         return [4 /*yield*/, this.stockOnHandCheck(salesData)];
-                    case 8:
+                    case 11:
                         canSendForApproval = _a.sent();
                         console.log(canSendForApproval);
-                        if (!canSendForApproval) return [3 /*break*/, 19];
-                        if (![5, 8, 9].includes(salesData.movementType.id)) return [3 /*break*/, 9];
+                        if (!canSendForApproval) return [3 /*break*/, 22];
+                        if (![5, 8, 9].includes(salesData.movementType.id)) return [3 /*break*/, 12];
                         item.statusId = Props_1.Props.WORKFLOW_STATUSID.PENDINGRMAPPROVAL[0];
                         if (RM_AND_RA.rm && RM_AND_RA.rm != "") {
                             item.pendingWith = RM_AND_RA.rm;
@@ -187,9 +197,9 @@ var WorkflowService = /** @class */ (function () {
                         else {
                             throw { message: "NO_RM_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
                         }
-                        return [3 /*break*/, 13];
-                    case 9:
-                        if (![1, 2, 3, 4, 6, 7].includes(salesData.movementType.id)) return [3 /*break*/, 10];
+                        return [3 /*break*/, 16];
+                    case 12:
+                        if (![1, 2, 3, 4, 6, 7].includes(salesData.movementType.id)) return [3 /*break*/, 13];
                         item.statusId = Props_1.Props.WORKFLOW_STATUSID.PENDINGRAAPPROVAL[0];
                         if (RM_AND_RA.ra && RM_AND_RA.ra != "") {
                             item.pendingWith = RM_AND_RA.ra;
@@ -197,14 +207,14 @@ var WorkflowService = /** @class */ (function () {
                         else {
                             throw { message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
                         }
-                        return [3 /*break*/, 13];
-                    case 10: return [4 /*yield*/, this.rawQuery.updateSalesTableWorkFlowStatus(salesData.salesId, "NOWORKFLOW")];
-                    case 11: return [4 /*yield*/, _a.sent()];
-                    case 12:
+                        return [3 /*break*/, 16];
+                    case 13: return [4 /*yield*/, this.rawQuery.updateSalesTableWorkFlowStatus(salesData.salesId, "NOWORKFLOW")];
+                    case 14: return [4 /*yield*/, _a.sent()];
+                    case 15:
                         _a.sent();
                         return [2 /*return*/, { id: salesData.salesId, status: "NOWORKFLOW", message: Props_1.Props.SAVED_SUCCESSFULLY }];
-                    case 13: return [4 /*yield*/, this.inventtransDAO.findAll({ invoiceid: salesData.salesId })];
-                    case 14:
+                    case 16: return [4 /*yield*/, this.inventtransDAO.findAll({ invoiceid: salesData.salesId })];
+                    case 17:
                         transactions = _a.sent();
                         transactions = transactions.filter(function (v) { return v.qty < 0; });
                         transactions.map(function (v) {
@@ -214,23 +224,23 @@ var WorkflowService = /** @class */ (function () {
                             console.log(v);
                         });
                         _i = 0, transactions_1 = transactions;
-                        _a.label = 15;
-                    case 15:
-                        if (!(_i < transactions_1.length)) return [3 /*break*/, 18];
-                        v = transactions_1[_i];
-                        return [4 /*yield*/, this.updateInventoryService.updateInventoryOnhandTable(v, true)];
-                    case 16:
-                        _a.sent();
-                        _a.label = 17;
-                    case 17:
-                        _i++;
-                        return [3 /*break*/, 15];
+                        _a.label = 18;
                     case 18:
-                        console.log(transactions);
-                        return [3 /*break*/, 20];
-                    case 19: throw { message: "CANNOT_CREATE_MOVEMENT_ORDER" };
-                    case 20: return [3 /*break*/, 22];
+                        if (!(_i < transactions_1.length)) return [3 /*break*/, 21];
+                        v = transactions_1[_i];
+                        return [4 /*yield*/, this.updateInventoryService.updateInventoryOnhandTable(v, true, queryRunner)];
+                    case 19:
+                        _a.sent();
+                        _a.label = 20;
+                    case 20:
+                        _i++;
+                        return [3 /*break*/, 18];
                     case 21:
+                        console.log(transactions);
+                        return [3 /*break*/, 23];
+                    case 22: throw { message: "CANNOT_CREATE_MOVEMENT_ORDER" };
+                    case 23: return [3 /*break*/, 25];
+                    case 24:
                         if (salesData.transkind == "DESIGNERSERVICERETURN") {
                             item.statusId = Props_1.Props.WORKFLOW_STATUSID.PENDINGINGFORDESIGNERAPPROVAL[0];
                             if (RM_AND_RA.designer_signing_authority && RM_AND_RA.designer_signing_authority != "") {
@@ -249,13 +259,13 @@ var WorkflowService = /** @class */ (function () {
                                 throw { message: "NO_RM_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
                             }
                         }
-                        _a.label = 22;
-                    case 22:
+                        _a.label = 25;
+                    case 25:
                         item.usergroupid = this.sessionInfo.groupid;
                         item.orderType = Props_1.Props.WORKFLOW_ORDER_TYPE[salesData.transkind][0];
                         item.inventLocationId = this.sessionInfo.inventlocationid;
-                        return [3 /*break*/, 24];
-                    case 23:
+                        return [3 /*break*/, 27];
+                    case 26:
                         // console.log(item.statusId);
                         if (status_1 == "accept" || status_1 == null) {
                             if (salesData.transkind == "RETURNORDER") {
@@ -342,13 +352,13 @@ var WorkflowService = /** @class */ (function () {
                             item.pendingWith = null;
                             // await this.inventryTransUpdate(salesData);
                         }
-                        _a.label = 24;
-                    case 24:
+                        _a.label = 27;
+                    case 27:
                         item.lastModifiedBy = this.sessionInfo.userName;
                         // console.log(new Date());
                         item.lastModifiedDate = new Date(App_1.App.DateNow());
                         return [4 /*yield*/, this.validate(item)];
-                    case 25:
+                    case 28:
                         _a.sent();
                         salesSaveData = {};
                         salesSaveData.salesId = item.orderId;
@@ -358,16 +368,26 @@ var WorkflowService = /** @class */ (function () {
                         promistList.push(this.workflowDAO.save(item), this.salesTableDAO.save(salesSaveData));
                         // let salesTableData: any = await this.salesTableDAO.save(salesData);
                         return [4 /*yield*/, Promise.all(promistList)];
-                    case 26:
+                    case 29:
                         // let salesTableData: any = await this.salesTableDAO.save(salesData);
                         _a.sent();
+                        return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 30:
+                        _a.sent();
                         return [2 /*return*/, { id: item.id, status: item.statusId, message: "SAVED_SUCCESSFULLY" }];
-                    case 27: throw { message: "INVALID_DATA" };
-                    case 28: return [3 /*break*/, 30];
-                    case 29:
+                    case 31: throw { message: "INVALID_DATA" };
+                    case 32: return [3 /*break*/, 37];
+                    case 33:
                         error_3 = _a.sent();
+                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                    case 34:
+                        _a.sent();
                         throw error_3;
-                    case 30: return [2 /*return*/];
+                    case 35: return [4 /*yield*/, queryRunner.release()];
+                    case 36:
+                        _a.sent();
+                        return [7 /*endfinally*/];
+                    case 37: return [2 /*return*/];
                 }
             });
         });
@@ -490,30 +510,55 @@ var WorkflowService = /** @class */ (function () {
     };
     WorkflowService.prototype.inventryTransUpdate = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var batches, _i, batches_2, batch;
+            var queryRunner, batches, _i, batches_2, batch, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.inventtransDAO.findAll({
-                            invoiceid: reqData.salesId,
-                        })];
+                    case 0:
+                        queryRunner = typeorm_2.getConnection().createQueryRunner();
+                        return [4 /*yield*/, queryRunner.connect()];
                     case 1:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.startTransaction()];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        _a.trys.push([3, 10, 12, 14]);
+                        return [4 /*yield*/, this.inventtransDAO.findAll({
+                                invoiceid: reqData.salesId,
+                            })];
+                    case 4:
                         batches = _a.sent();
                         batches = batches.filter(function (v) { return v.qty < 0; });
-                        if (!(batches.length > 0)) return [3 /*break*/, 5];
+                        if (!(batches.length > 0)) return [3 /*break*/, 8];
                         _i = 0, batches_2 = batches;
-                        _a.label = 2;
-                    case 2:
-                        if (!(_i < batches_2.length)) return [3 /*break*/, 5];
+                        _a.label = 5;
+                    case 5:
+                        if (!(_i < batches_2.length)) return [3 /*break*/, 8];
                         batch = batches_2[_i];
                         batch.qty = batch.qty;
-                        return [4 /*yield*/, this.updateInventoryService.updateUnReserveQty(batch)];
-                    case 3:
+                        return [4 /*yield*/, this.updateInventoryService.updateUnReserveQty(batch, queryRunner)];
+                    case 6:
                         _a.sent();
-                        _a.label = 4;
-                    case 4:
+                        _a.label = 7;
+                    case 7:
                         _i++;
-                        return [3 /*break*/, 2];
-                    case 5: return [2 /*return*/];
+                        return [3 /*break*/, 5];
+                    case 8: return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 9:
+                        _a.sent();
+                        return [3 /*break*/, 14];
+                    case 10:
+                        error_4 = _a.sent();
+                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                    case 11:
+                        _a.sent();
+                        throw error_4;
+                    case 12: return [4 /*yield*/, queryRunner.release()];
+                    case 13:
+                        _a.sent();
+                        return [7 /*endfinally*/];
+                    case 14: return [2 /*return*/];
                 }
             });
         });

@@ -553,7 +553,7 @@ var SalesTableController = /** @class */ (function () {
                         return [4 /*yield*/, App_1.App.ValildateUserAccess(this.service.sessionInfo, this.moduleName(), Props_1.Props.ACCESS_WRITE)];
                     case 1:
                         if (!_a.sent()) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.service.updateinventtransstatus(reqData)];
+                        return [4 /*yield*/, this.service.updateinventtransstatus(reqData, null, null)];
                     case 2:
                         result = _a.sent();
                         return [3 /*break*/, 4];

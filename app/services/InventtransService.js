@@ -376,7 +376,7 @@ var InventtransService = /** @class */ (function () {
                                         configId: v.configId,
                                         inventsizeid: v.inventsizeid,
                                         selectedQuantity: v.salesQty,
-                                        availabilty: itemsInStock_1[index].qty,
+                                        availabilty: parseInt(itemsInStock_1[index].qty),
                                     });
                                 }
                             }

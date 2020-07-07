@@ -16,7 +16,7 @@ var Inventorytrans = /** @class */ (function () {
     }
     __decorate([
         typeorm_1.PrimaryColumn({ name: "id" }),
-        __metadata("design:type", Number)
+        __metadata("design:type", String)
     ], Inventorytrans.prototype, "id", void 0);
     __decorate([
         typeorm_1.Column({ name: "itemid" }),

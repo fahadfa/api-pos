@@ -43,6 +43,7 @@ var typeorm_1 = require("typeorm");
 var RawQuery_1 = require("../common/RawQuery");
 var UsergroupconfigDAO_1 = require("../repos/UsergroupconfigDAO");
 var CacheService_1 = require("../common/CacheService");
+var typeorm_2 = require("typeorm");
 var CusttableService = /** @class */ (function () {
     function CusttableService() {
         this.db = typeorm_1.getManager();
@@ -219,25 +220,39 @@ var CusttableService = /** @class */ (function () {
     };
     CusttableService.prototype.save = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var cond, customer, returnData, error_5;
+            var queryRunner, cond, returnData, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 4, , 5]);
+                        queryRunner = typeorm_2.getConnection().createQueryRunner();
+                        return [4 /*yield*/, queryRunner.connect()];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.startTransaction()];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        _a.trys.push([3, 8, 10, 12]);
                         delete reqData.Custgroup;
                         console.log(reqData.Custgroup);
                         return [4 /*yield*/, this.validate(reqData)];
-                    case 1:
+                    case 4:
                         cond = _a.sent();
                         console.log(cond);
-                        if (!(cond == true)) return [3 /*break*/, 3];
+                        if (!(cond == true)) return [3 /*break*/, 7];
                         reqData.walkincustomer = true;
-                        return [4 /*yield*/, this.custtableDAO.save(reqData)];
-                    case 2:
-                        customer = _a.sent();
-                        returnData = { id: customer.accountnum, message: "SAVED_SUCCESSFULLY" };
+                        //let customer = await this.custtableDAO.save(reqData);
+                        return [4 /*yield*/, queryRunner.manager.getRepository(Custtable_1.Custtable).save(reqData)];
+                    case 5:
+                        //let customer = await this.custtableDAO.save(reqData);
+                        _a.sent();
+                        returnData = { id: reqData.accountnum, message: "SAVED_SUCCESSFULLY" };
+                        return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 6:
+                        _a.sent();
                         return [2 /*return*/, returnData];
-                    case 3:
+                    case 7:
                         if (cond == "updated") {
                             throw { message: "UPDATED" };
                         }
@@ -247,11 +262,18 @@ var CusttableService = /** @class */ (function () {
                         else {
                             throw { message: "INVALID_DATA" };
                         }
-                        return [3 /*break*/, 5];
-                    case 4:
+                        return [3 /*break*/, 12];
+                    case 8:
                         error_5 = _a.sent();
+                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                    case 9:
+                        _a.sent();
                         throw error_5;
-                    case 5: return [2 /*return*/];
+                    case 10: return [4 /*yield*/, queryRunner.release()];
+                    case 11:
+                        _a.sent();
+                        return [7 /*endfinally*/];
+                    case 12: return [2 /*return*/];
                 }
             });
         });

@@ -53,6 +53,7 @@ var InventTransDAO_1 = require("../repos/InventTransDAO");
 var UpdateInventoryService_1 = require("../services/UpdateInventoryService");
 var SalesLineDAO_1 = require("../repos/SalesLineDAO");
 var DesignerserviceRepository_1 = require("../repos/DesignerserviceRepository");
+var typeorm_2 = require("typeorm");
 var ReturnOrderReport = /** @class */ (function () {
     function ReturnOrderReport() {
         this.db = typeorm_1.getManager();
@@ -64,13 +65,22 @@ var ReturnOrderReport = /** @class */ (function () {
     }
     ReturnOrderReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data_1, batches, result, new_data_1, i_1, batches_2, _i, batches_1, item, salesLine, sNo_1, error_1;
+            var queryRunner, data_1, batches, result, new_data_1, i_1, batches_2, _i, batches_1, item, salesLine, sNo_1, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 9, , 10]);
-                        return [4 /*yield*/, this.query_to_data(params)];
+                        queryRunner = typeorm_2.getConnection().createQueryRunner();
+                        return [4 /*yield*/, queryRunner.connect()];
                     case 1:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.startTransaction()];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        _a.trys.push([3, 13, 15, 17]);
+                        return [4 /*yield*/, this.query_to_data(params)];
+                    case 4:
                         data_1 = _a.sent();
                         data_1 = data_1.length > 0 ? data_1[0] : {};
                         data_1.originalPrinted = data_1.originalPrinted == null ? false : data_1.originalPrinted;
@@ -83,7 +93,7 @@ var ReturnOrderReport = /** @class */ (function () {
                             data_1.isCopy = false;
                         }
                         return [4 /*yield*/, this.batches_data_to_query(params)];
-                    case 2:
+                    case 5:
                         batches = _a.sent();
                         result = this.groupBy(batches, function (item) {
                             return [item.itemid, item.batchno, item.configid, item.inventsizeid];
@@ -107,29 +117,29 @@ var ReturnOrderReport = /** @class */ (function () {
                         });
                         data_1.batches = new_data_1;
                         this.db.query(" update inventtrans set transactionclosed = true where invoiceid='" + params.salesId + "'");
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 7];
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 10];
                         return [4 /*yield*/, this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED", new Date().toISOString())];
-                    case 3:
+                    case 6:
                         _a.sent();
                         return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
-                    case 4:
+                    case 7:
                         batches_2 = _a.sent();
                         for (_i = 0, batches_1 = batches_2; _i < batches_1.length; _i++) {
                             item = batches_1[_i];
                             item.transactionClosed = true;
                             // this.inventTransDAO.save(item);
-                            this.updateInventoryService.updateInventtransTable(item);
+                            this.updateInventoryService.updateInventtransTable(item, false, queryRunner);
                         }
                         return [4 /*yield*/, this.updateSalesLineData(params.salesId)];
-                    case 5:
-                        _a.sent();
-                        if (!(data_1.designServiceRedeemAmount > 0)) return [3 /*break*/, 7];
-                        return [4 /*yield*/, this.updateDesignerServiceForCustomer(data_1)];
-                    case 6:
-                        _a.sent();
-                        _a.label = 7;
-                    case 7: return [4 /*yield*/, this.salesline_query_to_data(params)];
                     case 8:
+                        _a.sent();
+                        if (!(data_1.designServiceRedeemAmount > 0)) return [3 /*break*/, 10];
+                        return [4 /*yield*/, this.updateDesignerServiceForCustomer(data_1)];
+                    case 9:
+                        _a.sent();
+                        _a.label = 10;
+                    case 10: return [4 /*yield*/, this.salesline_query_to_data(params)];
+                    case 11:
                         salesLine = _a.sent();
                         sNo_1 = 1;
                         data_1.vat = salesLine.length > 0 ? salesLine[0].vat : "-";
@@ -144,11 +154,22 @@ var ReturnOrderReport = /** @class */ (function () {
                             data_1.quantity += parseInt(v.salesQty);
                         });
                         // console.log(data);
+                        return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 12:
+                        // console.log(data);
+                        _a.sent();
                         return [2 /*return*/, data_1];
-                    case 9:
+                    case 13:
                         error_1 = _a.sent();
+                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                    case 14:
+                        _a.sent();
                         throw error_1;
-                    case 10: return [2 /*return*/];
+                    case 15: return [4 /*yield*/, queryRunner.release()];
+                    case 16:
+                        _a.sent();
+                        return [7 /*endfinally*/];
+                    case 17: return [2 /*return*/];
                 }
             });
         });

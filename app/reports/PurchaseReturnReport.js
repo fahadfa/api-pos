@@ -51,6 +51,7 @@ var App_1 = require("../../utils/App");
 var RawQuery_1 = require("../common/RawQuery");
 var InventTransDAO_1 = require("../repos/InventTransDAO");
 var UpdateInventoryService_1 = require("../services/UpdateInventoryService");
+var typeorm_2 = require("typeorm");
 var PurchaseReturnReport = /** @class */ (function () {
     function PurchaseReturnReport() {
         this.db = typeorm_1.getManager();
@@ -60,13 +61,22 @@ var PurchaseReturnReport = /** @class */ (function () {
     }
     PurchaseReturnReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, batches, result, new_data_1, batches_2, _i, batches_1, item, error_1;
+            var queryRunner, data, batches, result, new_data_1, batches_2, _i, batches_1, item, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
-                        return [4 /*yield*/, this.query_to_data(params)];
+                        queryRunner = typeorm_2.getConnection().createQueryRunner();
+                        return [4 /*yield*/, queryRunner.connect()];
                     case 1:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.startTransaction()];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        _a.trys.push([3, 9, 11, 13]);
+                        return [4 /*yield*/, this.query_to_data(params)];
+                    case 4:
                         data = _a.sent();
                         data[0].originalPrinted = data[0].originalPrinted == null ? false : data[0].originalPrinted;
                         data[0].vatAmount = Math.round(parseFloat((data[0].vatAmount * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2);
@@ -78,7 +88,7 @@ var PurchaseReturnReport = /** @class */ (function () {
                             data[0].isCopy = false;
                         }
                         return [4 /*yield*/, this.batches_query_to_data(params)];
-                    case 2:
+                    case 5:
                         batches = _a.sent();
                         result = this.groupBy(batches, function (item) {
                             return [item.itemid, item.batchno, item.configid, item.inventsizeid];
@@ -100,22 +110,32 @@ var PurchaseReturnReport = /** @class */ (function () {
                         data[0].batches = new_data_1;
                         this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED");
                         this.db.query(" update inventtrans set transactionclosed = true where invoiceid='" + params.salesId + "'");
-                        if (!!data.isCopy) return [3 /*break*/, 4];
+                        if (!!data.isCopy) return [3 /*break*/, 7];
                         return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
-                    case 3:
+                    case 6:
                         batches_2 = _a.sent();
                         for (_i = 0, batches_1 = batches_2; _i < batches_1.length; _i++) {
                             item = batches_1[_i];
                             item.transactionClosed = true;
                             // this.inventTransDAO.save(item);
-                            this.updateInventoryService.updateInventtransTable(item);
+                            this.updateInventoryService.updateInventtransTable(item, false, queryRunner);
                         }
-                        _a.label = 4;
-                    case 4: return [2 /*return*/, data[0]];
-                    case 5:
+                        _a.label = 7;
+                    case 7: return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 8:
+                        _a.sent();
+                        return [2 /*return*/, data[0]];
+                    case 9:
                         error_1 = _a.sent();
+                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                    case 10:
+                        _a.sent();
                         throw error_1;
-                    case 6: return [2 /*return*/];
+                    case 11: return [4 /*yield*/, queryRunner.release()];
+                    case 12:
+                        _a.sent();
+                        return [7 /*endfinally*/];
+                    case 13: return [2 /*return*/];
                 }
             });
         });

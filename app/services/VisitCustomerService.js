@@ -129,13 +129,14 @@ var VisitCustomerService = /** @class */ (function () {
             });
         });
     };
-    VisitCustomerService.prototype.save = function (reqData) {
+    VisitCustomerService.prototype.save = function (reqData, queryRunner) {
+        if (queryRunner === void 0) { queryRunner = null; }
         return __awaiter(this, void 0, void 0, function () {
             var userGroupConfigData, cond, visitor, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
+                        _a.trys.push([0, 8, , 9]);
                         return [4 /*yield*/, this.usergroupconfigDAO.findOne({ groupid: this.sessionInfo.groupid })];
                     case 1:
                         userGroupConfigData = _a.sent();
@@ -147,22 +148,28 @@ var VisitCustomerService = /** @class */ (function () {
                         return [4 /*yield*/, this.validate(reqData)];
                     case 2:
                         cond = _a.sent();
-                        if (!(cond == true)) return [3 /*break*/, 4];
+                        if (!(cond == true)) return [3 /*break*/, 7];
                         // console.log(this.sessionInfo);
                         reqData.userGroupId = this.sessionInfo.groupid;
-                        return [4 /*yield*/, this.visitCustomerDAO.save(reqData)];
+                        if (!queryRunner) return [3 /*break*/, 4];
+                        return [4 /*yield*/, queryRunner.manager.getRepository(VisitCustomer_1.VisitCustomer).save(reqData)];
                     case 3:
+                        _a.sent();
+                        return [3 /*break*/, 6];
+                    case 4: return [4 /*yield*/, this.visitCustomerDAO.save(reqData)];
+                    case 5:
                         visitor = _a.sent();
-                        return [2 /*return*/, { id: reqData.visitorSequenceNumber, message: Props_1.Props.SAVED_SUCCESSFULLY }];
-                    case 4:
+                        _a.label = 6;
+                    case 6: return [2 /*return*/, { id: reqData.visitorSequenceNumber, message: Props_1.Props.SAVED_SUCCESSFULLY }];
+                    case 7:
                         if (cond == "VisitSeqNumber") {
                             throw { message: "RECORD_ALREADY_EXISTS" };
                         }
-                        return [3 /*break*/, 6];
-                    case 5:
+                        return [3 /*break*/, 9];
+                    case 8:
                         error_4 = _a.sent();
                         throw error_4;
-                    case 6: return [2 /*return*/];
+                    case 9: return [2 /*return*/];
                 }
             });
         });
