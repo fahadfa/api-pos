@@ -1300,7 +1300,7 @@ var SalesTableService = /** @class */ (function () {
                         item.reserveStatus = "UNRESERVED";
                         item.transactionClosed = false;
                         item.dateinvent = new Date(App_1.App.DateNow());
-                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(item, false, queryRunner)];
+                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(item, false, true, queryRunner)];
                     case 7:
                         _a.sent();
                         _a.label = 8;
@@ -1616,7 +1616,7 @@ var SalesTableService = /** @class */ (function () {
                             });
                             batch.salesLineId = item.id;
                             this.updateInventoryService.sessionInfo = this.sessionInfo;
-                            promiseList.push(this.updateInventoryService.updateInventtransTable(batch, true, queryRunner));
+                            promiseList.push(this.updateInventoryService.updateInventtransTable(batch, true, true, queryRunner));
                         }
                         return [4 /*yield*/, Promise.all(promiseList)];
                     case 11: return [2 /*return*/, _c.sent()];
@@ -1649,7 +1649,7 @@ var SalesTableService = /** @class */ (function () {
                             v.dataareaid = this.sessionInfo.dataareaid;
                             v.inventlocationid = condData.inventlocationid;
                             this.updateInventoryService.sessionInfo = this.sessionInfo;
-                            promiseList.push(this.updateInventoryService.updateInventtransTable(v, true, queryRunner));
+                            promiseList.push(this.updateInventoryService.updateInventtransTable(v, true, true, queryRunner));
                         }
                         return [4 /*yield*/, Promise.all(promiseList)];
                     case 3: return [2 /*return*/, _a.sent()];
@@ -2183,7 +2183,7 @@ var SalesTableService = /** @class */ (function () {
                                                 quantity: batches.returnQuantity,
                                             });
                                             this.updateInventoryService.sessionInfo = this.sessionInfo;
-                                            promiseList.push(this.updateInventoryService.updateInventtransTable(batches, false, queryRunner));
+                                            promiseList.push(this.updateInventoryService.updateInventtransTable(batches, false, true, queryRunner));
                                         }
                                     }
                                 }
@@ -2317,7 +2317,7 @@ var SalesTableService = /** @class */ (function () {
                                     quantity: batches.quantity,
                                 });
                                 this.updateInventoryService.sessionInfo = this.sessionInfo;
-                                promiseList.push(this.updateInventoryService.updateInventtransTable(batches, false, queryRunner));
+                                promiseList.push(this.updateInventoryService.updateInventtransTable(batches, false, true, queryRunner));
                             }
                         }
                         return [3 /*break*/, 12];
@@ -2330,7 +2330,7 @@ var SalesTableService = /** @class */ (function () {
                                 batchNo: inv.batchno,
                                 quantity: Math.abs(inv.qty),
                             });
-                            promiseList.push(this.updateInventoryService.updateInventtransTable(inv, false, queryRunner));
+                            promiseList.push(this.updateInventoryService.updateInventtransTable(inv, false, true, queryRunner));
                         }
                         _e.label = 12;
                     case 12: return [3 /*break*/, 15];
@@ -2343,7 +2343,7 @@ var SalesTableService = /** @class */ (function () {
                                 batchNo: inv.batchno,
                                 quantity: Math.abs(inv.qty),
                             });
-                            promiseList.push(this.updateInventoryService.updateInventtransTable(inv, false, queryRunner));
+                            promiseList.push(this.updateInventoryService.updateInventtransTable(inv, false, true, queryRunner));
                         }
                         _e.label = 15;
                     case 15:
@@ -2483,7 +2483,7 @@ var SalesTableService = /** @class */ (function () {
                                         quantity: batches_8.qty,
                                     });
                                     this.updateInventoryService.sessionInfo = this.sessionInfo;
-                                    promiseList.push(this.updateInventoryService.updateInventtransTable(batches_8, false, queryRunner));
+                                    promiseList.push(this.updateInventoryService.updateInventtransTable(batches_8, false, true, queryRunner));
                                 }
                             }
                             else {
@@ -2514,7 +2514,7 @@ var SalesTableService = /** @class */ (function () {
                                                 quantity: batches_9.quantity,
                                             });
                                             this.updateInventoryService.sessionInfo = this.sessionInfo;
-                                            promiseList.push(this.updateInventoryService.updateInventtransTable(batches_9, false, queryRunner));
+                                            promiseList.push(this.updateInventoryService.updateInventtransTable(batches_9, false, true, queryRunner));
                                         }
                                     }
                                 }
@@ -2650,7 +2650,7 @@ var SalesTableService = /** @class */ (function () {
                             quantity: batches.quantity,
                         });
                         this.updateInventoryService.sessionInfo = this.sessionInfo;
-                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches, false, queryRunner)];
+                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches, false, true, queryRunner)];
                     case 7:
                         _d.sent();
                         _d.label = 8;
@@ -2682,7 +2682,7 @@ var SalesTableService = /** @class */ (function () {
                             quantity: batch.quantity,
                         });
                         this.updateInventoryService.sessionInfo = this.sessionInfo;
-                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batch, false, queryRunner)];
+                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batch, false, true, queryRunner)];
                     case 13:
                         _d.sent();
                         _d.label = 14;

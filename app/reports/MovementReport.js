@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -54,36 +65,36 @@ var MovementReport = /** @class */ (function () {
     }
     MovementReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, id, status_1, data_1, salesLine, date, query, promiseList, reqData, batches, _i, batches_1, item, error_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var queryRunner, id, status_1, data_1, salesLine, date, query, promiseList, reqData, batches, groupData, inventoryOnHandBatches_2, _i, batches_1, item, _a, inventoryOnHandBatches_1, item, error_1;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         queryRunner = typeorm_2.getConnection().createQueryRunner();
                         return [4 /*yield*/, queryRunner.connect()];
                     case 1:
-                        _a.sent();
+                        _b.sent();
                         return [4 /*yield*/, queryRunner.startTransaction()];
                     case 2:
-                        _a.sent();
-                        _a.label = 3;
+                        _b.sent();
+                        _b.label = 3;
                     case 3:
-                        _a.trys.push([3, 11, 13, 15]);
+                        _b.trys.push([3, 12, 14, 16]);
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
                     case 4:
-                        data_1 = _a.sent();
+                        data_1 = _b.sent();
                         data_1 = data_1.length > 0 ? data_1[0] : {};
                         data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
                         return [4 /*yield*/, this.salesline_query_to_data(id)];
                     case 5:
-                        salesLine = _a.sent();
+                        salesLine = _b.sent();
                         // salesLine = salesLine.length > 0 ? salesLine : [];
                         data_1.salesLine = salesLine;
                         data_1.quantity = 0;
                         data_1.salesLine.map(function (v) {
                             data_1.quantity += parseInt(v.salesQty);
                         });
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 9];
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 10];
                         date = new Date().toISOString();
                         query = "UPDATE salestable SET originalprinted = '" + true + "', status = 'POSTED'";
                         if (date) {
@@ -92,45 +103,61 @@ var MovementReport = /** @class */ (function () {
                         query += " WHERE salesid = '" + params.salesId.toUpperCase() + "'";
                         return [4 /*yield*/, queryRunner.query(query)];
                     case 6:
-                        _a.sent();
+                        _b.sent();
                         promiseList = [];
-                        if (!(data_1.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 9];
+                        if (!(data_1.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 10];
                         reqData = {
                             salesId: id,
                         };
                         promiseList.push(this.workflowService.inventryTransUpdate(reqData));
-                        return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: id })];
+                        return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
                     case 7:
-                        batches = _a.sent();
+                        batches = _b.sent();
+                        return [4 /*yield*/, this.groupBy(batches, function (item) {
+                                return [item.itemid, item.batchno, item.configid, item.inventsizeid];
+                            })];
+                    case 8:
+                        groupData = _b.sent();
+                        inventoryOnHandBatches_2 = [];
+                        groupData.forEach(function (groupitem) {
+                            var qty = groupitem.reduce(function (res, item) { return res + parseInt(item.qty); }, 0);
+                            groupitem[0].qty = Math.abs(qty);
+                            inventoryOnHandBatches_2.push(__assign({}, groupitem[0]));
+                        });
                         for (_i = 0, batches_1 = batches; _i < batches_1.length; _i++) {
                             item = batches_1[_i];
-                            // console.log("===================dffhsafyrkfhiufghllgsh================");
                             item.transactionClosed = true;
                             // this.inventTransDAO.save(item);
-                            promiseList.push(this.updateInventoryService.updateInventtransTable(item, false, queryRunner));
+                            promiseList.push(this.updateInventoryService.updateInventtransTable(item, false, false, queryRunner));
+                        }
+                        for (_a = 0, inventoryOnHandBatches_1 = inventoryOnHandBatches_2; _a < inventoryOnHandBatches_1.length; _a++) {
+                            item = inventoryOnHandBatches_1[_a];
+                            item.transactionClosed = true;
+                            // this.inventTransDAO.save(item);
+                            promiseList.push(this.updateInventoryService.updateInventoryOnhandTable(item, false, queryRunner));
                         }
                         return [4 /*yield*/, Promise.all(promiseList)];
-                    case 8:
-                        _a.sent();
-                        _a.label = 9;
-                    case 9: 
+                    case 9:
+                        _b.sent();
+                        _b.label = 10;
+                    case 10: 
                     // console.log(data);
                     return [4 /*yield*/, queryRunner.commitTransaction()];
-                    case 10:
-                        // console.log(data);
-                        _a.sent();
-                        return [2 /*return*/, data_1];
                     case 11:
-                        error_1 = _a.sent();
-                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                        // console.log(data);
+                        _b.sent();
+                        return [2 /*return*/, data_1];
                     case 12:
-                        _a.sent();
+                        error_1 = _b.sent();
+                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                    case 13:
+                        _b.sent();
                         throw error_1;
-                    case 13: return [4 /*yield*/, queryRunner.release()];
-                    case 14:
-                        _a.sent();
+                    case 14: return [4 /*yield*/, queryRunner.release()];
+                    case 15:
+                        _b.sent();
                         return [7 /*endfinally*/];
-                    case 15: return [2 /*return*/];
+                    case 16: return [2 /*return*/];
                 }
             });
         });
@@ -151,6 +178,17 @@ var MovementReport = /** @class */ (function () {
                 }
                 return [2 /*return*/];
             });
+        });
+    };
+    MovementReport.prototype.groupBy = function (array, f) {
+        var groups = {};
+        array.forEach(function (o) {
+            var group = JSON.stringify(f(o));
+            groups[group] = groups[group] || [];
+            groups[group].push(o);
+        });
+        return Object.keys(groups).map(function (group) {
+            return groups[group];
         });
     };
     MovementReport.prototype.query_to_data = function (id) {

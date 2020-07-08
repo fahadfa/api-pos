@@ -45,7 +45,7 @@ var UpdateInventoryService = /** @class */ (function () {
         this.inventTransDAO = new InventTransDAO_1.InventorytransDAO();
         this.inventoryOnhandDAO = new InventoryOnhandDAO_1.InventoryOnhandDAO();
     }
-    UpdateInventoryService.prototype.updateInventtransTable = function (reqData, update, queryRunner) {
+    UpdateInventoryService.prototype.updateInventtransTable = function (reqData, update, status, queryRunner) {
         if (update === void 0) { update = false; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -58,10 +58,12 @@ var UpdateInventoryService = /** @class */ (function () {
                     case 1:
                         // await this.inventTransDAO.save(reqData);
                         _a.sent();
+                        if (!status) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.updateInventoryOnhandTable(reqData, update, queryRunner)];
                     case 2:
                         _a.sent();
-                        return [2 /*return*/];
+                        _a.label = 3;
+                    case 3: return [2 /*return*/];
                 }
             });
         });

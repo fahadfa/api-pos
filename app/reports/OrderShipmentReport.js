@@ -121,7 +121,7 @@ var OrderShipmentReport = /** @class */ (function () {
                         item = batches_1[_i];
                         item.transactionClosed = true;
                         // this.inventTransDAO.save(item);
-                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(item, false, queryRunner)];
+                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(item, false, true, queryRunner)];
                     case 11:
                         // this.inventTransDAO.save(item);
                         _b.sent();

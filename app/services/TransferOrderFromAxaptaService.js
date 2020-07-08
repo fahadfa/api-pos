@@ -255,7 +255,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                     case 13:
                         // await this.salesLineDAO.save(item);
                         _a.sent();
-                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches, false, queryRunner)];
+                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches, false, true, queryRunner)];
                     case 14:
                         _a.sent();
                         _a.label = 15;

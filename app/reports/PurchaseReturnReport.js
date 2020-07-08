@@ -118,7 +118,7 @@ var PurchaseReturnReport = /** @class */ (function () {
                             item = batches_1[_i];
                             item.transactionClosed = true;
                             // this.inventTransDAO.save(item);
-                            this.updateInventoryService.updateInventtransTable(item, false, queryRunner);
+                            this.updateInventoryService.updateInventtransTable(item, false, true, queryRunner);
                         }
                         _a.label = 7;
                     case 7: return [4 /*yield*/, queryRunner.commitTransaction()];

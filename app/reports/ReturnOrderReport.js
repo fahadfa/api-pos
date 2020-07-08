@@ -128,7 +128,7 @@ var ReturnOrderReport = /** @class */ (function () {
                             item = batches_1[_i];
                             item.transactionClosed = true;
                             // this.inventTransDAO.save(item);
-                            this.updateInventoryService.updateInventtransTable(item, false, queryRunner);
+                            this.updateInventoryService.updateInventtransTable(item, false, true, queryRunner);
                         }
                         return [4 /*yield*/, this.updateSalesLineData(params.salesId)];
                     case 8:
