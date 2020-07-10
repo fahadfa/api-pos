@@ -141,7 +141,7 @@ var SalesTableService = /** @class */ (function () {
                                 if (data.designServiceRedeemAmount > 0) {
                                     data.sendForApproval = true;
                                 }
-                                if ([1, 2].includes(data.customer.custtype) &&
+                                else if ([1, 2].includes(data.customer.custtype) &&
                                     (condition.rmApprovalRequired || condition.raApprovalRequired)) {
                                     data.sendForApproval = true;
                                 }
@@ -1555,6 +1555,7 @@ var SalesTableService = /** @class */ (function () {
                     case 1:
                         taxItemGroup = _c.sent();
                         item.taxItemGroup = taxItemGroup.taxitemgroupid;
+                        item.lineAmount = parseFloat(item.salesprice) * parseFloat(item.salesQty);
                         console.log("--------------------------------------------", item.batches);
                         if (!(item.batches && item.batches.length > 0)) return [3 /*break*/, 8];
                         item.batches = item.batches.filter(function (v) { return v.quantity > 0; });
