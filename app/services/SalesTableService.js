@@ -783,9 +783,11 @@ var SalesTableService = /** @class */ (function () {
                         if (!!item.salesId) return [3 /*break*/, 5];
                         item.dataareaid = this.sessionInfo.dataareaid;
                         item.deleted = false;
-                        item.inventLocationId = this.sessionInfo.inventlocationid;
+                        item.inventLocationId = item.inventLocationId ? item.inventLocationId : this.sessionInfo.inventlocationid;
+                        item.warehouse = { inventLocationId: item.inventLocationId };
                         item.createdby = this.sessionInfo.userName;
                         item.createddatetime = new Date(App_1.App.DateNow());
+                        item.countryCode = item.countryCode ? item.countryCode : 966;
                         return [4 /*yield*/, this.getSalesid(item.transkind)];
                     case 4:
                         uid = _a.sent();
@@ -2109,6 +2111,8 @@ var SalesTableService = /** @class */ (function () {
                         _c.label = 3;
                     case 3:
                         _c.trys.push([3, 14, 16, 18]);
+                        // reqData.interCompanyOriginalSalesId = reqData.interCompanyOriginalSalesId;
+                        console.log(reqData);
                         salesLine = reqData.salesLine;
                         delete reqData.salesLine;
                         return [4 /*yield*/, this.validate(reqData)];
@@ -2147,6 +2151,7 @@ var SalesTableService = /** @class */ (function () {
                     case 10:
                         promiseList = [];
                         // promiseList.push(this.salestableDAO.save(reqData));
+                        console.log(reqData, "==============================================================================================");
                         promiseList.push(queryRunner.manager.getRepository(SalesTable_1.SalesTable).save(reqData));
                         promiseList.push(this.salesLineDelete(reqData, queryRunner));
                         for (_i = 0, salesLine_8 = salesLine; _i < salesLine_8.length; _i++) {
