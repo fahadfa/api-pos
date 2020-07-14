@@ -75,8 +75,8 @@ var UpdateInventoryService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log("==========updateInventoryOnhand=================");
-                        console.log(reqData.transactionClosed);
+                        console.log("==========updateInventoryOnhand=================1");
+                        console.log(reqData);
                         if (!reqData.transactionClosed) return [3 /*break*/, 17];
                         return [4 /*yield*/, this.inventoryOnhandDAO.findOne({
                                 itemid: reqData.itemid,
@@ -88,7 +88,7 @@ var UpdateInventoryService = /** @class */ (function () {
                             })];
                     case 1:
                         inventoryOnHandData = _a.sent();
-                        console.log("==========updateInventoryOnhandData=================", inventoryOnHandData);
+                        console.log("==========updateInventoryOnhandData=================2", inventoryOnHandData);
                         if (!inventoryOnHandData) return [3 /*break*/, 14];
                         if (!(reqData.reserveStatus == "RESERVED")) return [3 /*break*/, 4];
                         if (!update) return [3 /*break*/, 3];
@@ -215,9 +215,9 @@ var UpdateInventoryService = /** @class */ (function () {
                         inventoryOnHandData.updatedOn = new Date(App_1.App.DateNow());
                         inventoryOnHandData.updatedBy = this.sessionInfo ? this.sessionInfo.userName : "SYSTEM";
                         // await this.inventoryOnhandDAO.save(inventoryOnHandData);
-                        return [4 /*yield*/, queryRunner.manager.getRepository(InventoryOnhand_1.InventoryOnhand).delete(inventoryOnHandData)];
+                        console.log(inventoryOnHandData);
+                        return [4 /*yield*/, queryRunner.manager.getRepository(InventoryOnhand_1.InventoryOnhand).save(inventoryOnHandData)];
                     case 2:
-                        // await this.inventoryOnhandDAO.save(inventoryOnHandData);
                         _a.sent();
                         _a.label = 3;
                     case 3: return [2 /*return*/];

@@ -55,6 +55,8 @@ var Watcher_1 = require("./utils/Watcher");
 //import { main } from "./sync";
 var http = require("http");
 var Store_1 = require("./utils/Store");
+var App_1 = require("./utils/App");
+var sysService_1 = require("./sysService");
 var port = 5000;
 var ENV_STORE_ID = process.env ? process.env.ENV_STORE_ID : null;
 var count = 0;
@@ -129,34 +131,66 @@ var run = function () { return __awaiter(_this, void 0, void 0, function () {
     });
 }); };
 run();
-var sync = function () {
-    var child_process = require("child_process");
-    var fs = require("fs");
-    var syncFileUpdate = __dirname + "/update.ts";
-    syncFileUpdate = fs.existsSync(syncFileUpdate) ? __dirname + "/update.ts" : __dirname + "/update.js";
-    child_process.fork(syncFileUpdate);
-    Log_1.log.warn("syncFileUpdate:", syncFileUpdate);
-    var syncDFile = __dirname + "/syncD.ts";
-    syncDFile = fs.existsSync(syncDFile) ? __dirname + "/syncD.ts" : __dirname + "/syncD.js";
-    child_process.fork(syncDFile);
-    Log_1.log.warn("syncDFile:", syncDFile);
-    var syncMFile = __dirname + "/syncM.ts";
-    syncMFile = fs.existsSync(syncMFile) ? __dirname + "/syncM.ts" : __dirname + "/syncM.js";
-    child_process.fork(syncMFile);
-    Log_1.log.warn("syncMFile:", syncMFile);
-    var syncTFile = __dirname + "/syncT.ts";
-    syncTFile = fs.existsSync(syncTFile) ? __dirname + "/syncT.ts" : __dirname + "/syncT.js";
-    child_process.fork(syncTFile);
-    Log_1.log.warn("syncTFile:", syncTFile);
-    var sync1File = __dirname + "/sync1.ts";
-    sync1File = fs.existsSync(sync1File) ? __dirname + "/sync1.ts" : __dirname + "/sync1.js";
-    child_process.fork(sync1File);
-    Log_1.log.warn("syncFile:", sync1File);
-    var syncFFile = __dirname + "/syncF.ts";
-    syncFFile = fs.existsSync(syncFFile) ? __dirname + "/syncF.ts" : __dirname + "/syncF.js";
-    child_process.fork(syncFFile);
-    Log_1.log.warn("syncFile:", syncFFile);
-};
+var sync = function () { return __awaiter(_this, void 0, void 0, function () {
+    var child_process, fs, syncFileUpdate, syncDFile, macAddress, _a, syncMFile, syncTFile, sync1File, syncFFile, err_1;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                child_process = require("child_process");
+                fs = require("fs");
+                syncFileUpdate = __dirname + "/update.ts";
+                syncFileUpdate = fs.existsSync(syncFileUpdate) ? __dirname + "/update.ts" : __dirname + "/update.js";
+                child_process.fork(syncFileUpdate);
+                Log_1.log.warn("syncFileUpdate:", syncFileUpdate);
+                syncDFile = __dirname + "/syncD.ts";
+                syncDFile = fs.existsSync(syncDFile) ? __dirname + "/syncD.ts" : __dirname + "/syncD.js";
+                child_process.fork(syncDFile);
+                Log_1.log.warn("syncDFile:", syncDFile);
+                _a = {};
+                return [4 /*yield*/, App_1.App.getMacAddress()];
+            case 1:
+                _a.systemAddress = _b.sent(),
+                    _a.storeId = ENV_STORE_ID;
+                return [4 /*yield*/, sysService_1.SysService.SelectedMacAddress(ENV_STORE_ID)];
+            case 2:
+                macAddress = (_a.selectAddress = _b.sent(),
+                    _a);
+                console.log(JSON.stringify(macAddress));
+                Log_1.log.warn(JSON.stringify(macAddress));
+                if (!(macAddress.selectAddress && macAddress.systemAddress && macAddress.selectAddress == macAddress.systemAddress)) return [3 /*break*/, 3];
+                syncMFile = __dirname + "/syncM.ts";
+                syncMFile = fs.existsSync(syncMFile) ? __dirname + "/syncM.ts" : __dirname + "/syncM.js";
+                child_process.fork(syncMFile);
+                Log_1.log.warn("syncMFile:", syncMFile);
+                syncTFile = __dirname + "/syncT.ts";
+                syncTFile = fs.existsSync(syncTFile) ? __dirname + "/syncT.ts" : __dirname + "/syncT.js";
+                child_process.fork(syncTFile);
+                Log_1.log.warn("syncTFile:", syncTFile);
+                sync1File = __dirname + "/sync1.ts";
+                sync1File = fs.existsSync(sync1File) ? __dirname + "/sync1.ts" : __dirname + "/sync1.js";
+                child_process.fork(sync1File);
+                Log_1.log.warn("syncFile:", sync1File);
+                syncFFile = __dirname + "/syncF.ts";
+                syncFFile = fs.existsSync(syncFFile) ? __dirname + "/syncF.ts" : __dirname + "/syncF.js";
+                child_process.fork(syncFFile);
+                Log_1.log.warn("syncFile:", syncFFile);
+                return [3 /*break*/, 6];
+            case 3:
+                _b.trys.push([3, 5, , 6]);
+                Log_1.log.error("Duplicate-Storeid: " + macAddress.storeId);
+                Log_1.log.error(JSON.stringify(macAddress));
+                return [4 /*yield*/, App_1.App.SendMail("searneni@jazeeratech.in; nreddy@jazeeratech.in; sprasad@jazeeratech.in;", "auto: duplicate-storeid: " + macAddress.storeId, "duplicate-store-id", macAddress)];
+            case 4:
+                _b.sent();
+                return [3 /*break*/, 6];
+            case 5:
+                err_1 = _b.sent();
+                Log_1.log.error(err_1);
+                return [3 /*break*/, 6];
+            case 6: return [2 /*return*/];
+        }
+    });
+}); };
 var syncTimeDiff = function () {
     try {
         var lastSyncDate = Store_1.getItem("syncdate", "index -> cron");
@@ -172,6 +206,32 @@ var syncTimeDiff = function () {
     }
 };
 try {
+    // let MacAddress = async () => {
+    //   let macAddress = {
+    //     systemAddress: await App.getMacAddress(),
+    //     storeId: ENV_STORE_ID,
+    //     selectAddress: await SysService.SelectedMacAddress(ENV_STORE_ID),
+    //   };
+    //   log.warn(JSON.stringify(macAddress));
+    //   if (macAddress.selectAddress && macAddress.systemAddress && macAddress.selectAddress == macAddress.systemAddress) {
+    //     console.log("proceed");
+    //   } else {
+    //     try {
+    //       log.error("auto: duplicate-dtoreid: " + macAddress.storeId);
+    //       log.error(JSON.stringify(macAddress));
+    //       await App.SendMail(
+    //         "searneni@jazeeratech.in; nreddy@jazeeratech.in; sprasad@jazeeratech.in;",
+    //         "Duplicate-Storeid: " + macAddress.storeId,
+    //         "duplicate-store-id",
+    //         macAddress
+    //       );
+    //     } catch (err) {
+    //       log.error(err);
+    //     }
+    //   }
+    // };
+    // MacAddress();
+    Log_1.log.info("ENV_STORE_ID: " + ENV_STORE_ID);
     if (ENV_STORE_ID) {
         var lastSyncDate = null;
         var diff = null;

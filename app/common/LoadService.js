@@ -358,7 +358,7 @@ var LoadService = /** @class */ (function () {
                         if (param.status) {
                             query += "and salestable.status in ('" + param.status + "') ";
                         }
-                        query += " LIMIT 15";
+                        query += "ORDER BY salestable.createddatetime DESC LIMIT 15";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();

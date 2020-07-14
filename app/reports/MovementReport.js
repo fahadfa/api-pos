@@ -78,7 +78,7 @@ var MovementReport = /** @class */ (function () {
                         _b.sent();
                         _b.label = 3;
                     case 3:
-                        _b.trys.push([3, 12, 14, 16]);
+                        _b.trys.push([3, 13, 15, 17]);
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
                     case 4:
@@ -94,7 +94,7 @@ var MovementReport = /** @class */ (function () {
                         data_1.salesLine.map(function (v) {
                             data_1.quantity += parseInt(v.salesQty);
                         });
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 10];
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 11];
                         date = new Date().toISOString();
                         query = "UPDATE salestable SET originalprinted = '" + true + "', status = 'POSTED'";
                         if (date) {
@@ -105,23 +105,27 @@ var MovementReport = /** @class */ (function () {
                     case 6:
                         _b.sent();
                         promiseList = [];
-                        if (!(data_1.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 10];
+                        if (!(data_1.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 11];
                         reqData = {
                             salesId: id,
                         };
-                        promiseList.push(this.workflowService.inventryTransUpdate(reqData));
-                        return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
+                        return [4 /*yield*/, this.workflowService.inventryTransUpdate(reqData)];
                     case 7:
+                        _b.sent();
+                        return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
+                    case 8:
                         batches = _b.sent();
+                        console.log(batches);
                         return [4 /*yield*/, this.groupBy(batches, function (item) {
                                 return [item.itemid, item.batchno, item.configid, item.inventsizeid];
                             })];
-                    case 8:
+                    case 9:
                         groupData = _b.sent();
+                        console.log(groupData);
                         inventoryOnHandBatches_2 = [];
                         groupData.forEach(function (groupitem) {
                             var qty = groupitem.reduce(function (res, item) { return res + parseInt(item.qty); }, 0);
-                            groupitem[0].qty = Math.abs(qty);
+                            groupitem[0].qty = qty;
                             inventoryOnHandBatches_2.push(__assign({}, groupitem[0]));
                         });
                         for (_i = 0, batches_1 = batches; _i < batches_1.length; _i++) {
@@ -137,27 +141,27 @@ var MovementReport = /** @class */ (function () {
                             promiseList.push(this.updateInventoryService.updateInventoryOnhandTable(item, false, queryRunner));
                         }
                         return [4 /*yield*/, Promise.all(promiseList)];
-                    case 9:
+                    case 10:
                         _b.sent();
-                        _b.label = 10;
-                    case 10: 
+                        _b.label = 11;
+                    case 11: 
                     // console.log(data);
                     return [4 /*yield*/, queryRunner.commitTransaction()];
-                    case 11:
+                    case 12:
                         // console.log(data);
                         _b.sent();
                         return [2 /*return*/, data_1];
-                    case 12:
+                    case 13:
                         error_1 = _b.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 13:
+                    case 14:
                         _b.sent();
                         throw error_1;
-                    case 14: return [4 /*yield*/, queryRunner.release()];
-                    case 15:
+                    case 15: return [4 /*yield*/, queryRunner.release()];
+                    case 16:
                         _b.sent();
                         return [7 /*endfinally*/];
-                    case 16: return [2 /*return*/];
+                    case 17: return [2 /*return*/];
                 }
             });
         });

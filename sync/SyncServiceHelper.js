@@ -436,6 +436,9 @@ var SyncServiceHelper = /** @class */ (function () {
                         else if (type == "VERSION") {
                             sql = "UPDATE sync_source SET  type = 'v" + data + "', updated_on = '" + moment().toISOString() + "'  WHERE id='" + STORE_ID + "' ";
                         }
+                        else if (type == "MAC") {
+                            sql = "UPDATE sync_source SET  mac_address = '" + data + "', updated_on = '" + moment().toISOString() + "'  WHERE id='" + STORE_ID + "' ";
+                        }
                         log.info(sql);
                         if (!sql) return [3 /*break*/, 2];
                         return [4 /*yield*/, SyncServiceHelper.BatchQuery(stageDb, [sql])];
@@ -443,6 +446,31 @@ var SyncServiceHelper = /** @class */ (function () {
                         _a.sent();
                         _a.label = 2;
                     case 2: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    SyncServiceHelper.StoreSource = function (storeid) {
+        return __awaiter(this, void 0, void 0, function () {
+            var sql, stageDb, syncResults, error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        stageDb = SyncServiceHelper.StageDBOptions();
+                        sql = "select * from sync_source where id='" + storeid + "' ";
+                        log.info(sql);
+                        return [4 /*yield*/, SyncServiceHelper.ExecuteQuery(stageDb, sql)];
+                    case 1:
+                        syncResults = _a.sent();
+                        syncResults = syncResults.rows;
+                        syncResults = syncResults.length > 0 ? syncResults[0] : null;
+                        return [2 /*return*/, Promise.resolve(syncResults)];
+                    case 2:
+                        error_1 = _a.sent();
+                        log.error(error_1);
+                        throw error_1;
+                    case 3: return [2 /*return*/];
                 }
             });
         });

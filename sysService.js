@@ -36,6 +36,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var Log_1 = require("./utils/Log");
+var SyncServiceHelper_1 = require("./sync/SyncServiceHelper");
+var App_1 = require("./utils/App");
 var syslogstr = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
 var cmd = require("node-cmd");
 var cron = require("node-cron");
@@ -109,6 +111,44 @@ var SysService = /** @class */ (function () {
                     Log_1.ulog.warn(syslogstr);
                 }
                 return [2 /*return*/, Promise.resolve(retValue)];
+            });
+        });
+    };
+    SysService.SelectedMacAddress = function (storeid) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, _a, err_2;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        Log_1.ulog.info(syslogstr);
+                        _b.label = 1;
+                    case 1:
+                        _b.trys.push([1, 8, 9, 10]);
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.StoreSource(storeid)];
+                    case 2:
+                        data = _b.sent();
+                        if (!data) return [3 /*break*/, 6];
+                        if (!(data.mac_address == "own")) return [3 /*break*/, 5];
+                        _a = data;
+                        return [4 /*yield*/, App_1.App.getMacAddress()];
+                    case 3:
+                        _a.mac_address = _b.sent();
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.UpdateCall("MAC", data.mac_address)];
+                    case 4:
+                        _b.sent();
+                        _b.label = 5;
+                    case 5: return [2 /*return*/, Promise.resolve(data.mac_address)];
+                    case 6: return [2 /*return*/, Promise.resolve(null)];
+                    case 7: return [3 /*break*/, 10];
+                    case 8:
+                        err_2 = _b.sent();
+                        Log_1.ulog.warn(err_2);
+                        return [2 /*return*/, null];
+                    case 9:
+                        Log_1.ulog.info(syslogstr);
+                        return [7 /*endfinally*/];
+                    case 10: return [2 /*return*/];
+                }
             });
         });
     };
