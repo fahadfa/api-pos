@@ -17,6 +17,7 @@
   "license": "ISC",
   "homepage": "",
   "dependencies": {
+    "address": "1.1.2",
     "auto-updater": "1.0.2",
     "axios": "0.19.0",
     "bcryptjs": "2.4.3",
