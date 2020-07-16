@@ -49,9 +49,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var InventTrans_1 = require("../../entities/InventTrans");
 var InventTransDAO_1 = require("../repos/InventTransDAO");
 var RawQuery_1 = require("../common/RawQuery");
+var SalesLineDAO_1 = require("../repos/SalesLineDAO");
 var InventtransService = /** @class */ (function () {
     function InventtransService() {
         this.inventtransDAO = new InventTransDAO_1.InventorytransDAO();
+        this.salesLineDAO = new SalesLineDAO_1.SalesLineDAO();
         this.rawQuery = new RawQuery_1.RawQuery();
         this.inventoryTrans = new InventTrans_1.Inventorytrans();
     }
@@ -132,16 +134,46 @@ var InventtransService = /** @class */ (function () {
     };
     InventtransService.prototype.getSelectedBatches = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var t0, data, salesorderlines_1, returnorderlines_1, salesorderlinesresult, returnorderlinesresult, so_list_1, ro_list_1, resData_1, result, new_data_1, error_4;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var data, new_data, _i, data_1, v, i, _a, t0, data, salesorderlines_1, returnorderlines_1, salesorderlinesresult, returnorderlinesresult, so_list_1, ro_list_1, resData_1, result, new_data_1, error_4;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
+                        _b.trys.push([0, 9, , 10]);
+                        if (!(params.type == "DESIGNERSERVICERETURN")) return [3 /*break*/, 6];
+                        return [4 /*yield*/, this.salesLineDAO.search({ salesId: params.salesid })];
+                    case 1:
+                        data = _b.sent();
+                        new_data = [];
+                        _i = 0, data_1 = data;
+                        _b.label = 2;
+                    case 2:
+                        if (!(_i < data_1.length)) return [3 /*break*/, 5];
+                        v = data_1[_i];
+                        _a = {
+                            itemid: v.itemid
+                        };
+                        return [4 /*yield*/, this.rawQuery.desiner_product_name(v.itemid)];
+                    case 3:
+                        i = (_a.nameen = _b.sent(),
+                            _a.configid = v.configId,
+                            _a.inventsizeid = v.inventsizeid,
+                            _a.qty = parseInt(v.salesQty),
+                            _a.batchno = "-",
+                            _a.colorantid = "-",
+                            _a);
+                        i.namear = i.itemen;
+                        new_data.push(i);
+                        _b.label = 4;
+                    case 4:
+                        _i++;
+                        return [3 /*break*/, 2];
+                    case 5: return [2 /*return*/, new_data];
+                    case 6:
                         t0 = new Date().getTime();
                         params.inventlocationid = this.sessionInfo.inventlocationid;
                         return [4 /*yield*/, this.rawQuery.getSelectedBatches(params)];
-                    case 1:
-                        data = _a.sent();
+                    case 7:
+                        data = _b.sent();
                         salesorderlines_1 = [];
                         returnorderlines_1 = [];
                         data.map(function (v) {
@@ -264,11 +296,12 @@ var InventtransService = /** @class */ (function () {
                             });
                             return [2 /*return*/, new_data_1];
                         }
-                        return [3 /*break*/, 3];
-                    case 2:
-                        error_4 = _a.sent();
+                        _b.label = 8;
+                    case 8: return [3 /*break*/, 10];
+                    case 9:
+                        error_4 = _b.sent();
                         throw error_4;
-                    case 3: return [2 /*return*/];
+                    case 10: return [2 /*return*/];
                 }
             });
         });

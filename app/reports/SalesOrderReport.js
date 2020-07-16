@@ -75,6 +75,10 @@ var SalesOrderReport = /** @class */ (function () {
                                 data_1.paymentModeAr = "ائتمان";
                             }
                         }
+                        if (data_1.paymentMode == "CASH") {
+                            data_1.paymentMode = "Cash";
+                            data_1.paymentModeAr = "السيولة النقدية";
+                        }
                         data_1.twoCopies = data_1.originalPrinted ? false : true;
                         // console.log(data.status);
                         if (data_1.status != "RESERVED") {
@@ -96,73 +100,85 @@ var SalesOrderReport = /** @class */ (function () {
                         newSalesline_1 = [];
                         sNo_1 = 1;
                         quantity_1 = 0;
-                        list_1.map(function (val) {
-                            data_1.vat = val.length > 0 ? val[0].vat : "-";
-                            val.colorantid = val.colorantid ? val.colorantid : "-";
-                            var lines = {
-                                amount: parseFloat(data_1.amount).toFixed(2),
-                                quantity: 0,
-                                netAmount: parseFloat(data_1.netAmount).toFixed(2),
-                                disc: parseFloat(data_1.disc).toFixed(2),
-                                vatamount: parseFloat(data_1.vatAmount).toFixed(2),
-                                shippingamount: parseFloat(data_1.shippingAmount).toFixed(2),
-                                page: 1,
-                                totalPages: list_1.length,
-                                voucherdiscchecked: data_1.voucherdiscchecked,
-                                vouchernum: data_1.vouchernum,
-                                salesId: data_1.salesId,
-                                custAccount: data_1.custAccount,
-                                status: data_1.status,
-                                transkind: data_1.transkind,
-                                customername: data_1.customername,
-                                custmobilenumber: data_1.custmobilenumber,
-                                cname: data_1.cname,
-                                cnamealias: data_1.cnamealias,
-                                cphone: data_1.cphone,
-                                createddatetime: data_1.createddatetime,
-                                lastmodifieddate: data_1.lastmodifieddate,
-                                originalPrinted: data_1.originalPrinted,
-                                inventLocationId: data_1.inventLocationId,
-                                wnamealias: data_1.wnamealias,
-                                wname: data_1.wname,
-                                createdby: data_1.createdby,
-                                deliveryaddress: data_1.deliveryaddress,
-                                salesman: data_1.salesman,
-                                notes: data_1.notes,
-                                deliveryDate: data_1.deliveryDate,
-                                isbreak: data_1.isbreak,
-                                vatGrand: data_1.vatamount,
-                                vat: data_1.vat,
-                                paymentType: data_1.paymentType,
-                                shippedDate: data_1.lastmodifieddate.split(",")[0],
-                                paymentMode: data_1.paymentType == "ONLINE" ? "Online" : data_1.paymentMode,
-                                paymentModeAr: data_1.paymentType == "ONLINE" ? "عبر الانترنت" : data_1.paymentMode,
-                                cashAmount: data_1.cashAmount,
-                                cardAmount: data_1.cardAmount,
-                                designServiceRedeemAmount: data_1.designServiceRedeemAmount,
-                                redeemAmount: data_1.redeemAmount,
-                                lines: [],
-                            };
-                            data_1.isbreak = val.length > 5 ? true : false;
-                            val.map(function (v) {
-                                lines.quantity += parseInt(v.salesQty);
-                                v.colorantid = val.colorantid;
-                                v.sNo = sNo_1;
-                                lines.lines.push(v);
-                                sNo_1 += 1;
+                        if (params.type != "mobile") {
+                            list_1.map(function (val) {
+                                data_1.vat = val.length > 0 ? val[0].vat : "-";
+                                val.colorant = val.colorant ? val.colorant : "-";
+                                var lines = {
+                                    amount: parseFloat(data_1.amount).toFixed(2),
+                                    quantity: 0,
+                                    netAmount: parseFloat(data_1.netAmount).toFixed(2),
+                                    disc: parseFloat(data_1.disc).toFixed(2),
+                                    vatamount: parseFloat(data_1.vatAmount).toFixed(2),
+                                    shippingamount: parseFloat(data_1.shippingAmount).toFixed(2),
+                                    page: 1,
+                                    totalPages: list_1.length,
+                                    voucherdiscchecked: data_1.voucherdiscchecked,
+                                    vouchernum: data_1.vouchernum,
+                                    salesId: data_1.salesId,
+                                    custAccount: data_1.custAccount,
+                                    status: data_1.status,
+                                    transkind: data_1.transkind,
+                                    customername: data_1.customername,
+                                    custmobilenumber: data_1.custmobilenumber,
+                                    cname: data_1.cname,
+                                    cnamealias: data_1.cnamealias,
+                                    cphone: data_1.cphone,
+                                    createddatetime: data_1.createddatetime,
+                                    lastmodifieddate: data_1.lastmodifieddate,
+                                    originalPrinted: data_1.originalPrinted,
+                                    inventLocationId: data_1.inventLocationId,
+                                    wnamealias: data_1.wnamealias,
+                                    wname: data_1.wname,
+                                    createdby: data_1.createdby,
+                                    deliveryaddress: data_1.deliveryaddress,
+                                    salesman: data_1.salesman,
+                                    notes: data_1.notes,
+                                    deliveryDate: data_1.deliveryDate,
+                                    isbreak: data_1.isbreak,
+                                    vatGrand: data_1.vatamount,
+                                    vat: data_1.vat,
+                                    paymentType: data_1.paymentType,
+                                    shippedDate: data_1.lastmodifieddate.split(",")[0],
+                                    paymentMode: data_1.paymentType == "ONLINE" ? "Online" : data_1.paymentMode,
+                                    paymentModeAr: data_1.paymentType == "ONLINE" ? "عبر الانترنت" : data_1.paymentMode,
+                                    cashAmount: data_1.cashAmount,
+                                    cardAmount: data_1.cardAmount,
+                                    designServiceRedeemAmount: data_1.designServiceRedeemAmount,
+                                    redeemAmount: data_1.redeemAmount,
+                                    lines: [],
+                                };
+                                data_1.isbreak = val.length > 5 ? true : false;
+                                val.map(function (v) {
+                                    lines.quantity += parseInt(v.salesQty);
+                                    v.colorantid = val.colorant;
+                                    v.sNo = sNo_1;
+                                    lines.lines.push(v);
+                                    sNo_1 += 1;
+                                });
+                                lines.page = list_1.indexOf(val) + 1;
+                                lines.quantity = lines.quantity + quantity_1;
+                                quantity_1 = lines.quantity;
+                                newSalesline_1.push(lines);
                             });
-                            lines.page = list_1.indexOf(val) + 1;
-                            lines.quantity = lines.quantity + quantity_1;
-                            quantity_1 = lines.quantity;
-                            newSalesline_1.push(lines);
-                        });
-                        data_1.salesLine = newSalesline_1;
-                        // data.salesLine.shippedDate = data.lastmodifieddate.split(",")[0];
-                        data_1.quantity = 0;
-                        data_1.salesLine.map(function (v) {
-                            data_1.quantity += parseInt(v.quantity);
-                        });
-                        return [2 /*return*/, data_1];
+                            data_1.salesLine = newSalesline_1;
+                            // data.salesLine.shippedDate = data.lastmodifieddate.split(",")[0];
+                            data_1.quantity = 0;
+                            data_1.salesLine.map(function (v) {
+                                data_1.quantity += parseInt(v.quantity);
+                            });
+                            return [2 /*return*/, data_1];
+                        }
+                        else {
+                            data_1.salesLine = salesLine;
+                            // data.salesLine.shippedDate = data.lastmodifieddate.split(",")[0];
+                            data_1.quantity = 0;
+                            data_1.salesLine.map(function (v) {
+                                data_1.quantity += parseInt(v.salesQty);
+                            });
+                            return [2 /*return*/, data_1];
+                        }
+                        return [3 /*break*/, 5];
                     case 4:
                         error_1 = _a.sent();
                         throw error_1;
@@ -227,7 +243,7 @@ var SalesOrderReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        salesQuery = "\n              select\n              distinct\n              ln.salesid,\n              ln.itemid,\n              ln.batchno,\n              ln.configid,\n              ln.inventsizeid,\n              ln.saleslineqty,\n              to_char(ln.lastmodifieddate, 'DD-MM-YYYY') as \"shippingDate\",\n              to_char(ln.salesqty, 'FM999999999D') as \"salesQty\",\n              to_char(ln.salesprice, 'FM999999999990.00') as salesprice,\n              to_char((ln.vatamount/ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"vatAmount\",\n              to_char((ln.linetotaldisc/ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"lineTotalDisc\",\n              to_char(ln.colorantprice, 'FM999999999990.00') as colorantprice,\n              to_char((ln.lineamount / ln.saleslineqty)*ln.salesqty + (ln.colorantprice*ln.salesqty) - (ln.linetotaldisc / ln.saleslineqty)*ln.salesqty + (ln.vatamount / ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"lineAmount\",\n              ln.prodnamear as \"prodNameAr\",\n              ln.prodnameen as \"prodNameEn\",\n              ln.colNameAr as \"colNameAr\",\n              ln.colNameEn as \"colNameEn\",\n              ln.sizeNameEn as \"sizeNameEn\",\n              ln.sizeNameAr as \"sizeNameAr\",\n              to_char((ln.lineamount/ln.saleslineqty)*ln.salesqty + (ln.colorantprice*ln.salesqty) - (ln.linetotaldisc/ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"lineAmountBeforeVat\",\n              ln.vat as vat,\n              ln.colorantid as colorant,\n              ln.linenum as linenum\n              from\n              (\n                select distinct on (i.id, i.invoiceid, i.itemid, i.configid, i.inventsizeid, i.qty, i.batchno, i.sales_line_id)\n                i.invoiceid as salesid,\n                i.batchno,\n                i.itemid,\n                i.configid,\n                i.inventsizeid,\n                st.status as status,\n                ABS(i.qty) as salesqty,\n                b.itemname as prodnamear,\n                b.namealias as prodnameen,\n                coalesce(sl.salesprice, 0)  as salesprice,\n                coalesce(sl.vatamount, 0)  as vatamount,\n                coalesce(sl.linetotaldisc, 0) as linetotaldisc,\n                coalesce(sl.colorantprice,0) as colorantprice,\n                c.name as colNameAr,\n                c.name as colNameEn,\n                s.description as sizeNameEn,\n                s.name as sizeNameAr,\n                coalesce(sl.lineamount,0) as  lineamount,\n                sl.colorantid as  colorantid,\n                sl.salesqty as saleslineqty,\n                sl.vat as vat,\n                sl.linenum,\n                sl.lastmodifieddate\n                from inventtrans i\n                left join salestable st on st.salesid = i.invoiceid\n                left join salesline sl on sl.id = i.sales_line_id\n                left join inventtable b on i.itemid=b.itemid\n                left join inventsize s on s.itemid = i.itemid and i.inventsizeid = s.inventsizeid\n                left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n                \n            where invoiceid='" + id + "'\n            ) as ln order by linenum ASC\n            ";
+                        salesQuery = "\n              select\n              distinct\n              ln.salesid,\n              ln.itemid,\n              ln.batchno,\n              ln.configid,\n              ln.inventsizeid,\n              ln.saleslineqty,\n              to_char(ln.lineamount, 'FM999999999990.00') as \"netAmount\",\n              to_char(ln.lastmodifieddate, 'DD-MM-YYYY') as \"shippingDate\",\n              to_char(ln.salesqty, 'FM999999999D') as \"salesQty\",\n              to_char(ln.salesprice, 'FM999999999990.00') as salesprice,\n              to_char((ln.vatamount/ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"vatAmount\",\n              to_char((ln.linetotaldisc/ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"lineTotalDisc\",\n              to_char(ln.colorantprice, 'FM999999999990.00') as colorantprice,\n              to_char((ln.lineamount / ln.saleslineqty)*ln.salesqty + (ln.colorantprice*ln.salesqty) - (ln.linetotaldisc / ln.saleslineqty)*ln.salesqty + (ln.vatamount / ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"lineAmount\",\n              ln.prodnamear as \"prodNameAr\",\n              ln.prodnameen as \"prodNameEn\",\n              ln.colNameAr as \"colNameAr\",\n              ln.colNameEn as \"colNameEn\",\n              ln.sizeNameEn as \"sizeNameEn\",\n              ln.sizeNameAr as \"sizeNameAr\",\n              to_char((ln.lineamount/ln.saleslineqty)*ln.salesqty + (ln.colorantprice*ln.salesqty) - (ln.linetotaldisc/ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"lineAmountBeforeVat\",\n              ln.vat as vat,\n              ln.colorantid as colorant,\n              ln.linenum as linenum\n              from\n              (\n                select distinct on (i.id, i.invoiceid, i.itemid, i.configid, i.inventsizeid, i.qty, i.batchno, i.sales_line_id)\n                i.invoiceid as salesid,\n                i.batchno,\n                i.itemid,\n                i.configid,\n                i.inventsizeid,\n                st.status as status,\n                ABS(i.qty) as salesqty,\n                b.itemname as prodnamear,\n                b.namealias as prodnameen,\n                coalesce(sl.salesprice, 0)  as salesprice,\n                coalesce(sl.vatamount, 0)  as vatamount,\n                coalesce(sl.linetotaldisc, 0) as linetotaldisc,\n                coalesce(sl.colorantprice,0) as colorantprice,\n                c.name as colNameAr,\n                c.name as colNameEn,\n                s.description as sizeNameEn,\n                s.name as sizeNameAr,\n                coalesce(sl.lineamount,0) as  lineamount,\n                sl.colorantid as  colorantid,\n                sl.salesqty as saleslineqty,\n                sl.vat as vat,\n                sl.linenum,\n                sl.lastmodifieddate\n                from inventtrans i\n                left join salestable st on st.salesid = i.invoiceid\n                left join salesline sl on sl.id = i.sales_line_id\n                left join inventtable b on i.itemid=b.itemid\n                left join inventsize s on s.itemid = i.itemid and i.inventsizeid = s.inventsizeid\n                left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n                \n            where invoiceid='" + id + "'\n            ) as ln order by linenum ASC\n            ";
                         return [4 /*yield*/, this.db.query(salesQuery)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
