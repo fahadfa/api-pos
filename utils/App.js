@@ -357,21 +357,30 @@ var App = /** @class */ (function () {
             .catch(function () { return false; });
     };
     App.getMacAddress = function () {
-        try {
-            var address = require("address");
-            return new Promise(function (resolve, reject) {
-                address(function (err, addrs) {
-                    if (addrs && addrs.mac) {
-                        console.log(addrs.ip, addrs.ipv6, addrs.mac);
-                        // '192.168.0.2', 'fe80::7aca:39ff:feb0:e67d', '78:ca:39:b0:e6:7d'
-                        resolve(addrs.mac);
-                    }
-                });
+        return __awaiter(this, void 0, void 0, function () {
+            var address;
+            return __generator(this, function (_a) {
+                try {
+                    address = require("address");
+                    return [2 /*return*/, new Promise(function (resolve, reject) {
+                            address(function (err, addrs) {
+                                if (addrs && addrs.mac) {
+                                    console.log(addrs.ip, addrs.ipv6, addrs.mac);
+                                    // '192.168.0.2', 'fe80::7aca:39ff:feb0:e67d', '78:ca:39:b0:e6:7d'
+                                    resolve(addrs.mac);
+                                }
+                                else {
+                                    resolve("Not Found Mac Address");
+                                }
+                            });
+                        })];
+                }
+                catch (err) {
+                    return [2 /*return*/, Promise.resolve("Not Found Mac Address")];
+                }
+                return [2 /*return*/];
             });
-        }
-        catch (err) {
-            return Promise.resolve("Not Found Mac Address");
-        }
+        });
     };
     App.uniqueId = 0;
     App.TOKEN_MESSAGE = "Please enter the token.";

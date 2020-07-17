@@ -143,7 +143,7 @@ var SysService = /** @class */ (function () {
                     case 8:
                         err_2 = _b.sent();
                         Log_1.ulog.warn(err_2);
-                        return [2 /*return*/, null];
+                        return [2 /*return*/, Promise.resolve(null)];
                     case 9:
                         Log_1.ulog.info(syslogstr);
                         return [7 /*endfinally*/];
