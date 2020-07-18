@@ -94,10 +94,10 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                     case 1:
                         salesData = _a.sent();
                         console.log(data, this.sessionInfo.inventlocationid);
-                        if (data[0].invent_location_id == this.sessionInfo.inventlocationid) {
+                        if (data[0].invent_location_id.trim() == this.sessionInfo.inventlocationid) {
                             salesData = new SalesTable_1.SalesTable();
                             salesData.salesId = data[0].purch_id;
-                            salesData.inventLocationId = data[0].invent_location_id;
+                            salesData.inventLocationId = data[0].invent_location_id.trim();
                             salesData.transkind = "PURCHASEORDER";
                             salesData.saleStatus = "CREATED";
                             salesData.custAccount = data[0].vend_account;
@@ -344,7 +344,7 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                 salesData.currencyCode = data.currency_code;
                 salesData.payment = data.payment_terms;
                 salesData.priceGroupId = data.price_group_id;
-                salesData.inventLocationId = data.invent_location_id;
+                salesData.inventLocationId = data.invent_location_id.trim();
                 // salesData.inventLocationId = this.sessionInfo.inventlocationid;
                 salesData.taxGroup = data.tax_group;
                 salesData.amount = data.gross_amount;
@@ -400,7 +400,7 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 7, , 8]);
-                        if (!(data.inventLocationId == this.sessionInfo.inventlocationid)) return [3 /*break*/, 5];
+                        if (!(data.inventLocationId.trim() == this.sessionInfo.inventlocationid)) return [3 /*break*/, 5];
                         return [4 /*yield*/, this.salesTableDAO.findOne({ interCompanyOriginalSalesId: data.salesId })];
                     case 1:
                         salesData = _a.sent();

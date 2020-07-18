@@ -1673,7 +1673,7 @@ var SalesTableService = /** @class */ (function () {
                                 voucherNum: reqData.voucherNum,
                                 custAccount: reqData.custAccount,
                             };
-                            query = "\n      UPDATE discountvoucher\n      SET  salesid='" + voucherData.salesId + "', \n      custaccount='" + voucherData.custAccount + "', \n      is_used=0, \n      used_numbers=used_numbers+1\n      WHERE voucher_num='" + voucherData.voucherNum + "';\n      ";
+                            query = "\n      UPDATE discountvoucher\n      SET  salesid='" + voucherData.salesId + "',\n      is_used=0, \n      used_numbers=used_numbers+1\n      WHERE voucher_num='" + voucherData.voucherNum + "';\n      ";
                             // promiseList.push(this.rawQuery.updateVoucherDiscounts(voucherData));
                             promiseList.push(queryRunner.query(query));
                         }
