@@ -157,7 +157,7 @@ var sync = function () { return __awaiter(_this, void 0, void 0, function () {
                     _a);
                 console.log(JSON.stringify(macAddress));
                 Log_1.log.warn(JSON.stringify(macAddress));
-                if (!(macAddress.selectAddress && macAddress.systemAddress && macAddress.selectAddress == macAddress.systemAddress)) return [3 /*break*/, 3];
+                if (!true) return [3 /*break*/, 3];
                 syncMFile = __dirname + "/syncM.ts";
                 syncMFile = fs.existsSync(syncMFile) ? __dirname + "/syncM.ts" : __dirname + "/syncM.js";
                 child_process.fork(syncMFile);
