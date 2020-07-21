@@ -94,13 +94,15 @@ var UserinfoDAO = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.dao
-                            .createQueryBuilder("UserInfo")
-                            .leftJoinAndSelect("UserInfo.userGroupConfig", "userGroupConfig")
-                            .leftJoinAndSelect("UserInfo.userGroup", "userGroup")
-                            .where({})
-                            .andWhere("LOWER(trim(UserInfo.userName)) = LOWER('" + data.userName.trim() + "')")
-                            .getOne()];
+                    case 0:
+                        console.log(data);
+                        return [4 /*yield*/, this.dao
+                                .createQueryBuilder("UserInfo")
+                                .leftJoinAndSelect("UserInfo.userGroupConfig", "userGroupConfig")
+                                .leftJoinAndSelect("UserInfo.userGroup", "userGroup")
+                                .where(data)
+                                // .andWhere(`LOWER(trim(UserInfo.userName)) = LOWER('${data.userName.trim()}')`)
+                                .getOne()];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });

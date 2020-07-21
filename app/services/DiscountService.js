@@ -58,7 +58,7 @@ var DiscountService = /** @class */ (function () {
                         checkCustomer = void 0;
                         discountBlockItems = void 0;
                         vendorCustomerAccount = void 0;
-                        reqData.customer = reqData.custaccount;
+                        reqData.customerId = reqData.custaccount;
                         reqData.grossTotal = 0;
                         reqData.inventLocationId = this.sessionInfo.inventlocationid;
                         return [4 /*yield*/, this.custtableDAO.entity(this.sessionInfo.defaultcustomerid)];
@@ -281,11 +281,11 @@ var DiscountService = /** @class */ (function () {
                                 isValidVoucher = true;
                             }
                             else {
-                                if (vouchers.custaccount == reqData.customer ||
+                                if (vouchers.custaccount == reqData.customerId ||
                                     reqData.custtype.toString() == vouchers.custaccount.toString() ||
                                     reqData.mobile == vouchers.custaccount ||
-                                    vouchers.custaccount.includes(reqData.customer) ||
-                                    reqData.customer.includes(vouchers.custaccount)) {
+                                    vouchers.custaccount.includes(reqData.customerId) ||
+                                    reqData.customerId.includes(vouchers.custaccount)) {
                                     isValidVoucher = true;
                                 }
                                 else {
@@ -336,7 +336,7 @@ var DiscountService = /** @class */ (function () {
                                             isValidVoucherItem = vouchers.voucher_type == "ALL_ITEMS" ? true : voucherDiscountedItems.includes(item.itemid);
                                             console.log("=========================", item.itemid, isValidVoucherItem);
                                             if (!isValidVoucherItem) {
-                                                message = 'voucher is not valid for selected products';
+                                                message = "voucher is not valid for selected products";
                                             }
                                         }
                                         condition = (reqData.discountType == "voucherDiscount" && isValidVoucherItem) || reqData.discountType == "instantDiscount"

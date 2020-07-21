@@ -1366,6 +1366,7 @@ var SalesTableService = /** @class */ (function () {
                             item.numberSequenceGroupId = this.seqNum;
                             item.lastModifiedDate = new Date(App_1.App.DateNow());
                             promiseList.push(this.salesLineDAO.save(item));
+                            item.jazeeraWarehouse = reqData.jazeeraWarehouse;
                             item.inventLocationId = this.sessionInfo.inventlocationid;
                         }
                         if (reqData.status == "PAID") {
@@ -1552,6 +1553,7 @@ var SalesTableService = /** @class */ (function () {
                         item.createdBy = this.sessionInfo.userName;
                         item.numberSequenceGroupId = this.seqNum;
                         item.lastModifiedDate = new Date(App_1.App.DateNow());
+                        item.jazeeraWarehouse = reqData.jazeeraWarehouse;
                         item.taxGroup = reqData.taxGroup;
                         return [4 /*yield*/, this.rawQuery.getItemTaxGroup(item.itemid)];
                     case 1:
@@ -2165,6 +2167,7 @@ var SalesTableService = /** @class */ (function () {
                                 item.createdBy = this.sessionInfo.userName;
                                 item.numberSequenceGroupId = this.seqNum;
                                 item.lastModifiedDate = new Date(App_1.App.DateNow());
+                                item.jazeeraWarehouse = reqData.jazeeraWarehouse;
                                 if (item.batches && item.batches.length > 0) {
                                     for (_a = 0, _b = item.batches; _a < _b.length; _a++) {
                                         batches = _b[_a];
@@ -2295,6 +2298,7 @@ var SalesTableService = /** @class */ (function () {
                         item.createdBy = this.sessionInfo.userName;
                         item.numberSequenceGroupId = this.seqNum;
                         item.lastModifiedDate = new Date(App_1.App.DateNow());
+                        item.jazeeraWarehouse = reqData.jazeeraWarehouse;
                         item.batch = [];
                         if (!(item.batches && item.batches.length > 0)) return [3 /*break*/, 13];
                         qty = item.batches.reduce(function (res, b) { return res + parseInt(b.quantity); }, 0);
@@ -2463,6 +2467,7 @@ var SalesTableService = /** @class */ (function () {
                             item.lastModifiedDate = new Date(App_1.App.DateNow());
                             item.createdBy = this.sessionInfo.userName;
                             item.numberSequenceGroupId = this.seqNum;
+                            item.jazeeraWarehouse = reqData.jazeeraWarehouse;
                             item.custAccount = reqData.custAccount;
                             item.batch = [];
                             if (batches_7 && batches_7.length > 0) {
@@ -2612,6 +2617,7 @@ var SalesTableService = /** @class */ (function () {
                         item.createddatetime = new Date(App_1.App.DateNow());
                         item.lastModifiedDate = new Date(App_1.App.DateNow());
                         item.createdBy = this.sessionInfo.userName;
+                        item.jazeeraWarehouse = reqData.jazeeraWarehouse;
                         item.numberSequenceGroupId = this.seqNum;
                         item.batch = [];
                         if (!(item.batches && item.batches.length > 0)) return [3 /*break*/, 10];

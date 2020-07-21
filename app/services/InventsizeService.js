@@ -197,11 +197,13 @@ var InventsizeService = /** @class */ (function () {
                         reqData.currency = defaultcustomer.currency;
                         _d.label = 2;
                     case 2:
+                        reqData.spGroup = 'SP';
                         queryData = {
                             custaccount: reqData.custaccount,
                             itemid: reqData.itemid,
                             pricegroup: reqData.pricegroup,
                             configid: reqData.configid,
+                            spGroup: reqData.spGroup,
                             currency: "SAR",
                             inventsizeids: [],
                         };
@@ -217,6 +219,9 @@ var InventsizeService = /** @class */ (function () {
                             var amount = prices.filter(function (v) { return v.inventsizeid == size.code && v.accountrelation == queryData.custaccount; });
                             if (amount.length <= 0) {
                                 amount = prices.filter(function (v) { return v.inventsizeid == size.code && v.accountrelation == queryData.pricegroup; });
+                            }
+                            if (amount.length <= 0) {
+                                amount = prices.filter(function (v) { return v.inventsizeid == size.code && v.accountrelation == queryData.spGroup; });
                             }
                             if (amount.length > 0) {
                                 size.price = parseFloat(amount[0].price);

@@ -326,6 +326,10 @@ var SalesLine = /** @class */ (function () {
         __metadata("design:type", Object)
     ], SalesLine.prototype, "appliedDiscounts", void 0);
     __decorate([
+        typeorm_1.Column({ name: "jazeerawarehouse" }),
+        __metadata("design:type", String)
+    ], SalesLine.prototype, "jazeeraWarehouse", void 0);
+    __decorate([
         typeorm_1.JoinColumn({ name: "itemid" }),
         typeorm_1.ManyToOne(function (type) { return Inventtable_1.Inventtable; }),
         __metadata("design:type", Inventtable_1.Inventtable)

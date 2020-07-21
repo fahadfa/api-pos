@@ -207,7 +207,7 @@ var AuthService = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 11, , 12]);
                         profileObj = null;
-                        return [4 /*yield*/, this.userinfoDAO.findOne({ userName: reqData.userName })];
+                        return [4 /*yield*/, this.userinfoDAO.findOne({ userName: reqData.userName.trim() })];
                     case 1:
                         profileObj = _a.sent();
                         if (!!profileObj) return [3 /*break*/, 3];

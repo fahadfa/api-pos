@@ -561,7 +561,7 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "\n            select amount as price, tinventsizeid as inventsizeid, configid, itemrelation as itemid, accountrelation as accountrelation\n            from pricedisctable \n            where (itemcode = 0) and (accountcode = 1 or accountcode = 0) \n            and currency = '" + data.currency + "' and \n            itemrelation = '" + data.itemid + "' and (configid='" + data.configid + "' or configid='--') and \n            (accountrelation = '" + data.pricegroup + "' or accountrelation = '" + data.custaccount + "') and tinventsizeid in (" + data.inventsizeids + ")\n            ";
+                        query = "\n            select amount as price, tinventsizeid as inventsizeid, configid, itemrelation as itemid, accountrelation as accountrelation\n            from pricedisctable \n            where (itemcode = 0) and (accountcode = 1 or accountcode = 0) \n            and currency = '" + data.currency + "' and \n            itemrelation = '" + data.itemid + "' and (configid='" + data.configid + "' or configid='--') and \n            (accountrelation = '" + data.pricegroup + "' or accountrelation = '" + data.custaccount + "' or accountrelation = '" + data.spGroup + "') and tinventsizeid in (" + data.inventsizeids + ")\n            ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
