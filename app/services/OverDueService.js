@@ -101,7 +101,8 @@ var OverDueService = /** @class */ (function () {
                         overDue = _a.sent();
                         result.usedCredit = 0;
                         data.map(function (item) {
-                            item.invoiceAmount = Math.round(parseFloat((item.invoiceAmount * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2);
+                            item.invoiceAmount =
+                                Math.round(parseFloat((Math.abs(item.invoiceAmount) * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2);
                             item.actualDueDate = new Date(item.actualDueDate).toISOString().substr(0, 10);
                             item.duedate = new Date(item.duedate).toISOString().substr(0, 10);
                             item.createddatetime = new Date(item.createddatetime).toISOString().substr(0, 10);

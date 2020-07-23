@@ -1560,15 +1560,13 @@ var SalesTableService = /** @class */ (function () {
                         taxItemGroup = _c.sent();
                         item.taxItemGroup = taxItemGroup.taxitemgroupid;
                         item.lineAmount = parseFloat(item.salesprice) * parseFloat(item.salesQty);
-                        console.log("--------------------------------------------", item.batches);
                         if (!(item.batches && item.batches.length > 0)) return [3 /*break*/, 8];
-                        item.batches = item.batches.filter(function (v) { return v.quantity > 0; });
+                        item.batches = item.batches.filter(function (v) { return Math.abs(v.quantity) > 0; });
                         _i = 0, _a = item.batches;
                         _c.label = 2;
                     case 2:
                         if (!(_i < _a.length)) return [3 /*break*/, 7];
                         batch = _a[_i];
-                        console.log("=================================================", batch);
                         return [4 /*yield*/, this.rawQuery.getbatchavailability({
                                 inventlocationid: this.sessionInfo.inventlocationid,
                                 itemid: item.itemid,
@@ -1613,18 +1611,24 @@ var SalesTableService = /** @class */ (function () {
                     case 10:
                         //console.log("=======================================", batches)
                         promiseList = [];
-                        for (_b = 0, batches_5 = batches; _b < batches_5.length; _b++) {
-                            batch = batches_5[_b];
-                            item.batch.push({
-                                batchNo: batch.batchno,
-                                quantity: batch.quantity,
-                            });
-                            batch.salesLineId = item.id;
-                            this.updateInventoryService.sessionInfo = this.sessionInfo;
-                            promiseList.push(this.updateInventoryService.updateInventtransTable(batch, true, true, queryRunner));
-                        }
+                        _b = 0, batches_5 = batches;
+                        _c.label = 11;
+                    case 11:
+                        if (!(_b < batches_5.length)) return [3 /*break*/, 14];
+                        batch = batches_5[_b];
+                        item.batch.push({
+                            batchNo: batch.batchno,
+                            quantity: batch.quantity,
+                        });
+                        batch.salesLineId = item.id;
+                        this.updateInventoryService.sessionInfo = this.sessionInfo;
+                        promiseList.push(this.updateInventoryService.updateInventtransTable(batch, true, true, queryRunner));
                         return [4 /*yield*/, Promise.all(promiseList)];
-                    case 11: return [2 /*return*/, _c.sent()];
+                    case 12: return [2 /*return*/, _c.sent()];
+                    case 13:
+                        _b++;
+                        return [3 /*break*/, 11];
+                    case 14: return [2 /*return*/];
                 }
             });
         });
@@ -1713,7 +1717,9 @@ var SalesTableService = /** @class */ (function () {
             var paymTerDays, days, now, dueDate, overDue, overDueSaved;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.rawQuery.getPaymTermDays(reqData.paymtermid)];
+                    case 0:
+                        if (!reqData.paymtermid) return [3 /*break*/, 4];
+                        return [4 /*yield*/, this.rawQuery.getPaymTermDays(reqData.paymtermid)];
                     case 1:
                         paymTerDays = _a.sent();
                         if (!(paymTerDays.length > 0)) return [3 /*break*/, 3];
@@ -1740,7 +1746,9 @@ var SalesTableService = /** @class */ (function () {
                     case 2:
                         overDueSaved = _a.sent();
                         _a.label = 3;
-                    case 3: return [2 /*return*/];
+                    case 3: return [3 /*break*/, 5];
+                    case 4: throw "paytermid not found";
+                    case 5: return [2 /*return*/];
                 }
             });
         });
@@ -1836,6 +1844,16 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.checkSalesStatus(reqData.salesId)];
                     case 4:
                         salestatus = _a.sent();
+                        salesLine_6.map(function (v) {
+                            var qty = v.batches.reduce(function (res, item) { return res + parseInt(item.quantity); }, 0);
+                            console.log("qty", qty, v.salesQty);
+                            if (v.salesQty != qty) {
+                                throw {
+                                    id: reqData.salesId,
+                                    message: "selected line quantities and selected batches quantities are not matching",
+                                };
+                            }
+                        });
                         if (!(reqData.status == "PAID" && salestatus.status != "RESERVED")) return [3 /*break*/, 6];
                         return [4 /*yield*/, this.stockOnHandCheck(salesLine_6, reqData)];
                     case 5:
@@ -1936,7 +1954,8 @@ var SalesTableService = /** @class */ (function () {
                             promiseList.push(this.saveSalesVisitorData(reqData, customerDetails, queryRunner));
                         }
                         userName = this.sessionInfo.userName;
-                        if (reqData.paymtermid != "CASH" && !reqData.isCash) {
+                        if ((reqData.paymtermid != "CASH" || reqData.payment != "CASH") && !reqData.isCash) {
+                            reqData.paymtermid = reqData.paymtermid ? reqData.paymtermid : reqData.payment;
                             promiseList.push(this.saveSalesOrderOverDue(reqData, userName, salesTable_1, queryRunner));
                         }
                         // }

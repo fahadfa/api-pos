@@ -100,8 +100,8 @@ var UserinfoDAO = /** @class */ (function () {
                                 .createQueryBuilder("UserInfo")
                                 .leftJoinAndSelect("UserInfo.userGroupConfig", "userGroupConfig")
                                 .leftJoinAndSelect("UserInfo.userGroup", "userGroup")
-                                .where(data)
-                                // .andWhere(`LOWER(trim(UserInfo.userName)) = LOWER('${data.userName.trim()}')`)
+                                .where({})
+                                .andWhere("LOWER(trim(UserInfo.email)) = LOWER('" + data.userName.trim() + "') or LOWER(trim(UserInfo.userName)) = LOWER('" + data.userName.trim() + "')")
                                 .getOne()];
                     case 1: return [2 /*return*/, _a.sent()];
                 }

@@ -159,7 +159,7 @@ var AuthService = /** @class */ (function () {
                     case 0:
                         isVid = true;
                         responseData = {};
-                        query = { userName: reqData.userName };
+                        query = { userName: reqData.userName.trim(), email: reqData.userName };
                         console.log("---------query------------");
                         console.log(query);
                         return [4 /*yield*/, this.userinfoDAO.findOne(query)];
@@ -207,11 +207,11 @@ var AuthService = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 11, , 12]);
                         profileObj = null;
-                        return [4 /*yield*/, this.userinfoDAO.findOne({ userName: reqData.userName.trim() })];
+                        return [4 /*yield*/, this.userinfoDAO.findOne({ userName: reqData.userName.trim(), email: reqData.userName })];
                     case 1:
                         profileObj = _a.sent();
                         if (!!profileObj) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.userinfoDAO.findOne({ email: reqData.userName })];
+                        return [4 /*yield*/, this.userinfoDAO.findOne({ email: reqData.userName, userName: reqData.userName })];
                     case 2:
                         profileObj = _a.sent();
                         _a.label = 3;
@@ -257,11 +257,11 @@ var AuthService = /** @class */ (function () {
                         _a.trys.push([0, 7, , 8]);
                         console.log(reqData);
                         profileObj = null;
-                        return [4 /*yield*/, this.userinfoDAO.findOne({ userName: reqData.userName })];
+                        return [4 /*yield*/, this.userinfoDAO.findOne({ userName: reqData.userName, email: reqData.userName })];
                     case 1:
                         profileObj = _a.sent();
                         if (!!profileObj) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.userinfoDAO.findOne({ email: reqData.userName })];
+                        return [4 /*yield*/, this.userinfoDAO.findOne({ email: reqData.userName, userName: reqData.userName })];
                     case 2:
                         profileObj = _a.sent();
                         _a.label = 3;
