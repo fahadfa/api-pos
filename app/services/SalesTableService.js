@@ -1844,6 +1844,10 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.checkSalesStatus(reqData.salesId)];
                     case 4:
                         salestatus = _a.sent();
+                        if (reqData.status != "PAID") {
+                            reqData.voucherDiscChecked = false;
+                            reqData.voucherNum = null;
+                        }
                         salesLine_6.map(function (v) {
                             var qty = v.batches.reduce(function (res, item) { return res + parseInt(item.quantity); }, 0);
                             console.log("qty", qty, v.salesQty);
