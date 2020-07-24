@@ -1848,16 +1848,26 @@ var SalesTableService = /** @class */ (function () {
                             reqData.voucherDiscChecked = false;
                             reqData.voucherNum = null;
                         }
-                        salesLine_6.map(function (v) {
-                            var qty = v.batches.reduce(function (res, item) { return res + parseInt(item.quantity); }, 0);
-                            console.log("qty", qty, v.salesQty);
-                            if (v.salesQty != qty) {
-                                throw {
-                                    id: reqData.salesId,
-                                    message: "selected line quantities and selected batches quantities are not matching",
-                                };
-                            }
-                        });
+                        if (reqData.status == "PAID" || reqData.status == "RESERVED") {
+                            salesLine_6.map(function (v) {
+                                if (v.batches && v.batches.length > 0) {
+                                    var qty = v.batches.reduce(function (res, item) { return res + parseInt(item.quantity); }, 0);
+                                    console.log("qty", qty, v.salesQty);
+                                    if (v.salesQty != qty) {
+                                        throw {
+                                            id: reqData.salesId,
+                                            message: "selected line quantities and selected batches quantities are not matching",
+                                        };
+                                    }
+                                }
+                                else {
+                                    throw {
+                                        id: reqData.salesId,
+                                        message: "selected line quantities and selected batches quantities are not matching",
+                                    };
+                                }
+                            });
+                        }
                         if (!(reqData.status == "PAID" && salestatus.status != "RESERVED")) return [3 /*break*/, 6];
                         return [4 /*yield*/, this.stockOnHandCheck(salesLine_6, reqData)];
                     case 5:
