@@ -39,6 +39,7 @@ var typeorm_1 = require("typeorm");
 var Props_1 = require("../../constants/Props");
 var RawQuery_1 = require("./RawQuery");
 var MenuGroupDAO_1 = require("../repos/MenuGroupDAO");
+var App_1 = require("../../utils/App");
 var LoadService = /** @class */ (function () {
     function LoadService() {
         this.db = typeorm_1.getManager();
@@ -1714,6 +1715,44 @@ var LoadService = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         return [2 /*return*/, data.length > 0 ? data[0].tax : 15];
+                }
+            });
+        });
+    };
+    LoadService.prototype.validategiftvoucher = function (param) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, voucherData, voucheritems, data_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "select * from discountvoucher where voucher_num = '" + param.key + "'";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        voucherData = _a.sent();
+                        if (!(voucherData.length > 0)) return [3 /*break*/, 7];
+                        voucherData = voucherData[0];
+                        if (!(voucherData.is_enabled == 1)) return [3 /*break*/, 2];
+                        throw { message: "INVALID_VOUCHER", status: 0 };
+                    case 2:
+                        if (!(voucherData.allowed_numbers <= voucherData.used_numbers)) return [3 /*break*/, 3];
+                        throw { message: "ALREADY_USED", status: 0 };
+                    case 3:
+                        if (!(new Date(voucherData.expiry_date) < new Date(App_1.App.DateNow()))) return [3 /*break*/, 4];
+                        throw { message: "VOUCHER_EXPIRED", status: 0 };
+                    case 4:
+                        query = "select * from voucherdiscountitems where voucher_type = '" + voucherData.voucher_type + "'";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 5:
+                        voucheritems = _a.sent();
+                        data_1 = {};
+                        data_1.freebieItems = [];
+                        voucheritems.map(function (v) {
+                            data_1.freebieItems.push(v.itemid);
+                        });
+                        return [2 /*return*/, data_1];
+                    case 6: return [3 /*break*/, 8];
+                    case 7: throw { message: "INVALID_VOUCHER", status: 0 };
+                    case 8: return [2 /*return*/];
                 }
             });
         });

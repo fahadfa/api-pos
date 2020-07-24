@@ -177,37 +177,74 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             grossAmount += itemGrossAmount;
                             var returnItem = {};
                             this_1.allocateReturnItem(returnItem, line);
+                            returnItem.appliedDiscounts = [];
                             if (line.appliedDiscounts.length > 0) {
                                 var _loop_4 = function (discountItem) {
                                     if (discountItem.discountType == "TOTAL_DISCOUNT") {
-                                        itemDiscount +=
-                                            parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
-                                        itemTotal -=
-                                            parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
+                                        var returnDiscount = parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
+                                        itemDiscount += returnDiscount;
+                                        itemTotal -= returnDiscount;
+                                        returnItem.appliedDiscounts.push({
+                                            discountType: discountItem.discountType,
+                                            percentage: discountItem.percentage,
+                                            discountAmount: returnDiscount,
+                                            cond: discountItem.cond,
+                                        });
                                     }
                                     if (discountItem.discountType == "LINE_DISCOUNT") {
-                                        itemDiscount +=
-                                            parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
-                                        itemTotal -=
-                                            parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
+                                        var returnDiscount = parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
+                                        itemDiscount += returnDiscount;
+                                        itemTotal -= returnDiscount;
+                                        returnItem.appliedDiscounts.push({
+                                            discountType: discountItem.discountType,
+                                            percentage: discountItem.percentage,
+                                            discountAmount: returnDiscount,
+                                            cond: discountItem.cond,
+                                        });
                                     }
                                     if (discountItem.discountType == "ARAMKO_TAHAKOM_DISOUNT") {
-                                        itemDiscount +=
-                                            parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
-                                        itemTotal -=
-                                            parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
+                                        var returnDiscount = parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
+                                        itemDiscount += returnDiscount;
+                                        itemTotal -= returnDiscount;
+                                        returnItem.appliedDiscounts.push({
+                                            discountType: discountItem.discountType,
+                                            percentage: discountItem.percentage,
+                                            discountAmount: returnDiscount,
+                                            cond: discountItem.code,
+                                        });
                                     }
                                     if (discountItem.discountType == "SABIC_CUSTOMER_DISCOUNT") {
-                                        itemDiscount +=
-                                            parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
-                                        itemTotal -=
-                                            parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
+                                        var returnDiscount = parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
+                                        itemDiscount += returnDiscount;
+                                        itemTotal -= returnDiscount;
+                                        returnItem.appliedDiscounts.push({
+                                            discountType: discountItem.discountType,
+                                            percentage: discountItem.percentage,
+                                            discountAmount: returnDiscount,
+                                            cond: discountItem.code,
+                                        });
                                     }
                                     if (discountItem.discountType == "VOUCHER_DISCOUNT") {
-                                        itemDiscount +=
-                                            parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
-                                        itemTotal -=
-                                            parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
+                                        var returnDiscount = parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
+                                        itemDiscount += returnDiscount;
+                                        itemTotal -= returnDiscount;
+                                        returnItem.appliedDiscounts.push({
+                                            discountType: discountItem.discountType,
+                                            percentage: discountItem.percentage,
+                                            discountAmount: returnDiscount,
+                                            cond: discountItem.code,
+                                        });
+                                    }
+                                    if (discountItem.discountType == "SALES_DISCOUNT") {
+                                        var returnDiscount = parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
+                                        itemDiscount += returnDiscount;
+                                        itemTotal -= returnDiscount;
+                                        returnItem.appliedDiscounts.push({
+                                            discountType: discountItem.discountType,
+                                            percentage: discountItem.percentage,
+                                            discountAmount: returnDiscount,
+                                            cond: discountItem.code,
+                                        });
                                     }
                                     if (discountItem.discountType == "INSTANT_DISCOUNT") {
                                         var percentage = 0;
@@ -219,16 +256,26 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 break;
                                             }
                                         }
-                                        itemDiscount +=
-                                            parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
-                                        itemTotal -=
-                                            parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
+                                        var returnDiscount = parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
+                                        itemDiscount += returnDiscount;
+                                        itemTotal -= returnDiscount;
+                                        returnItem.appliedDiscounts.push({
+                                            discountType: discountItem.discountType,
+                                            percentage: discountItem.percentage,
+                                            discountAmount: returnDiscount,
+                                            cond: discountItem.code,
+                                        });
                                     }
                                     if (discountItem.discountType == "MULTI_LINE_DISCOUNT") {
-                                        itemDiscount +=
-                                            parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
-                                        itemTotal -=
-                                            parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
+                                        var returnDiscount = parseFloat(line.salesprice) * (parseFloat(discountItem.percentage) / 100) * parseInt(item.returnQuantity);
+                                        itemDiscount += returnDiscount;
+                                        itemTotal -= returnDiscount;
+                                        returnItem.appliedDiscounts.push({
+                                            discountType: discountItem.discountType,
+                                            percentage: discountItem.percentage,
+                                            discountAmount: returnDiscount,
+                                            cond: discountItem.code,
+                                        });
                                     }
                                     if (discountItem.discountType == "BUY_ONE_GET_ONE_DISCOUNT") {
                                         var returnParentQty_1 = 0;
@@ -243,10 +290,15 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                             returnParentQty_1 += parseInt(v.returnQuantity);
                                         });
                                         if (returnParentQty_1 == returnFreeQty_1) {
-                                            itemDiscount +=
-                                                (parseFloat(discountItem.discountAmount) / parseFloat(line.salesQty)) * parseInt(item.returnQuantity);
-                                            itemTotal -=
-                                                (parseFloat(discountItem.discountAmount) / parseFloat(line.salesQty)) * parseInt(item.returnQuantity);
+                                            var returnDiscount = (parseFloat(discountItem.discountAmount) / parseFloat(line.salesQty)) * parseInt(item.returnQuantity);
+                                            itemDiscount += returnDiscount;
+                                            itemTotal -= returnDiscount;
+                                            returnItem.appliedDiscounts.push({
+                                                discountType: discountItem.discountType,
+                                                percentage: discountItem.percentage,
+                                                discountAmount: returnDiscount,
+                                                cond: discountItem.code,
+                                            });
                                         }
                                         else {
                                             throw { message: "PLEASE_ADD_FREE_ITEMS" };
@@ -265,6 +317,10 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             if (discountConditions[line.linkId]) {
                                 var discObj = discountConditions[line.linkId];
                                 // console.log(discObj);
+                                returnItem.appliedDiscounts.push({
+                                    discountType: "PROMOTIONAL_DISCOUNT",
+                                    discountAmount: discObj.deductableFreeAmount,
+                                });
                                 if (!discObj.isAmountDeducated) {
                                     itemDiscount += discObj.deductableFreeAmount;
                                     itemTotal -= discObj.deductableFreeAmount;

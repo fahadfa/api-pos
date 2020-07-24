@@ -65,7 +65,7 @@ var MovementReport = /** @class */ (function () {
     }
     MovementReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, id, status_1, data_1, salesLine, date, query, promiseList, reqData, batches, groupData, inventoryOnHandBatches_2, _i, batches_1, item, _a, inventoryOnHandBatches_1, item, error_1;
+            var queryRunner, id, status_1, data_1, salesLine, date, query, voucherData, query_1, promiseList, reqData, batches, groupData, inventoryOnHandBatches_2, _i, batches_1, item, _a, inventoryOnHandBatches_1, item, error_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -78,7 +78,7 @@ var MovementReport = /** @class */ (function () {
                         _b.sent();
                         _b.label = 3;
                     case 3:
-                        _b.trys.push([3, 13, 15, 17]);
+                        _b.trys.push([3, 16, 18, 20]);
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
                     case 4:
@@ -94,7 +94,7 @@ var MovementReport = /** @class */ (function () {
                         data_1.salesLine.map(function (v) {
                             data_1.quantity += parseInt(v.salesQty);
                         });
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 11];
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 14];
                         date = new Date().toISOString();
                         query = "UPDATE salestable SET originalprinted = '" + true + "', status = 'POSTED'";
                         if (date) {
@@ -104,22 +104,34 @@ var MovementReport = /** @class */ (function () {
                         return [4 /*yield*/, queryRunner.query(query)];
                     case 6:
                         _b.sent();
+                        if (!data_1.voucherDiscChecked) return [3 /*break*/, 8];
+                        voucherData = {
+                            salesId: data_1.salesId,
+                            voucherNum: data_1.voucherNum,
+                            custAccount: data_1.invoiceAccount,
+                        };
+                        query_1 = "\n          UPDATE discountvoucher\n          SET  salesid='" + voucherData.salesId + "',\n          is_used=0, \n          used_numbers=used_numbers+1\n          WHERE voucher_num='" + voucherData.voucherNum + "';\n          ";
+                        return [4 /*yield*/, queryRunner.query(query_1)];
+                    case 7:
+                        _b.sent();
+                        _b.label = 8;
+                    case 8:
                         promiseList = [];
-                        if (!(data_1.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 11];
+                        if (!(data_1.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 12];
                         reqData = {
                             salesId: id,
                         };
                         return [4 /*yield*/, this.workflowService.inventryTransUpdate(reqData)];
-                    case 7:
+                    case 9:
                         _b.sent();
                         return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
-                    case 8:
+                    case 10:
                         batches = _b.sent();
                         console.log(batches);
                         return [4 /*yield*/, this.groupBy(batches, function (item) {
                                 return [item.itemid, item.batchno, item.configid, item.inventsizeid];
                             })];
-                    case 9:
+                    case 11:
                         groupData = _b.sent();
                         console.log(groupData);
                         inventoryOnHandBatches_2 = [];
@@ -140,28 +152,29 @@ var MovementReport = /** @class */ (function () {
                             // this.inventTransDAO.save(item);
                             promiseList.push(this.updateInventoryService.updateInventoryOnhandTable(item, false, queryRunner));
                         }
-                        return [4 /*yield*/, Promise.all(promiseList)];
-                    case 10:
+                        _b.label = 12;
+                    case 12: return [4 /*yield*/, Promise.all(promiseList)];
+                    case 13:
                         _b.sent();
-                        _b.label = 11;
-                    case 11: 
+                        _b.label = 14;
+                    case 14: 
                     // console.log(data);
                     return [4 /*yield*/, queryRunner.commitTransaction()];
-                    case 12:
+                    case 15:
                         // console.log(data);
                         _b.sent();
                         return [2 /*return*/, data_1];
-                    case 13:
+                    case 16:
                         error_1 = _b.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 14:
+                    case 17:
                         _b.sent();
                         throw error_1;
-                    case 15: return [4 /*yield*/, queryRunner.release()];
-                    case 16:
+                    case 18: return [4 /*yield*/, queryRunner.release()];
+                    case 19:
                         _b.sent();
                         return [7 /*endfinally*/];
-                    case 17: return [2 /*return*/];
+                    case 20: return [2 /*return*/];
                 }
             });
         });
@@ -201,7 +214,7 @@ var MovementReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "\n            select \n            st.salesid as \"salesId\",\n            st.custaccount as \"custAccount\",\n            st.status as status,\n            st.transkind as transkind,\n            als.en as \"statusEn\",\n            als.ar as \"statusAr\",\n            alt.en as \"transkindEn\",\n            alt.ar as \"transkindAr\",\n            st.vatamount as vatamount,\n            st.netamount as \"netAmount\",\n            st.disc as disc,\n            st.salesname as \"salesName\",\n            st.is_movement_in as \"isMovementIn\",\n            st.createdby as createdby,\n            st.amount as amount,\n            to_char(st.createddatetime, 'DD-MM-YYYY') as createddatetime,\n            st.originalprinted as \"originalPrinted\",\n            st.inventlocationid as \"inventLocationId\",\n            st.description as notes,\n            w.namealias as wnamealias,\n            w.name as wname,\n            mt.movementtype as \"movementType\",\n            mt.movementarabic as \"movementTypeAr\"\n            from salestable st \n            left join inventlocation w on w.inventlocationid = st.inventlocationid\n            left join movementtype mt on mt.id = st.movement_type_id\n            left join app_lang als on als.id = st.status\n            left join app_lang alt on alt.id = st.transkind\n            where salesid='" + id + "'\n            ";
+                        query = "\n            select \n            st.salesid as \"salesId\",\n            st.custaccount as \"custAccount\",\n            st.status as status,\n            st.transkind as transkind,\n            als.en as \"statusEn\",\n            als.ar as \"statusAr\",\n            alt.en as \"transkindEn\",\n            alt.ar as \"transkindAr\",\n            st.vatamount as vatamount,\n            st.netamount as \"netAmount\",\n            st.disc as disc,\n            st.salesname as \"salesName\",\n            st.is_movement_in as \"isMovementIn\",\n            st.createdby as createdby,\n            st.amount as amount,\n            to_char(st.createddatetime, 'DD-MM-YYYY') as createddatetime,\n            st.originalprinted as \"originalPrinted\",\n            st.inventlocationid as \"inventLocationId\",\n            st.description as notes,\n            w.namealias as wnamealias,\n            w.name as wname,\n            st.voucherdiscchecked as \"voucherDiscChecked\",\n            st.vouchernum as \"voucherNum\",\n            st.invoiceaccount as \"invoiceAccount\",\n            mt.movementtype as \"movementType\",\n            mt.movementarabic as \"movementTypeAr\"\n            from salestable st \n            left join inventlocation w on w.inventlocationid = st.inventlocationid\n            left join movementtype mt on mt.id = st.movement_type_id\n            left join app_lang als on als.id = st.status\n            left join app_lang alt on alt.id = st.transkind\n            where salesid='" + id + "'\n            ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }

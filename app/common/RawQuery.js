@@ -927,6 +927,24 @@ var RawQuery = /** @class */ (function () {
             });
         });
     };
+    RawQuery.prototype.getSalesDisocuntItems = function (items, inventlocationid, custaccount, custtype) {
+        return __awaiter(this, void 0, void 0, function () {
+            var SpecialDisocuntQuery, e_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        SpecialDisocuntQuery = "select\n                                                    dataareaid, \n                                                    inventlocationid, \n                                                    itemid,\n                                                    inventsizeid,\n                                                    configid,\n                                                    discount_type as \"discountType\", \n                                                    discount as \"discount\", \n                                                    price_disc_item_code as \"priceDiscItemCode\", \n                                                    price_disc_account_relation as \"priceDiscAccountRelation\"\n                                                    from sales_discounts_on_products where \n                                                    inventlocationid = '" + inventlocationid + "'\n                                                    and (price_disc_account_relation = '" + custaccount + "' \n                                                    or price_disc_account_relation='" + custtype + "' or price_disc_item_code=2)\n                                                    and itemid in (" + items + ") and is_active = true";
+                        return [4 /*yield*/, this.db.query(SpecialDisocuntQuery)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                    case 2:
+                        e_1 = _a.sent();
+                        return [2 /*return*/, []];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
     RawQuery.prototype.checkDiscounts = function (items) {
         return __awaiter(this, void 0, void 0, function () {
             var discQuery;

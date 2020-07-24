@@ -154,7 +154,12 @@ var SalesTableService = /** @class */ (function () {
                             }
                         }
                         else if (data.transkind == "INVENTORYMOVEMENT") {
-                            data.sendForApproval = true;
+                            if (data.movementType && data.movementType.id == 10) {
+                                data.sendForApproval = false;
+                            }
+                            else {
+                                data.sendForApproval = true;
+                            }
                         }
                         else if (data.transkind == "SALESORDER" && sabicCustomers.includes(data.custAccount)) {
                             data.sendForApproval = true;
@@ -2752,6 +2757,12 @@ var SalesTableService = /** @class */ (function () {
                             message: "SAVED_SUCCESSFULLY",
                             status: reqData.status,
                         };
+                        if (reqData.traskind == "INVENTORYMOVEMENT" && reqData.movementType.id == 10) {
+                            returnData.sendForApproval = false;
+                        }
+                        else {
+                            returnData.sendForApproval = true;
+                        }
                         // //console.log(returnData);
                         return [2 /*return*/, returnData];
                     case 20: return [3 /*break*/, 25];
