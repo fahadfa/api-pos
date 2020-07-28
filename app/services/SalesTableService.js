@@ -114,7 +114,12 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.calData(data)];
                     case 2:
                         _a.sent();
-                        promiseList = [this.getcustomer(data), this.getpainter(data), this.getsalesman(data)];
+                        promiseList = [
+                            this.getcustomer(data),
+                            this.getpainter(data),
+                            this.getsalesman(data),
+                            this.workflowstatus(data),
+                        ];
                         return [4 /*yield*/, this.rawQuery.workflowconditions(this.sessionInfo.usergroupconfigid)];
                     case 3:
                         condition = _a.sent();
@@ -279,6 +284,22 @@ var SalesTableService = /** @class */ (function () {
             });
         });
     };
+    SalesTableService.prototype.workflowstatus = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var workFlowStatus;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        data = data ? data : {};
+                        return [4 /*yield*/, this.rawQuery.workflowstatus(data.salesId)];
+                    case 1:
+                        workFlowStatus = _a.sent();
+                        data.status = workFlowStatus ? workFlowStatus.status : data.status;
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     SalesTableService.prototype.ecommerceEntity = function (id, type) {
         if (type === void 0) { type = null; }
         return __awaiter(this, void 0, void 0, function () {
@@ -394,11 +415,14 @@ var SalesTableService = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.salestableDAO.entity(id.toUpperCase())];
                     case 1:
                         data = _a.sent();
+                        return [4 /*yield*/, this.workflowstatus(data)];
+                    case 2:
+                        _a.sent();
                         if (!data) {
                             throw { message: "ORDER_NOT_FOUND" };
                         }
                         return [4 /*yield*/, this.salesLineDAO.getDesignerServiceLines(id)];
-                    case 2:
+                    case 3:
                         salesLine = _a.sent();
                         data.salesLine = salesLine;
                         return [2 /*return*/, data];

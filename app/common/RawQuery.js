@@ -803,6 +803,21 @@ var RawQuery = /** @class */ (function () {
             });
         });
     };
+    RawQuery.prototype.workflowstatus = function (salesid) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "select \n            statusid as status from workflow\n            where orderid= '" + salesid + "' limit 1";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, data.length > 0 ? data[0] : null];
+                }
+            });
+        });
+    };
     RawQuery.prototype.workflowconditions = function (usergroupconfigid) {
         return __awaiter(this, void 0, void 0, function () {
             var query, data;
