@@ -2791,7 +2791,7 @@ var SalesTableService = /** @class */ (function () {
                             message: "SAVED_SUCCESSFULLY",
                             status: reqData.status,
                         };
-                        if (reqData.traskind == "INVENTORYMOVEMENT" && parseInt(reqData.movementType.id) == 10) {
+                        if (reqData.transkind == "INVENTORYMOVEMENT" && reqData.movementType.id == 10) {
                             returnData.sendForApproval = false;
                         }
                         else {
