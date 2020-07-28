@@ -1203,6 +1203,7 @@ var SalesTableService = /** @class */ (function () {
                         if (!custAccount) return [3 /*break*/, 7];
                         customer = custAccount;
                         reqData.custAccount = custAccount.accountnum;
+                        reqData.salesName = custAccount.name;
                         reqData.salesLine = salesData.salesLine;
                         reqData.payment = customer.paymtermid;
                         return [4 /*yield*/, this.save(reqData)];
