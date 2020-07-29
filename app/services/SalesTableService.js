@@ -1300,16 +1300,16 @@ var SalesTableService = /** @class */ (function () {
         if (status === void 0) { status = null; }
         if (queryRunner === void 0) { queryRunner = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner_1, salesData, batches, _i, batches_2, item, returnData, error_10;
+            var salesData, batches, _i, batches_2, item, returnData, error_10;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!(queryRunner == null)) return [3 /*break*/, 3];
-                        queryRunner_1 = typeorm_1.getConnection().createQueryRunner();
-                        return [4 /*yield*/, queryRunner_1.connect()];
+                        if (!!queryRunner) return [3 /*break*/, 3];
+                        queryRunner = typeorm_1.getConnection().createQueryRunner();
+                        return [4 /*yield*/, queryRunner.connect()];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, queryRunner_1.startTransaction()];
+                        return [4 /*yield*/, queryRunner.startTransaction()];
                     case 2:
                         _a.sent();
                         _a.label = 3;
@@ -1618,6 +1618,7 @@ var SalesTableService = /** @class */ (function () {
                         batch.batchno = batch.batchNo;
                         batch.configid = item.configId;
                         batch.inventsizeid = item.inventsizeid;
+                        batch.custvendac = reqData.custAccount;
                         batch.inventlocationid = this.sessionInfo.inventlocationid;
                         batch.dataareaid = this.sessionInfo.dataareaid;
                         batch.qty = -batch.quantity;
@@ -2252,6 +2253,7 @@ var SalesTableService = /** @class */ (function () {
                                                 reqData.transkind == "PURCHASERETURN" ? -batches.returnQuantity : batches.returnQuantity;
                                             batches.batchno = batches.batchNo;
                                             batches.configid = item.configId;
+                                            batches.custvendac = reqData.custAccount;
                                             batches.inventsizeid = item.inventsizeid;
                                             batches.dataareaid = this.sessionInfo.dataareaid;
                                             batches.inventlocationid = this.sessionInfo.inventlocationid;
@@ -2916,6 +2918,7 @@ var SalesTableService = /** @class */ (function () {
                                 batch.transrefid = reqData.interCompanyOriginalSalesId ? reqData.interCompanyOriginalSalesId : reqData.salesId;
                                 batch.invoiceid = item.salesId;
                                 batch.dataareaid = this.sessionInfo.dataareaid;
+                                batch.custvendac = reqData.custAccount;
                                 batch.inventlocationid = this.sessionInfo.inventlocationid;
                                 batch.transactionClosed = reqData.status == "PAID" || reqData.status == "RESERVED" ? true : false;
                                 batch.qty = -batch.quantity;

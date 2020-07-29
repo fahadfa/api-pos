@@ -158,10 +158,14 @@ var CusttableService = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         data.data.forEach(function (element) {
-                            element.rcusttypeen =
-                                element.rcusttype && Props_1.Props.RCUSTTYPE[element.rcusttype] ? Props_1.Props.RCUSTTYPE[element.rcusttype][1] : null;
-                            element.rcusttypear =
-                                element.rcusttype && Props_1.Props.RCUSTTYPE[element.rcusttype] ? Props_1.Props.RCUSTTYPE[element.rcusttype][2] : null;
+                            if (element.rcusttype && Props_1.Props.RCUSTTYPE[element.rcusttype]) {
+                                element.rcusttypeen = Props_1.Props.RCUSTTYPE[element.rcusttype][1];
+                                element.rcusttypear = Props_1.Props.RCUSTTYPE[element.rcusttype][2];
+                            }
+                            else {
+                                element.rcusttypeen = "Individual";
+                                element.rcusttypear = "أفراد";
+                            }
                             element.phone = !element.phone || element.phone.length <= 1 ? "N/A" : element.phone;
                         });
                         if (item.filter && item.filter != "null") {
