@@ -278,6 +278,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         });
                                     }
                                     if (discountItem.discountType == "BUY_ONE_GET_ONE_DISCOUNT") {
+                                        console.log("========================================", line.isItemFree);
                                         var returnParentQty_1 = 0;
                                         var returnFreeQty_1 = 0;
                                         var packageItems = reqData.selectedBatches.filter(function (v) { return v.linkId == item.linkId; });
@@ -290,7 +291,24 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                             returnParentQty_1 += parseInt(v.returnQuantity);
                                         });
                                         if (returnParentQty_1 == returnFreeQty_1) {
-                                            var returnDiscount = (parseFloat(discountItem.discountAmount) / parseFloat(line.salesQty)) * parseInt(item.returnQuantity);
+                                            var returnDiscount = 0;
+                                            var itemDiscountAmount_1 = 0;
+                                            if (line.isItemFree) {
+                                                itemDiscountAmount_1 = parseFloat(discountItem.discountAmount);
+                                                returnDiscount = (itemDiscountAmount_1 / parseFloat(line.salesQty)) * parseInt(item.returnQuantity);
+                                            }
+                                            else {
+                                                var returningFreeLines_1 = salesLine.filter(function (v) { return v.linkId == item.linkId && v.isItemFree == true; });
+                                                var filteredReturningFreeLines_1 = [];
+                                                returningFreeItems.map(function (a) {
+                                                    filteredReturningFreeLines_1.push(returningFreeLines_1.filter(function (b) { return b.id == a.salesLineId; })[0]);
+                                                });
+                                                filteredReturningFreeLines_1.map(function (x) {
+                                                    var d = x.appliedDiscounts.filter(function (y) { return y.discountType == "BUY_ONE_GET_ONE_DISCOUNT"; });
+                                                    itemDiscountAmount_1 += parseFloat(d[0].discountAmount);
+                                                });
+                                                returnDiscount = itemDiscountAmount_1 * parseInt(item.returnQuantity);
+                                            }
                                             itemDiscount += returnDiscount;
                                             itemTotal -= returnDiscount;
                                             returnItem.appliedDiscounts.push({

@@ -528,7 +528,7 @@ var DiscountService = /** @class */ (function () {
                                                 isInstantDiscount = true;
                                             }
                                         }
-                                        if (!(isInstantDiscount && !isNoDiscount)) return [3 /*break*/, 21];
+                                        if (!(isInstantDiscount && !isNoDiscount && !isSalesDiscount)) return [3 /*break*/, 21];
                                         return [4 /*yield*/, this_1.calInstantDiscount(reqData, item, instantDiscountPercent)];
                                     case 20:
                                         _g.sent();
