@@ -2251,7 +2251,7 @@ var SalesTableService = /** @class */ (function () {
                                             batches.invoiceid = item.salesId;
                                             batches.qty =
                                                 reqData.transkind == "PURCHASERETURN" ? -batches.returnQuantity : batches.returnQuantity;
-                                            batches.batchno = batches.batchNo;
+                                            batches.batchno = batches.batchno;
                                             batches.configid = item.configId;
                                             batches.custvendac = reqData.custAccount;
                                             batches.inventsizeid = item.inventsizeid;
