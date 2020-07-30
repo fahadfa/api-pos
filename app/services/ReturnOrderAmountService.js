@@ -166,6 +166,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                     case 5:
                         returnOrderData = _f.sent();
                         returnOrderData.salesLine = [];
+                        reqData.selectedBatches = reqData.selectedBatches.filter(function (v) { return v.returnQuantity > 0; });
                         lineNum = 1;
                         _loop_3 = function (item) {
                             var line = salesLine.filter(function (v) { return v.id == item.salesLineId; })[0];
@@ -296,6 +297,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                             if (line.isItemFree) {
                                                 itemDiscountAmount_1 = parseFloat(discountItem.discountAmount);
                                                 returnDiscount = (itemDiscountAmount_1 / parseFloat(line.salesQty)) * parseInt(item.returnQuantity);
+                                                // console.log(returnDiscount);
                                             }
                                             else {
                                                 var returningFreeLines_1 = salesLine.filter(function (v) { return v.linkId == item.linkId && v.isItemFree == true; });
@@ -305,9 +307,11 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 });
                                                 filteredReturningFreeLines_1.map(function (x) {
                                                     var d = x.appliedDiscounts.filter(function (y) { return y.discountType == "BUY_ONE_GET_ONE_DISCOUNT"; });
-                                                    itemDiscountAmount_1 += parseFloat(d[0].discountAmount);
+                                                    itemDiscountAmount_1 +=
+                                                        (parseFloat(d[0].discountAmount) / parseFloat(x.salesQty)) * parseInt(item.returnQuantity);
                                                 });
-                                                returnDiscount = itemDiscountAmount_1 * parseInt(item.returnQuantity);
+                                                returnDiscount = itemDiscountAmount_1;
+                                                // console.log(returnDiscount);
                                             }
                                             itemDiscount += returnDiscount;
                                             itemTotal -= returnDiscount;
