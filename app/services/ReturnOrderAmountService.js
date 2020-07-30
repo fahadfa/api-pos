@@ -44,22 +44,22 @@ var ReturnOrderAmountService = /** @class */ (function () {
     }
     ReturnOrderAmountService.prototype.returnAmount = function (reqData, type) {
         return __awaiter(this, void 0, void 0, function () {
-            var salesOrderData, prevReturnOrderAmounts, customer, condition, salesLine, salesLineIds, grossAmount, total, discount, vat, sendForApproval, totalGrossAmountAfterReturnItems, filteredSalesLine, promotionalDiscountItems, promotionalreturnItems, discountConditions, _i, salesLine_1, item, checkForPromotional, _loop_1, _a, _b, item, result, _loop_2, _c, result_1, item, returnOrderData, lineNum, _loop_3, this_1, _d, _e, item, cashAmount, redeemAmount, designServiceRedeemAmount;
-            return __generator(this, function (_f) {
-                switch (_f.label) {
+            var salesOrderData, prevReturnOrderAmounts, customer, condition, salesLine, salesLineIds, grossAmount, total, discount, vat, sendForApproval, totalGrossAmountAfterReturnItems, filteredSalesLine, promotionalDiscountItems, promotionalreturnItems, discountConditions, _i, salesLine_1, item, checkForPromotional, _loop_1, _a, _b, item, result, _loop_2, _c, result_1, item, returnOrderData, selectedBatchesGroup, selectedBatches, lineNum, _loop_3, this_1, _d, selectedBatches_1, item, cashAmount, redeemAmount, designServiceRedeemAmount;
+            return __generator(this, function (_e) {
+                switch (_e.label) {
                     case 0: return [4 /*yield*/, this.salesTableDAO.entity(reqData.salesid.toUpperCase())];
                     case 1:
-                        salesOrderData = _f.sent();
+                        salesOrderData = _e.sent();
                         console.log(salesOrderData.cashAmount);
                         return [4 /*yield*/, this.rawQuery.getPrevReturnOrderAmount(reqData.salesid.toUpperCase())];
                     case 2:
-                        prevReturnOrderAmounts = _f.sent();
+                        prevReturnOrderAmounts = _e.sent();
                         return [4 /*yield*/, this.rawQuery.getCustomer(salesOrderData.custAccount)];
                     case 3:
-                        customer = _f.sent();
+                        customer = _e.sent();
                         return [4 /*yield*/, this.rawQuery.workflowconditions(this.sessionInfo.usergroupconfigid)];
                     case 4:
-                        condition = _f.sent();
+                        condition = _e.sent();
                         salesLine = salesOrderData.salesLine;
                         salesLineIds = [];
                         grossAmount = 0;
@@ -164,9 +164,27 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         }
                         return [4 /*yield*/, this.allocateReturnOrderData(salesOrderData, type)];
                     case 5:
-                        returnOrderData = _f.sent();
+                        returnOrderData = _e.sent();
                         returnOrderData.salesLine = [];
                         reqData.selectedBatches = reqData.selectedBatches.filter(function (v) { return v.returnQuantity > 0; });
+                        selectedBatchesGroup = this.groupBy(reqData.selectedBatches, function (item) {
+                            return [item.itemid, item.configid, item.inventsizeid, item.isItemFree, item.salesLineId];
+                        });
+                        selectedBatches = [];
+                        selectedBatchesGroup.forEach(function (groupitem) {
+                            var qty = groupitem.reduce(function (res, item) { return res + parseInt(item.returnQuantity); }, 0);
+                            var batch = [];
+                            groupitem.forEach(function (element) {
+                                batch.push({
+                                    batchno: element.batchno,
+                                    returnQuantity: element.returnQuantity,
+                                });
+                            });
+                            groupitem[0].returnQuantity = qty;
+                            groupitem[0].batches = batch;
+                            selectedBatches.push(groupitem[0]);
+                        });
+                        console.log(selectedBatches);
                         lineNum = 1;
                         _loop_3 = function (item) {
                             var line = salesLine.filter(function (v) { return v.id == item.salesLineId; })[0];
@@ -303,12 +321,13 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 var returningFreeLines_1 = salesLine.filter(function (v) { return v.linkId == item.linkId && v.isItemFree == true; });
                                                 var filteredReturningFreeLines_1 = [];
                                                 returningFreeItems.map(function (a) {
-                                                    filteredReturningFreeLines_1.push(returningFreeLines_1.filter(function (b) { return b.id == a.salesLineId; })[0]);
+                                                    var returningFreeLine = returningFreeLines_1.filter(function (b) { return b.id == a.salesLineId; })[0];
+                                                    returningFreeLine.returnQuantity = a.returnQuantity;
+                                                    filteredReturningFreeLines_1.push(returningFreeLine);
                                                 });
                                                 filteredReturningFreeLines_1.map(function (x) {
                                                     var d = x.appliedDiscounts.filter(function (y) { return y.discountType == "BUY_ONE_GET_ONE_DISCOUNT"; });
-                                                    itemDiscountAmount_1 +=
-                                                        (parseFloat(d[0].discountAmount) / parseFloat(x.salesQty)) * parseInt(item.returnQuantity);
+                                                    itemDiscountAmount_1 += (parseFloat(d[0].discountAmount) / parseFloat(x.salesQty)) * x.returnQuantity;
                                                 });
                                                 returnDiscount = itemDiscountAmount_1;
                                                 // console.log(returnDiscount);
@@ -369,18 +388,13 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             returnItem.isItemFree = item.isItemFree;
                             returnItem.linkId = item.linkId;
                             returnItem.lineNum = lineNum;
-                            returnItem.batches = [
-                                {
-                                    batchno: item.batchno,
-                                    returnQuantity: item.returnQuantity,
-                                },
-                            ];
+                            returnItem.batches = item.batches;
                             returnOrderData.salesLine.push(returnItem);
                             lineNum += 1;
                         };
                         this_1 = this;
-                        for (_d = 0, _e = reqData.selectedBatches; _d < _e.length; _d++) {
-                            item = _e[_d];
+                        for (_d = 0, selectedBatches_1 = selectedBatches; _d < selectedBatches_1.length; _d++) {
+                            item = selectedBatches_1[_d];
                             _loop_3(item);
                         }
                         cashAmount = 0;
@@ -417,7 +431,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                 returnOrderData.redeemAmount = total - cashAmount - designServiceRedeemAmount;
                             }
                         }
-                        console.log(cashAmount);
+                        // console.log(cashAmount);
                         returnOrderData.amount = grossAmount;
                         returnOrderData.netAmount = total;
                         returnOrderData.disc = discount;
@@ -432,7 +446,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         else {
                             sendForApproval = false;
                         }
-                        console.log(sendForApproval, condition);
+                        // console.log(sendForApproval, condition);
                         return [2 /*return*/, {
                                 total: total > 0 ? total : 0,
                                 grossTotal: grossAmount,
