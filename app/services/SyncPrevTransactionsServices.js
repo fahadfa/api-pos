@@ -46,6 +46,7 @@ var Config = __importStar(require("../../utils/Config"));
 var SyncServiceHelper_1 = require("../../sync/SyncServiceHelper");
 var Log_1 = require("../../utils/Log");
 var App_1 = require("../../utils/App");
+var uuid = require("uuid");
 // let mssqlDbOptions = {
 //   username: "SA",
 //   password: "Jazeera123",
@@ -245,7 +246,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                             item.iscash = item.payment == "CASH" ? true : false;
                             item.deliverytype = "self";
                             item.documentstatus = item.documentstatus == 0 ? false : true;
-                            query = "INSERT INTO public.salestable (salesid,salesname, reservation, custaccount, invoiceaccount, deliverydate,\n          deliveryaddress, documentstatus, currencycode, dataareaid, recversion,\n          recid, languageid, payment, custgroup, pricegroupid, shippingdaterequested,\n          deliverystreet, salestype, salesstatus, numbersequencegroup, cashdisc,\n           intercompanyoriginalsalesid, salesgroup, shippingdateconfirmed, deadline, fixedduedate, returndeadline, createddatetime, createdby, syncstatus, amount, disc, netamount,\n           citycode, districtcode, latitude, vehiclecode, vouchernum, painter, ajpenddisc, taxgroup, sumtax, inventlocationid, vatamount, invoicedate, invoicecreatedby, multilinediscountgroupid,\n           lastmodifiedby, lastmodifieddate, originalprinted, iscash,  transkind, status, redeempts, redeemptsamt, deliverytype, customerref) VALUES(\n          '" + item.salesid + "','" + item.salesname + "'," + item.reservation + ",'" + item.custaccount + "','" + item.invoiceaccount + "','" + item.deliverydate + "', '" + item.deliveryaddress + "'," + item.documentstatus + ",'" + item.currencycode + "','" + item.dataareaid + "',\n          " + item.recversion + "," + item.recid + ", '" + item.languageid + "', '" + item.payment + "', '" + item.custgroup + "','" + item.pricegroupid + "', '" + item.shippingdaterequested + "', '" + item.deliverystreet + "',\n          " + item.salestype + "," + item.salesstatus + ",'" + item.numbersequencegroup + "','" + item.cashdisc + "','" + (item.salestype == 4 ? item.customerref : item.intercompanyoriginalsalesid) + "','" + item.salesgroup + "','" + item.shippingdateconfirmed + "',\n          '" + item.deadline + "','" + item.fixedduedate + "','" + item.returndeadline + "',\n          '" + item.createddatetime + "','" + item.createdby + "'," + item.syncstatus + "," + item.amount + "," + item.disc + "," + item.netamount + ",'" + item.citycode + "','" + item.districtcode + "','" + item.latitude + "','" + item.vehiclecode + "','" + item.vouchernum + "',\n          '" + item.painter + "','" + item.ajpenddisc + "','" + item.taxgroup + "'," + item.sumtax + ",'" + item.inventlocationid + "',\n           " + item.vatamount + ",'" + item.createddatetime + "','" + item.invoicecreatedby + "','" + item.multilinediscountgroupid + "','" + item.lastmodifiedby + "',\n           '" + item.createddatetime + "'," + item.originalprinted + ",'" + item.iscash + "','" + item.transkind + "', '" + item.status + "', " + item.redeempts + "," + item.redeemptsamt + ",'" + item.deliverytype + "', '" + item.customerref + "');";
+                            query = "INSERT INTO public.salestable (salesid,salesname, reservation, custaccount, invoiceaccount, deliverydate,\n          deliveryaddress, documentstatus, currencycode, dataareaid, recversion,\n          recid, languageid, payment, custgroup, pricegroupid, shippingdaterequested,\n          deliverystreet, salestype, salesstatus, numbersequencegroup, cashdisc,\n           intercompanyoriginalsalesid, salesgroup, shippingdateconfirmed, deadline, fixedduedate, returndeadline, createddatetime, createdby, syncstatus, amount, disc, netamount,\n           citycode, districtcode, latitude, vehiclecode, vouchernum, painter, ajpenddisc, taxgroup, sumtax, inventlocationid, vatamount, invoicedate, invoicecreatedby, multilinediscountgroupid,\n           lastmodifiedby, lastmodifieddate, originalprinted, iscash,  transkind, status, redeempts, redeemptsamt, deliverytype, customerref) VALUES(\n           '" + item.salesid + "','" + item.salesname + "'," + item.reservation + ",'" + item.custaccount + "','" + item.invoiceaccount + "','" + item.deliverydate + "', '" + item.deliveryaddress + "'," + item.documentstatus + ",'" + item.currencycode + "','" + item.dataareaid + "',\n          " + item.recversion + "," + item.recid + ", '" + item.languageid + "', '" + item.payment + "', '" + item.custgroup + "','" + item.pricegroupid + "', '" + item.shippingdaterequested + "', '" + item.deliverystreet + "',\n          " + item.salestype + "," + item.salesstatus + ",'" + item.numbersequencegroup + "','" + item.cashdisc + "','" + (item.salestype == 4 ? item.customerref : item.intercompanyoriginalsalesid) + "','" + item.salesgroup + "','" + item.shippingdateconfirmed + "',\n          '" + item.deadline + "','" + item.fixedduedate + "','" + item.returndeadline + "',\n          '" + item.createddatetime + "','" + item.createdby + "'," + item.syncstatus + "," + item.amount + "," + item.disc + "," + item.netamount + ",'" + item.citycode + "','" + item.districtcode + "','" + item.latitude + "','" + item.vehiclecode + "','" + item.vouchernum + "',\n          '" + item.painter + "','" + item.ajpenddisc + "','" + item.taxgroup + "'," + item.sumtax + ",'" + item.inventlocationid + "',\n           " + item.vatamount + ",'" + item.createddatetime + "','" + item.invoicecreatedby + "','" + item.multilinediscountgroupid + "','" + item.lastmodifiedby + "',\n           '" + item.createddatetime + "'," + item.originalprinted + ",'" + item.iscash + "','" + item.transkind + "', '" + item.status + "', " + item.redeempts + "," + item.redeemptsamt + ",'" + item.deliverytype + "', '" + item.customerref + "');";
                             queryData.push(query);
                         }
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(this.localDbConfig, queryData)];
@@ -279,14 +280,14 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                                             line.applied_discounts.push({
                                                 discountType: "ARAMKO_TAHAKOM_DISOUNT",
                                                 percentage: parseFloat(line.InteriorExteriorPer),
-                                                discountAmount: parseFloat(line.InteriorExteriorAmount)
+                                                discountAmount: parseFloat(line.InteriorExteriorAmount),
                                             });
                                         }
                                         if (line.VoucherDisc && line.VoucherDisc > 0) {
                                             line.applied_discounts.push({
                                                 discountType: "VOUCHER_DISCOUNT",
                                                 percentage: (parseFloat(line.VoucherDisc) * 100) / parseFloat(line.LINEAMOUNT),
-                                                discountAmount: parseFloat(line.InteriorExteriorAmount)
+                                                discountAmount: parseFloat(line.InteriorExteriorAmount),
                                             });
                                         }
                                         if (line.CUSTOMDISCAMT && line.CUSTOMDISCAMT > 0) {
@@ -294,7 +295,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                                                 discountType: "TOTAL_DISCOUNT",
                                                 percentage: (parseFloat(line.CUSTOMDISCAMT) * 100) / parseFloat(line.LINEAMOUNT),
                                                 discountAmount: parseFloat(line.CUSTOMDISCAMT),
-                                                cond: []
+                                                cond: [],
                                             });
                                         }
                                         if (line.LINEDISCAMT && line.LINEDISCAMT > 0) {
@@ -302,7 +303,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                                                 discountType: "LINE_DISCOUNT",
                                                 percentage: (parseFloat(line.LINEDISCAMT) * 100) / parseFloat(line.LINEAMOUNT),
                                                 discountAmount: parseFloat(line.LINEDISCAMT),
-                                                cond: []
+                                                cond: [],
                                             });
                                         }
                                         if (!(line.MultiLnDisc && line.MultiLnDisc > 0)) return [3 /*break*/, 2];
@@ -314,7 +315,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                                             discountType: "MULTI_LINE_DISCOUNT",
                                             percentage: parseFloat(line.MultiLnPercent),
                                             discountAmount: parseFloat(line.MultiLnDisc),
-                                            cond: MultiLineDiscRanges.rows
+                                            cond: MultiLineDiscRanges.rows,
                                         });
                                         _a.label = 2;
                                     case 2:
@@ -327,7 +328,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                                             discountType: "MULTI_LINE_DISCOUNT",
                                             percentage: (parseFloat(line.InstantDisc) * 100) / parseFloat(line.LINEAMOUNT),
                                             discountAmount: parseFloat(line.MultiLnDisc),
-                                            cond: InstantDiscRanges.rows
+                                            cond: InstantDiscRanges.rows,
                                         });
                                         _a.label = 4;
                                     case 4:
@@ -347,9 +348,9 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                                                 cond: [
                                                     {
                                                         multipleQty: line.multipleQty,
-                                                        freeQty: line.freeQty
-                                                    }
-                                                ]
+                                                        freeQty: line.freeQty,
+                                                    },
+                                                ],
                                             });
                                         }
                                         if (line.PromotionDiscEqual && line.PromotionDiscEqual > 0) {
@@ -361,17 +362,17 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                                                 cond: [
                                                     {
                                                         multipleQty: 1,
-                                                        freeQty: 1
-                                                    }
-                                                ]
+                                                        freeQty: 1,
+                                                    },
+                                                ],
                                             });
                                         }
                                         line.applied_discounts = JSON.stringify(line.applied_discounts);
                                         line.batches = JSON.stringify([
                                             {
                                                 batchNo: line.BATCHNO,
-                                                quantity: line.SALESQTY
-                                            }
+                                                quantity: line.SALESQTY,
+                                            },
                                         ]);
                                         return [2 /*return*/];
                                 }
@@ -393,7 +394,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                     case 4:
                         for (_a = 0, salesLineData_2 = salesLineData; _a < salesLineData_2.length; _a++) {
                             line = salesLineData_2[_a];
-                            query = "INSERT INTO public.salesline\n        (salesid, linenum, itemid, \"name\", salesprice, currencycode, salesqty, lineamount, salesunit, priceunit, qtyordered, remainsalesphysical, remainsalesfinancial,\n        salestype, dataareaid, custgroup, custaccount, inventsizeid, configid, numbersequencegroupid, inventlocationid, salesdelivernow, salesstatus, \"location\", batchno, instantdisc, voucherdisc,\n          redeemdisc, promotiondisc, linetotaldisc, linesalestax, netamttax, linesalestaxpercent, taxgroup, taxitemgroup, linediscamt, customdiscamt, supplmultipleqty, supplfreeqty, multilndisc, multilnpercent, enddisc,\n          createdby, createddatetime, lastmodifiedby, lastmodifieddate, \n            vatamount, vat, voucherdiscamt, sabic_customer_discount, is_item_free, link_id, batches, applied_discounts)\n        VALUES('" + line.SALESID + "', " + line.LINENUM + ", '" + line.ITEMID + "', '" + line.NAME + "', " + line.SALESPRICE + ", '" + line.CURRENCYCODE + "', " + line.SALESQTY + ", " + line.LINEAMOUNT + ", '" + line.SALESUNIT + "', " + line.PRICEUNIT + ", " + line.QTYORDERED + ", \n        " + line.REMAINSALESPHYSICAL + ", " + line.REMAINSALESFINANCIAL + ",  " + line.SALESTYPE + ", '" + (line.DATAAREAID ? line.DATAAREAID.toLowerCase() : null) + "', '" + line.CUSTGROUP + "', '" + line.CUSTACCOUNT + "', '" + line.INVENTSIZEID + "', '" + line.CONFIGID + "',\n         '" + line.NUMBERSEQUENCEGROUPID + "', '" + line.INVENTLOCATIONID + "', " + line.SALESDELIVERNOW + ", " + line.SALESSTATUS + ", '" + line.LOCATION + "', '" + line.BATCHNO + "', " + (line.InstantDisc ? line.InstantDisc : 0) + ", " + (line.VoucherDisc ? line.VoucherDisc : 0) + ", " + (line.RedeemDisc ? line.RedeemDisc : 0) + ", " + (line.PromotionDisc ? line.PromotionDisc : 0) + ", \n         " + (line.LineTotalDisc ? line.LineTotalDisc : 0) + ", " + (line.LineSalesTax ? line.LineSalesTax : 0) + ", " + (line.NetAmtTax ? line.NetAmtTax : 0) + ", " + (line.LineSalesTaxPercent ? line.LineSalesTaxPercent : 0) + ", '" + line.TAXGROUP + "', '" + line.TAXITEMGROUP + "', " + (line.LINEDISCAMT ? line.LINEDISCAMT : 0) + ", " + (line.CUSTOMDISCAMT ? line.CUSTOMDISCAMT : 0) + ", " + (line.SupplMultipleQty ? line.SupplMultipleQty : 0) + ", " + (line.SupplFreeQty ? line.SupplFreeQty : 0) + ",\n         " + (line.MulLnDisc ? line.MultiLineDisc : 0) + ", " + (line.MultiPercent ? line.MultiPercent : 0) + ", " + (line.CUSTOMDISCAMT ? line.CUSTOMDISCAMT : 0) + ", '" + line.createdby + "', now(), '" + line.createdby + "', now(),\n          " + (line.LineSalesTax ? line.LineSalesTax : 0) + ", " + (line.LineSalesTaxPercent ? line.LineSalesTaxPercent : 0) + ",\n           " + (line.VoucherDisc ? line.VoucherDisc : 0) + ", " + (line.InteriorExteriorAmount ? line.InteriorExteriorAmount : 0) + ", " + (line.isitemfree ? line.isitemfree : false) + ", '" + line.link_id + "', '" + line.batches + "', '" + line.applied_discounts + "')\n        ";
+                            query = "INSERT INTO public.salesline\n        (id, salesid, linenum, itemid, \"name\", salesprice, currencycode, salesqty, lineamount, salesunit, priceunit, qtyordered, remainsalesphysical, remainsalesfinancial,\n        salestype, dataareaid, custgroup, custaccount, inventsizeid, configid, numbersequencegroupid, inventlocationid, salesdelivernow, salesstatus, \"location\", batchno, instantdisc, voucherdisc,\n          redeemdisc, promotiondisc, linetotaldisc, linesalestax, netamttax, linesalestaxpercent, taxgroup, taxitemgroup, linediscamt, customdiscamt, supplmultipleqty, supplfreeqty, multilndisc, multilnpercent, enddisc,\n          createdby, createddatetime, lastmodifiedby, lastmodifieddate, \n            vatamount, vat, voucherdiscamt, sabic_customer_discount, is_item_free, link_id, batches, applied_discounts)\n        VALUES('" + (uuid() + App_1.App.UniqueNumber()) + "', '" + line.SALESID + "', " + line.LINENUM + ", '" + line.ITEMID + "', '" + line.NAME + "', " + line.SALESPRICE + ", '" + line.CURRENCYCODE + "', " + line.SALESQTY + ", " + line.LINEAMOUNT + ", '" + line.SALESUNIT + "', " + line.PRICEUNIT + ", " + line.QTYORDERED + ", \n        " + line.REMAINSALESPHYSICAL + ", " + line.REMAINSALESFINANCIAL + ",  " + line.SALESTYPE + ", '" + (line.DATAAREAID ? line.DATAAREAID.toLowerCase() : null) + "', '" + line.CUSTGROUP + "', '" + line.CUSTACCOUNT + "', '" + line.INVENTSIZEID + "', '" + line.CONFIGID + "',\n         '" + line.NUMBERSEQUENCEGROUPID + "', '" + line.INVENTLOCATIONID + "', " + line.SALESDELIVERNOW + ", " + line.SALESSTATUS + ", '" + line.LOCATION + "', '" + line.BATCHNO + "', " + (line.InstantDisc ? line.InstantDisc : 0) + ", " + (line.VoucherDisc ? line.VoucherDisc : 0) + ", " + (line.RedeemDisc ? line.RedeemDisc : 0) + ", " + (line.PromotionDisc ? line.PromotionDisc : 0) + ", \n         " + (line.LineTotalDisc ? line.LineTotalDisc : 0) + ", " + (line.LineSalesTax ? line.LineSalesTax : 0) + ", " + (line.NetAmtTax ? line.NetAmtTax : 0) + ", " + (line.LineSalesTaxPercent ? line.LineSalesTaxPercent : 0) + ", '" + line.TAXGROUP + "', '" + line.TAXITEMGROUP + "', " + (line.LINEDISCAMT ? line.LINEDISCAMT : 0) + ", " + (line.CUSTOMDISCAMT ? line.CUSTOMDISCAMT : 0) + ", " + (line.SupplMultipleQty ? line.SupplMultipleQty : 0) + ", " + (line.SupplFreeQty ? line.SupplFreeQty : 0) + ",\n         " + (line.MulLnDisc ? line.MultiLineDisc : 0) + ", " + (line.MultiPercent ? line.MultiPercent : 0) + ", " + (line.CUSTOMDISCAMT ? line.CUSTOMDISCAMT : 0) + ", '" + line.createdby + "', now(), '" + line.createdby + "', now(),\n          " + (line.LineSalesTax ? line.LineSalesTax : 0) + ", " + (line.LineSalesTaxPercent ? line.LineSalesTaxPercent : 0) + ",\n           " + (line.VoucherDisc ? line.VoucherDisc : 0) + ", " + (line.InteriorExteriorAmount ? line.InteriorExteriorAmount : 0) + ", " + (line.isitemfree ? line.isitemfree : false) + ", '" + line.link_id + "', '" + line.batches + "', '" + line.applied_discounts + "')\n        ";
                             // log.info(query)
                             queryData.push(query);
                         }
@@ -428,14 +429,14 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                             line.applied_discounts.push({
                                 discountType: "ARAMKO_TAHAKOM_DISOUNT",
                                 percentage: parseFloat(line.InteriorExteriorPer),
-                                discountAmount: parseFloat(line.InteriorExteriorAmount)
+                                discountAmount: parseFloat(line.InteriorExteriorAmount),
                             });
                         }
                         if (line.VoucherDisc && line.VoucherDisc > 0) {
                             line.applied_discounts.push({
                                 discountType: "VOUCHER_DISCOUNT",
                                 percentage: (parseFloat(line.VoucherDisc) * 100) / parseFloat(line.LINEAMOUNT),
-                                discountAmount: parseFloat(line.InteriorExteriorAmount)
+                                discountAmount: parseFloat(line.InteriorExteriorAmount),
                             });
                         }
                         if (line.CUSTOMDISCAMT && line.CUSTOMDISCAMT > 0) {
@@ -443,7 +444,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                                 discountType: "TOTAL_DISCOUNT",
                                 percentage: (parseFloat(line.CUSTOMDISCAMT) * 100) / parseFloat(line.LINEAMOUNT),
                                 discountAmount: parseFloat(line.CUSTOMDISCAMT),
-                                cond: []
+                                cond: [],
                             });
                         }
                         if (line.LINEDISCAMT && line.LINEDISCAMT > 0) {
@@ -451,7 +452,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                                 discountType: "LINE_DISCOUNT",
                                 percentage: (parseFloat(line.LINEDISCAMT) * 100) / parseFloat(line.LINEAMOUNT),
                                 discountAmount: parseFloat(line.LINEDISCAMT),
-                                cond: []
+                                cond: [],
                             });
                         }
                         if (!(line.MultiLnDisc && line.MultiLnDisc > 0)) return [3 /*break*/, 3];
@@ -463,7 +464,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                             discountType: "MULTI_LINE_DISCOUNT",
                             percentage: parseFloat(line.MultiLnPercent),
                             discountAmount: parseFloat(line.MultiLnDisc),
-                            cond: MultiLineDiscRanges.rows
+                            cond: MultiLineDiscRanges.rows,
                         });
                         _a.label = 3;
                     case 3:
@@ -476,7 +477,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                             discountType: "MULTI_LINE_DISCOUNT",
                             percentage: (parseFloat(line.InstantDisc) * 100) / parseFloat(line.LINEAMOUNT),
                             discountAmount: parseFloat(line.MultiLnDisc),
-                            cond: InstantDiscRanges.rows
+                            cond: InstantDiscRanges.rows,
                         });
                         _a.label = 5;
                     case 5:
@@ -491,9 +492,9 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                             cond: [
                                 {
                                     multipleQty: PromotionalDiscountRanges.rows.length > 0 ? PromotionalDiscountRanges.rows[0].multipleQty : 10,
-                                    freeQty: PromotionalDiscountRanges.rows.length > 0 ? PromotionalDiscountRanges.rows[0].freeQty : 1
-                                }
-                            ]
+                                    freeQty: PromotionalDiscountRanges.rows.length > 0 ? PromotionalDiscountRanges.rows[0].freeQty : 1,
+                                },
+                            ],
                         });
                         _a.label = 7;
                     case 7:
@@ -506,19 +507,19 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                                 cond: [
                                     {
                                         multipleQty: 1,
-                                        freeQty: 1
-                                    }
-                                ]
+                                        freeQty: 1,
+                                    },
+                                ],
                             });
                         }
                         line.applied_discounts = JSON.stringify(line.applied_discounts);
                         line.batches = JSON.stringify([
                             {
                                 batchNo: line.BATCHNO,
-                                quantity: line.SALESQTY
-                            }
+                                quantity: line.SALESQTY,
+                            },
                         ]);
-                        query = "INSERT INTO public.salesline\n        (salesid, linenum, itemid, \"name\", salesprice, currencycode, salesqty, lineamount, salesunit, priceunit, qtyordered, remainsalesphysical, remainsalesfinancial,\n        salestype, dataareaid, custgroup, custaccount, inventsizeid, configid, numbersequencegroupid, inventlocationid, salesdelivernow, salesstatus, \"location\", batchno, instantdisc, voucherdisc,\n          redeemdisc, promotiondisc, linetotaldisc, linesalestax, netamttax, linesalestaxpercent, taxgroup, taxitemgroup, linediscamt, customdiscamt, supplmultipleqty, supplfreeqty, multilndisc, multilnpercent, enddisc,\n          createdby, createddatetime, lastmodifiedby, lastmodifieddate, \n            vatamount, vat, voucherdiscamt, sabic_customer_discount, is_item_free, link_id, batches, applied_discounts)\n        VALUES('" + line.SALESID + "', " + line.LINENUM + ", '" + line.ITEMID + "', '" + line.NAME + "', " + line.SALESPRICE + ", '" + line.CURRENCYCODE + "', " + line.SALESQTY + ", " + line.LINEAMOUNT + ", '" + line.SALESUNIT + "', " + line.PRICEUNIT + ", " + line.QTYORDERED + ", \n        " + line.REMAINSALESPHYSICAL + ", " + line.REMAINSALESFINANCIAL + ",  " + line.SALESTYPE + ", '" + (line.DATAAREAID ? line.DATAAREAID.toLowerCase() : null) + "', '" + line.CUSTGROUP + "', '" + line.CUSTACCOUNT + "', '" + line.INVENTSIZEID + "', '" + line.CONFIGID + "',\n         '" + line.NUMBERSEQUENCEGROUPID + "', '" + line.INVENTLOCATIONID + "', " + line.SALESDELIVERNOW + ", " + line.SALESSTATUS + ", '" + line.LOCATION + "', '" + line.BATCHNO + "', " + (line.InstantDisc ? line.InstantDisc : 0) + ", " + (line.VoucherDisc ? line.VoucherDisc : 0) + ", " + (line.RedeemDisc ? line.RedeemDisc : 0) + ", " + (line.PromotionDisc ? line.PromotionDisc : 0) + ", \n         " + (line.LineTotalDisc ? line.LineTotalDisc : 0) + ", " + (line.LineSalesTax ? line.LineSalesTax : 0) + ", " + (line.NetAmtTax ? line.NetAmtTax : 0) + ", " + (line.LineSalesTaxPercent ? line.LineSalesTaxPercent : 0) + ", '" + line.TAXGROUP + "', '" + line.TAXITEMGROUP + "', " + (line.LINEDISCAMT ? line.LINEDISCAMT : 0) + ", " + (line.CUSTOMDISCAMT ? line.CUSTOMDISCAMT : 0) + ", " + (line.SupplMultipleQty ? line.SupplMultipleQty : 0) + ", " + (line.SupplFreeQty ? line.SupplFreeQty : 0) + ",\n         " + (line.MulLnDisc ? line.MultiLineDisc : 0) + ", " + (line.MultiPercent ? line.MultiPercent : 0) + ", " + (line.CUSTOMDISCAMT ? line.CUSTOMDISCAMT : 0) + ", '" + line.createdby + "', now(), '" + line.createdby + "', now(),\n          " + (line.LineSalesTax ? line.LineSalesTax : 0) + ", " + (line.LineSalesTaxPercent ? line.LineSalesTaxPercent : 0) + ",\n           " + (line.VoucherDisc ? line.VoucherDisc : 0) + ", " + (line.InteriorExteriorAmount ? line.InteriorExteriorAmount : 0) + ", " + (line.isitemfree ? line.isitemfree : false) + ", '" + line.link_id + "', '" + line.batches + "', '" + line.applied_discounts + "')\n        ";
+                        query = "INSERT INTO public.salesline\n        (id, salesid, linenum, itemid, \"name\", salesprice, currencycode, salesqty, lineamount, salesunit, priceunit, qtyordered, remainsalesphysical, remainsalesfinancial,\n        salestype, dataareaid, custgroup, custaccount, inventsizeid, configid, numbersequencegroupid, inventlocationid, salesdelivernow, salesstatus, \"location\", batchno, instantdisc, voucherdisc,\n          redeemdisc, promotiondisc, linetotaldisc, linesalestax, netamttax, linesalestaxpercent, taxgroup, taxitemgroup, linediscamt, customdiscamt, supplmultipleqty, supplfreeqty, multilndisc, multilnpercent, enddisc,\n          createdby, createddatetime, lastmodifiedby, lastmodifieddate, \n            vatamount, vat, voucherdiscamt, sabic_customer_discount, is_item_free, link_id, batches, applied_discounts)\n        VALUES('" + (uuid() + App_1.App.UniqueNumber()) + "' ,'" + line.SALESID + "', " + line.LINENUM + ", '" + line.ITEMID + "', '" + line.NAME + "', " + line.SALESPRICE + ", '" + line.CURRENCYCODE + "', " + line.SALESQTY + ", " + line.LINEAMOUNT + ", '" + line.SALESUNIT + "', " + line.PRICEUNIT + ", " + line.QTYORDERED + ", \n        " + line.REMAINSALESPHYSICAL + ", " + line.REMAINSALESFINANCIAL + ",  " + line.SALESTYPE + ", '" + (line.DATAAREAID ? line.DATAAREAID.toLowerCase() : null) + "', '" + line.CUSTGROUP + "', '" + line.CUSTACCOUNT + "', '" + line.INVENTSIZEID + "', '" + line.CONFIGID + "',\n         '" + line.NUMBERSEQUENCEGROUPID + "', '" + line.INVENTLOCATIONID + "', " + line.SALESDELIVERNOW + ", " + line.SALESSTATUS + ", '" + line.LOCATION + "', '" + line.BATCHNO + "', " + (line.InstantDisc ? line.InstantDisc : 0) + ", " + (line.VoucherDisc ? line.VoucherDisc : 0) + ", " + (line.RedeemDisc ? line.RedeemDisc : 0) + ", " + (line.PromotionDisc ? line.PromotionDisc : 0) + ", \n         " + (line.LineTotalDisc ? line.LineTotalDisc : 0) + ", " + (line.LineSalesTax ? line.LineSalesTax : 0) + ", " + (line.NetAmtTax ? line.NetAmtTax : 0) + ", " + (line.LineSalesTaxPercent ? line.LineSalesTaxPercent : 0) + ", '" + line.TAXGROUP + "', '" + line.TAXITEMGROUP + "', " + (line.LINEDISCAMT ? line.LINEDISCAMT : 0) + ", " + (line.CUSTOMDISCAMT ? line.CUSTOMDISCAMT : 0) + ", " + (line.SupplMultipleQty ? line.SupplMultipleQty : 0) + ", " + (line.SupplFreeQty ? line.SupplFreeQty : 0) + ",\n         " + (line.MulLnDisc ? line.MultiLineDisc : 0) + ", " + (line.MultiPercent ? line.MultiPercent : 0) + ", " + (line.CUSTOMDISCAMT ? line.CUSTOMDISCAMT : 0) + ", '" + line.createdby + "', now(), '" + line.createdby + "', now(),\n          " + (line.LineSalesTax ? line.LineSalesTax : 0) + ", " + (line.LineSalesTaxPercent ? line.LineSalesTaxPercent : 0) + ",\n           " + (line.VoucherDisc ? line.VoucherDisc : 0) + ", " + (line.InteriorExteriorAmount ? line.InteriorExteriorAmount : 0) + ", " + (line.isitemfree ? line.isitemfree : false) + ", '" + line.link_id + "', '" + line.batches + "', '" + line.applied_discounts + "')\n        ";
                         // log.info(query)
                         queryData.push(query);
                         _a.label = 8;
@@ -578,7 +579,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         salesLineData = _a.sent();
                         // log.info(salesLineData);
                         trans.saleslineid = salesLineData.rows[0] ? salesLineData.rows[0].id : "";
-                        query = "INSERT INTO public.inventtrans\n        (itemid, qty, datephysical, transtype, transrefid, invoiceid, dataareaid, recversion, recid, inventsizeid, configid, batchno, inventlocationid, transactionclosed, reserve_status, sales_line_id)\n        VALUES('" + trans.ITEMID + "', " + trans.QTY + ", '" + trans.DATEPHYSICAL + "'," + trans.TRANSTYPE + ", '" + trans.TRANSREFID + "', '" + trans.INVOICEID + "', '" + trans.DATAAREAID + "', " + trans.RECVERSION + ", " + trans.RECID + ", '" + trans.InventSizeId + "',\n         '" + trans.ConfigId + "', '" + trans.BATCHNO + "', '" + this.dateObj.inventlocationid + "', " + transactionclosed + ", 'OLD_POS_DATA', '" + trans.saleslineid + "');\n        ";
+                        query = "INSERT INTO public.inventtrans\n        (id, itemid, qty, datephysical, transtype, transrefid, invoiceid, dataareaid, recversion, recid, inventsizeid, configid, batchno, inventlocationid, transactionclosed, reserve_status, sales_line_id)\n        VALUES('" + (uuid() + App_1.App.UniqueNumber()) + "', '" + trans.ITEMID + "', " + trans.QTY + ", '" + trans.DATEPHYSICAL + "'," + trans.TRANSTYPE + ", '" + trans.TRANSREFID + "', '" + trans.INVOICEID + "', '" + trans.DATAAREAID + "', " + trans.RECVERSION + ", " + trans.RECID + ", '" + trans.InventSizeId + "',\n         '" + trans.ConfigId + "', '" + trans.BATCHNO + "', '" + this.dateObj.inventlocationid + "', " + transactionclosed + ", 'OLD_POS_DATA', '" + trans.saleslineid + "');\n        ";
                         if (!(transactionclosed == true && trans.ITEMID != "HSN-00001")) return [3 /*break*/, 8];
                         text = "select * from inventory_onhand where itemid = '" + trans.ITEMID + "' AND configid = '" + trans.ConfigId + "' and inventsizeid = '" + trans.InventSizeId + "' and batchno = '" + trans.BATCHNO + "' and inventlocationid = '" + this.dateObj.inventlocationid + "'";
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(this.localDbConfig, text)];
@@ -600,7 +601,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         else {
                             trans.qty_in = parseInt(trans.QTY) > 0 ? Math.abs(parseInt(trans.QTY)) : 0;
                             trans.qty_out = parseInt(trans.QTY) <= 0 ? Math.abs(parseInt(trans.QTY)) : 0;
-                            onhandquery = "INSERT INTO public.inventory_onhand (itemid, configid, inventsizeid, batchno, qty_in, qty_out, qty_reserved, dataareaid, inventlocationid, updated_on, \"name\", updated_by) VALUES('" + trans.ITEMID + "', '" + trans.ConfigId + "', '" + trans.InventSizeId + "', '" + trans.BATCHNO + "', '" + trans.qty_in + "', '" + trans.qty_out + "', 0, '" + trans.DATAAREAID.toLowerCase() + "', '" + this.dateObj.inventlocationid + "', now(), 'OPEN_BALANCE', 'sayeed');";
+                            onhandquery = "INSERT INTO public.inventory_onhand (id, itemid, configid, inventsizeid, batchno, qty_in, qty_out, qty_reserved, dataareaid, inventlocationid, updated_on, \"name\", updated_by) VALUES( '" + (uuid() + App_1.App.UniqueNumber()) + "', '" + trans.ITEMID + "', '" + trans.ConfigId + "', '" + trans.InventSizeId + "', '" + trans.BATCHNO + "', '" + trans.qty_in + "', '" + trans.qty_out + "', 0, '" + trans.DATAAREAID.toLowerCase() + "', '" + this.dateObj.inventlocationid + "', now(), 'OPEN_BALANCE', 'sayeed');";
                             inventoryOnHandQuery.push(onhandquery);
                         }
                         _a.label = 8;

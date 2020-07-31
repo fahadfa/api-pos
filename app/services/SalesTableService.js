@@ -1156,7 +1156,7 @@ var SalesTableService = /** @class */ (function () {
                     case 2:
                         convertedData = _a.sent();
                         if (!(convertedData.length > 0)) return [3 /*break*/, 3];
-                        throw { message: "ALREADY_CONVERTED" };
+                        throw { message: "ALREADY_CONVERTED", salesId: convertedData[0].salesid };
                     case 3:
                         canConvert = true;
                         colors_1 = [];

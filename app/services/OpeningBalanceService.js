@@ -48,6 +48,7 @@ var InventTrans_1 = require("../../entities/InventTrans");
 var InventTransDAO_1 = require("../repos/InventTransDAO");
 var InventoryOnhandDAO_1 = require("../repos/InventoryOnhandDAO");
 var RawQuery_1 = require("../common/RawQuery");
+var uuid = require("uuid");
 var fs = __importStar(require("fs"));
 var Log_1 = require("../../utils/Log");
 // let mssqlDbOptions = {
@@ -153,7 +154,7 @@ var OpeningBalanceService = /** @class */ (function () {
                         if (!(_i < chunkData_1.length)) return [3 /*break*/, 7];
                         item = chunkData_1[_i];
                         item.map(function (v) {
-                            // v.id = v.recid ? v.recid.toString() : App.UniqueCode()
+                            v.id = uuid() + App_1.App.UniqueCode();
                             v.dateinvent = new Date(App_1.App.DateNow());
                             v.datephysical = new Date(App_1.App.DateNow());
                             v.transactionClosed = true;
@@ -173,8 +174,10 @@ var OpeningBalanceService = /** @class */ (function () {
                         // chunkData = await this.chunkArray(onhandData, 100);
                         // for (let item of chunkData) {
                         item.map(function (v) {
-                            // v.id =v.recid ? v.recid.toString() : App.UniqueCode()
+                            v.id = uuid() + App_1.App.UniqueCode();
                             v.qtyIn = v.qty;
+                            v.qtyOut = 0;
+                            v.qtyReserved = 0;
                             v.updatedOn = new Date(App_1.App.DateNow());
                             v.updatedBy = _this.sessionInfo.userName;
                             v.name = "OPEN_BALANCE";

@@ -125,4 +125,3 @@ exports.setEnvConfig = function () {
     }
     console.log(envData);
 };
-
