@@ -1087,6 +1087,7 @@ var DiscountService = /** @class */ (function () {
         var conditionQuantity = 0;
         for (var _i = 0, multilineDiscRanges_1 = multilineDiscRanges; _i < multilineDiscRanges_1.length; _i++) {
             var element = multilineDiscRanges_1[_i];
+            conditionQuantity = parseFloat(element.quantityamount);
             percent = parseFloat(element.percent1);
             if (quantity > conditionQuantity && quantity <= parseFloat(element.quantityamount)) {
                 line.multilnPercent = percent;
@@ -1096,7 +1097,6 @@ var DiscountService = /** @class */ (function () {
                 line.multilnPercent = percent;
                 line.multilineDiscRanges = multilineDiscRanges;
             }
-            conditionQuantity = parseFloat(element.quantityamount);
         }
     };
     DiscountService.prototype.takeTwoDecimalValues = function (value) {
