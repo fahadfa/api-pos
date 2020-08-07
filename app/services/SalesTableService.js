@@ -290,12 +290,14 @@ var SalesTableService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        if (!(data.status != 'POSTED')) return [3 /*break*/, 2];
                         data = data ? data : {};
                         return [4 /*yield*/, this.rawQuery.workflowstatus(data.salesId)];
                     case 1:
                         workFlowStatus = _a.sent();
                         data.status = workFlowStatus ? workFlowStatus.status : data.status;
-                        return [2 /*return*/];
+                        _a.label = 2;
+                    case 2: return [2 /*return*/];
                 }
             });
         });
