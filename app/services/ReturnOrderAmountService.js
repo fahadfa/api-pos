@@ -54,6 +54,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.getPrevReturnOrderAmount(reqData.salesid.toUpperCase())];
                     case 2:
                         prevReturnOrderAmounts = _e.sent();
+                        this.rawQuery.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.rawQuery.getCustomer(salesOrderData.custAccount)];
                     case 3:
                         customer = _e.sent();

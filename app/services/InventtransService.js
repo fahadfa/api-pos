@@ -410,6 +410,7 @@ var InventtransService = /** @class */ (function () {
                                         inventsizeid: v.inventsizeid,
                                         selectedQuantity: v.salesQty,
                                         availabilty: parseInt(itemsInStock_1[index].qty),
+                                        product: v.product
                                     });
                                 }
                             }

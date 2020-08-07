@@ -84,77 +84,81 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
     };
     PurchaseOrderFromAxaptaService.prototype.mapSalesData = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var salesData, i, _i, data_1, v, salesLine, batches, error_2;
+            var salesData, custAccount, customer, i, _i, data_1, v, salesLine, batches, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 4, , 5]);
-                        if (!(data.length > 0)) return [3 /*break*/, 2];
+                        _a.trys.push([0, 7, , 8]);
+                        if (!(data.length > 0)) return [3 /*break*/, 5];
                         return [4 /*yield*/, this.salesTableDAO.findOne({ salesId: data[0].transfer_id })];
                     case 1:
                         salesData = _a.sent();
                         console.log(data, this.sessionInfo.inventlocationid);
-                        if (data[0].invent_location_id.trim() == this.sessionInfo.inventlocationid) {
-                            salesData = new SalesTable_1.SalesTable();
-                            salesData.salesId = data[0].purch_id;
-                            salesData.inventLocationId = data[0].invent_location_id.trim();
-                            salesData.transkind = "PURCHASEORDER";
-                            salesData.saleStatus = "CREATED";
-                            salesData.custAccount = data[0].vend_account;
-                            salesData.invoiceDate = new Date(App_1.App.DateNow());
-                            salesData.shippingDateConfirmed = new Date(App_1.App.DateNow());
-                            salesData.dataareaid = data[0].data_area_id;
-                            salesData.lastModifiedDate = new Date(App_1.App.DateNow());
-                            salesData.createddatetime = new Date(App_1.App.DateNow());
-                            salesData.salesType = 4;
-                            salesData.salesLines = [];
-                            i = 1;
-                            for (_i = 0, data_1 = data; _i < data_1.length; _i++) {
-                                v = data_1[_i];
-                                salesLine = new SalesLine_1.SalesLine();
-                                salesLine.salesId = v.purch_id;
-                                salesLine.lineNum = i;
-                                salesLine.itemid = v.item_id;
-                                salesLine.salesprice = 0;
-                                salesLine.appliedDiscounts = [];
-                                salesLine.configId = v.config_id;
-                                salesLine.inventsizeid = v.invent_size_id;
-                                salesLine.salesQty = parseInt(v.purch_qty);
-                                salesLine.dataareaid = v.data_area_id;
-                                salesLine.inventLocationId = v.invent_location_id;
-                                salesLine.batchNo = v.batch_no;
-                                salesLine.custAccount = v.vend_account;
-                                salesLine.lastModifiedDate = new Date(App_1.App.DateNow());
-                                salesLine.createddatetime = new Date(App_1.App.DateNow());
-                                batches = {};
-                                batches.qty = parseInt(v.purch_qty);
-                                batches.itemid = salesLine.itemid;
-                                batches.transrefid = salesLine.salesId;
-                                batches.invoiceid = salesLine.salesId;
-                                batches.batchno = salesLine.batchNo;
-                                batches.configid = salesLine.configId;
-                                batches.inventsizeid = salesLine.inventsizeid;
-                                batches.inventlocationid = salesLine.inventLocationId;
-                                batches.dataareaid = salesLine.dataareaid;
-                                batches.transactionClosed = false;
-                                batches.dateinvent = new Date(App_1.App.DateNow());
-                                salesLine.batches = batches;
-                                salesData.salesLines.push(salesLine);
-                                i += 1;
-                            }
-                            salesData.status = 1;
-                            return [2 /*return*/, salesData];
+                        if (!(data[0].invent_location_id.trim() == this.sessionInfo.inventlocationid)) return [3 /*break*/, 3];
+                        salesData = new SalesTable_1.SalesTable();
+                        salesData.salesId = data[0].purch_id;
+                        salesData.inventLocationId = data[0].invent_location_id.trim();
+                        salesData.transkind = "PURCHASEORDER";
+                        salesData.saleStatus = "CREATED";
+                        salesData.custAccount = data[0].vend_account;
+                        salesData.invoiceAccount = data.cust_account;
+                        this.rawQuery.sessionInfo = this.sessionInfo;
+                        return [4 /*yield*/, this.rawQuery.getCustomer(salesData.invoiceAccount)];
+                    case 2:
+                        custAccount = _a.sent();
+                        customer = custAccount ? custAccount : {};
+                        salesData.salesmanId = customer.salesmanid;
+                        salesData.invoiceDate = new Date(App_1.App.DateNow());
+                        salesData.shippingDateConfirmed = new Date(App_1.App.DateNow());
+                        salesData.dataareaid = data[0].data_area_id;
+                        salesData.lastModifiedDate = new Date(App_1.App.DateNow());
+                        salesData.createddatetime = new Date(App_1.App.DateNow());
+                        salesData.salesType = 4;
+                        salesData.salesLines = [];
+                        i = 1;
+                        for (_i = 0, data_1 = data; _i < data_1.length; _i++) {
+                            v = data_1[_i];
+                            salesLine = new SalesLine_1.SalesLine();
+                            salesLine.salesId = v.purch_id;
+                            salesLine.lineNum = i;
+                            salesLine.itemid = v.item_id;
+                            salesLine.salesprice = 0;
+                            salesLine.appliedDiscounts = [];
+                            salesLine.configId = v.config_id;
+                            salesLine.inventsizeid = v.invent_size_id;
+                            salesLine.salesQty = parseInt(v.purch_qty);
+                            salesLine.dataareaid = v.data_area_id;
+                            salesLine.inventLocationId = v.invent_location_id;
+                            salesLine.batchNo = v.batch_no;
+                            salesLine.custAccount = v.vend_account;
+                            salesLine.lastModifiedDate = new Date(App_1.App.DateNow());
+                            salesLine.createddatetime = new Date(App_1.App.DateNow());
+                            batches = {};
+                            batches.qty = parseInt(v.purch_qty);
+                            batches.itemid = salesLine.itemid;
+                            batches.transrefid = salesLine.salesId;
+                            batches.invoiceid = salesLine.salesId;
+                            batches.batchno = salesLine.batchNo;
+                            batches.configid = salesLine.configId;
+                            batches.inventsizeid = salesLine.inventsizeid;
+                            batches.inventlocationid = salesLine.inventLocationId;
+                            batches.dataareaid = salesLine.dataareaid;
+                            batches.transactionClosed = false;
+                            batches.dateinvent = new Date(App_1.App.DateNow());
+                            salesLine.batches = batches;
+                            salesData.salesLines.push(salesLine);
+                            i += 1;
                         }
-                        else {
-                            throw { status: 1, message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
-                        }
-                        return [3 /*break*/, 3];
-                    case 2: throw { status: 1, message: "DATA_NOT_FOUND" };
-                    case 3: return [3 /*break*/, 5];
-                    case 4:
+                        salesData.status = 1;
+                        return [2 /*return*/, salesData];
+                    case 3: throw { status: 1, message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
+                    case 4: return [3 /*break*/, 6];
+                    case 5: throw { status: 1, message: "DATA_NOT_FOUND" };
+                    case 6: return [3 /*break*/, 8];
+                    case 7:
                         error_2 = _a.sent();
                         throw error_2;
-                    case 5: return [2 /*return*/];
+                    case 8: return [2 /*return*/];
                 }
             });
         });
@@ -332,64 +336,74 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
     };
     PurchaseOrderFromAxaptaService.prototype.mapAgentpurcaseOrder = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var salesData, salesLine;
+            var salesData, custAccount, customer, salesLine;
             return __generator(this, function (_a) {
-                salesData = {};
-                salesData.salesId = data.purch_id;
-                salesData.salesName = data.cust_name;
-                salesData.custAccount = data.cust_account;
-                salesData.deliveryAddress = data.deilvery_address;
-                salesData.custGroup = data.cust_group;
-                salesData.invoiceDate = data.order_date;
-                salesData.currencyCode = data.currency_code;
-                salesData.payment = data.payment_terms;
-                salesData.priceGroupId = data.price_group_id;
-                salesData.inventLocationId = data.invent_location_id.trim();
-                // salesData.inventLocationId = this.sessionInfo.inventlocationid;
-                salesData.taxGroup = data.tax_group;
-                salesData.amount = data.gross_amount;
-                salesData.disc = data.total_disc;
-                salesData.vatamount = data.total_vat_amount;
-                salesData.netAmount = data.net_amount;
-                salesData.dataareaid = data.data_area_id;
-                salesLine = [];
-                data.agentOrderLines.map(function (v) {
-                    var line = {};
-                    line.salesId = v.purch_id;
-                    line.custAccount = v.cust_account;
-                    line.lineNum = v.line_num;
-                    line.itemid = v.item_id;
-                    line.name = v.name;
-                    line.configId = v.config_id;
-                    line.inventsizeid = v.invent_size_id;
-                    line.taxGroup = v.tax_group;
-                    line.taxItemGroup = v.tax_item_group;
-                    line.salesprice = v.unit_price;
-                    line.salesQty = parseInt(v.qty);
-                    line.lineTotalDisc = v.line_disc;
-                    line.lineAmount = v.line_amount;
-                    line.vat = v.line_vat_percent;
-                    line.vatamount = v.line_vat;
-                    line.currencyCode = v.currency_code;
-                    line.dataareaid = salesData.dataareaid;
-                    line.inventLocationId = salesData.inventLocationId;
-                    // let batches: any = {};
-                    // batches.qty = parseInt(v.purch_qty);
-                    // batches.itemid = line.itemid;
-                    // batches.transrefid = line.salesId;
-                    // batches.invoiceid = line.salesId;
-                    // batches.batchno = line.batchNo;
-                    // batches.configid = line.configId;
-                    // batches.inventsizeid = line.inventsizeid;
-                    // batches.inventlocationid = line.inventLocationId;
-                    // batches.dataareaid = line.dataareaid;
-                    // batches.transactionClosed = false;
-                    // batches.dateinvent = new Date(App.DateNow());
-                    // line.batches = batches;
-                    salesLine.push(line);
-                });
-                salesData.salesLine = salesLine;
-                return [2 /*return*/, salesData];
+                switch (_a.label) {
+                    case 0:
+                        salesData = {};
+                        salesData.salesId = data.purch_id;
+                        salesData.salesName = data.cust_name;
+                        salesData.custAccount = data.cust_account;
+                        salesData.invoiceAccount = data.cust_account;
+                        salesData.deliveryAddress = data.deilvery_address;
+                        salesData.custGroup = data.cust_group;
+                        salesData.invoiceDate = data.order_date;
+                        salesData.currencyCode = data.currency_code;
+                        salesData.payment = data.payment_terms;
+                        salesData.priceGroupId = data.price_group_id;
+                        salesData.inventLocationId = data.invent_location_id.trim();
+                        this.rawQuery.sessionInfo = this.sessionInfo;
+                        return [4 /*yield*/, this.rawQuery.getCustomer(salesData.invoiceAccount)];
+                    case 1:
+                        custAccount = _a.sent();
+                        customer = custAccount ? custAccount : {};
+                        salesData.salesmanId = customer.salesmanid;
+                        // salesData.inventLocationId = this.sessionInfo.inventlocationid;
+                        salesData.taxGroup = data.tax_group;
+                        salesData.amount = data.gross_amount;
+                        salesData.disc = data.total_disc;
+                        salesData.vatamount = data.total_vat_amount;
+                        salesData.netAmount = data.net_amount;
+                        salesData.dataareaid = data.data_area_id;
+                        salesLine = [];
+                        data.agentOrderLines.map(function (v) {
+                            var line = {};
+                            line.salesId = v.purch_id;
+                            line.custAccount = v.cust_account;
+                            line.lineNum = v.line_num;
+                            line.itemid = v.item_id;
+                            line.name = v.name;
+                            line.configId = v.config_id;
+                            line.inventsizeid = v.invent_size_id;
+                            line.taxGroup = v.tax_group;
+                            line.taxItemGroup = v.tax_item_group;
+                            line.salesprice = v.unit_price;
+                            line.salesQty = parseInt(v.qty);
+                            line.lineTotalDisc = v.line_disc;
+                            line.lineAmount = v.line_amount;
+                            line.vat = v.line_vat_percent;
+                            line.vatamount = v.line_vat;
+                            line.currencyCode = v.currency_code;
+                            line.dataareaid = salesData.dataareaid;
+                            line.inventLocationId = salesData.inventLocationId;
+                            // let batches: any = {};
+                            // batches.qty = parseInt(v.purch_qty);
+                            // batches.itemid = line.itemid;
+                            // batches.transrefid = line.salesId;
+                            // batches.invoiceid = line.salesId;
+                            // batches.batchno = line.batchNo;
+                            // batches.configid = line.configId;
+                            // batches.inventsizeid = line.inventsizeid;
+                            // batches.inventlocationid = line.inventLocationId;
+                            // batches.dataareaid = line.dataareaid;
+                            // batches.transactionClosed = false;
+                            // batches.dateinvent = new Date(App.DateNow());
+                            // line.batches = batches;
+                            salesLine.push(line);
+                        });
+                        salesData.salesLine = salesLine;
+                        return [2 /*return*/, salesData];
+                }
             });
         });
     };

@@ -190,6 +190,7 @@ var InventsizeService = /** @class */ (function () {
                 switch (_d.label) {
                     case 0:
                         if (!!reqData.pricegroup) return [3 /*break*/, 2];
+                        this.rawQuery.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.rawQuery.getCustomer(this.sessionInfo.defaultcustomerid)];
                     case 1:
                         defaultcustomer = _d.sent();

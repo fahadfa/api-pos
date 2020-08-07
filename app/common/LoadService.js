@@ -125,7 +125,9 @@ var LoadService = /** @class */ (function () {
             var customer;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.rawQuery.getCustomer(param.param)];
+                    case 0:
+                        this.rawQuery.sessionInfo = this.sessionInfo;
+                        return [4 /*yield*/, this.rawQuery.getCustomer(param.param)];
                     case 1:
                         customer = _a.sent();
                         return [2 /*return*/, [customer]];
@@ -1341,20 +1343,28 @@ var LoadService = /** @class */ (function () {
     };
     LoadService.prototype.checkfordiscounts = function (param) {
         return __awaiter(this, void 0, void 0, function () {
-            var promotionalDiscountQuery, buyOneGetOneDiscountQuery, data, freebieItems, freebieItemsArray_1;
+            var customer, defaultcustomerid, promotionalDiscountQuery, buyOneGetOneDiscountQuery, data, freebieItems, freebieItemsArray_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        this.rawQuery.sessionInfo = this.sessionInfo;
+                        return [4 /*yield*/, this.rawQuery.getCustomer(param.custaccount)];
+                    case 1:
+                        customer = _a.sent();
+                        return [4 /*yield*/, this.rawQuery.getCustomer(param.custaccount)];
+                    case 2:
+                        defaultcustomerid = _a.sent();
+                        param.custtype = customer.walkincustomer ? defaultcustomerid.custtype : param.custtype;
                         promotionalDiscountQuery = "select\n                                                    dataareaid, \n                                                    inventlocationid, \n                                                    itemid,\n                                                    inventsizeid,\n                                                    configid,\n                                                    multiple_qty as \"multipleQty\", \n                                                    free_qty as \"freeQty\", \n                                                    price_disc_item_code as \"priceDiscItemCode\", \n                                                    price_disc_account_relation as \"priceDiscAccountRelation\"\n                                                    from sales_promotion_items where \n                                                    inventlocationid = '" + this.sessionInfo.inventlocationid + "'\n                                                    and (price_disc_account_relation = '" + param.custaccount + "' \n                                                    or price_disc_account_relation='" + param.custtype + "' or price_disc_item_code=2)\n                                                    and itemid = '" + param.itemid + "'";
                         buyOneGetOneDiscountQuery = "select\n                                                    dataareaid, \n                                                    inventlocationid, \n                                                    itemid,\n                                                    inventsizeid,\n                                                    configid,\n                                                    multiple_qty as \"multipleQty\", \n                                                    free_qty as \"freeQty\", \n                                                    price_disc_item_code as \"priceDiscItemCode\", \n                                                    price_disc_account_relation as \"priceDiscAccountRelation\"\n                                                    from sales_promotion_items_equal where \n                                                    inventlocationid = '" + this.sessionInfo.inventlocationid + "'\n                                                    and (price_disc_account_relation = '" + param.custaccount + "' \n                                                    or price_disc_account_relation='" + param.custtype + "' or price_disc_item_code=2)\n                                                    and itemid = '" + param.itemid + "'";
                         return [4 /*yield*/, this.db.query(buyOneGetOneDiscountQuery)];
-                    case 1:
+                    case 3:
                         data = _a.sent();
-                        if (!(data.length > 0)) return [3 /*break*/, 3];
+                        if (!(data.length > 0)) return [3 /*break*/, 5];
                         data = data[0];
                         data.discountType = "BUY_ONE_GET_ONE";
                         return [4 /*yield*/, this.db.query("select itemid from inventtable where itemgroupid in (select itemgroupid from inventtable where itemid='" + param.itemid + "')")];
-                    case 2:
+                    case 4:
                         freebieItems = _a.sent();
                         freebieItemsArray_1 = [];
                         freebieItems.map(function (v) {
@@ -1362,8 +1372,8 @@ var LoadService = /** @class */ (function () {
                         });
                         data.freebieItems = freebieItemsArray_1;
                         return [2 /*return*/, data];
-                    case 3: return [4 /*yield*/, this.db.query(promotionalDiscountQuery)];
-                    case 4:
+                    case 5: return [4 /*yield*/, this.db.query(promotionalDiscountQuery)];
+                    case 6:
                         data = _a.sent();
                         if (data.length > 0) {
                             data = data[0];
@@ -1371,8 +1381,8 @@ var LoadService = /** @class */ (function () {
                             data.freebieItems = [param.itemid];
                             return [2 /*return*/, data];
                         }
-                        _a.label = 5;
-                    case 5: return [2 /*return*/, {}];
+                        _a.label = 7;
+                    case 7: return [2 /*return*/, {}];
                 }
             });
         });

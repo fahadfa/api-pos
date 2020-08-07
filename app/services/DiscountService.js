@@ -97,7 +97,7 @@ var DiscountService = /** @class */ (function () {
                         }
                         reqData.cashdisc = checkCustomer.cashdisc;
                         reqData.paymtermid = checkCustomer.paymtermid;
-                        reqData.custtype = checkCustomer.custtype;
+                        reqData.custtype = checkCustomer.walkincustomer ? defaultCustomer.custtype : checkCustomer.custtype;
                         reqData.custgroup = checkCustomer.custgroup;
                         reqData.mobile = checkCustomer.phone;
                         vatData = void 0;

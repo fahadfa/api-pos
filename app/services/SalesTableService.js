@@ -1085,6 +1085,7 @@ var SalesTableService = /** @class */ (function () {
                         salesData.interCompanyOriginalSalesId = salesData.salesId;
                         delete salesData.salesId;
                         reqData = __assign({}, salesData);
+                        this.rawQuery.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.rawQuery.getCustomer(reqData.custAccount)];
                     case 4:
                         customer = _a.sent();
@@ -1197,6 +1198,7 @@ var SalesTableService = /** @class */ (function () {
                         reqData.status = "CREATED";
                         reqData.inventLocationId = salesData.jazeeraWarehouse;
                         reqData.warehouse.inventLocationId = salesData.jazeeraWarehouse;
+                        this.rawQuery.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.rawQuery.getCustomer(salesData.invoiceAccount)];
                     case 5:
                         custAccount = _a.sent();
@@ -1206,6 +1208,7 @@ var SalesTableService = /** @class */ (function () {
                         reqData.salesName = custAccount.name;
                         reqData.salesLine = salesData.salesLine;
                         reqData.payment = customer.paymtermid;
+                        reqData.salesmanId = customer.salesmanid;
                         return [4 /*yield*/, this.save(reqData)];
                     case 6:
                         data = _a.sent();
@@ -1933,6 +1936,7 @@ var SalesTableService = /** @class */ (function () {
                         // console.log(reqData.lastModifiedDate.toISOString());
                         reqData.invoiceAccount =
                             reqData.invoiceAccount || reqData.invoiceAccount != "" ? reqData.invoiceAccount : reqData.custAccount;
+                        this.rawQuery.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.rawQuery.getCustomer(reqData.invoiceAccount)];
                     case 9:
                         customerRecord_1 = _a.sent();
@@ -3060,6 +3064,7 @@ var SalesTableService = /** @class */ (function () {
                             }); };
                             promiseList.push(pmobileno());
                         }
+                        this.rawQuery.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.rawQuery.getCustomer(reqData.custAccount)];
                     case 3:
                         customerDetails = _a.sent();
