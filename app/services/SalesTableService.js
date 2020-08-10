@@ -290,7 +290,7 @@ var SalesTableService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!(data.status != 'POSTED')) return [3 /*break*/, 2];
+                        if (!(data.status != "PAID" && data.status != "POSTED")) return [3 /*break*/, 2];
                         data = data ? data : {};
                         return [4 /*yield*/, this.rawQuery.workflowstatus(data.salesId)];
                     case 1:
