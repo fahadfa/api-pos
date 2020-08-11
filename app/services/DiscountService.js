@@ -1126,19 +1126,19 @@ var DiscountService = /** @class */ (function () {
             ele.lineamount = (ele.price + ele.colorantprice) * ele.quantity + ele.vatamount - ele.lineTotalDisc;
             ele.priceAfterdiscount = ele.priceAfterdiscount;
             ele.lineamountafterdiscount = ele.lineamountafterdiscount;
-            ele.vatamount = Math.round((ele.vatamount + Number.EPSILON) * 100) / 100;
+            ele.vatamount = ele.vatamount;
             ele.vat = parseFloat(ele.vat);
             ele.priceAfterVat = ele.priceAfterVat;
-            ele.lineTotalDisc = Math.round((ele.lineTotalDisc + Number.EPSILON) * 100) / 100;
-            ele.lineamount = Math.round((ele.lineamount + Number.EPSILON) * 100) / 100;
-            ele.netAmount = Math.round((ele.netAmount + Number.EPSILON) * 100) / 100;
-            reqData.vatamount += parseFloat(ele.vatamount);
+            ele.lineTotalDisc = ele.lineTotalDisc;
+            ele.lineamount = ele.lineamount;
+            ele.netAmount = ele.netAmount;
+            reqData.vatamount += ele.vatamount;
         }
-        reqData.vatamount = Math.round((reqData.vatamount + Number.EPSILON) * 100) / 100;
-        reqData.discount = Math.round((reqData.discount + Number.EPSILON) * 100) / 100;
-        reqData.totalBeforeVat = Math.round((reqData.totalBeforeVat + Number.EPSILON) * 100) / 100;
-        reqData.total = Math.round((reqData.total + Number.EPSILON) * 100) / 100;
-        reqData.grossTotal = Math.round((reqData.grossTotal + Number.EPSILON) * 100) / 100;
+        reqData.vatamount = reqData.vatamount;
+        reqData.discount = reqData.discount;
+        reqData.totalBeforeVat = reqData.totalBeforeVat;
+        reqData.total = reqData.total;
+        reqData.grossTotal = reqData.grossTotal;
     };
     DiscountService.prototype.allocateData = function (reqData) {
         reqData.selectedItems.forEach(function (ele) {
