@@ -99,7 +99,7 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                         salesData.salesId = data[0].purch_id;
                         salesData.inventLocationId = data[0].invent_location_id.trim();
                         salesData.transkind = "PURCHASEORDER";
-                        salesData.saleStatus = "CREATED";
+                        salesData.saleStatus = "SAVED";
                         salesData.custAccount = data[0].vend_account;
                         salesData.invoiceAccount = data.cust_account;
                         this.rawQuery.sessionInfo = this.sessionInfo;
@@ -143,7 +143,7 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                             batches.inventsizeid = salesLine.inventsizeid;
                             batches.inventlocationid = salesLine.inventLocationId;
                             batches.dataareaid = salesLine.dataareaid;
-                            batches.transactionClosed = false;
+                            batches.transactionClosed = true;
                             batches.dateinvent = new Date(App_1.App.DateNow());
                             salesLine.batches = batches;
                             salesData.salesLines.push(salesLine);
@@ -423,7 +423,7 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                     case 2:
                         salesData = data;
                         salesData.interCompanyOriginalSalesId = data.salesId;
-                        salesData.status = "CREATED";
+                        salesData.status = "SAVED";
                         salesData.transkind = "SALESORDER";
                         delete salesData.salesId;
                         this.salesTableService.sessionInfo = this.sessionInfo;

@@ -1463,11 +1463,20 @@ var LoadService = /** @class */ (function () {
     };
     LoadService.prototype.checkInstantDiscount = function (param) {
         return __awaiter(this, void 0, void 0, function () {
-            var data;
+            var customer, defaultcustomerid, data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.rawQuery.checkInstantDiscount(param.key)];
+                    case 0:
+                        this.rawQuery.sessionInfo = this.sessionInfo;
+                        return [4 /*yield*/, this.rawQuery.getCustomer(param.key)];
                     case 1:
+                        customer = _a.sent();
+                        return [4 /*yield*/, this.rawQuery.getCustomer(param.key)];
+                    case 2:
+                        defaultcustomerid = _a.sent();
+                        param.key = customer.walkincustomer ? defaultcustomerid.accountnum : param.key;
+                        return [4 /*yield*/, this.rawQuery.checkInstantDiscount(param.key)];
+                    case 3:
                         data = _a.sent();
                         return [2 /*return*/, data.length > 0 ? { cond: true, amount: parseInt(data[0].minamount) } : { cond: false, amount: 0 }];
                 }

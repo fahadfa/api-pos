@@ -390,8 +390,8 @@ var DiscountService = /** @class */ (function () {
                                         if (reqData.selectedItems[i].enddiscamt > 0) {
                                             reqData.selectedItems[i].appliedDiscounts.push({
                                                 discountType: "TOTAL_DISCOUNT",
-                                                percentage: reqData.selectedItems[i].endDisc,
-                                                discountAmount: reqData.selectedItems[i].enddiscamt,
+                                                percentage: parseFloat(reqData.selectedItems[i].endDisc),
+                                                discountAmount: parseFloat(reqData.selectedItems[i].enddiscamt),
                                                 cond: [],
                                             });
                                         }
@@ -468,8 +468,8 @@ var DiscountService = /** @class */ (function () {
                                         if (reqData.selectedItems[i].enddiscamt > 0) {
                                             reqData.selectedItems[i].appliedDiscounts.push({
                                                 discountType: "TOTAL_DISCOUNT",
-                                                percentage: reqData.selectedItems[i].endDisc,
-                                                discountAmount: reqData.selectedItems[i].enddiscamt,
+                                                percentage: parseFloat(reqData.selectedItems[i].endDisc),
+                                                discountAmount: parseFloat(reqData.selectedItems[i].enddiscamt),
                                                 cond: [],
                                             });
                                         }
@@ -479,7 +479,7 @@ var DiscountService = /** @class */ (function () {
                                         _g.sent();
                                         reqData.selectedItems[i].appliedDiscounts.push({
                                             discountType: "BUY_ONE_GET_ONE_DISCOUNT",
-                                            discountAmount: reqData.selectedItems[i].buyOneGetOneDiscount,
+                                            discountAmount: parseFloat(reqData.selectedItems[i].buyOneGetOneDiscount),
                                             cond: [
                                                 {
                                                     multipleQty: buyOneGetOneDiscountDetails.multipleQty,
@@ -539,8 +539,8 @@ var DiscountService = /** @class */ (function () {
                                         if (item.voucherdiscamt > 0) {
                                             appliedDiscounts.push({
                                                 discountType: "VOUCHER_DISCOUNT",
-                                                percentage: item.voucherdisc,
-                                                discountAmount: item.voucherdiscamt,
+                                                percentage: parseFloat(item.voucherdisc),
+                                                discountAmount: parseFloat(item.voucherdiscamt),
                                             });
                                         }
                                         total += item.priceAfterVat;
@@ -558,8 +558,8 @@ var DiscountService = /** @class */ (function () {
                                         if (item.instantdiscamt > 0) {
                                             appliedDiscounts.push({
                                                 discountType: "INSTANT_DISCOUNT",
-                                                percentage: item.instantDisc,
-                                                discountAmount: item.instantdiscamt,
+                                                percentage: parseFloat(item.instantDisc),
+                                                discountAmount: parseFloat(item.instantdiscamt),
                                                 cond: instantDiscountRanges,
                                             });
                                         }
@@ -572,8 +572,8 @@ var DiscountService = /** @class */ (function () {
                                         if (item.salesdiscamt > 0) {
                                             appliedDiscounts.push({
                                                 discountType: "SALES_DISCOUNT",
-                                                percentage: item.salesdisc,
-                                                discountAmount: item.salesdiscamt,
+                                                percentage: parseFloat(item.salesdisc),
+                                                discountAmount: parseFloat(item.salesdiscamt),
                                             });
                                         }
                                         total += item.priceAfterVat;
@@ -615,8 +615,8 @@ var DiscountService = /** @class */ (function () {
                                         if (item.linediscamt > 0) {
                                             appliedDiscounts.push({
                                                 discountType: "LINE_DISCOUNT",
-                                                percentage: item.linediscpercent,
-                                                discountAmount: item.linediscamt,
+                                                percentage: parseFloat(item.linediscpercent),
+                                                discountAmount: parseFloat(item.linediscamt),
                                                 cond: [],
                                             });
                                         }
@@ -632,8 +632,8 @@ var DiscountService = /** @class */ (function () {
                                         if (item.multilnPercent > 0) {
                                             appliedDiscounts.push({
                                                 discountType: "MULTI_LINE_DISCOUNT",
-                                                discountAmount: item.multilndisc,
-                                                percentage: item.multilnPercent,
+                                                discountAmount: parseFloat(item.multilndisc),
+                                                percentage: parseFloat(item.multilnPercent),
                                                 cond: multilineDiscRanges,
                                             });
                                         }
@@ -651,7 +651,7 @@ var DiscountService = /** @class */ (function () {
                                         _g.sent();
                                         appliedDiscounts.push({
                                             discountType: "PROMOTIONAL_DISCOUNT",
-                                            discountAmount: item.promotionalDiscount,
+                                            discountAmount: parseFloat(item.promotionalDiscount),
                                             cond: [
                                                 {
                                                     multipleQty: promotionalDiscountDetails.multipleQty,
@@ -898,8 +898,8 @@ var DiscountService = /** @class */ (function () {
                                         item.appliedDiscounts = [
                                             {
                                                 discountType: "INTERIOR_AND_EXTERIOR",
-                                                percentage: totalPercentage,
-                                                discountAmount: item.aramkoTahkomDiscount,
+                                                percentage: parseFloat(totalPercentage),
+                                                discountAmount: parseFloat(item.aramkoTahkomDiscount),
                                             },
                                         ];
                                         _a.label = 3;
@@ -1030,7 +1030,7 @@ var DiscountService = /** @class */ (function () {
                             {
                                 discountType: "SABIC_CUSTOMER_DISCOUNT",
                                 percentage: parseFloat(totalPercentage),
-                                discountAmount: item.sabicCustomerDiscount,
+                                discountAmount: parseFloat(item.sabicCustomerDiscount),
                             },
                         ];
                         _b.label = 4;

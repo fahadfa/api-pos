@@ -82,14 +82,21 @@ var DesignerserviceService = /** @class */ (function () {
     };
     DesignerserviceService.prototype.designerServiceList = function (item) {
         return __awaiter(this, void 0, void 0, function () {
-            var error_3;
+            var data, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 4, , 5]);
                         if (!item.accountnum) return [3 /*break*/, 2];
                         return [4 /*yield*/, this.rawQuery.getDesignerServiceList(item.accountnum, item.mobileNo)];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 1:
+                        data = _a.sent();
+                        data.map(function (v) {
+                            v.balanceAmount = parseFloat(v.balanceAmount);
+                            v.designerserviceAmount = parseFloat(v.designerserviceAmount);
+                            v.usedAmount = parseFloat(v.usedAmount);
+                        });
+                        return [2 /*return*/, data];
                     case 2: throw { message: "PLEASE_PROVIDE_ID" };
                     case 3: return [3 /*break*/, 5];
                     case 4:
