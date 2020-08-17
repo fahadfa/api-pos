@@ -78,7 +78,7 @@ var ReturnOrderReport = /** @class */ (function () {
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        _a.trys.push([3, 13, 15, 17]);
+                        _a.trys.push([3, 12, 14, 16]);
                         return [4 /*yield*/, this.query_to_data(params)];
                     case 4:
                         data_1 = _a.sent();
@@ -117,7 +117,7 @@ var ReturnOrderReport = /** @class */ (function () {
                         });
                         data_1.batches = new_data_1;
                         this.db.query(" update inventtrans set transactionclosed = true where invoiceid='" + params.salesId + "'");
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 10];
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 9];
                         return [4 /*yield*/, this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED", new Date().toISOString())];
                     case 6:
                         _a.sent();
@@ -133,13 +133,9 @@ var ReturnOrderReport = /** @class */ (function () {
                         return [4 /*yield*/, this.updateSalesLineData(params.salesId)];
                     case 8:
                         _a.sent();
-                        if (!(data_1.designServiceRedeemAmount > 0)) return [3 /*break*/, 10];
-                        return [4 /*yield*/, this.updateDesignerServiceForCustomer(data_1)];
-                    case 9:
-                        _a.sent();
-                        _a.label = 10;
-                    case 10: return [4 /*yield*/, this.salesline_query_to_data(params)];
-                    case 11:
+                        _a.label = 9;
+                    case 9: return [4 /*yield*/, this.salesline_query_to_data(params)];
+                    case 10:
                         salesLine = _a.sent();
                         sNo_1 = 1;
                         data_1.vat = salesLine.length > 0 ? salesLine[0].vat : "-";
@@ -155,21 +151,21 @@ var ReturnOrderReport = /** @class */ (function () {
                         });
                         // console.log(data);
                         return [4 /*yield*/, queryRunner.commitTransaction()];
-                    case 12:
+                    case 11:
                         // console.log(data);
                         _a.sent();
                         return [2 /*return*/, data_1];
-                    case 13:
+                    case 12:
                         error_1 = _a.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 14:
+                    case 13:
                         _a.sent();
                         throw error_1;
-                    case 15: return [4 /*yield*/, queryRunner.release()];
-                    case 16:
+                    case 14: return [4 /*yield*/, queryRunner.release()];
+                    case 15:
                         _a.sent();
                         return [7 /*endfinally*/];
-                    case 17: return [2 /*return*/];
+                    case 16: return [2 /*return*/];
                 }
             });
         });
@@ -232,40 +228,30 @@ var ReturnOrderReport = /** @class */ (function () {
             });
         });
     };
-    ReturnOrderReport.prototype.updateDesignerServiceForCustomer = function (reqData) {
-        return __awaiter(this, void 0, void 0, function () {
-            var designerData, designerServiceData;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.db.query(" select * from designerservice where salesorderid = '" + reqData.salesOrderId + "' ")];
-                    case 1:
-                        designerData = _a.sent();
-                        designerData = designerData.length > 0 ? designerData[0] : {};
-                        designerServiceData = {
-                            custphone: reqData.phone,
-                            amount: reqData.designServiceRedeemAmount,
-                            invoiceid: designerData.invoiceid,
-                            salesorderid: reqData.salesId,
-                            dataareaid: reqData.dataareaid,
-                            recordtype: 0,
-                            settle: 0,
-                            selectedforsettle: 0,
-                            createdby: reqData.createdBy,
-                            createddatetime: new Date(App_1.App.DateNow()),
-                            lastmodifiedby: reqData.createdBy,
-                            lastmodifieddate: new Date(App_1.App.DateNow()),
-                            customer: {
-                                accountnum: reqData.invoiceAccount,
-                            },
-                        };
-                        return [4 /*yield*/, this.designerServiceDAO.save(designerServiceData)];
-                    case 2:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
+    // async updateDesignerServiceForCustomer(reqData: any) {
+    //   let designerData: any = await this.db.query(
+    //     ` select * from designerservice where salesorderid = '${reqData.salesOrderId}' `
+    //   );
+    //   designerData = designerData.length > 0 ? designerData[0] : {};
+    //   let designerServiceData: any = {
+    //     custphone: reqData.phone,
+    //     amount: reqData.designServiceRedeemAmount,
+    //     invoiceid: designerData.invoiceid,
+    //     salesorderid: reqData.salesId,
+    //     dataareaid: reqData.dataareaid,
+    //     recordtype: 0,
+    //     settle: 0,
+    //     selectedforsettle: 0,
+    //     createdby: reqData.createdBy,
+    //     createddatetime: new Date(App.DateNow()),
+    //     lastmodifiedby: reqData.createdBy,
+    //     lastmodifieddate: new Date(App.DateNow()),
+    //     customer: {
+    //       accountnum: reqData.invoiceAccount,
+    //     },
+    //   };
+    //   await this.designerServiceDAO.save(designerServiceData);
+    // }
     ReturnOrderReport.prototype.report = function (result, params) {
         return __awaiter(this, void 0, void 0, function () {
             var renderData, file;

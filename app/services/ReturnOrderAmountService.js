@@ -526,13 +526,13 @@ var ReturnOrderAmountService = /** @class */ (function () {
         returnItem.inventLocationId = item.inventLocationId;
         returnItem.isItemFree = item.isItemFree;
         returnItem.linkId = item.linkId;
-        returnItem.colors = item.colors;
-        returnItem.baseSizes = item.baseSizes;
         returnItem.numberSequenceGroupId = item.numberSequenceGroupId;
         returnItem.vat = item.vat;
         returnItem.appliedDiscounts = [];
         returnItem.colorantprice = item.colorantprice;
         returnItem.colorantId = item.colorantId;
+        returnItem.taxGroup = item.taxGroup;
+        returnItem.taxItemGroup = item.taxItemGroup;
     };
     return ReturnOrderAmountService;
 }());

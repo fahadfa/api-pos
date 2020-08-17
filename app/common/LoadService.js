@@ -361,6 +361,9 @@ var LoadService = /** @class */ (function () {
                         if (param.status) {
                             query += "and salestable.status in ('" + param.status + "') ";
                         }
+                        if (param.transkind == "DESIGNERSERVICERETURN" || param.transkind == "DESIGNERSERVICERETURN") {
+                            query += " and salestable.salestype is NULL ";
+                        }
                         query += "ORDER BY salestable.createddatetime DESC LIMIT 15";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:

@@ -67,6 +67,7 @@ var SalesTableDAO = /** @class */ (function () {
         });
     };
     SalesTableDAO.prototype.search = function (data, type) {
+        if (type === void 0) { type = null; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -76,6 +77,7 @@ var SalesTableDAO = /** @class */ (function () {
                                 .createQueryBuilder("SalesTable")
                                 .leftJoin("SalesTable.warehouse", "warehouse")
                                 .leftJoin("SalesTable.movementType", "movementType")
+                                .leftJoinAndSelect("SalesTable.salesLine", "salesLine")
                                 .addSelect("warehouse.name")
                                 .addSelect("warehouse.nameAlias")
                                 .addSelect("movementType.id")
@@ -90,6 +92,7 @@ var SalesTableDAO = /** @class */ (function () {
                             .createQueryBuilder("SalesTable")
                             .leftJoin("SalesTable.warehouse", "warehouse")
                             .leftJoin("SalesTable.movementType", "movementType")
+                            .leftJoinAndSelect("SalesTable.salesLine", "salesLine")
                             .addSelect("warehouse.name")
                             .addSelect("warehouse.nameAlias")
                             .addSelect("movementType.id")
@@ -131,7 +134,7 @@ var SalesTableDAO = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         console.log(data);
-                        return [4 /*yield*/, this.dao.findOne(data)];
+                        return [4 /*yield*/, this.dao.find(data)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
