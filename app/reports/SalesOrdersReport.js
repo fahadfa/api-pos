@@ -117,26 +117,26 @@ var SalesOrdersReport = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var file;
             return __generator(this, function (_a) {
-                (result.printDate = new Date().toLocaleString()),
-                    (result.fromDate = params.fromDate),
-                    (result.toDate = params.toDate),
-                    // (result.status = params.status),
-                    (result.status = "");
+                result.printDate = new Date().toLocaleString();
+                result.fromDate = params.fromDate;
+                result.toDate = params.toDate(
+                // (result.status = params.status),
+                (result.status = ""));
                 if (params.status != "ALL") {
                     if (params.status == "RESERVED") {
-                        result.status += "RESERVED";
+                        result.status = "RESERVED";
                     }
                     else if (params.status == "SAVED") {
-                        result.status += "SAVED";
+                        result.status = "SAVED";
                     }
                     else if (params.status == "CREATED") {
-                        result.status += "CREATED";
+                        result.status = "CREATED";
                     }
                     else if (params.status == "POSTED") {
-                        result.status += "POSTED/PAID";
+                        result.status = "POSTED/PAID";
                     }
                     else if (params.status == "PAID") {
-                        result.status += "PAID/POSTED";
+                        result.status = "PAID/POSTED";
                     }
                 }
                 result.user = params.user;

@@ -1354,7 +1354,7 @@ var LoadService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.getCustomer(param.custaccount)];
                     case 1:
                         customer = _a.sent();
-                        return [4 /*yield*/, this.rawQuery.getCustomer(param.custaccount)];
+                        return [4 /*yield*/, this.rawQuery.getCustomer(this.sessionInfo.defaultcustomerid)];
                     case 2:
                         defaultcustomerid = _a.sent();
                         param.custtype = customer.walkincustomer ? defaultcustomerid.custtype : param.custtype;
@@ -1474,7 +1474,8 @@ var LoadService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.getCustomer(param.key)];
                     case 1:
                         customer = _a.sent();
-                        return [4 /*yield*/, this.rawQuery.getCustomer(param.key)];
+                        console.log(customer.walkincustomer);
+                        return [4 /*yield*/, this.rawQuery.getCustomer(this.sessionInfo.defaultcustomerid)];
                     case 2:
                         defaultcustomerid = _a.sent();
                         param.key = customer.walkincustomer ? defaultcustomerid.accountnum : param.key;

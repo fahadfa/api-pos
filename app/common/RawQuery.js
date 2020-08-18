@@ -156,7 +156,7 @@ var RawQuery = /** @class */ (function () {
                         if (date) {
                             query += "\n      ,lastmodifieddate = '" + date + "' ";
                         }
-                        query += " WHERE salesid = '" + salesId + "'";
+                        query += " WHERE salesid = '" + salesId + "' or salesgroup = '" + salesId + "' or deliverystreet = '" + salesId + "' ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
@@ -887,7 +887,20 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "\n                select distinct d.invoiceid, d.customerid, \n                cast(coalesce(d.balanceamount, 0) as Decimal(10,2)) as \"balanceAmount\", \n                cast((coalesce(d.designerserviceamount, 0) - coalesce(d.balanceamount, 0)) as Decimal(10,2)) as \"usedAmount\", \n                cast(coalesce(d.designerserviceamount, 0) as Decimal(10,2)) as \"designerserviceAmount\",\n                lastmodifieddate\n                from \n                (\n                select \n                a.invoiceid, \n                a.customerid,\n                a.custphone,\n                s.lastmodifieddate,\n                (select ABS(sum(b.amount)) from designerservice b where b.invoiceid=a.invoiceid and b.customerid = a.customerid and b.custphone= a.custphone group by b.invoiceid, b.customerid, b.custphone ) \n                as balanceamount,\n                (select ABS(sum(e.amount)) from designerservice e where e.amount > 0 and e.salesorderid is null and e.invoiceid=a.invoiceid and e.customerid = a.customerid and e.custphone = a.custphone group by e.invoiceid, e.customerid, e.custphone)\n                as designerserviceamount\n                from designerservice a \n                inner join salestable s on s.salesid = a.invoiceid \n                where a.customerid = '" + customerid + "' and a.custphone = '" + mobileno + "'\n                )  as d where d.balanceamount > 0 order by lastmodifieddate\n                    ";
+                        query = "\n                select distinct d.invoiceid, d.customerid, \n                cast(coalesce(d.balanceamount, 0) as Decimal(10,2)) as \"balanceAmount\", \n                cast((coalesce(d.designerserviceamount, 0) - coalesce(d.balanceamount, 0)) as Decimal(10,2)) as \"usedAmount\", \n                cast(coalesce(d.designerserviceamount, 0) as Decimal(10,2)) as \"designerserviceAmount\",\n                lastmodifieddate\n                from \n                (\n                select \n                a.invoiceid, \n                a.customerid,\n                a.custphone,\n                s.lastmodifieddate,\n                (select ABS(sum(b.amount)) from designerservice b where b.invoiceid=a.invoiceid and b.customerid = a.customerid and b.custphone= a.custphone group by b.invoiceid, b.customerid, b.custphone ) \n                as balanceamount,\n                (select ABS(sum(e.amount)) from designerservice e where e.amount > 0 and e.recordtype = 1 and e.invoiceid=a.invoiceid and e.customerid = a.customerid and e.custphone = a.custphone group by e.invoiceid, e.customerid, e.custphone)\n                as designerserviceamount\n                from designerservice a \n                inner join salestable s on s.salesid = a.invoiceid \n                where a.customerid = '" + customerid + "' and a.custphone = '" + mobileno + "'\n                )  as d where d.balanceamount > 0 order by lastmodifieddate\n                    ";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    RawQuery.prototype.getReturnedDesignerServiceList = function (salesgroup) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "\n      select distinct\n      a.invoiceid,\n      a.salesorderid,\n      a.customerid,\n      a.custphone,\n      a.amount,\n      a.recordtype,\n      s.salesgroup\n      from designerservice a \n      inner join salestable s on s.salesid = a.salesorderid\n      where a.amount > 0 and s.salesgroup = '" + salesgroup + "'\n    ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
