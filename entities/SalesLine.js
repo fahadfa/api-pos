@@ -330,17 +330,27 @@ var SalesLine = /** @class */ (function () {
         __metadata("design:type", String)
     ], SalesLine.prototype, "jazeeraWarehouse", void 0);
     __decorate([
+        typeorm_1.Column({ name: "is_parent" }),
+        __metadata("design:type", String)
+    ], SalesLine.prototype, "isParent", void 0);
+    __decorate([
         typeorm_1.JoinColumn({ name: "itemid" }),
         typeorm_1.ManyToOne(function (type) { return Inventtable_1.Inventtable; }),
         __metadata("design:type", Inventtable_1.Inventtable)
     ], SalesLine.prototype, "product", void 0);
     __decorate([
-        typeorm_1.JoinColumn([{ name: "configid", referencedColumnName: "code" }, { name: "itemid", referencedColumnName: "itemid" }]),
+        typeorm_1.JoinColumn([
+            { name: "configid", referencedColumnName: "code" },
+            { name: "itemid", referencedColumnName: "itemid" },
+        ]),
         typeorm_1.ManyToOne(function (type) { return Configtable_1.Configtable; }),
         __metadata("design:type", Configtable_1.Configtable)
     ], SalesLine.prototype, "color", void 0);
     __decorate([
-        typeorm_1.JoinColumn([{ name: "inventsizeid", referencedColumnName: "code" }, { name: "itemid", referencedColumnName: "itemid" }]),
+        typeorm_1.JoinColumn([
+            { name: "inventsizeid", referencedColumnName: "code" },
+            { name: "itemid", referencedColumnName: "itemid" },
+        ]),
         typeorm_1.ManyToOne(function (type) { return InventSize_1.Inventsize; }),
         __metadata("design:type", InventSize_1.Inventsize)
     ], SalesLine.prototype, "size", void 0);

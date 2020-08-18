@@ -395,6 +395,7 @@ var DiscountService = /** @class */ (function () {
                                                 cond: [],
                                             });
                                         }
+                                        promotionalDiscountAmount -= reqData.selectedItems[i].enddiscamt;
                                         return [3 /*break*/, 7];
                                     case 5: return [4 /*yield*/, this_1.totalDiscount(reqData.selectedItems[i], reqData, checkDiscounts, 0)];
                                     case 6:
@@ -473,6 +474,7 @@ var DiscountService = /** @class */ (function () {
                                                 cond: [],
                                             });
                                         }
+                                        buy_one_get_one -= reqData.selectedItems[i].enddiscamt;
                                         _g.label = 15;
                                     case 15: return [4 /*yield*/, this_1.buyOneGetOneDiscount(reqData.selectedItems[i], reqData)];
                                     case 16:
