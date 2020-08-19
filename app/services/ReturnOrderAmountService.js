@@ -185,7 +185,6 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             groupitem[0].batches = batch;
                             selectedBatches.push(groupitem[0]);
                         });
-                        console.log(selectedBatches);
                         lineNum = 1;
                         _loop_3 = function (item) {
                             var line = salesLine.filter(function (v) { return v.id == item.salesLineId; })[0];
@@ -300,7 +299,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         });
                                     }
                                     if (discountItem.discountType == "BUY_ONE_GET_ONE_DISCOUNT") {
-                                        console.log("========================================", line.isItemFree);
+                                        // console.log("========================================", line.isItemFree);
                                         var returnParentQty_1 = 0;
                                         var returnFreeQty_1 = 0;
                                         var packageItems = reqData.selectedBatches.filter(function (v) { return v.linkId == item.linkId; });
@@ -371,7 +370,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                     discountConditions[line.linkId].deductableFreeAmount -= discObj.deductableFreeAmount;
                                     returnItem.remainSalesFinancial = discObj.qtyForDeducting;
                                     discountConditions[line.linkId].isAmountDeducated = true;
-                                    console.log(total);
+                                    // console.log(total);
                                 }
                                 else {
                                     itemDiscount += 0;
@@ -431,7 +430,12 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             }
                             else if (designServiceRedeemAmount < total - cashAmount) {
                                 returnOrderData.designServiceRedeemAmount = designServiceRedeemAmount;
-                                returnOrderData.redeemAmount = total - cashAmount - designServiceRedeemAmount;
+                                if (redeemAmount > 0) {
+                                    returnOrderData.redeemAmount = total - cashAmount - designServiceRedeemAmount;
+                                }
+                                else {
+                                    returnOrderData.redeemAmount = 0;
+                                }
                             }
                         }
                         // console.log(cashAmount);
