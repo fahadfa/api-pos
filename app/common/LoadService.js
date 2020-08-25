@@ -1466,7 +1466,7 @@ var LoadService = /** @class */ (function () {
     };
     LoadService.prototype.checkInstantDiscount = function (param) {
         return __awaiter(this, void 0, void 0, function () {
-            var customer, defaultcustomerid, data;
+            var customer, defaultcustomerid, data, excludeItems;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -1482,7 +1482,14 @@ var LoadService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.checkInstantDiscount(param.key)];
                     case 3:
                         data = _a.sent();
-                        return [2 /*return*/, data.length > 0 ? { cond: true, amount: parseInt(data[0].minamount) } : { cond: false, amount: 0 }];
+                        return [4 /*yield*/, this.db.query("select istantdiscountexclude from usergroupconfig where id = '" + this.sessionInfo.usergroupconfigid + "'")];
+                    case 4:
+                        excludeItems = _a.sent();
+                        console.log(excludeItems);
+                        excludeItems = excludeItems[0].istantdiscountexclude ? excludeItems[0].istantdiscountexclude.split(",") : [];
+                        data = data.length > 0 ? { cond: true, amount: parseInt(data[0].minamount) } : { cond: false, amount: 0 };
+                        data.excludeItems = excludeItems;
+                        return [2 /*return*/, data];
                 }
             });
         });

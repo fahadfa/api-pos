@@ -37,10 +37,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var SalesTableDAO_1 = require("../repos/SalesTableDAO");
 var RawQuery_1 = require("../common/RawQuery");
+var typeorm_1 = require("typeorm");
 var ReturnOrderAmountService = /** @class */ (function () {
     function ReturnOrderAmountService() {
         this.salesTableDAO = new SalesTableDAO_1.SalesTableDAO();
         this.rawQuery = new RawQuery_1.RawQuery();
+        this.db = typeorm_1.getManager();
     }
     ReturnOrderAmountService.prototype.returnAmount = function (reqData, type) {
         return __awaiter(this, void 0, void 0, function () {
@@ -328,8 +330,12 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                     filteredReturningFreeLines_1.push(returningFreeLine);
                                                 });
                                                 filteredReturningFreeLines_1.map(function (x) {
-                                                    var d = x.appliedDiscounts.filter(function (y) { return y.discountType == "BUY_ONE_GET_ONE_DISCOUNT"; });
-                                                    itemDiscountAmount_1 += (parseFloat(d[0].discountAmount) / parseFloat(x.salesQty)) * x.returnQuantity;
+                                                    var d = x.appliedDiscounts.find(function (y) { return y.discountType == "BUY_ONE_GET_ONE_DISCOUNT"; });
+                                                    var t = x.appliedDiscounts.find(function (y) { return y.discountType == "TOTAL_DISCOUNT"; });
+                                                    itemDiscountAmount_1 += (parseFloat(d.discountAmount) / parseFloat(x.salesQty)) * x.returnQuantity;
+                                                    if (t && t.discountAmount) {
+                                                        itemDiscountAmount_1 -= (parseFloat(t.discountAmount) / parseFloat(x.salesQty)) * x.returnQuantity;
+                                                    }
                                                 });
                                                 returnDiscount = itemDiscountAmount_1;
                                                 // console.log(returnDiscount);

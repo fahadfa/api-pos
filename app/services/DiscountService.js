@@ -347,7 +347,7 @@ var DiscountService = /** @class */ (function () {
                                                 message = "voucher is not valid for selected products";
                                             }
                                         }
-                                        condition = (reqData.discountType == "voucherDiscount" && isValidVoucherItem) || reqData.instantDiscountChecked
+                                        condition = (reqData.voucherDiscountChecked && isValidVoucherItem) || reqData.instantDiscountChecked
                                             ? "true"
                                             : "!item.isItemFree";
                                         condition = eval(condition);
@@ -1109,7 +1109,7 @@ var DiscountService = /** @class */ (function () {
             var element = multilineDiscRanges_1[_i];
             conditionQuantity = parseFloat(element.quantityamount);
             percent = parseFloat(element.percent1);
-            if (quantity > conditionQuantity && quantity <= parseFloat(element.quantityamount)) {
+            if (quantity >= conditionQuantity && quantity <= parseFloat(element.quantityamount)) {
                 line.multilnPercent = percent;
                 line.multilineDiscRanges = multilineDiscRanges;
             }

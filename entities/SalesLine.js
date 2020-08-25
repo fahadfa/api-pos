@@ -331,7 +331,7 @@ var SalesLine = /** @class */ (function () {
     ], SalesLine.prototype, "jazeeraWarehouse", void 0);
     __decorate([
         typeorm_1.Column({ name: "is_parent" }),
-        __metadata("design:type", String)
+        __metadata("design:type", Boolean)
     ], SalesLine.prototype, "isParent", void 0);
     __decorate([
         typeorm_1.JoinColumn({ name: "itemid" }),
