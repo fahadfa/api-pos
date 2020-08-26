@@ -677,7 +677,7 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "SELECT itemrelation, ACCOUNTRELATION,QUANTITYAMOUNT,\n       CURRENCY,PERCENT1 FROM \n       PRICEDISCTABLE WHERE MODULE = 1 AND \n       ITEMCODE = 1 AND ACCOUNTCODE = 1 AND \n       ACCOUNTRELATION = '" + accountrelation + "' AND DATAAREAID = '" + dataareaid + "' AND CURRENCY='" + currency + "'";
+                        query = "SELECT itemrelation, ACCOUNTRELATION, quantityamountfrom, quantityamountto,\n       CURRENCY,PERCENT1 FROM \n       PRICEDISCTABLE WHERE MODULE = 1 AND \n       ITEMCODE = 1 AND ACCOUNTCODE = 1 AND \n       ACCOUNTRELATION = '" + accountrelation + "' AND DATAAREAID = '" + dataareaid + "' AND CURRENCY='" + currency + "'";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();

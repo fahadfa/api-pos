@@ -1078,20 +1078,15 @@ var ReturnOrderAmountService = /** @class */ (function () {
     };
     ReturnOrderAmountService.prototype.getMultiLinePercent = function (line, multilineDiscRanges, quantity) {
         var percent = 0;
-        var conditionQuantity = 0;
         line.multilnPercent = 0;
         for (var _i = 0, multilineDiscRanges_1 = multilineDiscRanges; _i < multilineDiscRanges_1.length; _i++) {
             var element = multilineDiscRanges_1[_i];
             percent = parseFloat(element.percent1);
-            if (quantity >= conditionQuantity && quantity < parseFloat(element.quantityamount)) {
+            if (quantity >= parseFloat(element.quantityamountfrom) &&
+                (quantity < parseFloat(element.quantityamountto) || parseFloat(element.quantityamountto) == 0)) {
                 line.multilnPercent = percent;
                 line.multilineDiscRanges = multilineDiscRanges;
             }
-            else if (quantity > conditionQuantity) {
-                line.multilnPercent = percent;
-                line.multilineDiscRanges = multilineDiscRanges;
-            }
-            conditionQuantity = parseFloat(element.quantityamount);
         }
     };
     ReturnOrderAmountService.prototype.groupBy = function (array, f) {
