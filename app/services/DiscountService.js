@@ -474,7 +474,8 @@ var DiscountService = /** @class */ (function () {
                                                 cond: [],
                                             });
                                         }
-                                        buy_one_get_one -= reqData.selectedItems[i].enddiscamt;
+                                        reqData.selectedItems[i].buyOneGetOneDiscount -= parseFloat(reqData.selectedItems[i].enddiscamt) / 2;
+                                        buy_one_get_one -= parseFloat(reqData.selectedItems[i].enddiscamt) / 2;
                                         _g.label = 15;
                                     case 15: return [4 /*yield*/, this_1.buyOneGetOneDiscount(reqData.selectedItems[i], reqData)];
                                     case 16:

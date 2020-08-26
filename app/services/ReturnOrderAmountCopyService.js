@@ -561,7 +561,8 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 cond: [],
                                             });
                                         }
-                                        buy_one_get_one -= reqData.salesLine[i].enddiscamt;
+                                        reqData.salesLine[i].buyOneGetOneDiscount -= parseFloat(reqData.salesLine[i].enddiscamt) / 2;
+                                        buy_one_get_one -= parseFloat(reqData.salesLine[i].enddiscamt) / 2;
                                         _d.label = 5;
                                     case 5: return [4 /*yield*/, this_1.buyOneGetOneDiscount(reqData.salesLine[i], reqData)];
                                     case 6:
@@ -1119,7 +1120,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
     };
     ReturnOrderAmountService.prototype.allocateReturnOrderData = function (salesOrderData, returnOrderData, prevReturnOrderEquals, salesLineIds) {
         return __awaiter(this, void 0, void 0, function () {
-            var returnData, cashAmount, redeemAmount, designServiceRedeemAmount, returnNetAmount, salesLine, _loop_4, this_2, _i, _a, item;
+            var returnData, cashAmount, redeemAmount, designServiceRedeemAmount, returnNetAmount, salesLine, linenum, _loop_4, this_2, _i, _a, item;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -1174,6 +1175,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         returnData.cardAmount = 0;
                         returnData.redeemAmount = parseFloat(returnData.redeemAmount);
                         salesLine = [];
+                        linenum = 1;
                         _loop_4 = function (item) {
                             var line, prevReturnLine, salesOrderLine, promotionalDiscount, buyOneGetOneDiscount, totalDiscount, lineDiscount, multilineDiscount, voucherDiscount, sabicCustomerDiscount, InteriorAndExteriorDiscount, instantDisocunt, salesDiscount, discount, discount, discount, discount, discount, discount, discount, discount, discount, discount;
                             return __generator(this, function (_a) {
@@ -1207,6 +1209,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                             line.lineTotalDisc -= parseFloat(salesOrderLine.lineTotalDisc);
                                             line.vatamount -= parseFloat(salesOrderLine.vatamount);
                                             line.batches = salesOrderLine.batches;
+                                            line.lineNum = linenum;
                                             if (prevReturnLine) {
                                                 line.lineTotalDisc -= parseFloat(prevReturnLine.lineTotalDisc);
                                                 line.vatamount -= parseFloat(prevReturnLine.vatamount);
@@ -1353,6 +1356,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 }
                                             }
                                             salesLine.push(line);
+                                            linenum += 1;
                                         }
                                         _a.label = 2;
                                     case 2: return [2 /*return*/];
