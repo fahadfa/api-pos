@@ -300,6 +300,7 @@ var GeneralJournalService = /** @class */ (function () {
                         });
                         return [3 /*break*/, 8];
                     case 7:
+                        delete item.createdDatetime;
                         console.log(item.journalNum);
                         if (previousData) {
                             if (item.journalNum != previousData.journalNum) {

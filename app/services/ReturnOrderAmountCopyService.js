@@ -363,11 +363,11 @@ var ReturnOrderAmountService = /** @class */ (function () {
     };
     ReturnOrderAmountService.prototype.getDiscount = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var result, sabicCustomers, INTERIOR_AND_EXTERIOR, _i, _a, item, error_1;
+            var result, vatData, sabicCustomers, INTERIOR_AND_EXTERIOR, _i, _a, item, error_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _b.trys.push([0, 10, , 11]);
+                        _b.trys.push([0, 11, , 12]);
                         result = void 0;
                         reqData.customerId = reqData.custaccount;
                         reqData.grossTotal = 0;
@@ -380,9 +380,13 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         reqData.vatamount = 0;
                         reqData.instantDiscountChecked = reqData.instantDiscChecked;
                         reqData.voucherDiscountChecked = reqData.voucherDiscChecked;
+                        return [4 /*yield*/, this.rawQuery.getCustomerTax(reqData.taxGroup)];
+                    case 1:
+                        vatData = _b.sent();
+                        reqData.vat = vatData ? vatData.vat : 15;
                         reqData.vat = parseFloat(reqData.sumTax);
                         return [4 /*yield*/, this.sessionInfo.sabiccustomers];
-                    case 1:
+                    case 2:
                         sabicCustomers = _b.sent();
                         INTERIOR_AND_EXTERIOR = false;
                         for (_i = 0, _a = reqData.salesLine; _i < _a.length; _i++) {
@@ -400,31 +404,31 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                 INTERIOR_AND_EXTERIOR = false;
                             }
                         }
-                        if (!(reqData.salesLine && reqData.salesLine.length > 0)) return [3 /*break*/, 8];
-                        if (!sabicCustomers) return [3 /*break*/, 3];
+                        if (!(reqData.salesLine && reqData.salesLine.length > 0)) return [3 /*break*/, 9];
+                        if (!sabicCustomers) return [3 /*break*/, 4];
                         return [4 /*yield*/, this.sabicCustomersDiscount(reqData)];
-                    case 2:
-                        result = _b.sent();
-                        return [3 /*break*/, 7];
                     case 3:
-                        if (!INTERIOR_AND_EXTERIOR) return [3 /*break*/, 5];
-                        return [4 /*yield*/, this.aramkoTahkomDiscount(reqData)];
+                        result = _b.sent();
+                        return [3 /*break*/, 8];
                     case 4:
+                        if (!INTERIOR_AND_EXTERIOR) return [3 /*break*/, 6];
+                        return [4 /*yield*/, this.aramkoTahkomDiscount(reqData)];
+                    case 5:
                         result = _b.sent();
-                        return [3 /*break*/, 7];
-                    case 5: return [4 /*yield*/, this.calDiscount(reqData)];
-                    case 6:
+                        return [3 /*break*/, 8];
+                    case 6: return [4 /*yield*/, this.calDiscount(reqData)];
+                    case 7:
                         result = _b.sent();
-                        _b.label = 7;
-                    case 7: return [3 /*break*/, 9];
-                    case 8:
+                        _b.label = 8;
+                    case 8: return [3 /*break*/, 10];
+                    case 9:
                         result = reqData;
-                        _b.label = 9;
-                    case 9: return [2 /*return*/, result];
-                    case 10:
+                        _b.label = 10;
+                    case 10: return [2 /*return*/, result];
+                    case 11:
                         error_1 = _b.sent();
                         throw error_1;
-                    case 11: return [2 /*return*/];
+                    case 12: return [2 /*return*/];
                 }
             });
         });
@@ -1135,60 +1139,11 @@ var ReturnOrderAmountService = /** @class */ (function () {
     };
     ReturnOrderAmountService.prototype.allocateReturnOrderData = function (salesOrderData, returnOrderData, prevReturnOrderEquals, salesLineIds) {
         return __awaiter(this, void 0, void 0, function () {
-            var returnData, cashAmount, redeemAmount, designServiceRedeemAmount, returnNetAmount, salesLine, linenum, _loop_4, this_2, _i, _a, item;
+            var returnData, salesLine, linenum, _loop_4, this_2, _i, _a, item, cashAmount, redeemAmount, designServiceRedeemAmount, returnNetAmount;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         returnData = this.allocateSalesTableData(salesOrderData, "RETURNORDER");
-                        cashAmount = 0;
-                        redeemAmount = 0;
-                        designServiceRedeemAmount = 0;
-                        returnNetAmount = 0;
-                        returnData.cashAmount = parseFloat(returnData.cashAmount);
-                        if (prevReturnOrderEquals) {
-                            returnData.amount -= prevReturnOrderEquals.amount ? parseFloat(prevReturnOrderEquals.amount) : 0;
-                            returnData.netAmount -= prevReturnOrderEquals.netAmount ? parseFloat(prevReturnOrderEquals.netAmount) : 0;
-                            returnData.disc -= prevReturnOrderEquals.disc ? parseFloat(prevReturnOrderEquals.disc) : 0;
-                            returnData.vatamount -= prevReturnOrderEquals.vatamount ? parseFloat(prevReturnOrderEquals.vatamount) : 0;
-                            returnData.cashAmount += parseFloat(returnData.cardAmount);
-                            returnData.cashAmount -= prevReturnOrderEquals.cashAmount ? parseFloat(prevReturnOrderEquals.cashAmount) : 0;
-                            returnData.designerServiceAmount -= prevReturnOrderEquals.designerServiceAmount
-                                ? parseFloat(prevReturnOrderEquals.designerServiceAmount)
-                                : 0;
-                            returnData.cardAmount = 0;
-                            returnData.redeemAmount -= prevReturnOrderEquals.redeemAmount
-                                ? parseFloat(prevReturnOrderEquals.redeemAmount)
-                                : 0;
-                        }
-                        designServiceRedeemAmount = returnData.designerServiceAmount;
-                        returnData.amount -= parseFloat(returnOrderData.amount);
-                        returnData.netAmount -= parseFloat(returnOrderData.netAmount);
-                        returnData.disc -= parseFloat(returnOrderData.disc);
-                        returnData.vatamount -= parseFloat(returnOrderData.vatamount);
-                        returnNetAmount = returnData.netAmount;
-                        if (parseFloat(returnData.cashAmount) >= returnNetAmount) {
-                            returnData.cashAmount = returnNetAmount;
-                            returnNetAmount = 0;
-                        }
-                        else {
-                            returnNetAmount -= parseFloat(returnData.cashAmount);
-                        }
-                        if (returnNetAmount > 0) {
-                            if (designServiceRedeemAmount >= returnNetAmount) {
-                                returnData.designerServiceAmount -= returnNetAmount;
-                                returnNetAmount = 0;
-                            }
-                            else {
-                                returnNetAmount -= returnData.designerServiceAmount;
-                            }
-                        }
-                        if (returnNetAmount > 0) {
-                            redeemAmount = returnNetAmount;
-                        }
-                        returnData.cashAmount = parseFloat(returnData.cashAmount);
-                        returnData.designerServiceAmount = parseFloat(returnData.designerServiceAmount);
-                        returnData.cardAmount = 0;
-                        returnData.redeemAmount = parseFloat(returnData.redeemAmount);
                         salesLine = [];
                         linenum = 1;
                         _loop_4 = function (item) {
@@ -1392,6 +1347,66 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         _i++;
                         return [3 /*break*/, 1];
                     case 4:
+                        cashAmount = 0;
+                        redeemAmount = 0;
+                        designServiceRedeemAmount = 0;
+                        returnNetAmount = 0;
+                        returnData.cashAmount = parseFloat(returnData.cashAmount);
+                        returnData.netAmount = 0;
+                        returnData.amount = 0;
+                        returnData.disc = 0;
+                        returnData.vatamount = 0;
+                        salesLine.map(function (v) {
+                            console.log(v.lineAmount, v.colorantprice, v.salesQty);
+                            returnData.amount += parseFloat(v.lineAmount) + parseFloat(v.colorantprice) * parseInt(v.salesQty);
+                            returnData.vatamount += parseFloat(v.vatamount);
+                            returnData.disc += v.lineTotalDisc;
+                        });
+                        returnData.netAmount = returnData.amount - returnData.disc + returnData.vatamount;
+                        if (prevReturnOrderEquals) {
+                            //   returnData.amount -= prevReturnOrderEquals.amount ? parseFloat(prevReturnOrderEquals.amount) : 0;
+                            //   returnData.netAmount -= prevReturnOrderEquals.netAmount ? parseFloat(prevReturnOrderEquals.netAmount) : 0;
+                            //   returnData.disc -= prevReturnOrderEquals.disc ? parseFloat(prevReturnOrderEquals.disc) : 0;
+                            //   returnData.vatamount -= prevReturnOrderEquals.vatamount ? parseFloat(prevReturnOrderEquals.vatamount) : 0;
+                            returnData.cashAmount += parseFloat(returnData.cardAmount);
+                            returnData.cashAmount -= prevReturnOrderEquals.cashAmount ? parseFloat(prevReturnOrderEquals.cashAmount) : 0;
+                            returnData.designerServiceAmount -= prevReturnOrderEquals.designerServiceAmount
+                                ? parseFloat(prevReturnOrderEquals.designerServiceAmount)
+                                : 0;
+                            returnData.cardAmount = 0;
+                            returnData.redeemAmount -= prevReturnOrderEquals.redeemAmount
+                                ? parseFloat(prevReturnOrderEquals.redeemAmount)
+                                : 0;
+                        }
+                        designServiceRedeemAmount = returnData.designerServiceAmount;
+                        // returnData.amount -= parseFloat(returnOrderData.amount);
+                        // returnData.netAmount -= parseFloat(returnOrderData.netAmount);
+                        // returnData.disc -= parseFloat(returnOrderData.disc);
+                        // returnData.vatamount -= parseFloat(returnOrderData.vatamount);
+                        returnNetAmount = returnData.netAmount;
+                        if (parseFloat(returnData.cashAmount) >= returnNetAmount) {
+                            returnData.cashAmount = returnNetAmount;
+                            returnNetAmount = 0;
+                        }
+                        else {
+                            returnNetAmount -= parseFloat(returnData.cashAmount);
+                        }
+                        if (returnNetAmount > 0) {
+                            if (designServiceRedeemAmount >= returnNetAmount) {
+                                returnData.designerServiceAmount -= returnNetAmount;
+                                returnNetAmount = 0;
+                            }
+                            else {
+                                returnNetAmount -= returnData.designerServiceAmount;
+                            }
+                        }
+                        if (returnNetAmount > 0) {
+                            redeemAmount = returnNetAmount;
+                        }
+                        returnData.cashAmount = parseFloat(returnData.cashAmount);
+                        returnData.designerServiceAmount = parseFloat(returnData.designerServiceAmount);
+                        returnData.cardAmount = 0;
+                        returnData.redeemAmount = parseFloat(returnData.redeemAmount);
                         returnData.salesLine = salesLine;
                         return [2 /*return*/, returnData];
                 }
@@ -1459,7 +1474,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
         returnItem.numberSequenceGroupId = item.numberSequenceGroupId;
         returnItem.vat = parseFloat(item.vat);
         returnItem.appliedDiscounts = [];
-        returnItem.colorantprice = parseFloat(item.colorantprice);
+        returnItem.colorantprice = item.colorantprice ? parseFloat(item.colorantprice) : 0;
         returnItem.colorantId = item.colorantId;
         returnItem.taxGroup = item.taxGroup;
         returnItem.taxItemGroup = item.taxItemGroup;
