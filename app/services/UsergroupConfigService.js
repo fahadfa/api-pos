@@ -150,75 +150,41 @@ var UsergroupConfigService = /** @class */ (function () {
     };
     UsergroupConfigService.prototype.save = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var sequenceGroupList, itemsNotInNumSeq, _i, sequenceGroupList_1, seq, numberSeq, cond, promiseList, returnData, error_5;
+            var cond, promiseList, returnData, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 9, , 10]);
-                        sequenceGroupList = [
-                            "quotationsequencegroup",
-                            "salesordersequencegroup",
-                            "returnordersequencegroup",
-                            "returnordersequencegroup",
-                            "movementsequencegroup",
-                            "transferordersequencegroup",
-                            "ordershipmentsequencegroup",
-                            "orderreceivesequencegroup",
-                            "purchaserequestsequencegroup",
-                            "purchaseordersequencegroup",
-                        ];
-                        itemsNotInNumSeq = [];
-                        _i = 0, sequenceGroupList_1 = sequenceGroupList;
-                        _a.label = 1;
-                    case 1:
-                        if (!(_i < sequenceGroupList_1.length)) return [3 /*break*/, 4];
-                        seq = sequenceGroupList_1[_i];
-                        return [4 /*yield*/, this.rawQuery.getNumberSeq(reqData[seq])];
-                    case 2:
-                        numberSeq = _a.sent();
-                        console.log(numberSeq);
-                        if (numberSeq.length === 0) {
-                            itemsNotInNumSeq.push(seq);
-                        }
-                        _a.label = 3;
-                    case 3:
-                        _i++;
-                        return [3 /*break*/, 1];
-                    case 4:
-                        console.log(itemsNotInNumSeq);
-                        if (itemsNotInNumSeq.length > 0) {
-                            throw { message: "CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE" };
-                        }
+                        _a.trys.push([0, 5, , 6]);
                         return [4 /*yield*/, this.validate(reqData)];
-                    case 5:
+                    case 1:
                         cond = _a.sent();
                         console.log(cond);
-                        if (!(cond == true)) return [3 /*break*/, 8];
+                        if (!(cond == true)) return [3 /*break*/, 4];
                         reqData.lastmodifieddate = new Date(App_1.App.DateNow());
                         promiseList = [];
                         promiseList.push(this.usergroupconfigDAO.save(reqData));
                         promiseList.push(this.update_user_group(reqData));
                         return [4 /*yield*/, Promise.all(promiseList)];
-                    case 6:
+                    case 2:
                         _a.sent();
                         console.log("======================================");
                         return [4 /*yield*/, this.rawQuery.updateSynctable(reqData.inventlocationid)];
-                    case 7:
+                    case 3:
                         _a.sent();
                         returnData = { id: reqData.id, message: "SAVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
-                    case 8:
+                    case 4:
                         if (cond == "groupname") {
                             throw { message: "RECORD_ALREADY_EXISTS" };
                         }
                         else {
                             throw { message: "INVALID_DATA" };
                         }
-                        return [3 /*break*/, 10];
-                    case 9:
+                        return [3 /*break*/, 6];
+                    case 5:
                         error_5 = _a.sent();
                         throw error_5;
-                    case 10: return [2 /*return*/];
+                    case 6: return [2 /*return*/];
                 }
             });
         });

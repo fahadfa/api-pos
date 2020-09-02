@@ -260,9 +260,6 @@ var CusttableService = /** @class */ (function () {
                         _a.sent();
                         return [2 /*return*/, returnData];
                     case 7:
-                        if (cond == "updated") {
-                            throw { message: "UPDATED" };
-                        }
                         if (cond == "phone") {
                             throw { message: "RECORD_ALREADY_EXISTS" };
                         }
@@ -354,7 +351,7 @@ var CusttableService = /** @class */ (function () {
                         userGroupConfigData = _a.sent();
                         regionNumber = userGroupConfigData.regionId;
                         showroomId = userGroupConfigData.costCenterId;
-                        return [4 /*yield*/, this.rawQuery.getNumberSequence("WC_ER18")];
+                        return [4 /*yield*/, this.rawQuery.getNumberSequence("CUSTOMER", "ALL")];
                     case 2:
                         data = _a.sent();
                         hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);
@@ -363,7 +360,7 @@ var CusttableService = /** @class */ (function () {
                         data.nextrec = prevYear == year ? data.nextrec : 1;
                         accountNum = data.format.replace(hashString, regionNumber + "-" + showroomId + "-" + year + "-" + data.nextrec);
                         console.log(accountNum);
-                        return [4 /*yield*/, this.rawQuery.updateNumberSequence("WC_ER18", data.nextrec)];
+                        return [4 /*yield*/, this.rawQuery.updateNumberSequence(data.numbersequence, data.nextrec)];
                     case 3:
                         _a.sent();
                         return [2 /*return*/, accountNum];
@@ -392,7 +389,7 @@ var CusttableService = /** @class */ (function () {
                     case 4: return [4 /*yield*/, this.custtableDAO.save(customer)];
                     case 5:
                         _a.sent();
-                        return [2 /*return*/, { id: customer.accountnum, message: "REMOVED_SUCCESSFULLY" }];
+                        return [2 /*return*/, { id: customer.accountnum, message: "REMOVED" }];
                     case 6:
                         error_6 = _a.sent();
                         throw error_6;

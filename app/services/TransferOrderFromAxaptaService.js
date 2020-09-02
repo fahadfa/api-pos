@@ -176,7 +176,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
     };
     TransferOrderFromAxaptaService.prototype.save = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, salesData, prevSalesData, usergroupconfig, seqNum, seqData, hashString, date, prevYear, year, salesLines, _i, salesLines_1, item, batches, error_3;
+            var queryRunner, salesData, prevSalesData, usergroupconfig, seqData, hashString, date, prevYear, year, salesLines, _i, salesLines_1, item, batches, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -207,8 +207,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         salesData.status = "RECEIVED";
                         salesData.interCompanyOriginalSalesId = salesData.salesId;
                         salesData.transkind = "ORDERRECEIVE";
-                        seqNum = usergroupconfig.orderreceivesequencegroup;
-                        return [4 /*yield*/, this.rawQuery.getNumberSequence(seqNum)];
+                        return [4 /*yield*/, this.rawQuery.getNumberSequence(salesData.transkind, this.sessionInfo.inventlocationid)];
                     case 7:
                         seqData = _a.sent();
                         if (!(seqData && seqData.format)) return [3 /*break*/, 9];
@@ -217,9 +216,12 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         prevYear = new Date(seqData.lastmodifieddate).getFullYear().toString().substr(2, 2);
                         year = new Date().getFullYear().toString().substr(2, 2);
                         seqData.nextrec = prevYear == year ? seqData.nextrec : "000001";
+                        if (data.nextrec == 1 || data.nextrec == "1") {
+                            data.nextrec = "000001";
+                        }
                         salesData.salesId = seqData.format.replace(hashString, year) + "-" + seqData.nextrec;
                         //console.log(salesId);
-                        return [4 /*yield*/, this.rawQuery.updateNumberSequence(seqNum, seqData.nextrec)];
+                        return [4 /*yield*/, this.rawQuery.updateNumberSequence(data.numbersequence, seqData.nextrec)];
                     case 8:
                         //console.log(salesId);
                         _a.sent();

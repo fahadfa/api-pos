@@ -56,7 +56,9 @@ var FixedAssetGroupService = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         data.createdDateTime = data.createdDateTime ? data.createdDateTime.toLocaleDateString() : data.createdDateTime;
-                        data.lastModifiedDate = data.lastModifiedDate ? data.lastModifiedDate.toLocaleDateString() : data.lastModifiedDate;
+                        data.lastModifiedDate = data.lastModifiedDate
+                            ? data.lastModifiedDate.toLocaleDateString()
+                            : data.lastModifiedDate;
                         return [2 /*return*/, data];
                     case 2:
                         error_1 = _a.sent();
@@ -78,8 +80,12 @@ var FixedAssetGroupService = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         data.map(function (element) {
-                            element.createdDateTime = element.createdDateTime ? element.createdDateTime.toLocaleDateString() : element.createdDateTime;
-                            element.lastModifiedDate = element.lastModifiedDate ? element.lastModifiedDate.toLocaleDateString() : element.lastModifiedDate;
+                            element.createdDateTime = element.createdDateTime
+                                ? element.createdDateTime.toLocaleDateString()
+                                : element.createdDateTime;
+                            element.lastModifiedDate = element.lastModifiedDate
+                                ? element.lastModifiedDate.toLocaleDateString()
+                                : element.lastModifiedDate;
                         });
                         return [2 /*return*/, data];
                     case 2:
@@ -104,9 +110,9 @@ var FixedAssetGroupService = /** @class */ (function () {
                         return [4 /*yield*/, this.fixedassetgroupRepository.save(item)];
                     case 2:
                         fixedassetgroupData = _a.sent();
-                        returnData = { id: fixedassetgroupData.groupid, message: 'SAVED_SUCCESSFULLY' };
+                        returnData = { id: fixedassetgroupData.groupid, message: "SAVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
-                    case 3: throw { message: 'INVALID_DATA' };
+                    case 3: throw { message: "INVALID_DATA" };
                     case 4: return [3 /*break*/, 6];
                     case 5:
                         error_3 = _a.sent();
@@ -130,13 +136,13 @@ var FixedAssetGroupService = /** @class */ (function () {
                             entity.deleted = true;
                         }
                         else {
-                            throw { message: 'DATA_NOT_FOUND' };
+                            throw { message: "DATA_NOT_FOUND" };
                         }
                         entity.deletedby = this.sessionInfo.userName;
                         return [4 /*yield*/, this.fixedassetgroupRepository.save(entity)];
                     case 2:
                         _a.sent();
-                        return [2 /*return*/, { id: entity.assetId, message: 'REMOVED_SUCCESSFULLY' }];
+                        return [2 /*return*/, { id: entity.assetId, message: "REMOVED_SUCCESSFULLY" }];
                     case 3:
                         error_4 = _a.sent();
                         throw error_4;
@@ -180,7 +186,8 @@ var FixedAssetGroupService = /** @class */ (function () {
                         _a.label = 8;
                     case 8: return [3 /*break*/, 10];
                     case 9:
-                        if (item.lastModifiedDate && previousItem.lastModifiedDate.toISOString() != new Date(item.lastModifiedDate).toISOString()) {
+                        if (item.lastModifiedDate &&
+                            previousItem.lastModifiedDate.toISOString() != new Date(item.lastModifiedDate).toISOString()) {
                             return [2 /*return*/, "updated"];
                         }
                         _a.label = 10;
@@ -194,45 +201,38 @@ var FixedAssetGroupService = /** @class */ (function () {
     };
     FixedAssetGroupService.prototype.getaccountNum = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var usergroupconfig, data, seqNum, prevYear, year, hashString, salesId, error_5;
+            var usergroupconfig, data, prevYear, year, hashString, salesId, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 7, , 8]);
                         return [4 /*yield*/, this.usergroupconfigDAO.findOne({
-                                inventlocationid: this.sessionInfo.inventlocationid
+                                inventlocationid: this.sessionInfo.inventlocationid,
                             })];
                     case 1:
                         usergroupconfig = _a.sent();
                         data = void 0;
-                        seqNum = usergroupconfig.fixedassestgroupsequencegroup;
-                        return [4 /*yield*/, this.rawQuery.getNumberSequence(seqNum)];
+                        return [4 /*yield*/, this.rawQuery.getNumberSequence("FIXEDASSETS", this.sessionInfo.inventlocationid)];
                     case 2:
                         data = _a.sent();
                         if (!data) return [3 /*break*/, 5];
-                        prevYear = new Date(data.lastmodifieddate)
-                            .getFullYear()
-                            .toString()
-                            .substr(2, 2);
-                        year = new Date()
-                            .getFullYear()
-                            .toString()
-                            .substr(2, 2);
+                        prevYear = new Date(data.lastmodifieddate).getFullYear().toString().substr(2, 2);
+                        year = new Date().getFullYear().toString().substr(2, 2);
                         data.nextrec = prevYear == year ? data.nextrec : 1;
                         hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);
                         salesId = data.format.replace(hashString, data.nextrec) + "-" + year;
                         console.log(salesId);
-                        return [4 /*yield*/, this.rawQuery.updateNumberSequence(seqNum, data.nextrec)];
+                        return [4 /*yield*/, this.rawQuery.updateNumberSequence(data.numbersequence, data.nextrec)];
                     case 3:
                         _a.sent();
                         return [4 /*yield*/, salesId];
                     case 4: return [2 /*return*/, _a.sent()];
-                    case 5: throw { message: 'CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE' };
+                    case 5: throw { message: "CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE" };
                     case 6: return [3 /*break*/, 8];
                     case 7:
                         error_5 = _a.sent();
                         if (error_5 == {}) {
-                            error_5 = { message: 'SERVER_SIDE_ERROR' };
+                            error_5 = { message: "SERVER_SIDE_ERROR" };
                         }
                         throw error_5;
                     case 8: return [2 /*return*/];

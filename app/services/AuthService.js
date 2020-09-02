@@ -274,9 +274,9 @@ var AuthService = /** @class */ (function () {
                         return [4 /*yield*/, this.userinfoDAO.save(profileObj)];
                     case 4:
                         data = _a.sent();
-                        return [2 /*return*/, { message: "SAVED_SUCCESSFULLY", status: 1 }];
+                        return [2 /*return*/, { message: "PASSWORD_UPDATED", status: 1 }];
                     case 5: throw { message: "INVALID_TOKEN", status: 0 };
-                    case 6: return [2 /*return*/, { message: "PASSWORD_UPDATED", status: 0 }];
+                    case 6: return [3 /*break*/, 8];
                     case 7:
                         error_4 = _a.sent();
                         throw error_4;

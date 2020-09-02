@@ -123,16 +123,16 @@ var AccountsTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.accountsTableDAO.save(reqData)];
                     case 2:
                         account = _a.sent();
-                        return [2 /*return*/, { id: account.accountNum, message: 'SAVED_SUCCESSFULLY' }];
+                        return [2 /*return*/, { id: account.accountNum, message: "SAVED_SUCCESSFULLY" }];
                     case 3:
                         if (cond == "required") {
                             throw { message: "ACCOUNT_NUM_REQUIREMENT" };
                         }
                         else if (cond == "accountNum") {
-                            throw { message: 'RECORD_ALREADY_EXISTS' };
+                            throw { message: "RECORD_ALREADY_EXISTS" };
                         }
                         else {
-                            throw { message: 'INVALID_DATA' };
+                            throw { message: "INVALID_DATA" };
                         }
                         _a.label = 4;
                     case 4: return [3 /*break*/, 6];
@@ -152,33 +152,27 @@ var AccountsTableService = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 6, , 7]);
                         return [4 /*yield*/, this.usergroupconfigDAO.findOne({
-                                inventlocationid: this.sessionInfo.inventlocationid
+                                inventlocationid: this.sessionInfo.inventlocationid,
                             })];
                     case 1:
                         usergroupconfig = _a.sent();
                         data = void 0;
                         seqNum = usergroupconfig.legeraccountsequencegroup;
-                        return [4 /*yield*/, this.rawQuery.getNumberSequence(seqNum)];
+                        return [4 /*yield*/, this.rawQuery.getNumberSequence("LEDGERJOURNAL", this.sessionInfo.inventlocationid)];
                     case 2:
                         data = _a.sent();
                         if (!data) return [3 /*break*/, 4];
-                        prevYear = new Date(data.lastmodifieddate)
-                            .getFullYear()
-                            .toString()
-                            .substr(2, 2);
-                        year = new Date()
-                            .getFullYear()
-                            .toString()
-                            .substr(2, 2);
+                        prevYear = new Date(data.lastmodifieddate).getFullYear().toString().substr(2, 2);
+                        year = new Date().getFullYear().toString().substr(2, 2);
                         data.nextrec = prevYear == year ? data.nextrec : 1;
                         hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);
                         salesId = data.format.replace(hashString, data.nextrec) + "-" + year;
                         console.log(salesId);
-                        return [4 /*yield*/, this.rawQuery.updateNumberSequence(seqNum, data.nextrec)];
+                        return [4 /*yield*/, this.rawQuery.updateNumberSequence(data.numbersequence, data.nextrec)];
                     case 3:
                         _a.sent();
                         return [2 /*return*/, salesId];
-                    case 4: throw { message: 'CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE' };
+                    case 4: throw { message: "CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE" };
                     case 5: return [3 /*break*/, 7];
                     case 6:
                         error_4 = _a.sent();
@@ -252,7 +246,7 @@ var AccountsTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.accountsTableDAO.save(accountsTable)];
                     case 2:
                         _a.sent();
-                        return [2 /*return*/, { id: accountsTable.accountNum, message: 'REMOVED' }];
+                        return [2 /*return*/, { id: accountsTable.accountNum, message: "REMOVED" }];
                     case 3:
                         error_5 = _a.sent();
                         throw error_5;

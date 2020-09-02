@@ -52,6 +52,15 @@ var CusttableDAO_1 = require("../repos/CusttableDAO");
 var typeorm_1 = require("typeorm");
 var ReturnOrderAmountService = /** @class */ (function () {
     function ReturnOrderAmountService() {
+        this.date_diff_indays = function (date1, date2) {
+            console.log(date1, date2);
+            var dt1 = new Date(date1);
+            var dt2 = new Date(date2);
+            console.log(dt1, dt2);
+            return Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) -
+                Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate())) /
+                (1000 * 60 * 60 * 24));
+        };
         this.salesTableDAO = new SalesTableDAO_1.SalesTableDAO();
         this.rawQuery = new RawQuery_1.RawQuery();
         this.custtableDAO = new CusttableDAO_1.CusttableDAO();
@@ -59,27 +68,34 @@ var ReturnOrderAmountService = /** @class */ (function () {
     }
     ReturnOrderAmountService.prototype.returnAmount = function (reqData, type) {
         return __awaiter(this, void 0, void 0, function () {
-            var salesOrderData, prevReturnOrders, salesOrderDataCopy, customer, condition, salesLine_2, salesLineIds_1, sendForApproval, prevReturnOrderEquals, so_list_1, buyOneGetOneDiscountItems, _loop_1, _i, salesLine_1, item, error, filteredbuyOneGetOneDiscountItems_2, _loop_2, _a, filteredbuyOneGetOneDiscountItems_1, item, state_1, data, returnOrderData, returnData, err_1;
+            var salesOrderData, date_dif, prevReturnOrders, salesOrderDataCopy, customer, condition, salesLine_2, salesLineIds_1, sendForApproval, prevReturnOrderEquals, so_list_1, buyOneGetOneDiscountItems, _loop_1, _i, salesLine_1, item, error, filteredbuyOneGetOneDiscountItems_2, _loop_2, _a, filteredbuyOneGetOneDiscountItems_1, item, state_1, data, returnOrderData, returnData, err_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _b.trys.push([0, 19, , 20]);
+                        _b.trys.push([0, 20, , 21]);
                         return [4 /*yield*/, this.salesTableDAO.entity(reqData.salesid.toUpperCase())];
                     case 1:
                         salesOrderData = _b.sent();
+                        return [4 /*yield*/, this.date_diff_indays(new Date(salesOrderData.lastModifiedDate).toISOString(), new Date().toISOString())];
+                    case 2:
+                        date_dif = _b.sent();
+                        console.log(date_dif);
+                        if (date_dif > 30) {
+                            throw "RETURN_OF_ITEMS_WILL_ACCEPT_ONLY_WITH_IN_45_DAYS";
+                        }
                         return [4 /*yield*/, this.salesTableDAO.search({
                                 interCompanyOriginalSalesId: reqData.salesid.toUpperCase(),
                             })];
-                    case 2:
+                    case 3:
                         prevReturnOrders = _b.sent();
                         salesOrderDataCopy = JSON.parse(JSON.stringify(salesOrderData));
                         // let prevReturnOrderAmounts: any = await this.rawQuery.getPrevReturnOrderAmount(reqData.salesid.toUpperCase());
                         this.rawQuery.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.rawQuery.getCustomer(salesOrderData.custAccount)];
-                    case 3:
+                    case 4:
                         customer = _b.sent();
                         return [4 /*yield*/, this.rawQuery.workflowconditions(this.sessionInfo.usergroupconfigid)];
-                    case 4:
+                    case 5:
                         condition = _b.sent();
                         salesLine_2 = salesOrderDataCopy.salesLine;
                         delete salesOrderDataCopy.salesLine;
@@ -89,7 +105,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             salesLineIds_1.push(v.salesLineId);
                         });
                         return [4 /*yield*/, this.calReturnOrders(prevReturnOrders)];
-                    case 5:
+                    case 6:
                         prevReturnOrderEquals = _b.sent();
                         reqData.selectedBatches = this.groupBy(reqData.selectedBatches, function (item) {
                             return [item.salesLineId];
@@ -163,24 +179,24 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             });
                         };
                         _i = 0, salesLine_1 = salesLine_2;
-                        _b.label = 6;
-                    case 6:
-                        if (!(_i < salesLine_1.length)) return [3 /*break*/, 9];
+                        _b.label = 7;
+                    case 7:
+                        if (!(_i < salesLine_1.length)) return [3 /*break*/, 10];
                         item = salesLine_1[_i];
                         return [5 /*yield**/, _loop_1(item)];
-                    case 7:
-                        _b.sent();
-                        _b.label = 8;
                     case 8:
-                        _i++;
-                        return [3 /*break*/, 6];
+                        _b.sent();
+                        _b.label = 9;
                     case 9:
+                        _i++;
+                        return [3 /*break*/, 7];
+                    case 10:
                         error = null;
-                        if (!(buyOneGetOneDiscountItems.length > 0)) return [3 /*break*/, 14];
+                        if (!(buyOneGetOneDiscountItems.length > 0)) return [3 /*break*/, 15];
                         return [4 /*yield*/, this.groupBy(buyOneGetOneDiscountItems, function (item) {
                                 return [item.linkId, item.freeItem];
                             })];
-                    case 10:
+                    case 11:
                         buyOneGetOneDiscountItems = _b.sent();
                         filteredbuyOneGetOneDiscountItems_2 = [];
                         buyOneGetOneDiscountItems.forEach(function (groupitem) {
@@ -210,27 +226,27 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             });
                         };
                         _a = 0, filteredbuyOneGetOneDiscountItems_1 = filteredbuyOneGetOneDiscountItems_2;
-                        _b.label = 11;
-                    case 11:
-                        if (!(_a < filteredbuyOneGetOneDiscountItems_1.length)) return [3 /*break*/, 14];
+                        _b.label = 12;
+                    case 12:
+                        if (!(_a < filteredbuyOneGetOneDiscountItems_1.length)) return [3 /*break*/, 15];
                         item = filteredbuyOneGetOneDiscountItems_1[_a];
                         return [5 /*yield**/, _loop_2(item)];
-                    case 12:
+                    case 13:
                         state_1 = _b.sent();
                         if (state_1 === "break")
-                            return [3 /*break*/, 14];
-                        _b.label = 13;
-                    case 13:
-                        _a++;
-                        return [3 /*break*/, 11];
+                            return [3 /*break*/, 15];
+                        _b.label = 14;
                     case 14:
-                        if (!(error == null)) return [3 /*break*/, 17];
+                        _a++;
+                        return [3 /*break*/, 12];
+                    case 15:
+                        if (!(error == null)) return [3 /*break*/, 18];
                         salesOrderDataCopy.salesLine = salesLine_2;
                         return [4 /*yield*/, this.getDiscount(salesOrderDataCopy)];
-                    case 15:
-                        data = _b.sent();
-                        return [4 /*yield*/, this.allocateReturnOrderData(salesOrderData, data, prevReturnOrderEquals, salesLineIds_1)];
                     case 16:
+                        data = _b.sent();
+                        return [4 /*yield*/, this.allocateReturnOrderData(salesOrderData, data, prevReturnOrderEquals, salesLineIds_1, type)];
+                    case 17:
                         returnOrderData = _b.sent();
                         returnData = {
                             grossTotal: parseFloat(returnOrderData.amount),
@@ -253,12 +269,12 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         }
                         returnData.sendForApproval = sendForApproval;
                         return [2 /*return*/, returnData];
-                    case 17: throw error;
-                    case 18: return [3 /*break*/, 20];
-                    case 19:
+                    case 18: throw error;
+                    case 19: return [3 /*break*/, 21];
+                    case 20:
                         err_1 = _b.sent();
                         throw { message: err_1 };
-                    case 20: return [2 /*return*/];
+                    case 21: return [2 /*return*/];
                 }
             });
         });
@@ -582,7 +598,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 cond: [],
                                             });
                                         }
-                                        console.log("===============================", parseFloat(reqData.salesLine[i].enddiscamt) / 2);
+                                        // console.log("===============================", parseFloat(reqData.salesLine[i].enddiscamt) / 2);
                                         reqData.salesLine[i].buyOneGetOneDiscount -= parseFloat(reqData.salesLine[i].enddiscamt) / 2;
                                         buy_one_get_one -= parseFloat(reqData.salesLine[i].enddiscamt) / 2;
                                         _d.label = 5;
@@ -1137,13 +1153,13 @@ var ReturnOrderAmountService = /** @class */ (function () {
         reqData.netAmount = reqData.netAmount;
         reqData.amount = reqData.amount;
     };
-    ReturnOrderAmountService.prototype.allocateReturnOrderData = function (salesOrderData, returnOrderData, prevReturnOrderEquals, salesLineIds) {
+    ReturnOrderAmountService.prototype.allocateReturnOrderData = function (salesOrderData, returnOrderData, prevReturnOrderEquals, salesLineIds, type) {
         return __awaiter(this, void 0, void 0, function () {
             var returnData, salesLine, linenum, _loop_4, this_2, _i, _a, item, cashAmount, redeemAmount, designServiceRedeemAmount, returnNetAmount;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        returnData = this.allocateSalesTableData(salesOrderData, "RETURNORDER");
+                        returnData = this.allocateSalesTableData(salesOrderData, type);
                         salesLine = [];
                         linenum = 1;
                         _loop_4 = function (item) {
@@ -1357,7 +1373,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         returnData.disc = 0;
                         returnData.vatamount = 0;
                         salesLine.map(function (v) {
-                            console.log(v.lineAmount, v.colorantprice, v.salesQty);
+                            // console.log(v.lineAmount, v.colorantprice, v.salesQty);
                             returnData.amount += parseFloat(v.lineAmount) + parseFloat(v.colorantprice) * parseInt(v.salesQty);
                             returnData.vatamount += parseFloat(v.vatamount);
                             returnData.disc += v.lineTotalDisc;

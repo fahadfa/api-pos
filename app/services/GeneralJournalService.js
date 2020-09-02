@@ -230,7 +230,7 @@ var GeneralJournalService = /** @class */ (function () {
                         usergroupconfig = _a.sent();
                         data = void 0;
                         seqNum = usergroupconfig.generaljournalsequencegroup;
-                        return [4 /*yield*/, this.rawQuery.getNumberSequence(seqNum)];
+                        return [4 /*yield*/, this.rawQuery.getNumberSequence("LEDGERJOURNAL", this.sessionInfo.inventlocationid)];
                     case 2:
                         data = _a.sent();
                         console.log(data);
@@ -241,7 +241,7 @@ var GeneralJournalService = /** @class */ (function () {
                         hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);
                         salesId = data.format.replace(hashString, year) + "-" + data.nextrec;
                         console.log(salesId);
-                        return [4 /*yield*/, this.rawQuery.updateNumberSequence(seqNum, data.nextrec)];
+                        return [4 /*yield*/, this.rawQuery.updateNumberSequence(data.numbersequence, data.nextrec)];
                     case 3:
                         _a.sent();
                         return [2 /*return*/, salesId];
@@ -250,7 +250,7 @@ var GeneralJournalService = /** @class */ (function () {
                     case 6:
                         error_3 = _a.sent();
                         if (error_3 == {}) {
-                            error_3 = { message: "TECHNICAL_ISSUE,_PLEASE_CONTACT_YOUR_TECHNICAL_TEAM" };
+                            error_3 = { message: "TECHNICAL_ISSUE_PLEASE_CONTACT_YOUR_TECHNICAL_TEAM" };
                         }
                         else {
                             throw { message: "SERVER_SIDE_ERROR" };

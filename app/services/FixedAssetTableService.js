@@ -265,7 +265,7 @@ var FixedAssetTableService = /** @class */ (function () {
                         else {
                             seqNum = usergroupconfig.fixedassestgroupsequencegroup;
                         }
-                        return [4 /*yield*/, this.rawQuery.getNumberSequence(seqNum)];
+                        return [4 /*yield*/, this.rawQuery.getNumberSequence("FIXEDASSETS", this.sessionInfo.inventlocationid)];
                     case 3:
                         data = _a.sent();
                         if (!data) return [3 /*break*/, 6];
@@ -275,7 +275,7 @@ var FixedAssetTableService = /** @class */ (function () {
                         hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);
                         salesId = data.format.replace(hashString, year) + "-" + data.nextrec;
                         console.log(salesId);
-                        return [4 /*yield*/, this.rawQuery.updateNumberSequence(seqNum, data.nextrec)];
+                        return [4 /*yield*/, this.rawQuery.updateNumberSequence(data.numbersequence, data.nextrec)];
                     case 4:
                         _a.sent();
                         return [4 /*yield*/, salesId];
@@ -285,7 +285,7 @@ var FixedAssetTableService = /** @class */ (function () {
                     case 8:
                         error_5 = _a.sent();
                         if (error_5 == {}) {
-                            error_5 = { message: "TECHNICAL_ISSUE,_PLEASE_CONTACT_YOUR_TECHNICAL_TEAM" };
+                            error_5 = { message: "TECHNICAL_ISSUE_PLEASE_CONTACT_YOUR_TECHNICAL_TEAM" };
                         }
                         throw error_5;
                     case 9: return [2 /*return*/];

@@ -72,7 +72,7 @@ var MenuGroupService = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 4, , 5]);
                         item.group = {
-                            groupid: item.groupId
+                            groupid: item.groupId,
                         };
                         return [4 /*yield*/, this.menuGroupRepository.permissionData(item)];
                     case 1:
@@ -90,9 +90,11 @@ var MenuGroupService = /** @class */ (function () {
                                     name: element.name,
                                     nameAr: element.nameAr,
                                     link: element.link,
-                                    parentId: element.parentId
+                                    parentId: element.parentId,
                                 };
-                                newData.push(Object.assign({}, { active: false, writeAccess: false, deleteAccess: false }, newMenu, { groupid: item.groupId }));
+                                newData.push(Object.assign({}, { active: false, writeAccess: false, deleteAccess: false }, newMenu, {
+                                    groupid: item.groupId,
+                                }));
                             }
                         };
                         for (_i = 0, menu_1 = menu; _i < menu_1.length; _i++) {
@@ -150,11 +152,11 @@ var MenuGroupService = /** @class */ (function () {
                                 deleteAccess: element.deleteAccess,
                                 active: element.active,
                                 menu: {
-                                    id: element.menuId
+                                    id: element.menuId,
                                 },
                                 group: {
-                                    groupid: element.groupid
-                                }
+                                    groupid: element.groupid,
+                                },
                             };
                             menugroup.updatedDate = new Date(App_1.App.DateNow());
                             if (!element.id) {
@@ -166,7 +168,7 @@ var MenuGroupService = /** @class */ (function () {
                         return [4 /*yield*/, this.menuGroupRepository.save(saveData_1)];
                     case 1:
                         menuGroupData = _a.sent();
-                        returnData = { message: 'SAVED_SUCCESSFULLY' };
+                        returnData = { message: "SAVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
                     case 2:
                         error_3 = _a.sent();
@@ -187,12 +189,12 @@ var MenuGroupService = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         if (!data)
-                            throw { message: 'RECORD_NOT_FOUND' };
+                            throw { message: "RECORD_NOT_FOUND" };
                         data.updatedBy = this.sessionInfo.id;
                         return [4 /*yield*/, this.menuGroupRepository.delete(data)];
                     case 2:
                         result = _a.sent();
-                        returnData = { id: id, message: 'REMOVED_SUCCESSFULLY' };
+                        returnData = { id: id, message: "REMOVED" };
                         return [2 /*return*/, returnData];
                     case 3:
                         error_4 = _a.sent();

@@ -184,7 +184,7 @@ var VisitCustomerService = /** @class */ (function () {
                         return [4 /*yield*/, this.visitCustomerDAO.search(item)];
                     case 1:
                         result = _a.sent();
-                        return [4 /*yield*/, this.rawQuery.getNumberSequence("VST_NUMBER")];
+                        return [4 /*yield*/, this.rawQuery.getNumberSequence("VISITOR", "ALL")];
                     case 2:
                         data = _a.sent();
                         hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);

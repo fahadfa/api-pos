@@ -112,13 +112,14 @@ var RawQuery = /** @class */ (function () {
             });
         });
     };
-    RawQuery.prototype.getNumberSequence = function (numberSequence) {
+    RawQuery.prototype.getNumberSequence = function (transkind, inventlocationid) {
+        if (inventlocationid === void 0) { inventlocationid = null; }
         return __awaiter(this, void 0, void 0, function () {
             var query, data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select \n        LPAD(nextrec::text, 5, '0') as nextrec, \n        format, lastmodifieddate    \n        from numbersequencetable where numbersequence='" + numberSequence + "'";
+                        query = "select \n        numbersequence,\n        LPAD(nextrec::text, 5, '0') as nextrec, \n        format, lastmodifieddate    \n        from numbersequencetable where transkind='" + transkind + "' and  inventlocationid = '" + inventlocationid + "'";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
