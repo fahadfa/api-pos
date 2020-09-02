@@ -432,7 +432,7 @@ var WorkflowService = /** @class */ (function () {
                     case 1:
                         usergroupconfig = _a.sent();
                         seqNum = usergroupconfig.workflowsequencegroup;
-                        return [4 /*yield*/, this.rawQuery.getNumberSequence(seqNum)];
+                        return [4 /*yield*/, this.rawQuery.getNumberSequence("WORKFLOW", this.sessionInfo.inventlocationid)];
                     case 2:
                         data = _a.sent();
                         if (!(data && data.format)) return [3 /*break*/, 4];
@@ -442,7 +442,7 @@ var WorkflowService = /** @class */ (function () {
                         data.nextrec = prevYear == year ? data.nextrec : 1;
                         id = data.format.replace(hashString, data.nextrec) + "-" + year;
                         console.log(id);
-                        return [4 /*yield*/, this.rawQuery.updateNumberSequence(usergroupconfig.workflowsequencegroup, data.nextrec)];
+                        return [4 /*yield*/, this.rawQuery.updateNumberSequence(data.numbersequence, data.nextrec)];
                     case 3:
                         _a.sent();
                         return [2 /*return*/, id];

@@ -529,6 +529,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         discountAmount = promotionalDiscountDetails
                                             ? parseFloat(promotionalDiscountDetails.discountAmount)
                                             : 0;
+                                        console.log(promotionalDiscountDetails);
                                         promotionalDiscountDetails = promotionalDiscountDetails ? promotionalDiscountDetails.cond : [];
                                         isPromotionDiscount = false;
                                         isBuyOneGetOneDiscount = false;

@@ -726,12 +726,12 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.save = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, custAccount, error_5;
+            var _a, error_5;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _b.trys.push([0, 41, , 42]);
-                        if (!(reqData.salesLine && reqData.salesLine.length > 0)) return [3 /*break*/, 39];
+                        _b.trys.push([0, 39, , 40]);
+                        if (!(reqData.salesLine && reqData.salesLine.length > 0)) return [3 /*break*/, 37];
                         _a = reqData.transkind;
                         switch (_a) {
                             case "SALESQUOTATION": return [3 /*break*/, 1];
@@ -745,10 +745,10 @@ var SalesTableService = /** @class */ (function () {
                             case "ORDERRECEIVE": return [3 /*break*/, 19];
                             case "PURCHASEREQUEST": return [3 /*break*/, 23];
                             case "PURCHASEORDER": return [3 /*break*/, 25];
-                            case "PURCHASERETURN": return [3 /*break*/, 29];
-                            case "DESIGNERSERVICE": return [3 /*break*/, 31];
+                            case "PURCHASERETURN": return [3 /*break*/, 27];
+                            case "DESIGNERSERVICE": return [3 /*break*/, 29];
                         }
-                        return [3 /*break*/, 37];
+                        return [3 /*break*/, 35];
                     case 1: return [4 /*yield*/, this.saveQuotation(reqData)];
                     case 2: return [2 /*return*/, _b.sent()];
                     case 3: return [4 /*yield*/, this.saveSalesOrder(reqData)];
@@ -768,41 +768,40 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.saveOrderShipment(reqData)];
                     case 16: return [2 /*return*/, _b.sent()];
                     case 17: throw { message: "INVOICE_ID_REQUIRED" };
-                    case 18: return [3 /*break*/, 38];
+                    case 18: return [3 /*break*/, 36];
                     case 19:
                         if (!(reqData.interCompanyOriginalSalesId && reqData.interCompanyOriginalSalesId != "")) return [3 /*break*/, 21];
                         return [4 /*yield*/, this.saveOrderReceive(reqData)];
                     case 20: return [2 /*return*/, _b.sent()];
                     case 21: throw { message: "INVOICE_ID_REQUIRED" };
-                    case 22: return [3 /*break*/, 38];
+                    case 22: return [3 /*break*/, 36];
                     case 23: return [4 /*yield*/, this.saveQuotation(reqData)];
                     case 24: return [2 /*return*/, _b.sent()];
-                    case 25: return [4 /*yield*/, this.rawQuery.get_vedor_related_custaccount(reqData.custAccount)];
-                    case 26:
-                        custAccount = _b.sent();
-                        if (!custAccount) return [3 /*break*/, 28];
+                    case 25: return [4 /*yield*/, this.saveQuotation(reqData)];
+                    case 26: 
+                    // let custAccount = await this.rawQuery.get_vedor_related_custaccount(reqData.custAccount);
+                    //console.log(custAccount);
+                    // if (custAccount) {
+                    return [2 /*return*/, _b.sent()];
+                    case 27: return [4 /*yield*/, this.saveReturnOrder(reqData)];
+                    case 28: return [2 /*return*/, _b.sent()];
+                    case 29:
+                        if (!(reqData.status == "PAID")) return [3 /*break*/, 33];
+                        if (!(reqData.mobileNo && reqData.mobileNo != "" && reqData.mobileNo.length > 8)) return [3 /*break*/, 31];
                         return [4 /*yield*/, this.saveQuotation(reqData)];
-                    case 27: return [2 /*return*/, _b.sent()];
-                    case 28: throw { message: "NO_VENDOR_FOR_CUSTOMER" };
-                    case 29: return [4 /*yield*/, this.saveReturnOrder(reqData)];
                     case 30: return [2 /*return*/, _b.sent()];
-                    case 31:
-                        if (!(reqData.status == "PAID")) return [3 /*break*/, 35];
-                        if (!(reqData.mobileNo && reqData.mobileNo != "" && reqData.mobileNo.length > 8)) return [3 /*break*/, 33];
-                        return [4 /*yield*/, this.saveQuotation(reqData)];
-                    case 32: return [2 /*return*/, _b.sent()];
-                    case 33: throw { message: "PLEASE_ENTER_MOBILE_NUMBER" };
-                    case 34: return [3 /*break*/, 37];
-                    case 35: return [4 /*yield*/, this.saveQuotation(reqData)];
-                    case 36: return [2 /*return*/, _b.sent()];
-                    case 37: throw { message: "TRANSKIND_REQUIRED" };
+                    case 31: throw { message: "PLEASE_ENTER_MOBILE_NUMBER" };
+                    case 32: return [3 /*break*/, 35];
+                    case 33: return [4 /*yield*/, this.saveQuotation(reqData)];
+                    case 34: return [2 /*return*/, _b.sent()];
+                    case 35: throw { message: "TRANSKIND_REQUIRED" };
+                    case 36: return [3 /*break*/, 38];
+                    case 37: throw { message: "INVALID_DATA" };
                     case 38: return [3 /*break*/, 40];
-                    case 39: throw { message: "INVALID_DATA" };
-                    case 40: return [3 /*break*/, 42];
-                    case 41:
+                    case 39:
                         error_5 = _b.sent();
                         throw error_5;
-                    case 42: return [2 /*return*/];
+                    case 40: return [2 /*return*/];
                 }
             });
         });
