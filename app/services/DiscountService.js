@@ -929,6 +929,9 @@ var DiscountService = /** @class */ (function () {
                         reqData.totalBeforeVat = totalBeforeVat;
                         reqData.isVoucherApplied = false;
                         reqData.message = "For Aramko And Thahakom Customers Other Discounts Will Not Apply";
+                        return [4 /*yield*/, this.calData(reqData)];
+                    case 6:
+                        _b.sent();
                         return [2 /*return*/, reqData];
                 }
             });
@@ -1046,6 +1049,9 @@ var DiscountService = /** @class */ (function () {
                         reqData.totalBeforeVat = totalBeforeVat;
                         reqData.isVoucherApplied = false;
                         reqData.message = "For Sabic Customers Other Discounts Will Not Apply";
+                        return [4 /*yield*/, this.calData(reqData)];
+                    case 6:
+                        _b.sent();
                         return [2 /*return*/, reqData];
                 }
             });
@@ -1123,16 +1129,16 @@ var DiscountService = /** @class */ (function () {
         reqData.vat = parseFloat(reqData.vat);
         for (var _i = 0, _a = reqData.selectedItems; _i < _a.length; _i++) {
             var ele = _a[_i];
-            ele.lineamount = (ele.price + ele.colorantprice) * ele.quantity + ele.vatamount - ele.lineTotalDisc;
-            ele.priceAfterdiscount = ele.priceAfterdiscount;
-            ele.lineamountafterdiscount = ele.lineamountafterdiscount;
-            ele.vatamount = ele.vatamount;
+            ele.lineamount =
+                (ele.price + ele.colorantprice) * parseInt(ele.quantity) +
+                    parseFloat(ele.vatamount) -
+                    parseFloat(ele.lineTotalDisc);
+            ele.vatamount = parseFloat(ele.vatamount);
             ele.vat = parseFloat(ele.vat);
-            ele.priceAfterVat = ele.priceAfterVat;
-            ele.lineTotalDisc = ele.lineTotalDisc;
-            ele.lineamount = ele.lineamount;
-            ele.netAmount = ele.netAmount;
-            reqData.vatamount += ele.vatamount;
+            ele.lineTotalDisc = parseFloat(ele.lineTotalDisc);
+            ele.lineamount = parseFloat(ele.lineamount);
+            ele.netAmount = parseFloat(ele.netAmount);
+            reqData.vatamount += parseFloat(ele.vatamount);
         }
         reqData.vatamount = reqData.vatamount;
         reqData.discount = reqData.discount;

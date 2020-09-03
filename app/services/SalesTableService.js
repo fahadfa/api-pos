@@ -867,16 +867,84 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.getSalesid = function (type) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, hashString, date, prevYear, year, salesId, error_6;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var data, _a, hashString, date, prevYear, year, salesId, error_6;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
+                        _b.trys.push([0, 32, , 33]);
                         data = void 0;
-                        return [4 /*yield*/, this.rawQuery.getNumberSequence(type, this.sessionInfo.inventlocationid)];
-                    case 1:
-                        data = _a.sent();
-                        if (!(data && data.format)) return [3 /*break*/, 3];
+                        _a = type;
+                        switch (_a) {
+                            case "SALESQUOTATION": return [3 /*break*/, 1];
+                            case "SALESORDER": return [3 /*break*/, 3];
+                            case "RESERVED": return [3 /*break*/, 5];
+                            case "DESIGNERSERVICE": return [3 /*break*/, 7];
+                            case "RETURNORDER": return [3 /*break*/, 9];
+                            case "DESIGNERSERVICERETURN": return [3 /*break*/, 11];
+                            case "INVENTORYMOVEMENT": return [3 /*break*/, 13];
+                            case "TRANSFERORDER": return [3 /*break*/, 15];
+                            case "ORDERSHIPMENT": return [3 /*break*/, 17];
+                            case "ORDERRECEIVE": return [3 /*break*/, 19];
+                            case "PURCHASEREQUEST": return [3 /*break*/, 21];
+                            case "PURCHASEORDER": return [3 /*break*/, 23];
+                            case "PURCHASERETURN": return [3 /*break*/, 25];
+                        }
+                        return [3 /*break*/, 27];
+                    case 1: return [4 /*yield*/, this.rawQuery.getNumberSequence("SALESQUOTATION", this.sessionInfo.inventlocationid)];
+                    case 2:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 3: return [4 /*yield*/, this.rawQuery.getNumberSequence("SALESORDER", this.sessionInfo.inventlocationid)];
+                    case 4:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 5: return [4 /*yield*/, this.rawQuery.getNumberSequence("SALESORDER", this.sessionInfo.inventlocationid)];
+                    case 6:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 7: return [4 /*yield*/, this.rawQuery.getNumberSequence("SALESORDER", this.sessionInfo.inventlocationid)];
+                    case 8:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 9: return [4 /*yield*/, this.rawQuery.getNumberSequence("RETURNORDER", this.sessionInfo.inventlocationid)];
+                    case 10:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 11: return [4 /*yield*/, this.rawQuery.getNumberSequence("RETURNORDER", this.sessionInfo.inventlocationid)];
+                    case 12:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 13: return [4 /*yield*/, this.rawQuery.getNumberSequence("INVENTORYMOVEMENT", this.sessionInfo.inventlocationid)];
+                    case 14:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 15: return [4 /*yield*/, this.rawQuery.getNumberSequence("TRANSFERORDER", this.sessionInfo.inventlocationid)];
+                    case 16:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 17: return [4 /*yield*/, this.rawQuery.getNumberSequence("ORDERSHIPMENT", this.sessionInfo.inventlocationid)];
+                    case 18:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 19: return [4 /*yield*/, this.rawQuery.getNumberSequence("ORDERRECEIVE", this.sessionInfo.inventlocationid)];
+                    case 20:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 21: return [4 /*yield*/, this.rawQuery.getNumberSequence("PURCHASEREQUEST", this.sessionInfo.inventlocationid)];
+                    case 22:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 23: return [4 /*yield*/, this.rawQuery.getNumberSequence("PURCHASEORDER", this.sessionInfo.inventlocationid)];
+                    case 24:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 25: return [4 /*yield*/, this.rawQuery.getNumberSequence("PURCHASERETURN", this.sessionInfo.inventlocationid)];
+                    case 26:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 27: throw { message: "TRANSKIND_REQUIRED" };
+                    case 28:
+                        if (!(data && data.format)) return [3 /*break*/, 30];
                         hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);
                         date = new Date(data.lastmodifieddate).toLocaleString();
                         console.log(date);
@@ -890,19 +958,19 @@ var SalesTableService = /** @class */ (function () {
                         salesId = data.format.replace(hashString, year) + "-" + data.nextrec;
                         //console.log(salesId);
                         return [4 /*yield*/, this.rawQuery.updateNumberSequence(data.numbersequence, data.nextrec)];
-                    case 2:
+                    case 29:
                         //console.log(salesId);
-                        _a.sent();
+                        _b.sent();
                         return [2 /*return*/, salesId];
-                    case 3: throw { message: "CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE" };
-                    case 4: return [3 /*break*/, 6];
-                    case 5:
-                        error_6 = _a.sent();
+                    case 30: throw { message: "CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE" };
+                    case 31: return [3 /*break*/, 33];
+                    case 32:
+                        error_6 = _b.sent();
                         if (error_6 == {}) {
                             error_6 = { message: "SERVER_SIDE_ERROR" };
                         }
                         throw error_6;
-                    case 6: return [2 /*return*/];
+                    case 33: return [2 /*return*/];
                 }
             });
         });

@@ -79,7 +79,6 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         return [4 /*yield*/, this.date_diff_indays(new Date(salesOrderData.lastModifiedDate).toISOString(), new Date().toISOString())];
                     case 2:
                         date_dif = _b.sent();
-                        console.log(date_dif);
                         if (date_dif > 30) {
                             throw "RETURN_OF_ITEMS_WILL_ACCEPT_ONLY_WITH_IN_45_DAYS";
                         }
@@ -101,6 +100,30 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         delete salesOrderDataCopy.salesLine;
                         salesLineIds_1 = [];
                         sendForApproval = customer.custtype == 1 || customer.custtype == 2 ? true : false;
+                        reqData.selectedBatches.map(function (v) {
+                            if (!v.addedBy) {
+                                var parentItem = reqData.selectedBatches.find(function (j) { return j.linkId == v.linkId && v.isItemFree == false; });
+                                if (!parentItem) {
+                                    var line = salesLine_2.find(function (j) { return j.linkId == v.linkId && j.isItemFree == false && j.isParent == true; });
+                                    reqData.selectedBatches.push({
+                                        itemid: line.itemid,
+                                        qty: line.salesQty,
+                                        configid: line.configId,
+                                        inventsizeid: line.inventsizeid,
+                                        invoiceid: line.salesId,
+                                        transrefid: line.salesId,
+                                        batchno: line.batch[0].batchNo,
+                                        batchNo: line.batch[0].batchNo,
+                                        salesLineId: line.id,
+                                        isItemFree: true,
+                                        linkId: line.linkId,
+                                        colorantId: line.colorantId,
+                                        returnQuantity: 0,
+                                        addedBy: true,
+                                    });
+                                }
+                            }
+                        });
                         reqData.selectedBatches.map(function (v) {
                             salesLineIds_1.push(v.salesLineId);
                         });
@@ -158,6 +181,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                             ? parseInt(prevReturnLine.salesQty) + parseInt(line.returnQuantity)
                                             : parseInt(line.returnQuantity);
                                         item.salesQty -= returnQty;
+                                        console.log(line.isItemFree, item.salesQty);
                                         item.batches = line.batches;
                                         return [4 /*yield*/, item.appliedDiscounts.find(function (v) { return v.discountType == "BUY_ONE_GET_ONE_DISCOUNT"; })];
                                     case 3:
@@ -529,7 +553,6 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         discountAmount = promotionalDiscountDetails
                                             ? parseFloat(promotionalDiscountDetails.discountAmount)
                                             : 0;
-                                        console.log(promotionalDiscountDetails);
                                         promotionalDiscountDetails = promotionalDiscountDetails ? promotionalDiscountDetails.cond : [];
                                         isPromotionDiscount = false;
                                         isBuyOneGetOneDiscount = false;
@@ -1201,6 +1224,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 line.lineTotalDisc -= parseFloat(prevReturnLine.lineTotalDisc);
                                                 line.vatamount -= parseFloat(prevReturnLine.vatamount);
                                                 line.salesQty -= parseFloat(prevReturnLine.salesQty);
+                                                line.lineAmount -= parseFloat(prevReturnLine.lineAmount);
                                             }
                                             promotionalDiscount = item.appliedDiscounts.find(function (v) { return v.discountType == "PROMOTIONAL_DISCOUNT"; });
                                             buyOneGetOneDiscount = item.appliedDiscounts.find(function (v) { return v.discountType == "BUY_ONE_GET_ONE_DISCOUNT"; });
