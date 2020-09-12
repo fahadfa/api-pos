@@ -179,13 +179,10 @@
     <!-- <p id="bg__text__watermark">Only for testing</p> -->
     <!-- </div> -->
     <!-- logo code starts -->
-    <table align="center" border="0" cellpadding="0" cellspacing="0" style="width:220px">
+    <table align="center" border="0" cellpadding="0" cellspacing="0" style="width: 220px">
       <tbody>
         <tr>
-          <td
-            style="text-align: center;
-                    margin: auto;"
-          >
+          <td style="text-align: center; margin: auto">
             <img
               alt="logo"
               height="auto"
@@ -199,80 +196,64 @@
 
     <table id="headertbl">
       <tr>
-        <td colspan="3" valign="top" style="width:33%">
-          <table style="text-align:left;">
+        <td colspan="3" valign="top" style="width: 33%">
+          <table style="text-align: left">
             <tr class="billing">
               <td class="textboldtd" valign="top">From</td>
               <td valign="top">:</td>
-              <td>
-                {{data.salesTable.warehouse.nameAlias}}
-              </td>
+              <td>{{data.salesTable.warehouse.nameAlias}}</td>
             </tr>
             <tr class="billing">
               <td class="textboldtd" valign="top">Phone</td>
               <td valign="top">:</td>
 
-              <td>
-                {{data.salesTable.mobileNo}}
-              </td>
+              <td>{{data.salesTable.mobileNo}}</td>
             </tr>
             <tr class="billing">
               <td class="textboldtd" valign="top">Customer</td>
               <td valign="top">:</td>
-              <td>
-                {{data.salesTable.salesName}}
-              </td>
+              <td>{{data.salesTable.salesName}}</td>
             </tr>
             <tr class="billing">
               <td class="textboldtd">Deliver Address</td>
               <td>:</td>
-              <td>
-                {{data.salesTable.deliveryAddress}}
-              </td>
+              <td>{{data.salesTable.deliveryAddress}}</td>
             </tr>
             <tr class="billing">
               <td class="textboldtd">Payment Type</td>
               <td>:</td>
-              <td>
-                {{data.salesTable.paymentType}}
-              </td>
+              <td>{{data.salesTable.paymentType}}</td>
             </tr>
           </table>
         </td>
-        <td colspan="3" valign="bottom" style="width:33%">
-          <table align="center" style="text-align:center">
+        <td colspan="3" valign="bottom" style="width: 33%">
+          <table align="center" style="text-align: center">
             <tr>
               <td>Sales Invoice</td>
             </tr>
             <tr>
-              <td><span style="font-size:14px;font-weight: bold; ">{{data.salesTable.salesId}}</span></td>
+              <td><span style="font-size: 14px; font-weight: bold">{{data.salesTable.salesId}}</span></td>
             </tr>
           </table>
         </td>
-        <td colspan="4" valign="top" style="width:33%">
+        <td colspan="4" valign="top" style="width: 33%">
           <table align="right">
             <tr class="billing">
               <td class="textboldtd">User</td>
               <td>:</td>
-              <td>
-                {{data.salesTable.createdby}}
-              </td>
+              <td>{{data.salesTable.createdby}}</td>
             </tr>
             <tr class="billing">
               <td class="textboldtd">Invoice Date</td>
               <td>:</td>
-              <td class="quotation-date">
-                {{data.salesTable.date}}
-              </td>
+              <td class="quotation-date">{{data.salesTable.date}}</td>
             </tr>
 
             {{#if data.salesTable.voucherdiscchecked}}
             <tr class="billing">
               <td class="textboldtd">Voucher No</td>
               <td>:</td>
-              <td class="quotation-date">
-                {{data.salesTable.voucherNum}}
-              </td>
+              <td class="quotation-date">{{data.salesTable.voucherNum}}</td>
             </tr>
             {{/if}}
 
@@ -298,19 +279,19 @@
           <th class="th">Discount</th>
           <th class="th">Net Amnt Before VAT</th>
           <th class="th">
-            <table style="border-collapse: collapse !important;border:none !important;width:100%; text-align: center;">
+            <table
+              style="border-collapse: collapse !important; border: none !important; width: 100%; text-align: center"
+            >
               <tr class="td">
                 <td
                   class="inline-table"
-                  style="border-collapse: collapse !important;border-top:none;border-left:none;border-right:none"
+                  style="border-collapse: collapse !important; border-top: none; border-left: none; border-right: none"
                 >
                   Vat %
                 </td>
               </tr>
               <tr class="">
-                <td class="td" style="border-collapse: collapse !important;border:none !important">
-                  Amount
-                </td>
+                <td class="td" style="border-collapse: collapse !important; border: none !important">Amount</td>
               </tr>
             </table>
           </th>
@@ -322,42 +303,27 @@
         <tr class="tab-data">
           <td class="tdcenter">{{this.sNo}}</td>
           <td class="tdleft">
-            <div style="font-size:10px">
-              {{this.itemid}}
-            </div>
+            <div style="font-size: 10px">{{this.itemid}}</div>
           </td>
           <td class="td description-data">
-            <span style="font-size:10px">
-              {{this.productName}}, {{# if this.colorantId}} {{this.colorantId}}, {{else}} {{this.colorName}}, {{/if}}
-              {{this.sizeName}}, {{this.batchNo}}
-            </span>
+            <span style="font-size: 10px"> {{this.inventsizeid}} </span>
           </td>
-          <td class="tdcenter" style="text-align: center;">
-            {{this.quantity}}
-          </td>
-          <td class="tdright" style="text-align: center;">
-            {{this.productPrice}}
-          </td>
-          <td class="tdright" style="text-align: center;">
-            {{this.colorantPrice}}
-          </td>
-          <td class="tdright" style="text-align: center;">
-            {{this.lineTotalDisc}}
-          </td>
-          <td class="tdright" style="text-align: center;">{{this.lineAmountBeforeVat}}</td>
-          <td class="tdcenter" style="text-align: center;">
-            <table id="disctable" width="100%" style="text-align: center;">
+          <td class="tdcenter" style="text-align: center">{{this.quantity}}</td>
+          <td class="tdright" style="text-align: center">{{this.productPrice}}</td>
+          <td class="tdright" style="text-align: center">{{this.colorantPrice}}</td>
+          <td class="tdright" style="text-align: center">{{this.lineTotalDisc}}</td>
+          <td class="tdright" style="text-align: center">{{this.lineAmountBeforeVat}}</td>
+          <td class="tdcenter" style="text-align: center">
+            <table id="disctable" width="100%" style="text-align: center">
               <tr class="td inline-table">
-                <td class="inline-table" style="border-bottom:1px solid;">5%</td>
+                <td class="inline-table" style="border-bottom: 1px solid">5%</td>
               </tr>
               <tr>
-                <td class="td" style="border:none !important;text-align: center;">{{this.vatAmount}}</td>
+                <td class="td" style="border: none !important; text-align: center">{{this.vatAmount}}</td>
               </tr>
             </table>
           </td>
-          <td class="tdright" style="text-align: center;">
-            {{this.lineAmount}}
-          </td>
+          <td class="tdright" style="text-align: center">{{this.lineAmount}}</td>
         </tr>
         {{/each}}
       </tbody>
@@ -367,9 +333,7 @@
         <td class="tdcenter">Sales Order</td>
         <td class="tdleft">Gross Total</td>
         <td class="tdcenter">{{data.salesTable.quantity}}</td>
-        <td class="tdright">
-          {{data.salesTable.amount}}
-        </td>
+        <td class="tdright">{{data.salesTable.amount}}</td>
       </tr>
       <!-- <tr class="tdright">
               <td rowspan="4">&nbsp;</td>
@@ -382,44 +346,30 @@
       <tr class="tdright">
         <td rowspan="3">&nbsp;</td>
         <td colspan="2" class="tdleft">Discount</td>
-        <td class="tdright">
-          {{data.salesTable.disc}}
-        </td>
+        <td class="tdright">{{data.salesTable.disc}}</td>
       </tr>
       <tr class="tdright">
         <td colspan="2" class="tdleft">VAT (5%)</td>
-        <td class="tdright">
-          {{data.salesTable.vatamount}}
-        </td>
+        <td class="tdright">{{data.salesTable.vatamount}}</td>
       </tr>
       <tr class="tdright">
         <td colspan="2" class="tdleft">Shipping Charges</td>
-        <td class="tdright">
-          {{data.salesTable.shippingAmount}}
-        </td>
+        <td class="tdright">{{data.salesTable.shippingAmount}}</td>
       </tr>
       <tr class="tdright">
         <td rowspan="3">&nbsp;</td>
         <td colspan="2" class="tdleft">Net Amount</td>
-        <td class="tdright">
-          {{data.salesTable.netAmount}}
-        </td>
+        <td class="tdright">{{data.salesTable.netAmount}}</td>
       </tr>
     </table>
 
     <!-- <div style="padding-top: 120px;">&nbsp;</div> -->
 
-    <table width="100%" style="background: #fff;border-top:1px dotted #8a8989;padding-top: 30px;">
+    <table width="100%" style="background: #fff; border-top: 1px dotted #8a8989; padding-top: 30px">
       <tr>
-        <td style="width:33%;font-size:15px; text-align: left;">
-          Recipient
-        </td>
-        <td style="width:33%;font-size:15px; text-align: center;">
-          Seller
-        </td>
-        <td style="width:33%;font-size:15px;text-align: right;">
-          Company
-        </td>
+        <td style="width: 33%; font-size: 15px; text-align: left">Recipient</td>
+        <td style="width: 33%; font-size: 15px; text-align: center">Seller</td>
+        <td style="width: 33%; font-size: 15px; text-align: right">Company</td>
       </tr>
     </table>
   </body>

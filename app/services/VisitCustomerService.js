@@ -143,7 +143,6 @@ var VisitCustomerService = /** @class */ (function () {
                         reqData.regionNumber = userGroupConfigData.regionId;
                         reqData.userGroupId = userGroupConfigData.groupid;
                         reqData.showroomId = userGroupConfigData.costCenterId;
-                        reqData.salesmanId = userGroupConfigData.salesmanid;
                         reqData.dataareaid = this.sessionInfo.dataareaid;
                         return [4 /*yield*/, this.validate(reqData)];
                     case 2:

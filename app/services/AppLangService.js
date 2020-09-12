@@ -38,11 +38,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var App_1 = require("../../utils/App");
 var Props_1 = require("../../constants/Props");
 var AppLangRepository_1 = require("../repos/AppLangRepository");
-var CacheService_1 = require("../common/CacheService");
 var AppLangService = /** @class */ (function () {
     function AppLangService() {
         this.appLangRepository = new AppLangRepository_1.AppLangRepository();
-        this.cacheService = new CacheService_1.CacheService();
     }
     AppLangService.prototype.entity = function (id) {
         return __awaiter(this, void 0, void 0, function () {
@@ -102,7 +100,6 @@ var AppLangService = /** @class */ (function () {
                     case 2:
                         appLangData = _a.sent();
                         returnData = { id: item.id, message: 'SAVED_SUCCESSFULLY' };
-                        this.cacheService.app_lang("Reload");
                         return [2 /*return*/, returnData];
                     case 3: throw { message: 'INVALID_DATA' };
                     case 4: return [3 /*break*/, 6];

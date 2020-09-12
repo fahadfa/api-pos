@@ -176,7 +176,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
     };
     TransferOrderFromAxaptaService.prototype.save = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, salesData, prevSalesData, usergroupconfig, seqData, hashString, date, prevYear, year, salesLines, _i, salesLines_1, item, batches, error_3;
+            var queryRunner, salesData, prevSalesData, usergroupconfig, oldItem, salesIdExists, uid, salesLines, _i, salesLines_1, item, batches, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -207,26 +207,25 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         salesData.status = "RECEIVED";
                         salesData.interCompanyOriginalSalesId = salesData.salesId;
                         salesData.transkind = "ORDERRECEIVE";
-                        return [4 /*yield*/, this.rawQuery.getNumberSequence(salesData.transkind, this.sessionInfo.inventlocationid)];
+                        oldItem = null;
+                        salesIdExists = true;
+                        _a.label = 7;
                     case 7:
-                        seqData = _a.sent();
-                        if (!(seqData && seqData.format)) return [3 /*break*/, 9];
-                        hashString = seqData.format.slice(seqData.format.indexOf("#"), seqData.format.lastIndexOf("#") + 1);
-                        date = new Date(seqData.lastmodifieddate).toLocaleString();
-                        prevYear = new Date(seqData.lastmodifieddate).getFullYear().toString().substr(2, 2);
-                        year = new Date().getFullYear().toString().substr(2, 2);
-                        seqData.nextrec = prevYear == year ? seqData.nextrec : "000001";
-                        if (data.nextrec == 1 || data.nextrec == "1") {
-                            data.nextrec = "000001";
-                        }
-                        salesData.salesId = seqData.format.replace(hashString, year) + "-" + seqData.nextrec;
-                        //console.log(salesId);
-                        return [4 /*yield*/, this.rawQuery.updateNumberSequence(data.numbersequence, seqData.nextrec)];
+                        if (!salesIdExists) return [3 /*break*/, 10];
+                        return [4 /*yield*/, this.getSalesid('ORDERRECEIVE', salesData)];
                     case 8:
-                        //console.log(salesId);
-                        _a.sent();
-                        return [3 /*break*/, 10];
-                    case 9: throw { message: "CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE" };
+                        uid = _a.sent();
+                        return [4 /*yield*/, this.salesTableDAO.findOne(uid)];
+                    case 9:
+                        oldItem = _a.sent();
+                        if (oldItem) {
+                            console.log(oldItem.salesId);
+                        }
+                        else {
+                            salesData.salesId = uid;
+                            salesIdExists = false;
+                        }
+                        return [3 /*break*/, 7];
                     case 10:
                         salesLines = data.salesLines;
                         delete salesData.salesLines;
@@ -286,9 +285,119 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
             });
         });
     };
+    TransferOrderFromAxaptaService.prototype.getSalesid = function (type, item) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, _a, hashString, date, prevYear, year, salesId, error_4;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _b.trys.push([0, 32, , 33]);
+                        data = void 0;
+                        _a = type;
+                        switch (_a) {
+                            case "SALESQUOTATION": return [3 /*break*/, 1];
+                            case "SALESORDER": return [3 /*break*/, 3];
+                            case "RESERVED": return [3 /*break*/, 5];
+                            case "DESIGNERSERVICE": return [3 /*break*/, 7];
+                            case "RETURNORDER": return [3 /*break*/, 9];
+                            case "DESIGNERSERVICERETURN": return [3 /*break*/, 11];
+                            case "INVENTORYMOVEMENT": return [3 /*break*/, 13];
+                            case "TRANSFERORDER": return [3 /*break*/, 15];
+                            case "ORDERSHIPMENT": return [3 /*break*/, 17];
+                            case "ORDERRECEIVE": return [3 /*break*/, 19];
+                            case "PURCHASEREQUEST": return [3 /*break*/, 21];
+                            case "PURCHASEORDER": return [3 /*break*/, 23];
+                            case "PURCHASERETURN": return [3 /*break*/, 25];
+                        }
+                        return [3 /*break*/, 27];
+                    case 1: return [4 /*yield*/, this.rawQuery.getNumberSequence("SALESQUOTATION", this.sessionInfo.inventlocationid)];
+                    case 2:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 3: return [4 /*yield*/, this.rawQuery.getNumberSequence("SALESORDER", this.sessionInfo.inventlocationid)];
+                    case 4:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 5: return [4 /*yield*/, this.rawQuery.getNumberSequence("SALESORDER", this.sessionInfo.inventlocationid)];
+                    case 6:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 7: return [4 /*yield*/, this.rawQuery.getNumberSequence("SALESORDER", this.sessionInfo.inventlocationid)];
+                    case 8:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 9: return [4 /*yield*/, this.rawQuery.getNumberSequence("RETURNORDER", this.sessionInfo.inventlocationid)];
+                    case 10:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 11: return [4 /*yield*/, this.rawQuery.getNumberSequence("RETURNORDER", this.sessionInfo.inventlocationid)];
+                    case 12:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 13: return [4 /*yield*/, this.rawQuery.getNumberSequence("INVENTORYMOVEMENT", this.sessionInfo.inventlocationid)];
+                    case 14:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 15: return [4 /*yield*/, this.rawQuery.getNumberSequence("TRANSFERORDER", this.sessionInfo.inventlocationid)];
+                    case 16:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 17: return [4 /*yield*/, this.rawQuery.getNumberSequence("ORDERSHIPMENT", this.sessionInfo.inventlocationid)];
+                    case 18:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 19: return [4 /*yield*/, this.rawQuery.getNumberSequence("ORDERRECEIVE", this.sessionInfo.inventlocationid)];
+                    case 20:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 21: return [4 /*yield*/, this.rawQuery.getNumberSequence("PURCHASEREQUEST", this.sessionInfo.inventlocationid)];
+                    case 22:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 23: return [4 /*yield*/, this.rawQuery.getNumberSequence("PURCHASEORDER", this.sessionInfo.inventlocationid)];
+                    case 24:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 25: return [4 /*yield*/, this.rawQuery.getNumberSequence("PURCHASERETURN", this.sessionInfo.inventlocationid)];
+                    case 26:
+                        data = _b.sent();
+                        return [3 /*break*/, 28];
+                    case 27: throw { message: "TRANSKIND_REQUIRED" };
+                    case 28:
+                        if (!(data && data.format)) return [3 /*break*/, 30];
+                        hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);
+                        date = new Date(data.lastmodifieddate).toLocaleString();
+                        console.log(date);
+                        console.log(data);
+                        prevYear = new Date(data.lastmodifieddate).getFullYear().toString().substr(2, 2);
+                        year = new Date(App_1.App.DateNow()).getFullYear().toString().substr(2, 2);
+                        data.nextrec = prevYear == year ? data.nextrec : "000001";
+                        if (data.nextrec == 1 || data.nextrec == "1") {
+                            data.nextrec = "000001";
+                        }
+                        salesId = data.format.replace(hashString, year) + "-" + data.nextrec;
+                        //console.log(salesId);
+                        item.numberSequenceGroup = data.numbersequence;
+                        return [4 /*yield*/, this.rawQuery.updateNumberSequence(data.numbersequence, data.nextrec)];
+                    case 29:
+                        _b.sent();
+                        return [2 /*return*/, salesId];
+                    case 30: throw { message: "CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE" };
+                    case 31: return [3 /*break*/, 33];
+                    case 32:
+                        error_4 = _b.sent();
+                        if (error_4 == {}) {
+                            error_4 = { message: "SERVER_SIDE_ERROR" };
+                        }
+                        throw error_4;
+                    case 33: return [2 /*return*/];
+                }
+            });
+        });
+    };
     TransferOrderFromAxaptaService.prototype.getTransferOrder = function (transferID) {
         return __awaiter(this, void 0, void 0, function () {
-            var token, url, data, error_4;
+            var token, url, data, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -308,10 +417,10 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         console.log();
                         return [2 /*return*/, data.data];
                     case 3:
-                        error_4 = _a.sent();
+                        error_5 = _a.sent();
                         // console.log(Object.keys(error));
                         // console.log(error.response.data.Message);
-                        throw { status: 0, message: error_4.response.data.Message };
+                        throw { status: 0, message: error_5.response.data.Message };
                     case 4: return [2 /*return*/];
                 }
             });
@@ -369,7 +478,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                                 salesline.itemid = lineArray[0];
                                 salesline.configId = lineArray[1];
                                 salesline.inventsizeid = lineArray[2];
-                                salesline.batch = { batchNo: lineArray[3], quantity: parseInt(lineArray[4]) };
+                                // salesline.batch = { batchNo: lineArray[3], quantity: parseInt(lineArray[4]) };
                                 salesline.salesQty = parseInt(lineArray[4]);
                                 salesline.lastModifiedDate = new Date(App_1.App.DateNow());
                                 salesline.createddatetime = new Date(App_1.App.DateNow());
@@ -377,6 +486,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                                 salesline.batchNo = lineArray[3];
                                 salesline.dataareaid = this.sessionInfo.dataareaid;
                                 salesline.custAccount = salestable.custAccount;
+                                salesline.numberSequenceGroupId = salestable.numberSequenceGroup;
                                 batches = {};
                                 batches.qty = salesline.salesQty;
                                 batches.itemid = salesline.itemid;
@@ -451,7 +561,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
     };
     TransferOrderFromAxaptaService.prototype.getToken = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var token, url, data, error_5;
+            var token, url, data, error_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -465,8 +575,8 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         token = data.headers.token;
                         return [2 /*return*/, token];
                     case 2:
-                        error_5 = _a.sent();
-                        throw { status: 0, message: error_5 };
+                        error_6 = _a.sent();
+                        throw { status: 0, message: error_6 };
                     case 3: return [2 /*return*/];
                 }
             });

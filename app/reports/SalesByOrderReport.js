@@ -83,12 +83,12 @@ var SalesByOrderReport = /** @class */ (function () {
                             // result.headers.wname = params.viewType;
                             result.headers.fromDate = params.fromDate;
                             result.headers.toDate = params.toDate;
-                            result.headers.salesman = params.salesmanid ? rows.length > 0 ? rows[0].salesman : "-" : "ALL";
+                            result.headers.salesman = params.salesmanid ? (rows.length > 0 ? rows[0].salesman : "-") : "ALL";
                             result.headers.printtime = moment().format("HH:mm:ss");
                             result.headers.printdate = moment().format("DD-MM-YY");
                         }
                         _loop_1 = function (item) {
-                            saleslist = result.data.find(function (ele) { return ele.salesgroup.salesman == item.salesman; });
+                            saleslist = result.data.find(function (ele) { return ele.salesgroup.salesmanId == item.salesmanId; });
                             item.deliverydate = App_1.App.convertUTCDateToLocalDate(new Date(item.deliverydate), parseInt(params.timeZoneOffSet)).toLocaleString();
                             if (saleslist) {
                                 this_1.updateAmount(saleslist, item);
@@ -171,7 +171,7 @@ var SalesByOrderReport = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         console.log("My params", params);
-                        sql = "\n      select\n        st.salesid as \"salesid\" ,\n        st.custaccount as \"custaccount\",\n        st.status as status,\n        als.en as \"statusEn\",\n        als.ar as \"statusAr\",\n        alt.en as \"transkindEn\",\n        alt.ar as \"transkindAr\",\n        st.transkind as transkind,\n        st.salesname as customername,\n        st.mobileno as custmobilenumber,\n        to_char(st.vatamount, 'FM999999999990.00') as vatamount,\n        to_char(st.netamount, 'FM999999999990.00') as \"netamount\",\n        to_char(st.disc, 'FM999,999999990.00') as disc,\n        to_char(st.amount , 'FM999999999990.00') as amount,\n        w.namealias as wnamealias,\n        w.name as wname,\n        d.description as salesman,\n        d.num as \"salesmanId\",\n        st.lastmodifieddate as \"deliverydate\"\n      from\n        salestable st\n      left join inventlocation w on\n        w.inventlocationid = st.inventlocationid\n      inner join dimensions d on\n        d.num = st.dimension6_\n      left join app_lang als on als.id = st.status\n      left join app_lang alt on alt.id = st.transkind  \n      where\n        1 = 1\n        and st.transkind not in ('SALESQUOTATION')\n        AND st.status in ('POSTED', 'PAID')\n        and st.lastmodifieddate between '" + params.fromDate + "' and ('" + params.toDate + "'::date + '2 day'::interval)\n        and st.inventlocationid = '" + params.inventlocationid + "'\n  ";
+                        sql = "\n      select\n        st.salesid as \"salesid\" ,\n        st.custaccount as \"custaccount\",\n        st.status as status,\n        als.en as \"statusEn\",\n        als.ar as \"statusAr\",\n        alt.en as \"transkindEn\",\n        alt.ar as \"transkindAr\",\n        st.transkind as transkind,\n        st.salesname as customername,\n        st.mobileno as custmobilenumber,\n        to_char(st.vatamount, 'FM999999999990.00') as vatamount,\n        to_char(st.netamount, 'FM999999999990.00') as \"netamount\",\n        to_char(st.disc, 'FM999,999999990.00') as disc,\n        to_char(st.amount , 'FM999999999990.00') as amount,\n        w.namealias as wnamealias,\n        w.name as wname,\n        d.description as salesman,\n        d.num as \"salesmanId\",\n        st.lastmodifieddate as \"deliverydate\"\n      from\n        salestable st\n      left join inventlocation w on\n        w.inventlocationid = st.inventlocationid\n      inner join dimensions d on\n        d.num = st.dimension6_\n      left join app_lang als on als.id = st.status\n      left join app_lang alt on alt.id = st.transkind  \n      where\n        1 = 1\n        and st.transkind not in ('SALESQUOTATION', 'ORDERSHIPEMT', 'TRANSFERORDER', 'ORDERRECEIVE', 'INVENTORYMOVEMENT')\n        AND st.status in ('POSTED', 'PAID')\n        and st.lastmodifieddate between '" + params.fromDate + "' and ('" + params.toDate + "'::date + '2 day'::interval)\n        and st.inventlocationid = '" + params.inventlocationid + "'\n  ";
                         if (params.salesmanid) {
                             sql = sql + (" and d.num = '" + params.salesmanid + "' ");
                         }

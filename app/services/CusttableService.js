@@ -42,7 +42,6 @@ var Props_1 = require("../../constants/Props");
 var typeorm_1 = require("typeorm");
 var RawQuery_1 = require("../common/RawQuery");
 var UsergroupconfigDAO_1 = require("../repos/UsergroupconfigDAO");
-var CacheService_1 = require("../common/CacheService");
 var typeorm_2 = require("typeorm");
 var CusttableService = /** @class */ (function () {
     function CusttableService() {
@@ -50,7 +49,6 @@ var CusttableService = /** @class */ (function () {
         this.custtableDAO = new CusttableDAO_1.CusttableDAO();
         this.custTable = new Custtable_1.Custtable();
         this.rawQuery = new RawQuery_1.RawQuery();
-        this.cacheService = new CacheService_1.CacheService();
         this.usergroupconfigDAO = new UsergroupconfigDAO_1.UsergroupconfigDAO();
     }
     CusttableService.prototype.entity = function (id) {
@@ -240,7 +238,7 @@ var CusttableService = /** @class */ (function () {
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        _a.trys.push([3, 8, 10, 12]);
+                        _a.trys.push([3, 9, 11, 13]);
                         delete reqData.Custgroup;
                         console.log(reqData.Custgroup);
                         return [4 /*yield*/, this.validate(reqData)];
@@ -266,27 +264,28 @@ var CusttableService = /** @class */ (function () {
                         else {
                             throw { message: "INVALID_DATA" };
                         }
-                        return [3 /*break*/, 12];
-                    case 8:
+                        _a.label = 8;
+                    case 8: return [3 /*break*/, 13];
+                    case 9:
                         error_5 = _a.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 9:
+                    case 10:
                         _a.sent();
                         throw error_5;
-                    case 10: return [4 /*yield*/, queryRunner.release()];
-                    case 11:
+                    case 11: return [4 /*yield*/, queryRunner.release()];
+                    case 12:
                         _a.sent();
                         return [7 /*endfinally*/];
-                    case 12: return [2 /*return*/];
+                    case 13: return [2 /*return*/];
                 }
             });
         });
     };
     CusttableService.prototype.validate = function (item) {
         return __awaiter(this, void 0, void 0, function () {
-            var previousData, mdata, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var previousData, mdata;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
                         console.log(item.accountnum);
                         previousData = null;
@@ -297,43 +296,36 @@ var CusttableService = /** @class */ (function () {
                         console.log(item.accountnum);
                         return [4 /*yield*/, this.custtableDAO.findOne({ accountnum: item.accountnum })];
                     case 2:
-                        previousData = _b.sent();
+                        previousData = _a.sent();
                         console.log(previousData);
-                        _b.label = 3;
+                        _a.label = 3;
                     case 3:
-                        item.lastmodifiedby = this.sessionInfo.userName;
                         mdata = [];
                         if (!item.phone) return [3 /*break*/, 5];
                         return [4 /*yield*/, this.custtableDAO.findAll({ phone: item.phone })];
                     case 4:
-                        mdata = _b.sent();
-                        return [3 /*break*/, 6];
+                        mdata = _a.sent();
+                        _a.label = 5;
                     case 5:
-                        mdata = [];
-                        _b.label = 6;
-                    case 6:
-                        if (!!item.accountnum) return [3 /*break*/, 10];
-                        if (!(mdata.length > 0)) return [3 /*break*/, 7];
-                        return [2 /*return*/, "phone"];
-                    case 7:
-                        _a = item;
-                        return [4 /*yield*/, this.getAccountNum()];
-                    case 8:
-                        _a.accountnum = _b.sent();
-                        item.inventlocation = this.sessionInfo.inventlocationid;
-                        item.createdDateTime = new Date(App_1.App.DateNow());
-                        item.createdby = this.sessionInfo.userName;
-                        _b.label = 9;
-                    case 9: return [3 /*break*/, 11];
-                    case 10:
-                        // console.log(item.accountnum);
-                        if (item.phone != previousData.phone) {
+                        // console.log(mdata);
+                        if (!item.accountnum) {
                             if (mdata.length > 0) {
                                 return [2 /*return*/, "phone"];
                             }
+                            else {
+                                if (previousData) {
+                                    item.lastmodifiedby = this.sessionInfo.userName;
+                                    item.lastmodifieddate = new Date(App_1.App.DateNow());
+                                }
+                                else {
+                                    item.accountnum = item.phone.toString();
+                                    item.inventlocation = this.sessionInfo.inventlocationid;
+                                    item.createdDateTime = new Date(App_1.App.DateNow());
+                                    item.createdby = this.sessionInfo.userName;
+                                }
+                                // item.accountnum = await this.getAccountNum();
+                            }
                         }
-                        _b.label = 11;
-                    case 11:
                         item.lastmodifieddate = new Date(App_1.App.DateNow());
                         item.lastmodifiedby = this.sessionInfo.userName;
                         return [2 /*return*/, true];

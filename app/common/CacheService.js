@@ -48,7 +48,7 @@ var CacheService = /** @class */ (function () {
         this.basesDAO = new BasesDAO_1.BasesDAO();
         // this.init();
     }
-    CacheService.Cache = function (key, value) {
+    CacheService.prototype.Cache = function (key, value) {
         return __awaiter(this, void 0, void 0, function () {
             var data;
             return __generator(this, function (_a) {
@@ -75,6 +75,9 @@ var CacheService = /** @class */ (function () {
                         return [4 /*yield*/, this.app_lang("Reload")];
                     case 1:
                         _a.sent();
+                        return [4 /*yield*/, this.numbersequences("Reload")];
+                    case 2:
+                        _a.sent();
                         //    this.file_data(null);
                         return [2 /*return*/, Promise.resolve({ message: "All cache refresh." })];
                 }
@@ -91,12 +94,12 @@ var CacheService = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 5, , 6]);
-                        return [4 /*yield*/, CacheService.Cache("app_lang")];
+                        return [4 /*yield*/, this.Cache("app_lang")];
                     case 2:
                         cacheData = _a.sent();
                         length_1 = cacheData ? cacheData.length : -1;
                         if (param == "Reload") {
-                            CacheService.Cache("app_lang", []);
+                            this.Cache("app_lang", []);
                             length_1 = -1;
                         }
                         if (!(length_1 == -1)) return [3 /*break*/, 4];
@@ -109,9 +112,9 @@ var CacheService = /** @class */ (function () {
                         data.forEach(function (element) {
                             returnData_1[element.id] = { en: element.en, ar: element.ar };
                         });
-                        CacheService.Cache("app_lang", returnData_1);
+                        this.Cache("app_lang", returnData_1);
                         _a.label = 4;
-                    case 4: return [2 /*return*/, CacheService.Cache("app_lang")];
+                    case 4: return [2 /*return*/, this.Cache("app_lang")];
                     case 5:
                         error_1 = _a.sent();
                         throw error_1;
@@ -120,34 +123,35 @@ var CacheService = /** @class */ (function () {
             });
         });
     };
-    CacheService.prototype.quotationProducts = function (param) {
+    CacheService.prototype.numbersequences = function (param) {
         return __awaiter(this, void 0, void 0, function () {
             var cacheData, length_2, query, data, returnData_2, obj, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 4, , 5]);
-                        return [4 /*yield*/, CacheService.Cache("quotationProducts")];
+                        return [4 /*yield*/, this.Cache("numbersequences")];
                     case 1:
                         cacheData = _a.sent();
                         length_2 = cacheData ? cacheData.length : -1;
                         if (param == "Reload") {
-                            CacheService.Cache("quotationProducts", []);
+                            this.Cache("numbersequences", []);
                             length_2 = -1;
                         }
                         if (!(length_2 == -1)) return [3 /*break*/, 3];
-                        query = "select id, en, ar from app_lang order by id asc";
+                        query = "select nextrec, transkind, inventlocationid, numbersequence from numbersequencetable";
                         return [4 /*yield*/, this.db.query(query)];
                     case 2:
                         data = _a.sent();
                         returnData_2 = {};
                         obj = void 0;
                         data.forEach(function (element) {
-                            returnData_2[element.id] = { en: element.en, ar: element.ar };
+                            returnData_2[element.numbersequence] = element;
                         });
-                        CacheService.Cache("app_lang", returnData_2);
+                        // console.log(returnData)
+                        this.Cache("numbersequences", returnData_2);
                         _a.label = 3;
-                    case 3: return [2 /*return*/, CacheService.Cache("app_lang")];
+                    case 3: return [2 /*return*/, this.Cache("numbersequences")];
                     case 4:
                         error_2 = _a.sent();
                         throw error_2;

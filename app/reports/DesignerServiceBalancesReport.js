@@ -115,7 +115,7 @@ var DesignerServiceBalancesReport = /** @class */ (function () {
                             }
                         }
                         if (params.custaccount) {
-                            query += "and st.custaccount= '" + params.custaccount + "'";
+                            query += "and d.customerid = '" + params.custaccount + "'";
                         }
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];

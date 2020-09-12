@@ -90,7 +90,8 @@ var SalesByCustomerReport = /** @class */ (function () {
                             // result.headers.printdate = moment().format("DD-MM-YY");
                         }
                         _loop_1 = function (item) {
-                            saleslist = result.data.find(function (ele) { return ele.salesgroup.salesman == item.salesman; });
+                            saleslist = result.data.find(function (ele) { return ele.salesgroup.salesmanId == item.salesmanId; });
+                            console.log(saleslist);
                             if (saleslist) {
                                 this_1.updateAmount(saleslist, item);
                                 saleslist.salesdata.push(item);
@@ -98,6 +99,7 @@ var SalesByCustomerReport = /** @class */ (function () {
                             else {
                                 saleslist = { salesgroup: {}, salesdata: [] };
                                 saleslist.salesgroup.salesman = item.salesman;
+                                saleslist.salesgroup.salesmanId = item.salesmanId;
                                 saleslist.salesgroup.amount = 0;
                                 saleslist.salesgroup.netamount = 0;
                                 saleslist.salesgroup.vatamount = 0;
@@ -136,10 +138,7 @@ var SalesByCustomerReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 // console.log(result.salesLine[0].product.nameEnglish);
                 renderData = result;
-                renderData.printDate = new Date(params.printDate)
-                    .toISOString()
-                    .replace(/T/, " ")
-                    .replace(/\..+/, "");
+                renderData.printDate = new Date(params.printDate).toISOString().replace(/T/, " ").replace(/\..+/, "");
                 console.log(params.lang);
                 file = params.lang == "en" ? "sales-by-customer-en" : "sales-by-customer-ar";
                 try {
@@ -158,13 +157,13 @@ var SalesByCustomerReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        sql = "\n      select\n        st.salesname as customername,\n        als.en as \"statusEn\",\n        als.ar as \"statusAr\",\n        alt.en as \"transkindEn\",\n        alt.ar as \"transkindAr\",\n        to_char(sum(st.vatamount), 'FM999999999990.00') as vatamount,\n        to_char(sum(st.netamount), 'FM999999999990.00') as \"netamount\",\n        to_char(sum(st.disc), 'FM999999999990.00') as disc,\n        to_char(sum(st.amount) , 'FM999999999990.00') as amount,\n        w.namealias as wnamealias,\n        w.name as wname,\n        d.description as salesman\n      from\n        salestable st\n      left join inventlocation w on\n        w.inventlocationid = st.inventlocationid\n      inner join dimensions d on\n        d.num = st.dimension6_\n      left join app_lang als on als.id = st.status\n      left join app_lang alt on alt.id = st.transkind\n      where\n        1 = 1\n        and st.status not in ('RESERVED')\n        and st.lastmodifieddate between '" + params.fromDate + "' and ('" + params.toDate + "'::date + '2 day'::interval)\n        and st.inventlocationid = '" + params.inventlocationid + "'\n  ";
+                        sql = "\n      select\n        st.salesname as customername,\n        als.en as \"statusEn\",\n        als.ar as \"statusAr\",\n        alt.en as \"transkindEn\",\n        alt.ar as \"transkindAr\",\n        to_char(sum(st.vatamount), 'FM999999999990.00') as vatamount,\n        to_char(sum(st.netamount), 'FM999999999990.00') as \"netamount\",\n        to_char(sum(st.disc), 'FM999999999990.00') as disc,\n        to_char(sum(st.amount) , 'FM999999999990.00') as amount,\n        w.namealias as wnamealias,\n        w.name as wname,\n        d.description as salesman,\n        d.num as \"salesmanId\"\n      from\n        salestable st\n      left join inventlocation w on\n        w.inventlocationid = st.inventlocationid\n      inner join dimensions d on\n        d.num = st.dimension6_\n      left join app_lang als on als.id = st.status\n      left join app_lang alt on alt.id = st.transkind\n      where\n        1 = 1\n        and st.transkind not in ('SALESQUOTATION', 'ORDERSHIPEMT', 'TRANSFERORDER', 'ORDERRECEIVE', 'INVENTORYMOVEMENT')\n        AND st.status in ('POSTED', 'PAID')\n        and st.lastmodifieddate between '" + params.fromDate + "' and ('" + params.toDate + "'::date + '2 day'::interval)\n        and st.inventlocationid = '" + params.inventlocationid + "'\n  ";
                         if (params.salesmanid) {
                             sql = sql + (" and d.num = '" + params.salesmanid + "' ");
                         }
                         sql =
                             sql +
-                                " \n    group by st.salesname, w.namealias, w.name, d.description, als.en, als.ar, alt.en, alt.ar \n    order by customername";
+                                " \n    group by st.salesname, w.namealias, w.name, d.description, als.en, als.ar, alt.en, alt.ar ,  d.num\n    order by customername";
                         return [4 /*yield*/, this.db.query(sql)];
                     case 1:
                         rows = _a.sent();

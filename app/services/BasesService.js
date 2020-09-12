@@ -37,12 +37,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var BasesDAO_1 = require("../repos/BasesDAO");
 var typeorm_1 = require("typeorm");
-var CacheService_1 = require("../common/CacheService");
 var RawQuery_1 = require("../common/RawQuery");
 var BasesService = /** @class */ (function () {
     function BasesService() {
         this.basesDAO = new BasesDAO_1.BasesDAO();
-        this.cacheService = new CacheService_1.CacheService();
         this.db = typeorm_1.getManager();
         this.rawQuery = new RawQuery_1.RawQuery();
     }

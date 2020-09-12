@@ -279,9 +279,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             vatPrice: parseFloat(returnOrderData.vatamount),
                         };
                         returnData.returnOrderData = returnOrderData;
-                        returnData.designServiceRedeemAmount = returnOrderData.designServiceRedeemAmount;
-                        returnData.cashAmount = returnOrderData.cashAmount;
-                        returnData.redeemAmount = returnOrderData.redeemAmount;
+                        returnData.designServiceRedeemAmount = parseFloat(returnOrderData.designServiceRedeemAmount);
+                        returnData.cashAmount = parseFloat(returnOrderData.cashAmount);
+                        returnData.redeemAmount = parseFloat(returnOrderData.redeemAmount);
                         if (returnOrderData.designServiceRedeemAmount > 0) {
                             sendForApproval = true;
                         }
@@ -424,7 +424,8 @@ var ReturnOrderAmountService = /** @class */ (function () {
                     case 1:
                         vatData = _b.sent();
                         reqData.vat = vatData ? vatData.vat : 15;
-                        reqData.vat = parseFloat(reqData.sumTax);
+                        console.log(reqData.vat);
+                        reqData.sumTax = reqData.vat;
                         return [4 /*yield*/, this.sessionInfo.sabiccustomers];
                     case 2:
                         sabicCustomers = _b.sent();
@@ -1404,6 +1405,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             returnData.disc += v.lineTotalDisc;
                         });
                         returnData.netAmount = returnData.amount - returnData.disc + returnData.vatamount;
+                        console.log(returnData.designServiceRedeemAmount);
                         if (prevReturnOrderEquals) {
                             //   returnData.amount -= prevReturnOrderEquals.amount ? parseFloat(prevReturnOrderEquals.amount) : 0;
                             //   returnData.netAmount -= prevReturnOrderEquals.netAmount ? parseFloat(prevReturnOrderEquals.netAmount) : 0;
@@ -1411,15 +1413,15 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             //   returnData.vatamount -= prevReturnOrderEquals.vatamount ? parseFloat(prevReturnOrderEquals.vatamount) : 0;
                             returnData.cashAmount += parseFloat(returnData.cardAmount);
                             returnData.cashAmount -= prevReturnOrderEquals.cashAmount ? parseFloat(prevReturnOrderEquals.cashAmount) : 0;
-                            returnData.designerServiceAmount -= prevReturnOrderEquals.designerServiceAmount
-                                ? parseFloat(prevReturnOrderEquals.designerServiceAmount)
+                            returnData.designServiceRedeemAmount -= prevReturnOrderEquals.designServiceRedeemAmount
+                                ? parseFloat(prevReturnOrderEquals.designServiceRedeemAmount)
                                 : 0;
                             returnData.cardAmount = 0;
                             returnData.redeemAmount -= prevReturnOrderEquals.redeemAmount
                                 ? parseFloat(prevReturnOrderEquals.redeemAmount)
                                 : 0;
                         }
-                        designServiceRedeemAmount = returnData.designerServiceAmount;
+                        designServiceRedeemAmount = returnData.designServiceRedeemAmount;
                         // returnData.amount -= parseFloat(returnOrderData.amount);
                         // returnData.netAmount -= parseFloat(returnOrderData.netAmount);
                         // returnData.disc -= parseFloat(returnOrderData.disc);
@@ -1434,18 +1436,18 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         }
                         if (returnNetAmount > 0) {
                             if (designServiceRedeemAmount >= returnNetAmount) {
-                                returnData.designerServiceAmount -= returnNetAmount;
+                                returnData.designServiceRedeemAmount = returnNetAmount;
                                 returnNetAmount = 0;
                             }
                             else {
-                                returnNetAmount -= returnData.designerServiceAmount;
+                                returnNetAmount -= returnData.designServiceRedeemAmount;
                             }
                         }
                         if (returnNetAmount > 0) {
                             redeemAmount = returnNetAmount;
                         }
                         returnData.cashAmount = parseFloat(returnData.cashAmount);
-                        returnData.designerServiceAmount = parseFloat(returnData.designerServiceAmount);
+                        returnData.designServiceRedeemAmount = parseFloat(returnData.designServiceRedeemAmount);
                         returnData.cardAmount = 0;
                         returnData.redeemAmount = parseFloat(returnData.redeemAmount);
                         returnData.salesLine = salesLine;
