@@ -104,9 +104,16 @@ var InventoryOnHandReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select\n    i.itemid as itemid,\n    bs.namealias as nameEn,\n    bs.itemname as nameAr,\n    sum(i.qty_in-i.qty_out-i.qty_reserved) as \"physicalAvailable\",\n    i.configid as configid,\n    i.inventsizeid as inventsizeid,\n    " + (params.batchCheck
+                        query = '';
+                        query = "\n    select \n    a.itemid,\n    a.configid,\n    a.inventsizeid,\n    " + (params.batchCheck
+                            ? "a.batchno as batchno,\n           a.batchexpdate,"
+                            : "") + "\n    a.availabilty as \"physicalAvailable\",\n    a.reservedquantity as \"reservedQuantity\",\n    (a.availabilty- a.reservedquantity) as \"totalAvailable\",\n    a.nameen as nameEn,\n    a.namear as nameAr,\n    a.sizenameen as \"sizeNameEn\",\n    a.sizenamear as \"sizeNameAr\",\n    a.warehouseNameEn,\n    a.WareHouseNameAr \n    from\n    (select \n    i.itemid,\n    bs.namealias as nameen,\n    bs.itemname as namear,\n    i.configid as configid,\n    i.inventsizeid as inventsizeid,\n    " + (params.batchCheck
                             ? "i.batchno as batchno,\n    to_char(b.expdate, 'yyyy-MM-dd') as batchexpdate,"
-                            : "") + "\n    sum(i.qty_reserved) as \"reservedQuantity\",\n    sum(i.qty_in-i.qty_out) as \"totalAvailable\",\n    w.name as WareHouseNameAr, \n    w.namealias as WareHouseNameEn\n    from inventory_onhand as i\n    left join inventbatch b on i.batchno = b.inventbatchid and i.itemid = b.itemid\n    inner join inventtable bs on i.itemid = bs.itemid\n    inner join inventsize sz on sz.inventsizeid = i.inventsizeid and sz.itemid = i.itemid\n    inner join configtable c on c.itemid = i.itemid and c.configid = i.configid\n    inner join inventlocation w on w.inventlocationid=i.inventlocationid\n";
+                            : "") + "\n    sz.description as \"sizenameen\",\n    sz.\"name\" as \"sizenamear\",\n    sum(qty) as availabilty,\n    COALESCE((\n    select \n    sum(it.qty) \n    from inventtrans it \n    where it.itemid = i.itemid \n    and it.configid = i.configid and \n    i.inventsizeid = it.inventsizeid   " + (params.batchCheck
+                            ? "and \n        i.batchno = it.batchno "
+                            : "") + " and \n    transactionclosed = transactionclosed and \n    reserve_status = 'RESERVED'\n    group by i.itemid, i.configid, i.inventsizeid, " + (params.batchCheck
+                            ? "\n        i.batchno, "
+                            : "") + " i.inventlocationid\n    ), 0) as \"reservedquantity\",\n    w.name as warehousenamear, \n    w.namealias as warehousenameen\n    from inventtrans i\n    left join inventbatch b on i.batchno = b.inventbatchid and i.itemid = b.itemid\n    inner join inventtable bs on i.itemid = bs.itemid\n    inner join inventsize sz on sz.inventsizeid = i.inventsizeid and sz.itemid = i.itemid\n    inner join configtable c on c.itemid = i.itemid and c.configid = i.configid \n    inner join inventlocation w on w.inventlocationid=i.inventlocationid\n    ";
                         if (!(params.key == "ALL")) return [3 /*break*/, 2];
                         warehouseQuery = "select regionalwarehouse from usergroupconfig where id= '" + this.sessionInfo.usergroupconfigid + "' limit 1";
                         return [4 /*yield*/, this.db.query(warehouseQuery)];
@@ -136,8 +143,7 @@ var InventoryOnHandReport = /** @class */ (function () {
                         if (params.batchno && params.batchCheck) {
                             query = query + (" and LOWER(i.batchno)=LOWER('" + params.batchno + "') ");
                         }
-                        query += "  GROUP BY bs.itemname, bs.namealias, w.name, w.namealias,\ni.itemid, i.configid, i.inventsizeid " + (params.batchCheck ? ", i.batchno, b.expdate" : "") + " ";
-                        query += " " + (params.withZero ? "having sum(i.qty_in-i.qty_out) >= 0" : " having sum(i.qty_in-i.qty_out) > 0 ") + " order by i.itemid ";
+                        query += " and transactionclosed  = true group by i.itemid, i.configid, i.inventsizeid, i.inventlocationid,\n      bs.namealias, bs.itemname, w.name, w.namealias,  sz.description, sz.\"name\" " + (params.batchCheck ? ", i.batchno, b.expdate" : "") + " ) as a where availabilty  > 0 ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 4: return [2 /*return*/, _a.sent()];
                 }
