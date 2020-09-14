@@ -93,11 +93,11 @@ var VisitCustomerService = /** @class */ (function () {
     };
     VisitCustomerService.prototype.searchVisitors = function (item) {
         return __awaiter(this, void 0, void 0, function () {
-            var data_1, citycodes_1, uniqueCodes, cities_1, error_3;
+            var data_1, citycodes_1, cities_1, uniqueCodes, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
+                        _a.trys.push([0, 5, , 6]);
                         return [4 /*yield*/, this.salesTableDAO.searchVisitors(item)];
                     case 1:
                         data_1 = _a.sent();
@@ -108,10 +108,16 @@ var VisitCustomerService = /** @class */ (function () {
                                 citycodes_1.push(item.citycode);
                             }
                         });
+                        if (!(citycodes_1.length > 0)) return [3 /*break*/, 3];
                         uniqueCodes = new Set(citycodes_1);
                         return [4 /*yield*/, this.salesTableDAO.searchCities(Array.from(uniqueCodes))];
                     case 2:
                         cities_1 = _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        cities_1 = [];
+                        _a.label = 4;
+                    case 4:
                         data_1.forEach(function (item, index) {
                             var city = cities_1.find(function (cityObj) {
                                 return cityObj.cityname == item.citycode;
@@ -121,10 +127,10 @@ var VisitCustomerService = /** @class */ (function () {
                             }
                         });
                         return [2 /*return*/, data_1];
-                    case 3:
+                    case 5:
                         error_3 = _a.sent();
                         throw error_3;
-                    case 4: return [2 /*return*/];
+                    case 6: return [2 /*return*/];
                 }
             });
         });
