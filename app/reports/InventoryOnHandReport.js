@@ -111,7 +111,7 @@ var InventoryOnHandReport = /** @class */ (function () {
                             ? "i.batchno as batchno,\n    to_char(b.expdate, 'yyyy-MM-dd') as batchexpdate,"
                             : "") + "\n    sz.description as \"sizenameen\",\n    sz.\"name\" as \"sizenamear\",\n    sum(qty) as availabilty,\n    COALESCE((\n    select \n    sum(it.qty) \n    from inventtrans it \n    where it.itemid = i.itemid \n    and it.configid = i.configid and \n    i.inventsizeid = it.inventsizeid   " + (params.batchCheck
                             ? "and \n        i.batchno = it.batchno "
-                            : "") + " and \n    transactionclosed = transactionclosed and \n    reserve_status = 'RESERVED'\n    group by i.itemid, i.configid, i.inventsizeid, " + (params.batchCheck
+                            : "") + " and \n    it.transactionclosed = true and \n    it.inventlocationid = i.inventlocationid and\n    reserve_status = 'RESERVED' \n    group by i.itemid, i.configid, i.inventsizeid, " + (params.batchCheck
                             ? "\n        i.batchno, "
                             : "") + " i.inventlocationid\n    ), 0) as \"reservedquantity\",\n    w.name as warehousenamear, \n    w.namealias as warehousenameen\n    from inventtrans i\n    left join inventbatch b on i.batchno = b.inventbatchid and i.itemid = b.itemid\n    inner join inventtable bs on i.itemid = bs.itemid\n    left join inventsize sz on lower(sz.inventsizeid) = lower(i.inventsizeid) and sz.itemid = i.itemid\n    inner join configtable c on c.itemid = i.itemid and lower(c.configid) = lower(i.configid)\n    inner join inventlocation w on w.inventlocationid=i.inventlocationid\n    ";
                         if (!(params.key == "ALL")) return [3 /*break*/, 2];

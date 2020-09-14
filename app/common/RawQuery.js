@@ -478,7 +478,7 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select configid from \n                  (select c.configid from configtable c\n                  inner join inventory_onhand ioh on ioh.itemid = c.itemid and c.configid = ioh.configid\n                  where ioh.inventlocationid='" + param.inventlocationid + "' and ioh.itemid = '" + param.itemid + "' GROUP BY\n                  c.configid \n                  having SUM(ioh.qty_in-ioh.qty_out-ioh.qty_reserved)>0)  as i \n               ";
+                        query = "select configid from \n                  (select c.configid from configtable c\n                  inner join inventtrans ioh on ioh.itemid = c.itemid and lower(c.configid) = lower(ioh.configid)\n                  where ioh.inventlocationid='" + param.inventlocationid + "' and ioh.itemid = '" + param.itemid + "' and transactionclosed = true  GROUP BY\n                  c.configid \n                  having SUM(ioh.qty)>0)  as i \n               ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
@@ -516,7 +516,7 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = " select distinct io.inventsizeid from inventory_onhand io\n                  where io.inventlocationid='" + param.inventlocationid + "' and io.itemid = '" + param.itemid + "' and io.configid = '" + param.configid + "'\n                  group by  io.inventsizeid having SUM(io.qty_in-io.qty_out-io.qty_reserved)>0 \n               ";
+                        query = " select distinct io.inventsizeid from inventtrans io\n                  where io.inventlocationid='" + param.inventlocationid + "' and io.itemid = '" + param.itemid + "' and lower(io.configid) = lower('" + param.configid + "')\n                  and transactionclosed = true\n                  group by  io.inventsizeid having SUM(qty)>0 \n               ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
