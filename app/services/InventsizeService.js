@@ -215,19 +215,19 @@ var InventsizeService = /** @class */ (function () {
                         };
                         for (_i = 0, _a = reqData.sizes; _i < _a.length; _i++) {
                             size = _a[_i];
-                            queryData.inventsizeids.push(size.code);
+                            queryData.inventsizeids.push(size.code.toLowerCase());
                         }
                         queryData.inventsizeids = queryData.inventsizeids.map(function (d) { return "'" + d + "'"; }).join(",");
                         return [4 /*yield*/, this.rawQuery.allSizePrices(queryData)];
                     case 3:
                         prices = _d.sent();
                         _loop_1 = function (size) {
-                            var amount = prices.filter(function (v) { return v.inventsizeid == size.code && v.accountrelation == queryData.custaccount; });
+                            var amount = prices.filter(function (v) { return v.inventsizeid.toLowerCase() == size.code.toLowerCase() && v.accountrelation == queryData.custaccount; });
                             if (amount.length <= 0) {
-                                amount = prices.filter(function (v) { return v.inventsizeid == size.code && v.accountrelation == queryData.pricegroup; });
+                                amount = prices.filter(function (v) { return v.inventsizeid.toLowerCase() == size.code.toLowerCase() && v.accountrelation.toLowerCase() == queryData.pricegroup.toLowerCase(); });
                             }
                             if (amount.length <= 0) {
-                                amount = prices.filter(function (v) { return v.inventsizeid == size.code && v.accountrelation == queryData.spGroup; });
+                                amount = prices.filter(function (v) { return v.inventsizeid.toLowerCase() == size.code.toLowerCase() && v.accountrelation == queryData.spGroup; });
                             }
                             if (amount.length > 0) {
                                 size.price = parseFloat(amount[0].price);

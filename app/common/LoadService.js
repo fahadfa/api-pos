@@ -1346,7 +1346,7 @@ var LoadService = /** @class */ (function () {
     };
     LoadService.prototype.checkfordiscounts = function (param) {
         return __awaiter(this, void 0, void 0, function () {
-            var customer, defaultcustomerid, promotionalDiscountQuery, buyOneGetOneDiscountQuery, data, freebieItems, freebieItemsArray_1;
+            var customer, promotionalDiscountQuery, buyOneGetOneDiscountQuery, data, freebieItems, freebieItemsArray_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -1354,20 +1354,19 @@ var LoadService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.getCustomer(param.custaccount)];
                     case 1:
                         customer = _a.sent();
-                        return [4 /*yield*/, this.rawQuery.getCustomer(this.sessionInfo.defaultcustomerid)];
-                    case 2:
-                        defaultcustomerid = _a.sent();
-                        param.custtype = customer.walkincustomer ? defaultcustomerid.custtype : param.custtype;
+                        // let defaultcustomerid: any = await this.rawQuery.getCustomer(this.sessionInfo.defaultcustomerid);
+                        param.custtype = customer.custtype;
+                        console.log(param.custtype);
                         promotionalDiscountQuery = "select\n                                                    dataareaid, \n                                                    inventlocationid, \n                                                    itemid,\n                                                    inventsizeid,\n                                                    configid,\n                                                    multiple_qty as \"multipleQty\", \n                                                    free_qty as \"freeQty\", \n                                                    price_disc_item_code as \"priceDiscItemCode\", \n                                                    price_disc_account_relation as \"priceDiscAccountRelation\"\n                                                    from sales_promotion_items where \n                                                    inventlocationid = '" + this.sessionInfo.inventlocationid + "'\n                                                    and (price_disc_account_relation = '" + param.custaccount + "' \n                                                    or price_disc_account_relation='" + param.custtype + "' or price_disc_item_code=2)\n                                                    and itemid = '" + param.itemid + "' and deleted=false";
                         buyOneGetOneDiscountQuery = "select\n                                                    dataareaid, \n                                                    inventlocationid, \n                                                    itemid,\n                                                    inventsizeid,\n                                                    configid,\n                                                    multiple_qty as \"multipleQty\", \n                                                    free_qty as \"freeQty\", \n                                                    price_disc_item_code as \"priceDiscItemCode\", \n                                                    price_disc_account_relation as \"priceDiscAccountRelation\"\n                                                    from sales_promotion_items_equal where \n                                                    inventlocationid = '" + this.sessionInfo.inventlocationid + "'\n                                                    and (price_disc_account_relation = '" + param.custaccount + "' \n                                                    or price_disc_account_relation='" + param.custtype + "' or price_disc_item_code=2)\n                                                    and itemid = '" + param.itemid + "' and deleted=false";
                         return [4 /*yield*/, this.db.query(buyOneGetOneDiscountQuery)];
-                    case 3:
+                    case 2:
                         data = _a.sent();
-                        if (!(data.length > 0)) return [3 /*break*/, 5];
+                        if (!(data.length > 0)) return [3 /*break*/, 4];
                         data = data[0];
                         data.discountType = "BUY_ONE_GET_ONE";
                         return [4 /*yield*/, this.db.query("select itemid from inventtable where itemgroupid in (select itemgroupid from inventtable where itemid='" + param.itemid + "')")];
-                    case 4:
+                    case 3:
                         freebieItems = _a.sent();
                         freebieItemsArray_1 = [];
                         freebieItems.map(function (v) {
@@ -1375,8 +1374,8 @@ var LoadService = /** @class */ (function () {
                         });
                         data.freebieItems = freebieItemsArray_1;
                         return [2 /*return*/, data];
-                    case 5: return [4 /*yield*/, this.db.query(promotionalDiscountQuery)];
-                    case 6:
+                    case 4: return [4 /*yield*/, this.db.query(promotionalDiscountQuery)];
+                    case 5:
                         data = _a.sent();
                         if (data.length > 0) {
                             data = data[0];
@@ -1384,8 +1383,8 @@ var LoadService = /** @class */ (function () {
                             data.freebieItems = [param.itemid];
                             return [2 /*return*/, data];
                         }
-                        _a.label = 7;
-                    case 7: return [2 /*return*/, {}];
+                        _a.label = 6;
+                    case 6: return [2 /*return*/, {}];
                 }
             });
         });
