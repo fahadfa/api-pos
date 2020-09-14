@@ -3223,7 +3223,7 @@ var SalesTableService = /** @class */ (function () {
                             batch = inventory_2[_a];
                             if (batch.quantity > 0) {
                                 batch.itemid = item.itemid;
-                                batch.transrefid = reqData.interCompanyOriginalSalesId ? reqData.interCompanyOriginalSalesId : reqData.salesId;
+                                batch.transrefid = reqData.salesId;
                                 batch.invoiceid = item.salesId;
                                 batch.dataareaid = this.sessionInfo.dataareaid;
                                 batch.custvendac = reqData.custAccount;
