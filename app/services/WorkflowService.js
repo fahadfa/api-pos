@@ -133,14 +133,14 @@ var WorkflowService = /** @class */ (function () {
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        _a.trys.push([3, 33, 35, 37]);
+                        _a.trys.push([3, 29, 31, 33]);
                         status_1 = item.status;
                         promistList = [];
                         return [4 /*yield*/, this.rawQuery.workflowconditions(this.sessionInfo.usergroupconfigid)];
                     case 4:
                         condition = _a.sent();
                         usergroupid = this.sessionInfo.groupid;
-                        if (!(item.id || item.orderId)) return [3 /*break*/, 31];
+                        if (!(item.id || item.orderId)) return [3 /*break*/, 27];
                         if (!item.id) return [3 /*break*/, 6];
                         return [4 /*yield*/, this.workflowDAO.entity(item.id)];
                     case 5:
@@ -158,7 +158,7 @@ var WorkflowService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.getRmAndRa(usergroupid)];
                     case 8:
                         RM_AND_RA = _a.sent();
-                        if (!(type == "sendforapproval")) return [3 /*break*/, 26];
+                        if (!(type == "sendforapproval")) return [3 /*break*/, 22];
                         return [4 /*yield*/, this.allocateData(item, salesData)];
                     case 9:
                         _a.sent();
@@ -181,14 +181,14 @@ var WorkflowService = /** @class */ (function () {
                                 throw { message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
                             }
                         }
-                        return [3 /*break*/, 25];
+                        return [3 /*break*/, 21];
                     case 10:
-                        if (!(salesData.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 24];
+                        if (!(salesData.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 20];
                         return [4 /*yield*/, this.stockOnHandCheck(salesData)];
                     case 11:
                         canSendForApproval = _a.sent();
                         console.log(canSendForApproval);
-                        if (!canSendForApproval) return [3 /*break*/, 22];
+                        if (!canSendForApproval) return [3 /*break*/, 18];
                         if (![5, 8, 9].includes(salesData.movementType.id)) return [3 /*break*/, 12];
                         item.statusId = Props_1.Props.WORKFLOW_STATUSID.PENDINGRMAPPROVAL[0];
                         if (RM_AND_RA.rm && RM_AND_RA.rm != "") {
@@ -223,24 +223,15 @@ var WorkflowService = /** @class */ (function () {
                             v.transactionClosed = true;
                             console.log(v);
                         });
-                        _i = 0, transactions_1 = transactions;
-                        _a.label = 18;
-                    case 18:
-                        if (!(_i < transactions_1.length)) return [3 /*break*/, 21];
-                        v = transactions_1[_i];
-                        return [4 /*yield*/, this.updateInventoryService.updateInventoryOnhandTable(v, true, queryRunner)];
-                    case 19:
-                        _a.sent();
-                        _a.label = 20;
-                    case 20:
-                        _i++;
-                        return [3 /*break*/, 18];
-                    case 21:
+                        for (_i = 0, transactions_1 = transactions; _i < transactions_1.length; _i++) {
+                            v = transactions_1[_i];
+                            // await this.updateInventoryService.updateInventoryOnhandTable(v, true, queryRunner);
+                        }
                         console.log(transactions);
-                        return [3 /*break*/, 23];
-                    case 22: throw { message: "CANNOT_CREATE_MOVEMENT_ORDER" };
-                    case 23: return [3 /*break*/, 25];
-                    case 24:
+                        return [3 /*break*/, 19];
+                    case 18: throw { message: "CANNOT_CREATE_MOVEMENT_ORDER" };
+                    case 19: return [3 /*break*/, 21];
+                    case 20:
                         if (salesData.transkind == "DESIGNERSERVICERETURN") {
                             item.statusId = Props_1.Props.WORKFLOW_STATUSID.PENDINGINGFORDESIGNERAPPROVAL[0];
                             if (RM_AND_RA.designer_signing_authority && RM_AND_RA.designer_signing_authority != "") {
@@ -259,13 +250,13 @@ var WorkflowService = /** @class */ (function () {
                                 throw { message: "NO_RM_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
                             }
                         }
-                        _a.label = 25;
-                    case 25:
+                        _a.label = 21;
+                    case 21:
                         item.usergroupid = this.sessionInfo.groupid;
                         item.orderType = Props_1.Props.WORKFLOW_ORDER_TYPE[salesData.transkind][0];
                         item.inventLocationId = this.sessionInfo.inventlocationid;
-                        return [3 /*break*/, 27];
-                    case 26:
+                        return [3 /*break*/, 23];
+                    case 22:
                         // console.log(item.statusId);
                         if (status_1 == "accept" || status_1 == null) {
                             if (salesData.transkind == "RETURNORDER") {
@@ -352,13 +343,13 @@ var WorkflowService = /** @class */ (function () {
                             item.pendingWith = null;
                             // await this.inventryTransUpdate(salesData);
                         }
-                        _a.label = 27;
-                    case 27:
+                        _a.label = 23;
+                    case 23:
                         item.lastModifiedBy = this.sessionInfo.userName;
                         // console.log(new Date());
                         item.lastModifiedDate = new Date(App_1.App.DateNow());
                         return [4 /*yield*/, this.validate(item)];
-                    case 28:
+                    case 24:
                         _a.sent();
                         salesSaveData = {};
                         salesSaveData.salesId = item.orderId;
@@ -368,26 +359,26 @@ var WorkflowService = /** @class */ (function () {
                         promistList.push(this.workflowDAO.save(item), this.salesTableDAO.save(salesSaveData));
                         // let salesTableData: any = await this.salesTableDAO.save(salesData);
                         return [4 /*yield*/, Promise.all(promistList)];
-                    case 29:
+                    case 25:
                         // let salesTableData: any = await this.salesTableDAO.save(salesData);
                         _a.sent();
                         return [4 /*yield*/, queryRunner.commitTransaction()];
-                    case 30:
+                    case 26:
                         _a.sent();
                         return [2 /*return*/, { id: item.id, status: item.statusId, message: "SAVED_SUCCESSFULLY" }];
-                    case 31: throw { message: "INVALID_DATA" };
-                    case 32: return [3 /*break*/, 37];
-                    case 33:
+                    case 27: throw { message: "INVALID_DATA" };
+                    case 28: return [3 /*break*/, 33];
+                    case 29:
                         error_3 = _a.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 34:
+                    case 30:
                         _a.sent();
                         throw error_3;
-                    case 35: return [4 /*yield*/, queryRunner.release()];
-                    case 36:
+                    case 31: return [4 /*yield*/, queryRunner.release()];
+                    case 32:
                         _a.sent();
                         return [7 /*endfinally*/];
-                    case 37: return [2 /*return*/];
+                    case 33: return [2 /*return*/];
                 }
             });
         });

@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -63,29 +52,29 @@ var OrderReceiveReport = /** @class */ (function () {
     }
     OrderReceiveReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, id, status_1, data_1, salesLine, i_1, promiseList, date, query, batches, groupData, inventoryOnHandBatches_2, _i, batches_1, item, _a, inventoryOnHandBatches_1, item, error_1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var queryRunner, id, status_1, data_1, salesLine, i_1, promiseList, date, query, batches, groupData, _i, batches_1, item, error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
                         queryRunner = typeorm_2.getConnection().createQueryRunner();
                         return [4 /*yield*/, queryRunner.connect()];
                     case 1:
-                        _b.sent();
+                        _a.sent();
                         return [4 /*yield*/, queryRunner.startTransaction()];
                     case 2:
-                        _b.sent();
-                        _b.label = 3;
+                        _a.sent();
+                        _a.label = 3;
                     case 3:
-                        _b.trys.push([3, 11, 13, 15]);
+                        _a.trys.push([3, 11, 13, 15]);
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
                     case 4:
-                        data_1 = _b.sent();
+                        data_1 = _a.sent();
                         data_1 = data_1.length >= 1 ? data_1[0] : {};
                         data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
                         return [4 /*yield*/, this.salesline_query_to_data(id)];
                     case 5:
-                        salesLine = _b.sent();
+                        salesLine = _a.sent();
                         i_1 = 1;
                         salesLine.map(function (v) {
                             v.sNo += i_1;
@@ -107,47 +96,51 @@ var OrderReceiveReport = /** @class */ (function () {
                         promiseList.push(queryRunner.query(query));
                         return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
                     case 6:
-                        batches = _b.sent();
+                        batches = _a.sent();
                         return [4 /*yield*/, this.groupBy(batches, function (item) {
                                 return [item.itemid, item.batchno, item.configid, item.inventsizeid];
                             })];
                     case 7:
-                        groupData = _b.sent();
-                        inventoryOnHandBatches_2 = [];
-                        groupData.forEach(function (groupitem) {
-                            var qty = groupitem.reduce(function (res, item) { return res + parseInt(item.qty); }, 0);
-                            groupitem[0].qty = Math.abs(qty);
-                            inventoryOnHandBatches_2.push(__assign({}, groupitem[0]));
-                        });
+                        groupData = _a.sent();
+                        // let inventoryOnHandBatches: any[] = [];
+                        // groupData.forEach(function (groupitem: any) {
+                        //   const qty = groupitem.reduce((res: number, item: any) => res + parseInt(item.qty), 0);
+                        //   groupitem[0].qty = Math.abs(qty);
+                        //   inventoryOnHandBatches.push({ ...groupitem[0] });
+                        // });
                         for (_i = 0, batches_1 = batches; _i < batches_1.length; _i++) {
                             item = batches_1[_i];
                             item.transactionClosed = true;
                             // this.inventTransDAO.save(item);
                             promiseList.push(this.updateInventoryService.updateInventtransTable(item, false, false, queryRunner));
                         }
-                        for (_a = 0, inventoryOnHandBatches_1 = inventoryOnHandBatches_2; _a < inventoryOnHandBatches_1.length; _a++) {
-                            item = inventoryOnHandBatches_1[_a];
-                            item.transactionClosed = true;
-                            // this.inventTransDAO.save(item);
-                            promiseList.push(this.updateInventoryService.updateInventoryOnhandTable(item, false, queryRunner));
-                        }
+                        // for (let item of inventoryOnHandBatches) {
+                        //   item.transactionClosed = true;
+                        // this.inventTransDAO.save(item);
+                        // promiseList.push(this.updateInventoryService.updateInventoryOnhandTable(item, false, queryRunner));
+                        // }
                         return [4 /*yield*/, Promise.all(promiseList)];
                     case 8:
-                        _b.sent();
-                        _b.label = 9;
+                        // for (let item of inventoryOnHandBatches) {
+                        //   item.transactionClosed = true;
+                        // this.inventTransDAO.save(item);
+                        // promiseList.push(this.updateInventoryService.updateInventoryOnhandTable(item, false, queryRunner));
+                        // }
+                        _a.sent();
+                        _a.label = 9;
                     case 9: return [4 /*yield*/, queryRunner.commitTransaction()];
                     case 10:
-                        _b.sent();
+                        _a.sent();
                         return [2 /*return*/, data_1];
                     case 11:
-                        error_1 = _b.sent();
+                        error_1 = _a.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
                     case 12:
-                        _b.sent();
+                        _a.sent();
                         throw error_1;
                     case 13: return [4 /*yield*/, queryRunner.release()];
                     case 14:
-                        _b.sent();
+                        _a.sent();
                         return [7 /*endfinally*/];
                     case 15: return [2 /*return*/];
                 }

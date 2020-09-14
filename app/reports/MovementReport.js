@@ -147,9 +147,9 @@ var MovementReport = /** @class */ (function () {
                         }
                         for (_a = 0, inventoryOnHandBatches_1 = inventoryOnHandBatches_2; _a < inventoryOnHandBatches_1.length; _a++) {
                             item = inventoryOnHandBatches_1[_a];
-                            item.transactionClosed = true;
+                            // item.transactionClosed = true;
                             // this.inventTransDAO.save(item);
-                            promiseList.push(this.updateInventoryService.updateInventoryOnhandTable(item, false, queryRunner));
+                            // promiseList.push(this.updateInventoryService.updateInventoryOnhandTable(item, false, queryRunner));
                         }
                         _b.label = 12;
                     case 12: return [4 /*yield*/, Promise.all(promiseList)];

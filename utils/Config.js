@@ -149,3 +149,4 @@ exports.setEnvConfig = function () {
 //     synchronize: false,
 //     entities: [__dirname + "/../entities/**/*{.ts,.js}"]
 // };
+

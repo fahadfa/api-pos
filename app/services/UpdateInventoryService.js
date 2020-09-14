@@ -58,12 +58,10 @@ var UpdateInventoryService = /** @class */ (function () {
                     case 1:
                         // await this.inventTransDAO.save(reqData);
                         _a.sent();
-                        if (!status) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.updateInventoryOnhandTable(reqData, update, queryRunner)];
-                    case 2:
-                        _a.sent();
-                        _a.label = 3;
-                    case 3: return [2 /*return*/];
+                        if (status) {
+                            // await this.updateInventoryOnhandTable(reqData, update, queryRunner);
+                        }
+                        return [2 /*return*/];
                 }
             });
         });

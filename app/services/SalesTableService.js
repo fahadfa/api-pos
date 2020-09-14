@@ -1466,7 +1466,7 @@ var SalesTableService = /** @class */ (function () {
                                 designerServiceData = {
                                     custphone: reqData.mobileNo,
                                     amount: reqData.netAmount,
-                                    invoiceid: reqData.canCommitTransaction ? reqData.salesId : reqData.interCompanyOriginalSalesId,
+                                    invoiceid: canCommitTransaction ? reqData.salesId : reqData.interCompanyOriginalSalesId,
                                     salesorderid: canCommitTransaction ? reqData.interCompanyOriginalSalesId : reqData.salesId,
                                     dataareaid: this.sessionInfo.dataareaid,
                                     recordtype: canCommitTransaction ? 1 : 0,
@@ -2434,56 +2434,62 @@ var SalesTableService = /** @class */ (function () {
                         canCommitTransaction = true;
                         _c.label = 3;
                     case 3:
-                        _c.trys.push([3, 27, 30, 33]);
+                        _c.trys.push([3, 29, 32, 35]);
                         condition = false;
+                        if (!(reqData.transkind == 'RETURNORDER')) return [3 /*break*/, 5];
                         return [4 /*yield*/, this.validateReturnOrder(reqData)];
                     case 4:
                         condition = _c.sent();
                         console.log(condition);
-                        if (!condition) return [3 /*break*/, 25];
+                        return [3 /*break*/, 6];
+                    case 5:
+                        condition = true;
+                        _c.label = 6;
+                    case 6:
+                        if (!condition) return [3 /*break*/, 27];
                         console.log(reqData);
                         salesLine = reqData.salesLine;
                         delete reqData.salesLine;
                         return [4 /*yield*/, this.validate(reqData)];
-                    case 5:
+                    case 7:
                         cond = _c.sent();
-                        if (!(cond == true)) return [3 /*break*/, 24];
-                        if (!(reqData.transkind == "DESIGNERSERVICERETURN")) return [3 /*break*/, 14];
+                        if (!(cond == true)) return [3 /*break*/, 26];
+                        if (!(reqData.transkind == "DESIGNERSERVICERETURN")) return [3 /*break*/, 16];
                         this.rawQuery.sessionInfo = this.sessionInfo;
                         reqData.invoiceAccount = reqData.invoiceAccount ? reqData.invoiceAccount : reqData.custAccount;
                         return [4 /*yield*/, this.rawQuery.getCustomer(reqData.invoiceAccount)];
-                    case 6:
+                    case 8:
                         customerRecord = _c.sent();
                         reqData.salesmanId = customerRecord.salesmanid;
-                        if (!(customerRecord.walkincustomer == true)) return [3 /*break*/, 9];
+                        if (!(customerRecord.walkincustomer == true)) return [3 /*break*/, 11];
                         return [4 /*yield*/, this.rawQuery.getCustomer(this.sessionInfo.defaultcustomerid)];
-                    case 7:
+                    case 9:
                         customerTaxGroup = _c.sent();
                         return [4 /*yield*/, this.rawQuery.getCustomer(this.sessionInfo.defaultcustomerid)];
-                    case 8:
+                    case 10:
                         defaultcustomer = _c.sent();
                         reqData.salesmanId = defaultcustomer.salesmanid;
                         reqData.taxGroup = customerTaxGroup.taxgroup;
                         reqData.priceGroupId = defaultcustomer.pricegroup;
                         reqData.custGroup = defaultcustomer.custgroup;
                         reqData.custAccount = defaultcustomer.accountnum;
-                        return [3 /*break*/, 10];
-                    case 9:
+                        return [3 /*break*/, 12];
+                    case 11:
                         reqData.taxGroup = customerRecord.taxgroup;
-                        _c.label = 10;
-                    case 10: return [4 /*yield*/, this.designerServiceDAO.search({
+                        _c.label = 12;
+                    case 12: return [4 /*yield*/, this.designerServiceDAO.search({
                             invoiceid: reqData.interCompanyOriginalSalesId,
                         })];
-                    case 11:
+                    case 13:
                         desinerService = _c.sent();
-                        console.log(desinerService);
+                        console.log(desinerService, reqData.interCompanyOriginalSalesId);
                         amount = desinerService.reduce(function (res, item) { return res + parseFloat(item.amount); }, 0);
                         console.log("=========================amount===================", amount, reqData.netAmount);
-                        if (!(amount >= reqData.netAmount)) return [3 /*break*/, 13];
+                        if (!(amount >= reqData.netAmount)) return [3 /*break*/, 15];
                         return [4 /*yield*/, this.designerServiceDAO.findOne({
                                 invoiceid: reqData.interCompanyOriginalSalesId,
                             })];
-                    case 12:
+                    case 14:
                         designerServiceData = _c.sent();
                         delete designerServiceData.serviceid;
                         designerServiceData.recordtype = 0;
@@ -2494,9 +2500,9 @@ var SalesTableService = /** @class */ (function () {
                         designerServiceData.lastmodifiedby = this.sessionInfo.userName;
                         // await this.designerServiceDAO.save(designerServiceData);
                         queryRunner.manager.getRepository(Designerservice_1.Designerservice).save(designerServiceData);
-                        return [3 /*break*/, 14];
-                    case 13: throw { status: 0, message: "CAN_NOT_CREATE_RETURN_ORDER_AMOUNT_ALREADY_USED" };
-                    case 14:
+                        return [3 /*break*/, 16];
+                    case 15: throw { status: 0, message: "CAN_NOT_CREATE_RETURN_ORDER_AMOUNT_ALREADY_USED" };
+                    case 16:
                         promiseList = [];
                         // promiseList.push(this.salestableDAO.save(reqData));
                         // console.log(
@@ -2506,12 +2512,12 @@ var SalesTableService = /** @class */ (function () {
                         promiseList.push(queryRunner.manager.getRepository(SalesTable_1.SalesTable).save(reqData));
                         promiseList.push(this.salesLineDelete(reqData, queryRunner));
                         _i = 0, salesLine_9 = salesLine;
-                        _c.label = 15;
-                    case 15:
-                        if (!(_i < salesLine_9.length)) return [3 /*break*/, 19];
+                        _c.label = 17;
+                    case 17:
+                        if (!(_i < salesLine_9.length)) return [3 /*break*/, 21];
                         item = salesLine_9[_i];
                         item.batch = [];
-                        if (!(item.salesQty > 0)) return [3 /*break*/, 17];
+                        if (!(item.salesQty > 0)) return [3 /*break*/, 19];
                         delete item.id;
                         item.id = uuid();
                         item.salesId = reqData.salesId;
@@ -2521,7 +2527,7 @@ var SalesTableService = /** @class */ (function () {
                         item.lastModifiedDate = new Date(App_1.App.DateNow());
                         item.jazeeraWarehouse = reqData.jazeeraWarehouse;
                         return [4 /*yield*/, this.rawQuery.getItemTaxGroup(item.itemid)];
-                    case 16:
+                    case 18:
                         taxItemGroup = _c.sent();
                         item.taxItemGroup = taxItemGroup.taxitemgroupid;
                         if (item.batches && item.batches.length > 0) {
@@ -2553,27 +2559,27 @@ var SalesTableService = /** @class */ (function () {
                                 }
                             }
                         }
-                        _c.label = 17;
-                    case 17:
+                        _c.label = 19;
+                    case 19:
                         // promiseList.push(this.salesLineDAO.save(item));
                         promiseList.push(queryRunner.manager.getRepository(SalesLine_1.SalesLine).save(item));
-                        _c.label = 18;
-                    case 18:
-                        _i++;
-                        return [3 /*break*/, 15];
-                    case 19: return [4 /*yield*/, Promise.all(promiseList)];
+                        _c.label = 20;
                     case 20:
+                        _i++;
+                        return [3 /*break*/, 17];
+                    case 21: return [4 /*yield*/, Promise.all(promiseList)];
+                    case 22:
                         _c.sent();
-                        if (!canCommitTransaction) return [3 /*break*/, 24];
-                        if (!(reqData.designServiceRedeemAmount > 0)) return [3 /*break*/, 22];
+                        if (!canCommitTransaction) return [3 /*break*/, 26];
+                        if (!(reqData.designServiceRedeemAmount > 0)) return [3 /*break*/, 24];
                         return [4 /*yield*/, this.saveReturnOrderDesignerService(reqData, queryRunner)];
-                    case 21:
+                    case 23:
                         _c.sent();
-                        _c.label = 22;
-                    case 22: 
+                        _c.label = 24;
+                    case 24: 
                     // throw { message: "error" };
                     return [4 /*yield*/, queryRunner.commitTransaction()];
-                    case 23:
+                    case 25:
                         // throw { message: "error" };
                         _c.sent();
                         reqData.salesLine = salesLine;
@@ -2585,26 +2591,26 @@ var SalesTableService = /** @class */ (function () {
                         //console.log(returnData);
                         console.log(reqData);
                         return [2 /*return*/, returnData];
-                    case 24: return [3 /*break*/, 26];
-                    case 25: throw { status: 0, message: "CAN_NOT_CREATE_RETURN_ORDER" };
-                    case 26: return [3 /*break*/, 33];
-                    case 27:
+                    case 26: return [3 /*break*/, 28];
+                    case 27: throw { status: 0, message: "CAN_NOT_CREATE_RETURN_ORDER" };
+                    case 28: return [3 /*break*/, 35];
+                    case 29:
                         error_18 = _c.sent();
                         console.log(error_18);
-                        if (!canCommitTransaction) return [3 /*break*/, 29];
+                        if (!canCommitTransaction) return [3 /*break*/, 31];
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 28:
-                        _c.sent();
-                        _c.label = 29;
-                    case 29: throw error_18;
                     case 30:
-                        if (!canCommitTransaction) return [3 /*break*/, 32];
-                        return [4 /*yield*/, queryRunner.release()];
-                    case 31:
                         _c.sent();
-                        _c.label = 32;
-                    case 32: return [7 /*endfinally*/];
-                    case 33: return [2 /*return*/];
+                        _c.label = 31;
+                    case 31: throw error_18;
+                    case 32:
+                        if (!canCommitTransaction) return [3 /*break*/, 34];
+                        return [4 /*yield*/, queryRunner.release()];
+                    case 33:
+                        _c.sent();
+                        _c.label = 34;
+                    case 34: return [7 /*endfinally*/];
+                    case 35: return [2 /*return*/];
                 }
             });
         });
