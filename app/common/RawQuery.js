@@ -1287,7 +1287,7 @@ var RawQuery = /** @class */ (function () {
                         sizes = sizesList.map(function (d) { return "lower('" + d + "')"; }).join(",");
                         colors = colorsList.map(function (d) { return "lower('" + d + "')"; }).join(",");
                         batches = batchList.map(function (d) { return "lower('" + d + "')"; }).join(",");
-                        query = "select itemid, configid, inventsizeid, batchno,  sum(qty) as qty from inventrans  \n    where lower(itemid) in (" + items + ")\n    and lower(configid) in (" + colors + ")\n    and lower(inventsizeid) in (" + sizes + ")\n    and lower(batchno) in (" + batches + ")\n    and inventlocationid = '" + inventlocationid + "' and transactionclosed = true\n    group by itemid, configid, inventsizeid, batchno";
+                        query = "select itemid, configid, inventsizeid, batchno,  sum(qty) as qty from inventtrans  \n    where lower(itemid) in (" + items + ")\n    and lower(configid) in (" + colors + ")\n    and lower(inventsizeid) in (" + sizes + ")\n    and lower(batchno) in (" + batches + ")\n    and inventlocationid = '" + inventlocationid + "' and transactionclosed = true\n    group by itemid, configid, inventsizeid, batchno";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
