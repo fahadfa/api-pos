@@ -411,8 +411,16 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         result = void 0;
                         reqData.customerId = reqData.custaccount;
                         reqData.grossTotal = 0;
+                        reqData.instantDiscGrossTotal = 0;
                         reqData.inventLocationId = this.sessionInfo.inventlocationid;
                         reqData.salesLine.map(function (v) {
+                            if (v.appliedDiscounts) {
+                                var instantData = v.appliedDiscounts.find(function (v) { return v.discountType == "INSTANT_DISCOUNT"; });
+                                if (instantData) {
+                                    reqData.instantDiscGrossTotal +=
+                                        (parseFloat(v.salesprice) + parseFloat(v.colorantprice)) * parseFloat(v.salesQty);
+                                }
+                            }
                             v.colorantprice = v.colorantprice ? v.colorantprice : 0;
                             reqData.grossTotal += (parseFloat(v.salesprice) + parseFloat(v.colorantprice)) * parseFloat(v.salesQty);
                         });
@@ -523,9 +531,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                             isInstantDiscount = true;
                                             for (_i = 0, instantDiscountRanges_1 = instantDiscountRanges; _i < instantDiscountRanges_1.length; _i++) {
                                                 item_1 = instantDiscountRanges_1[_i];
-                                                if (reqData.grossTotal &&
-                                                    reqData.grossTotal >= parseFloat(item_1.minamount) &&
-                                                    reqData.grossTotal <= parseFloat(item_1.maxamount)) {
+                                                if (reqData.instantDiscGrossTotal &&
+                                                    reqData.instantDiscGrossTotal >= parseFloat(item_1.minamount) &&
+                                                    reqData.instantDiscGrossTotal <= parseFloat(item_1.maxamount)) {
                                                     instantDiscountPercent = item_1.discpercent;
                                                     break;
                                                 }
@@ -915,8 +923,10 @@ var ReturnOrderAmountService = /** @class */ (function () {
                     (parseFloat(item.salesprice) + parseFloat(item.colorantprice)) *
                         parseInt(multiplyQty) *
                         (parseFloat(totalPercentage) / 100);
-                item.priceAfterdiscount = item.priceAfterdiscount ? parseFloat(item.priceAfterdiscount) - parseFloat(item.enddiscamt)
-                    : ((parseFloat(item.salesprice) + parseFloat(item.colorantprice)) * parseInt(item.salesQty)) - parseFloat(item.enddiscamt);
+                item.priceAfterdiscount = item.priceAfterdiscount
+                    ? parseFloat(item.priceAfterdiscount) - parseFloat(item.enddiscamt)
+                    : (parseFloat(item.salesprice) + parseFloat(item.colorantprice)) * parseInt(item.salesQty) -
+                        parseFloat(item.enddiscamt);
                 console.log(item.priceAfterdiscount, item.enddiscamt);
                 item.lineTotalDisc = item.lineTotalDisc ? item.lineTotalDisc : 0;
                 if (isFree != true) {
@@ -1026,8 +1036,10 @@ var ReturnOrderAmountService = /** @class */ (function () {
                 item.lineAmount = (parseFloat(item.salesprice) + parseFloat(item.colorantprice)) * parseInt(item.salesQty);
                 item.salesdisc = salesDiscount ? parseFloat(salesDiscount.percentage) : 0;
                 item.salesdiscamt = parseFloat(item.salesprice) * parseInt(item.salesQty) * (parseFloat(item.salesdisc) / 100);
-                item.priceAfterdiscount = item.priceAfterdiscount ? parseFloat(item.priceAfterdiscount) - parseFloat(item.salesdiscamt) :
-                    (parseFloat(item.salesprice) + parseFloat(item.colorantprice)) * parseInt(item.salesQty) - parseFloat(item.salesdiscamt);
+                item.priceAfterdiscount = item.priceAfterdiscount
+                    ? parseFloat(item.priceAfterdiscount) - parseFloat(item.salesdiscamt)
+                    : (parseFloat(item.salesprice) + parseFloat(item.colorantprice)) * parseInt(item.salesQty) -
+                        parseFloat(item.salesdiscamt);
                 console.log(item.priceAfterdiscount, item.salesdiscamt);
                 item.lineTotalDisc = item.lineTotalDisc ? parseFloat(item.lineTotalDisc) : 0;
                 item.lineTotalDisc += item.salesdiscamt;
