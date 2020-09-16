@@ -109,11 +109,7 @@ var InventoryOnHandReport = /** @class */ (function () {
                             ? "a.batchno as batchno,\n           a.batchexpdate,"
                             : "") + "\n    a.availabilty as \"physicalAvailable\",\n    a.reservedquantity as \"reservedQuantity\",\n    (a.availabilty- a.reservedquantity) as \"totalAvailable\",\n    a.nameen as nameEn,\n    a.namear as nameAr,\n    a.sizenameen as \"sizeNameEn\",\n    a.sizenamear as \"sizeNameAr\",\n    a.warehouseNameEn,\n    a.WareHouseNameAr \n    from\n    (select \n    i.itemid,\n    bs.namealias as nameen,\n    bs.itemname as namear,\n    i.configid as configid,\n    i.inventsizeid as inventsizeid,\n    " + (params.batchCheck
                             ? "i.batchno as batchno,\n    to_char(b.expdate, 'yyyy-MM-dd') as batchexpdate,"
-                            : "") + "\n    sz.description as \"sizenameen\",\n    sz.\"name\" as \"sizenamear\",\n    sum(qty) as availabilty,\n    COALESCE((\n    select \n    sum(it.qty) \n    from inventtrans it \n    where it.itemid = i.itemid \n    and it.configid = i.configid and \n    i.inventsizeid = it.inventsizeid   " + (params.batchCheck
-                            ? "and \n        i.batchno = it.batchno "
-                            : "") + " and \n    it.transactionclosed = true and \n    it.inventlocationid = i.inventlocationid and\n    reserve_status = 'RESERVED' \n    group by i.itemid, i.configid, i.inventsizeid, " + (params.batchCheck
-                            ? "\n        i.batchno, "
-                            : "") + " i.inventlocationid\n    ), 0) as \"reservedquantity\",\n    w.name as warehousenamear, \n    w.namealias as warehousenameen\n    from inventtrans i\n    left join inventbatch b on i.batchno = b.inventbatchid and i.itemid = b.itemid\n    inner join inventtable bs on i.itemid = bs.itemid\n    left join inventsize sz on lower(sz.inventsizeid) = lower(i.inventsizeid) and sz.itemid = i.itemid\n    inner join configtable c on c.itemid = i.itemid and lower(c.configid) = lower(i.configid)\n    inner join inventlocation w on w.inventlocationid=i.inventlocationid\n    ";
+                            : "") + "\n    sz.description as \"sizenameen\",\n    sz.\"name\" as \"sizenamear\",\n    sum(qty) as availabilty,\n    abs(sum(case\n      when reserve_status ='RESERVED' then qty\n      else 0\n      end\n      )) as reservedquantity,\n    w.name as warehousenamear, \n    w.namealias as warehousenameen\n    from inventtrans i\n    left join inventbatch b on i.batchno = b.inventbatchid and i.itemid = b.itemid\n    inner join inventtable bs on i.itemid = bs.itemid\n    left join inventsize sz on lower(sz.inventsizeid) = lower(i.inventsizeid) and sz.itemid = i.itemid\n    inner join configtable c on c.itemid = i.itemid and lower(c.configid) = lower(i.configid)\n    inner join inventlocation w on w.inventlocationid=i.inventlocationid\n    ";
                         if (!(params.key == "ALL")) return [3 /*break*/, 2];
                         warehouseQuery = "select regionalwarehouse from usergroupconfig where id= '" + this.sessionInfo.usergroupconfigid + "' limit 1";
                         return [4 /*yield*/, this.db.query(warehouseQuery)];
@@ -143,7 +139,7 @@ var InventoryOnHandReport = /** @class */ (function () {
                         if (params.batchno && params.batchCheck) {
                             query = query + (" and LOWER(i.batchno)=LOWER('" + params.batchno + "') ");
                         }
-                        query += " and transactionclosed  = true group by i.itemid, i.configid, i.inventsizeid, i.inventlocationid,\n      bs.namealias, bs.itemname, w.name, w.namealias,  sz.description, sz.\"name\" " + (params.batchCheck ? ", i.batchno, b.expdate" : "") + " ) as a where availabilty  > 0 ";
+                        query += " and transactionclosed  = true group by i.itemid, i.configid, i.inventsizeid, i.inventlocationid,\n      bs.namealias, bs.itemname, w.name, w.namealias,  sz.description, sz.\"name\" " + (params.batchCheck ? ", i.batchno, b.expdate" : "") + " ) as a where (a.availabilty + a.reservedquantity) >0 ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 4: return [2 /*return*/, _a.sent()];
                 }
