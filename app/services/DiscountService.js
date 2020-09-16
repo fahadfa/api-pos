@@ -359,9 +359,7 @@ var DiscountService = /** @class */ (function () {
                                                 message = "voucher is not valid for selected products";
                                             }
                                         }
-                                        condition = (reqData.voucherDiscountChecked && isValidVoucherItem) || reqData.instantDiscountChecked
-                                            ? "true"
-                                            : "!item.isItemFree";
+                                        condition = '!item.isItemFree';
                                         condition = eval(condition);
                                         item.lineTotalDisc = 0;
                                         if (!condition) return [3 /*break*/, 41];
@@ -374,7 +372,7 @@ var DiscountService = /** @class */ (function () {
                                         isPromotionDiscount = false;
                                         isBuyOneGetOneDiscount = false;
                                         buyOneGetOneDiscountDetails = void 0;
-                                        if (!((!reqData.voucherDiscountChecked || isValidVoucherItem == false) && !reqData.instantDiscountChecked)) return [3 /*break*/, 17];
+                                        // if ((!reqData.voucherDiscountChecked || isValidVoucherItem == false) && !reqData.instantDiscountChecked) {
                                         promotionalDiscountDetails = promotionalDiscountDetails.length > 0 ? promotionalDiscountDetails[0] : null;
                                         selectedQuantity = reqData.selectedItems
                                             .filter(function (v) { return v.itemid == v.itemid && v.inventsizeid == v.inventsizeid; })
@@ -537,7 +535,7 @@ var DiscountService = /** @class */ (function () {
                                         //     }
                                         //   }
                                         // }
-                                        if (isInstantDiscount && !isNoDiscount) {
+                                        if (isInstantDiscount && !isNoDiscount && !isPromotionDiscount && !isBuyOneGetOneDiscount) {
                                             if (instantDiscountExcludeItems.includes(item.itemid) ||
                                                 instantDiscountExcludeItems.includes(item.product.itemGroupId || item.product.intExt != 4)) {
                                                 isInstantDiscount = false;
@@ -598,7 +596,7 @@ var DiscountService = /** @class */ (function () {
                                         grossTotal += (parseFloat(item.price) + parseFloat(item.colorantprice)) * parseInt(item.quantity);
                                         return [3 /*break*/, 39];
                                     case 23:
-                                        if (!(isInstantDiscount && !isNoDiscount && !isSalesDiscount)) return [3 /*break*/, 25];
+                                        if (!(isInstantDiscount && !isNoDiscount && !isSalesDiscount && !isPromotionDiscount && !isBuyOneGetOneDiscount)) return [3 /*break*/, 25];
                                         return [4 /*yield*/, this_1.calInstantDiscount(reqData, item, instantDiscountPercent)];
                                     case 24:
                                         _g.sent();
