@@ -53,10 +53,10 @@ var typeorm_1 = require("typeorm");
 var ReturnOrderAmountService = /** @class */ (function () {
     function ReturnOrderAmountService() {
         this.date_diff_indays = function (date1, date2) {
-            console.log(date1, date2);
+            // console.log(date1, date2);
             var dt1 = new Date(date1);
             var dt2 = new Date(date2);
-            console.log(dt1, dt2);
+            // console.log(dt1, dt2);
             return Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) -
                 Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate())) /
                 (1000 * 60 * 60 * 24));
@@ -160,9 +160,12 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             var line, prevReturnLine, returnQty, buyOneData, returnQty;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
-                                    case 0: return [4 /*yield*/, reqData.selectedBatches.find(function (v) { return v.salesLineId == item.id; })];
+                                    case 0:
+                                        console.log(item.id, reqData.selectedBatches);
+                                        return [4 /*yield*/, reqData.selectedBatches.find(function (v) { return v.salesLineId == item.id; })];
                                     case 1:
                                         line = _a.sent();
+                                        console.log("====================", line);
                                         return [4 /*yield*/, prevReturnOrderEquals.salesLine.find(function (v) {
                                                 return v.itemid == item.itemid &&
                                                     v.inventsizeid == item.inventsizeid &&
@@ -174,12 +177,14 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                     case 2:
                                         prevReturnLine = _a.sent();
                                         if (!line) return [3 /*break*/, 4];
+                                        item.addedBatch = true;
                                         returnQty = prevReturnLine
                                             ? parseInt(prevReturnLine.salesQty) + parseInt(line.returnQuantity)
                                             : parseInt(line.returnQuantity);
                                         item.salesQty -= returnQty;
-                                        console.log(line.isItemFree, item.salesQty);
+                                        // console.log(line.isItemFree, item.salesQty);
                                         item.batches = line.batches;
+                                        console.log("====================", line.batches, item.batches);
                                         return [4 /*yield*/, item.appliedDiscounts.find(function (v) { return v.discountType == "BUY_ONE_GET_ONE_DISCOUNT"; })];
                                     case 3:
                                         buyOneData = _a.sent();
@@ -194,6 +199,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                     case 4:
                                         returnQty = prevReturnLine ? parseInt(prevReturnLine.salesQty) : 0;
                                         item.salesQty -= returnQty;
+                                        item.addedBatch = false;
                                         _a.label = 5;
                                     case 5: return [2 /*return*/];
                                 }
@@ -429,7 +435,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                     case 1:
                         vatData = _b.sent();
                         reqData.vat = vatData ? vatData.vat : 15;
-                        console.log(reqData.vat);
+                        // console.log(reqData.vat);
                         reqData.sumTax = reqData.vat;
                         return [4 /*yield*/, this.sessionInfo.sabiccustomers];
                     case 2:
@@ -600,7 +606,6 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         grossTotal += (parseFloat(item.salesprice) + parseFloat(item.colorantprice)) * parseInt(item.salesQty);
                                         _g.label = 2;
                                     case 2:
-                                        console.log("isBuyOneGetOneDiscount", isBuyOneGetOneDiscount);
                                         if (!isBuyOneGetOneDiscount) return [3 /*break*/, 9];
                                         freeItems = reqData.salesLine.filter(function (v) { return v.linkId == item.linkId && v.isItemFree == true; });
                                         _a = [];
@@ -749,7 +754,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         item.lineamountafterdiscount = parseFloat(item.priceAfterdiscount);
                                         item.vat = parseFloat(reqData.vat);
                                         item.vatamount = parseFloat(item.priceAfterdiscount) * (item.vat / 100);
-                                        console.log(item.priceAfterdiscount, item.vatamount);
+                                        // console.log(item.priceAfterdiscount, item.vatamount);
                                         item.priceAfterVat = parseFloat(item.priceAfterdiscount) + parseFloat(item.vatamount);
                                         total += parseFloat(item.priceAfterVat);
                                         totalBeforeVat += parseFloat(item.lineamountafterdiscount);
@@ -888,7 +893,6 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         if (!item.isItemFree) return [3 /*break*/, 38];
                                         buyOneGetOneDiscountDetails = item.appliedDiscounts.find(function (v) { return v.discountType == "BUY_ONE_GET_ONE_DISCOUNT"; });
                                         isNotB1G1 = buyOneGetOneDiscountDetails ? false : true;
-                                        console.log(isNotB1G1);
                                         if (!isNotB1G1) return [3 /*break*/, 38];
                                         return [4 /*yield*/, this_1.totalDiscount(item, reqData)];
                                     case 37:
@@ -946,8 +950,8 @@ var ReturnOrderAmountService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 multiplyQty = getFreeQty ? getFreeQty : parseInt(item.salesQty);
                 totalPercentage = item.appliedDiscounts.find(function (v) { return v.discountType == "TOTAL_DISCOUNT"; });
-                console.log(totalPercentage);
-                console.log(item.salesprice, item.salesQty, totalPercentage, item.colorantprice);
+                // console.log(totalPercentage);
+                // console.log(item.salesprice, item.salesQty, totalPercentage, item.colorantprice);
                 totalPercentage = totalPercentage ? parseFloat(totalPercentage.percentage) : 0;
                 item.lineAmount = (parseFloat(item.salesprice) + parseFloat(item.colorantprice)) * parseInt(multiplyQty);
                 item.endDisc = parseFloat(totalPercentage);
@@ -959,7 +963,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                     ? parseFloat(item.priceAfterdiscount) - parseFloat(item.enddiscamt)
                     : (parseFloat(item.salesprice) + parseFloat(item.colorantprice)) * parseInt(item.salesQty) -
                         parseFloat(item.enddiscamt);
-                console.log(item.priceAfterdiscount, item.enddiscamt);
+                // console.log(item.priceAfterdiscount, item.enddiscamt);
                 item.lineTotalDisc = item.lineTotalDisc ? item.lineTotalDisc : 0;
                 if (isFree != true) {
                     item.lineTotalDisc = item.lineTotalDisc ? item.lineTotalDisc : 0;
@@ -1012,7 +1016,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
     ReturnOrderAmountService.prototype.buyOneGetOneDiscount = function (item, reqData) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                console.log("=====================buy1get1");
+                // console.log("=====================buy1get1")
                 item.lineAmount = (parseFloat(item.salesprice) + parseFloat(item.colorantprice)) * parseInt(item.salesQty);
                 item.priceAfterdiscount = parseFloat(item.priceAfterdiscount)
                     ? parseFloat(item.priceAfterdiscount) - parseFloat(item.buyOneGetOneDiscount)
@@ -1065,7 +1069,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
             var salesDiscount;
             return __generator(this, function (_a) {
                 salesDiscount = item.appliedDiscounts.find(function (v) { return v.discountType == "SALES_DISCOUNT"; });
-                console.log(item.salesprice, item.salesQty, salesDiscount, item.colorantprice);
+                // console.log(item.salesprice, item.salesQty, salesDiscount, item.colorantprice);
                 item.lineAmount = (parseFloat(item.salesprice) + parseFloat(item.colorantprice)) * parseInt(item.salesQty);
                 item.salesdisc = salesDiscount ? parseFloat(salesDiscount.percentage) : 0;
                 item.salesdiscamt = parseFloat(item.salesprice) * parseInt(item.salesQty) * (parseFloat(item.salesdisc) / 100);
@@ -1073,7 +1077,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                     ? parseFloat(item.priceAfterdiscount) - parseFloat(item.salesdiscamt)
                     : (parseFloat(item.salesprice) + parseFloat(item.colorantprice)) * parseInt(item.salesQty) -
                         parseFloat(item.salesdiscamt);
-                console.log(item.priceAfterdiscount, item.salesdiscamt);
+                // console.log(item.priceAfterdiscount, item.salesdiscamt);
                 item.lineTotalDisc = item.lineTotalDisc ? parseFloat(item.lineTotalDisc) : 0;
                 item.lineTotalDisc += item.salesdiscamt;
                 reqData.discount += item.salesdiscamt;
@@ -1270,17 +1274,20 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 v.linkId == item.linkId &&
                                                 v.isItemFree == item.isItemFree;
                                         });
+                                        console.log("====================================");
                                         salesOrderLine = returnOrderData.salesLine.find(function (v) {
                                             return v.itemid == item.itemid &&
                                                 v.inventsizeid == item.inventsizeid &&
                                                 v.configId == item.configId &&
                                                 v.colorantId == item.colorantId &&
                                                 v.linkId == item.linkId &&
-                                                v.isItemFree == item.isItemFree;
+                                                v.isItemFree == item.isItemFree &&
+                                                v.addedBatch == true;
                                         });
-                                        // console.log(salesOrderLine)
+                                        console.log(salesOrderLine);
+                                        console.log("====================================");
                                         if (salesOrderLine) {
-                                            console.log("====================================", parseFloat(salesOrderLine.lineAmount), parseFloat(salesOrderLine.salesQty));
+                                            console.log("====================================", salesOrderLine.batches, line.batches, parseFloat(salesOrderLine.salesQty));
                                             line.salesQty -= parseFloat(salesOrderLine.salesQty);
                                             line.lineAmount -= parseFloat(salesOrderLine.lineAmount);
                                             line.lineTotalDisc = line.lineTotalDisc ? line.lineTotalDisc : 0;
@@ -1466,13 +1473,13 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         returnData.disc = 0;
                         returnData.vatamount = 0;
                         salesLine.map(function (v) {
-                            console.log(v.lineAmount, v.colorantprice, v.salesQty);
+                            // console.log(v.lineAmount, v.colorantprice, v.salesQty);
                             returnData.amount += parseFloat(v.lineAmount) + parseFloat(v.colorantprice) * parseInt(v.salesQty);
                             returnData.vatamount += parseFloat(v.vatamount);
                             returnData.disc += v.lineTotalDisc;
                         });
                         returnData.netAmount = returnData.amount - returnData.disc + returnData.vatamount;
-                        console.log(returnData.designServiceRedeemAmount);
+                        // console.log(returnData.designServiceRedeemAmount);
                         if (prevReturnOrderEquals) {
                             //   returnData.amount -= prevReturnOrderEquals.amount ? parseFloat(prevReturnOrderEquals.amount) : 0;
                             //   returnData.netAmount -= prevReturnOrderEquals.netAmount ? parseFloat(prevReturnOrderEquals.netAmount) : 0;
@@ -1593,6 +1600,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
         returnItem.vatamount = parseFloat(item.vatamount);
         returnItem.salesQty = parseInt(item.salesQty);
         returnItem.isParent = item.isParent;
+        returnItem.batches = item.batches;
         return returnItem;
     };
     return ReturnOrderAmountService;

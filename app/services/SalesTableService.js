@@ -2376,6 +2376,7 @@ var SalesTableService = /** @class */ (function () {
                         console.log(prevReturnLines);
                         returnLines = reqData.salesLine;
                         _loop_3 = function (val) {
+                            console.log(val.batches);
                             var _loop_4 = function (v) {
                                 var lineData = prevReturnLines.find(function (d) {
                                     return d.itemid == val.itemid &&
