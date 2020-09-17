@@ -107,7 +107,7 @@ var LoadService = /** @class */ (function () {
                         else {
                             query += " or c.walkincustomer = true ";
                         }
-                        query += "  and c.deleted = false and lower(c.dataareaid)='" + this.sessionInfo.dataareaid.toLowerCase() + "' " + (param.type == "DESIGNERSERVICE" ? " and c.accountnum!='" + this.sessionInfo.defaultcustomerid + "'" : "") + " limit 15";
+                        query += "  and c.deleted = false and lower(c.dataareaid)='" + this.sessionInfo.dataareaid.toLowerCase() + "' " + (param.type == "DESIGNERSERVICE" ? " and c.accountnum!='" + this.sessionInfo.defaultcustomerid + "'" : "") + " order by accountnum DESC limit 15";
                         return [4 /*yield*/, this.db.query(query)];
                     case 2:
                         data = _a.sent();
