@@ -74,7 +74,7 @@ var PurchaseReturnReport = /** @class */ (function () {
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        _a.trys.push([3, 9, 11, 13]);
+                        _a.trys.push([3, 12, 14, 16]);
                         return [4 /*yield*/, this.query_to_data(params)];
                     case 4:
                         data = _a.sent();
@@ -110,32 +110,40 @@ var PurchaseReturnReport = /** @class */ (function () {
                         data[0].batches = new_data_1;
                         this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED");
                         this.db.query(" update inventtrans set transactionclosed = true where invoiceid='" + params.salesId + "'");
-                        if (!!data.isCopy) return [3 /*break*/, 7];
+                        if (!!data.isCopy) return [3 /*break*/, 10];
                         return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
                     case 6:
                         batches_2 = _a.sent();
-                        for (_i = 0, batches_1 = batches_2; _i < batches_1.length; _i++) {
-                            item = batches_1[_i];
-                            item.transactionClosed = true;
-                            // this.inventTransDAO.save(item);
-                            this.updateInventoryService.updateInventtransTable(item, false, true, queryRunner);
-                        }
+                        _i = 0, batches_1 = batches_2;
                         _a.label = 7;
-                    case 7: return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 7:
+                        if (!(_i < batches_1.length)) return [3 /*break*/, 10];
+                        item = batches_1[_i];
+                        item.transactionClosed = true;
+                        // this.inventTransDAO.save(item);
+                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(item, false, true, queryRunner)];
                     case 8:
+                        // this.inventTransDAO.save(item);
+                        _a.sent();
+                        _a.label = 9;
+                    case 9:
+                        _i++;
+                        return [3 /*break*/, 7];
+                    case 10: return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 11:
                         _a.sent();
                         return [2 /*return*/, data[0]];
-                    case 9:
+                    case 12:
                         error_1 = _a.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 10:
+                    case 13:
                         _a.sent();
                         throw error_1;
-                    case 11: return [4 /*yield*/, queryRunner.release()];
-                    case 12:
+                    case 14: return [4 /*yield*/, queryRunner.release()];
+                    case 15:
                         _a.sent();
                         return [7 /*endfinally*/];
-                    case 13: return [2 /*return*/];
+                    case 16: return [2 /*return*/];
                 }
             });
         });

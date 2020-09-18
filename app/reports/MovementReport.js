@@ -65,7 +65,7 @@ var MovementReport = /** @class */ (function () {
     }
     MovementReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, id, status_1, data_1, salesLine, date, query, voucherData, query_1, promiseList, reqData, batches, groupData, inventoryOnHandBatches_2, _i, batches_1, item, _a, inventoryOnHandBatches_1, item, error_1;
+            var queryRunner, id, status_1, data_1, salesLine, date, query, voucherData, query_1, reqData, batches, groupData, inventoryOnHandBatches_2, _i, batches_1, item, _a, inventoryOnHandBatches_1, item, error_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -78,7 +78,7 @@ var MovementReport = /** @class */ (function () {
                         _b.sent();
                         _b.label = 3;
                     case 3:
-                        _b.trys.push([3, 16, 18, 20]);
+                        _b.trys.push([3, 18, 20, 22]);
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
                     case 4:
@@ -93,7 +93,7 @@ var MovementReport = /** @class */ (function () {
                         data_1.salesLine = salesLine;
                         data_1.quantity = 0;
                         data_1.salesLine.map(function (v) { data_1.quantity += parseInt(v.salesQty); });
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 14];
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 16];
                         date = new Date().toISOString();
                         query = "UPDATE salestable SET originalprinted = '" + true + "', status = 'POSTED'";
                         if (date) {
@@ -115,8 +115,7 @@ var MovementReport = /** @class */ (function () {
                         _b.sent();
                         _b.label = 8;
                     case 8:
-                        promiseList = [];
-                        if (!(data_1.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 12];
+                        if (!(data_1.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 16];
                         reqData = {
                             salesId: id,
                         };
@@ -139,41 +138,47 @@ var MovementReport = /** @class */ (function () {
                             groupitem[0].qty = qty;
                             inventoryOnHandBatches_2.push(__assign({}, groupitem[0]));
                         });
-                        for (_i = 0, batches_1 = batches; _i < batches_1.length; _i++) {
-                            item = batches_1[_i];
-                            item.transactionClosed = true;
-                            // this.inventTransDAO.save(item);
-                            promiseList.push(this.updateInventoryService.updateInventtransTable(item, false, false, queryRunner));
-                        }
+                        _i = 0, batches_1 = batches;
+                        _b.label = 12;
+                    case 12:
+                        if (!(_i < batches_1.length)) return [3 /*break*/, 15];
+                        item = batches_1[_i];
+                        item.transactionClosed = true;
+                        // this.inventTransDAO.save(item);
+                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(item, false, false, queryRunner)];
+                    case 13:
+                        // this.inventTransDAO.save(item);
+                        _b.sent();
+                        _b.label = 14;
+                    case 14:
+                        _i++;
+                        return [3 /*break*/, 12];
+                    case 15:
                         for (_a = 0, inventoryOnHandBatches_1 = inventoryOnHandBatches_2; _a < inventoryOnHandBatches_1.length; _a++) {
                             item = inventoryOnHandBatches_1[_a];
                             // item.transactionClosed = true;
                             // this.inventTransDAO.save(item);
                             // promiseList.push(this.updateInventoryService.updateInventoryOnhandTable(item, false, queryRunner));
                         }
-                        _b.label = 12;
-                    case 12: return [4 /*yield*/, Promise.all(promiseList)];
-                    case 13:
-                        _b.sent();
-                        _b.label = 14;
-                    case 14: 
+                        _b.label = 16;
+                    case 16: 
                     // console.log(data);
                     return [4 /*yield*/, queryRunner.commitTransaction()];
-                    case 15:
+                    case 17:
                         // console.log(data);
                         _b.sent();
                         return [2 /*return*/, data_1];
-                    case 16:
+                    case 18:
                         error_1 = _b.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 17:
-                        _b.sent();
-                        throw error_1;
-                    case 18: return [4 /*yield*/, queryRunner.release()];
                     case 19:
                         _b.sent();
+                        throw error_1;
+                    case 20: return [4 /*yield*/, queryRunner.release()];
+                    case 21:
+                        _b.sent();
                         return [7 /*endfinally*/];
-                    case 20: return [2 /*return*/];
+                    case 22: return [2 /*return*/];
                 }
             });
         });

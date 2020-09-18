@@ -82,7 +82,7 @@ var ReturnOrderReport = /** @class */ (function () {
                         _b.sent();
                         _b.label = 3;
                     case 3:
-                        _b.trys.push([3, 15, 17, 19]);
+                        _b.trys.push([3, 19, 21, 23]);
                         return [4 /*yield*/, this.query_to_data(params)];
                     case 4:
                         data_1 = _b.sent();
@@ -122,30 +122,39 @@ var ReturnOrderReport = /** @class */ (function () {
                         data_1.batches = new_data_1;
                         // this.db.query(` update inventtrans set transactionclosed = true where invoiceid='${params.salesId}'`);
                         queryRunner.query("update inventtrans set transactionclosed = true where invoiceid='" + params.salesId + "'");
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 12];
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 16];
                         statusQuery = "UPDATE salestable SET \n                          originalprinted = 'true',\n                          status = 'POSTED',\n                          lastmodifieddate = '" + new Date().toISOString() + "' \n                          WHERE salesid = '" + params.salesId + "' or \n                          salesgroup = '" + params.salesId + "' or \n                          deliverystreet = '" + params.salesId + "'";
                         // await this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED");
                         queryRunner.query(statusQuery);
                         return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
                     case 6:
                         batches_2 = _b.sent();
-                        for (_i = 0, batches_1 = batches_2; _i < batches_1.length; _i++) {
-                            item = batches_1[_i];
-                            item.transactionClosed = true;
-                            // this.inventTransDAO.save(item);
-                            this.updateInventoryService.updateInventtransTable(item, false, true, queryRunner);
-                        }
-                        return [4 /*yield*/, this.updateSalesLineData(params.salesId)];
+                        _i = 0, batches_1 = batches_2;
+                        _b.label = 7;
                     case 7:
+                        if (!(_i < batches_1.length)) return [3 /*break*/, 10];
+                        item = batches_1[_i];
+                        item.transactionClosed = true;
+                        // this.inventTransDAO.save(item);
+                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(item, false, true, queryRunner)];
+                    case 8:
+                        // this.inventTransDAO.save(item);
+                        _b.sent();
+                        _b.label = 9;
+                    case 9:
+                        _i++;
+                        return [3 /*break*/, 7];
+                    case 10: return [4 /*yield*/, this.updateSalesLineData(params.salesId)];
+                    case 11:
                         _b.sent();
                         return [4 /*yield*/, this.salesTableDAO.search({ deliveryStreet: params.salesId })];
-                    case 8:
+                    case 12:
                         designerServices = _b.sent();
                         console.log(designerServices);
                         _a = 0, designerServices_1 = designerServices;
-                        _b.label = 9;
-                    case 9:
-                        if (!(_a < designerServices_1.length)) return [3 /*break*/, 12];
+                        _b.label = 13;
+                    case 13:
+                        if (!(_a < designerServices_1.length)) return [3 /*break*/, 16];
                         service = designerServices_1[_a];
                         service.status = "PAID";
                         // this.salesTableService.sessionInfo = {
@@ -161,14 +170,14 @@ var ReturnOrderReport = /** @class */ (function () {
                         // };
                         this.salesTableService.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.salesTableService.saveQuotation(service, queryRunner)];
-                    case 10:
+                    case 14:
                         _b.sent();
-                        _b.label = 11;
-                    case 11:
+                        _b.label = 15;
+                    case 15:
                         _a++;
-                        return [3 /*break*/, 9];
-                    case 12: return [4 /*yield*/, this.salesline_query_to_data(params)];
-                    case 13:
+                        return [3 /*break*/, 13];
+                    case 16: return [4 /*yield*/, this.salesline_query_to_data(params)];
+                    case 17:
                         salesLine = _b.sent();
                         sNo_1 = 1;
                         data_1.vat = salesLine.length > 0 ? salesLine[0].vat : "-";
@@ -184,21 +193,21 @@ var ReturnOrderReport = /** @class */ (function () {
                         });
                         // console.log(data);
                         return [4 /*yield*/, queryRunner.commitTransaction()];
-                    case 14:
+                    case 18:
                         // console.log(data);
                         _b.sent();
                         return [2 /*return*/, data_1];
-                    case 15:
+                    case 19:
                         error_1 = _b.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 16:
+                    case 20:
                         _b.sent();
                         throw error_1;
-                    case 17: return [4 /*yield*/, queryRunner.release()];
-                    case 18:
+                    case 21: return [4 /*yield*/, queryRunner.release()];
+                    case 22:
                         _b.sent();
                         return [7 /*endfinally*/];
-                    case 19: return [2 /*return*/];
+                    case 23: return [2 /*return*/];
                 }
             });
         });

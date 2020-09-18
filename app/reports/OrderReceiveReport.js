@@ -52,7 +52,7 @@ var OrderReceiveReport = /** @class */ (function () {
     }
     OrderReceiveReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, id, status_1, data_1, salesLine, i_1, promiseList, date, query, batches, groupData, _i, batches_1, item, error_1;
+            var queryRunner, id, status_1, data_1, salesLine, i_1, date, query, batches, groupData, _i, batches_1, item, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -65,7 +65,7 @@ var OrderReceiveReport = /** @class */ (function () {
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        _a.trys.push([3, 11, 13, 15]);
+                        _a.trys.push([3, 14, 16, 18]);
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
                     case 4:
@@ -85,64 +85,56 @@ var OrderReceiveReport = /** @class */ (function () {
                         salesLine.map(function (v) {
                             data_1.quantity += parseInt(v.salesQty);
                         });
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 9];
-                        promiseList = [];
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 12];
                         date = new Date().toISOString();
                         query = "UPDATE salestable SET originalprinted = '" + true + "', status = 'POSTED'";
                         if (date) {
                             query += ",lastmodifieddate = '" + date + "' ";
                         }
                         query += " WHERE salesid = '" + params.salesId.toUpperCase() + "'";
-                        promiseList.push(queryRunner.query(query));
-                        return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
+                        return [4 /*yield*/, queryRunner.query(query)
+                            // this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED", new Date().toISOString());
+                        ];
                     case 6:
+                        _a.sent();
+                        return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
+                    case 7:
                         batches = _a.sent();
                         return [4 /*yield*/, this.groupBy(batches, function (item) {
                                 return [item.itemid, item.batchno, item.configid, item.inventsizeid];
                             })];
-                    case 7:
-                        groupData = _a.sent();
-                        // let inventoryOnHandBatches: any[] = [];
-                        // groupData.forEach(function (groupitem: any) {
-                        //   const qty = groupitem.reduce((res: number, item: any) => res + parseInt(item.qty), 0);
-                        //   groupitem[0].qty = Math.abs(qty);
-                        //   inventoryOnHandBatches.push({ ...groupitem[0] });
-                        // });
-                        for (_i = 0, batches_1 = batches; _i < batches_1.length; _i++) {
-                            item = batches_1[_i];
-                            item.transactionClosed = true;
-                            // this.inventTransDAO.save(item);
-                            promiseList.push(this.updateInventoryService.updateInventtransTable(item, false, false, queryRunner));
-                        }
-                        // for (let item of inventoryOnHandBatches) {
-                        //   item.transactionClosed = true;
-                        // this.inventTransDAO.save(item);
-                        // promiseList.push(this.updateInventoryService.updateInventoryOnhandTable(item, false, queryRunner));
-                        // }
-                        return [4 /*yield*/, Promise.all(promiseList)];
                     case 8:
-                        // for (let item of inventoryOnHandBatches) {
-                        //   item.transactionClosed = true;
-                        // this.inventTransDAO.save(item);
-                        // promiseList.push(this.updateInventoryService.updateInventoryOnhandTable(item, false, queryRunner));
-                        // }
-                        _a.sent();
+                        groupData = _a.sent();
+                        _i = 0, batches_1 = batches;
                         _a.label = 9;
-                    case 9: return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 9:
+                        if (!(_i < batches_1.length)) return [3 /*break*/, 12];
+                        item = batches_1[_i];
+                        item.transactionClosed = true;
+                        // this.inventTransDAO.save(item);
+                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(item, false, false, queryRunner)];
                     case 10:
+                        // this.inventTransDAO.save(item);
+                        _a.sent();
+                        _a.label = 11;
+                    case 11:
+                        _i++;
+                        return [3 /*break*/, 9];
+                    case 12: return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 13:
                         _a.sent();
                         return [2 /*return*/, data_1];
-                    case 11:
+                    case 14:
                         error_1 = _a.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 12:
+                    case 15:
                         _a.sent();
                         throw error_1;
-                    case 13: return [4 /*yield*/, queryRunner.release()];
-                    case 14:
+                    case 16: return [4 /*yield*/, queryRunner.release()];
+                    case 17:
                         _a.sent();
                         return [7 /*endfinally*/];
-                    case 15: return [2 /*return*/];
+                    case 18: return [2 /*return*/];
                 }
             });
         });
