@@ -98,7 +98,7 @@ var OrderShipmentReport = /** @class */ (function () {
                         // console.log(chunkArray);
                         list = list.concat(chunkArray);
                         if (!(data_1.status != "POSTED")) return [3 /*break*/, 15];
-                        return [4 /*yield*/, this.stockOnHandCheck(salesLine, data_1.inventLocationId)];
+                        return [4 /*yield*/, this.stockOnHandCheck(salesLine, data_1.inventLocationId, id)];
                     case 7:
                         cond = _b.sent();
                         if (!cond) return [3 /*break*/, 14];
@@ -385,7 +385,7 @@ var OrderShipmentReport = /** @class */ (function () {
             });
         });
     };
-    OrderShipmentReport.prototype.stockOnHandCheck = function (salesLine, inventlocationid) {
+    OrderShipmentReport.prototype.stockOnHandCheck = function (salesLine, inventlocationid, salesid) {
         return __awaiter(this, void 0, void 0, function () {
             var canConvert, colors, items, sizes, groupSalesLines, newSalesline, itemsInStock;
             return __generator(this, function (_a) {
@@ -412,7 +412,7 @@ var OrderShipmentReport = /** @class */ (function () {
                                 return false;
                             }
                         });
-                        return [4 /*yield*/, this.rawQuery.checkItems(inventlocationid, items, colors, sizes)];
+                        return [4 /*yield*/, this.rawQuery.checkItems(inventlocationid, items, colors, sizes, salesid)];
                     case 1:
                         itemsInStock = _a.sent();
                         newSalesline.map(function (v) {

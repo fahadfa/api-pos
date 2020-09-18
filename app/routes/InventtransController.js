@@ -215,7 +215,7 @@ var InventtransController = /** @class */ (function () {
             });
         }); });
         this.router.post("/checkinventory", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
-            var reqData, result, error_6;
+            var reqData, result, salesIdData, error_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -225,10 +225,11 @@ var InventtransController = /** @class */ (function () {
                         this.service.sessionInfo = request.body.sessionInfo;
                         App_1.App.PrintLog(this.moduleName(), "Save", this.service.sessionInfo);
                         reqData = request.body ? request.body.data : {};
+                        salesIdData = request.query ? request.query : {};
                         return [4 /*yield*/, App_1.App.ValildateUserAccess(this.service.sessionInfo, this.moduleName(), Props_1.Props.ACCESS_WRITE)];
                     case 1:
                         if (!_a.sent()) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.service.stockOnHandCheck(reqData)];
+                        return [4 /*yield*/, this.service.stockOnHandCheck(reqData, salesIdData.salesId)];
                     case 2:
                         result = _a.sent();
                         return [3 /*break*/, 4];

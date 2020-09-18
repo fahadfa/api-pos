@@ -1063,7 +1063,7 @@ var SalesTableService = /** @class */ (function () {
                         salesData.salesLine.map(function (v) {
                             items.push("" + v.itemid), colors.push(v.configId), sizes.push(v.inventsizeid);
                         });
-                        return [4 /*yield*/, this.rawQuery.checkItems(this.sessionInfo.inventlocationid, items, colors, sizes)];
+                        return [4 /*yield*/, this.rawQuery.checkItems(this.sessionInfo.inventlocationid, items, colors, sizes, data.salesId)];
                     case 2:
                         itemsInStock = _a.sent();
                         console.log("==========================", itemsInStock);
@@ -1551,7 +1551,7 @@ var SalesTableService = /** @class */ (function () {
                                 throw { message: "CANNOT_CREATE_SALESORDER" };
                             }
                         });
-                        return [4 /*yield*/, this.rawQuery.checkItems(this.sessionInfo.inventlocationid, items_2, colors_2, sizes_2)];
+                        return [4 /*yield*/, this.rawQuery.checkItems(this.sessionInfo.inventlocationid, items_2, colors_2, sizes_2, reqData.salesId)];
                     case 1:
                         itemsInStock_1 = _a.sent();
                         newSalesline_1.map(function (v) {

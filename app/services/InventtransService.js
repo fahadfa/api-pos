@@ -91,6 +91,8 @@ var InventtransService = /** @class */ (function () {
                         // let data: any = await this.rawQuery.getInventTransFromView(params);
                         data.map(function (v) {
                             v.availabilty = parseInt(v.availabilty);
+                            v.reservedQuantity = parseInt(v.reservedQuantity);
+                            v.totalAvailable = parseInt(v.totalAvailable);
                         });
                         return [2 /*return*/, data];
                     case 2:
@@ -349,6 +351,11 @@ var InventtransService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.inventoryOnHand(item)];
                     case 1:
                         data = _a.sent();
+                        data.map(function (v) {
+                            v.availabilty = parseInt(v.availabilty);
+                            v.reservedQuantity = parseInt(v.reservedQuantity);
+                            v.totalAvailable = parseInt(v.totalAvailable);
+                        });
                         return [4 /*yield*/, data];
                     case 2: return [2 /*return*/, _a.sent()];
                     case 3:
@@ -359,7 +366,7 @@ var InventtransService = /** @class */ (function () {
             });
         });
     };
-    InventtransService.prototype.stockOnHandCheck = function (salesLine) {
+    InventtransService.prototype.stockOnHandCheck = function (salesLine, salesId) {
         return __awaiter(this, void 0, void 0, function () {
             var colors_1, items_1, sizes_1, result_2, groupSalesLines, newSalesline_1, itemsInStock_1, err_1;
             return __generator(this, function (_a) {
@@ -393,7 +400,7 @@ var InventtransService = /** @class */ (function () {
                                 });
                             }
                         });
-                        return [4 /*yield*/, this.rawQuery.checkItems(this.sessionInfo.inventlocationid, items_1, colors_1, sizes_1)];
+                        return [4 /*yield*/, this.rawQuery.checkItems(this.sessionInfo.inventlocationid, items_1, colors_1, sizes_1, salesId)];
                     case 1:
                         itemsInStock_1 = _a.sent();
                         newSalesline_1.map(function (v) {
@@ -410,7 +417,7 @@ var InventtransService = /** @class */ (function () {
                                         inventsizeid: v.inventsizeid,
                                         selectedQuantity: v.salesQty,
                                         availabilty: parseInt(itemsInStock_1[index].qty),
-                                        product: v.product
+                                        product: v.product,
                                     });
                                 }
                             }
