@@ -1631,7 +1631,9 @@ var SalesTableService = /** @class */ (function () {
                             promiseList.push(queryRunner.manager.getRepository(InventTrans_1.Inventorytrans).delete(i.id));
                         }
                         return [4 /*yield*/, Promise.all(promiseList)];
-                    case 2: return [2 /*return*/, _a.sent()];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/];
                 }
             });
         });
@@ -1693,7 +1695,7 @@ var SalesTableService = /** @class */ (function () {
                         batch.qty = -batch.quantity;
                         batch.reserveStatus = reqData.status;
                         batch.dataareaid = this.sessionInfo.dataareaid;
-                        batch.transactionClosed = reqData.status == "PAID" || reqData.status == "RESERVED" ? true : false;
+                        batch.transactionClosed = (reqData.status == "PAID" || reqData.status == "RESERVED") ? true : false;
                         batch.salesLineId = item.id;
                         batch.dateinvent = new Date(App_1.App.DateNow());
                         batches.push(batch);
