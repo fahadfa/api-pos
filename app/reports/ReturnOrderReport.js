@@ -69,23 +69,23 @@ var ReturnOrderReport = /** @class */ (function () {
     }
     ReturnOrderReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, data_1, batches, result, new_data_1, i_1, statusQuery, batches_2, _i, batches_1, item, designerServices, _a, designerServices_1, service, salesLine, sNo_1, error_1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var queryRunner, data_1, batchesList, result, new_data_1, i_1, date, statusQuery, inventtransQuery, designerServices, _i, designerServices_1, service, salesLine, sNo_1, error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
                         queryRunner = typeorm_2.getConnection().createQueryRunner();
                         return [4 /*yield*/, queryRunner.connect()];
                     case 1:
-                        _b.sent();
+                        _a.sent();
                         return [4 /*yield*/, queryRunner.startTransaction()];
                     case 2:
-                        _b.sent();
-                        _b.label = 3;
+                        _a.sent();
+                        _a.label = 3;
                     case 3:
-                        _b.trys.push([3, 19, 21, 23]);
+                        _a.trys.push([3, 15, 17, 19]);
                         return [4 /*yield*/, this.query_to_data(params)];
                     case 4:
-                        data_1 = _b.sent();
+                        data_1 = _a.sent();
                         data_1 = data_1.length > 0 ? data_1[0] : {};
                         data_1.originalPrinted = data_1.originalPrinted == null ? false : data_1.originalPrinted;
                         data_1.vatAmount = Math.round(parseFloat((data_1.vatAmount * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2);
@@ -98,8 +98,8 @@ var ReturnOrderReport = /** @class */ (function () {
                         }
                         return [4 /*yield*/, this.batches_data_to_query(params)];
                     case 5:
-                        batches = _b.sent();
-                        result = this.groupBy(batches, function (item) {
+                        batchesList = _a.sent();
+                        result = this.groupBy(batchesList, function (item) {
                             return [item.itemid, item.batchno, item.configid, item.inventsizeid];
                         });
                         new_data_1 = [];
@@ -122,40 +122,47 @@ var ReturnOrderReport = /** @class */ (function () {
                         data_1.batches = new_data_1;
                         // this.db.query(` update inventtrans set transactionclosed = true where invoiceid='${params.salesId}'`);
                         queryRunner.query("update inventtrans set transactionclosed = true where invoiceid='" + params.salesId + "'");
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 16];
-                        statusQuery = "UPDATE salestable SET \n                          originalprinted = 'true',\n                          status = 'POSTED',\n                          lastmodifieddate = '" + new Date().toISOString() + "' \n                          WHERE salesid = '" + params.salesId + "' or \n                          salesgroup = '" + params.salesId + "' or \n                          deliverystreet = '" + params.salesId + "'";
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 12];
+                        date = new Date().toISOString();
+                        statusQuery = "UPDATE salestable SET \n                          originalprinted = 'true',\n                          status = 'POSTED',\n                          lastmodifieddate = '" + date + "' \n                          WHERE salesid = '" + params.salesId + "' or \n                          salesgroup = '" + params.salesId + "' or \n                          deliverystreet = '" + params.salesId + "'";
                         // await this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED");
                         queryRunner.query(statusQuery);
-                        return [4 /*yield*/, this.inventTransDAO.findAll({ invoiceid: params.salesId })];
+                        inventtransQuery = "UPDATE inventtrans SET transactionclosed = " + true + " ";
+                        if (date) {
+                            inventtransQuery += ",dateinvent = '" + date + "' ";
+                        }
+                        inventtransQuery += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "'";
+                        return [4 /*yield*/, queryRunner.query(inventtransQuery)
+                            // for (let item of batches) {
+                            // item.transactionClosed = true;
+                            // this.inventTransDAO.save(item);
+                            // await this.updateInventoryService.updateInventtransTable(item, false, true, queryRunner);
+                            // }
+                        ];
                     case 6:
-                        batches_2 = _b.sent();
-                        _i = 0, batches_1 = batches_2;
-                        _b.label = 7;
+                        _a.sent();
+                        // for (let item of batches) {
+                        // item.transactionClosed = true;
+                        // this.inventTransDAO.save(item);
+                        // await this.updateInventoryService.updateInventtransTable(item, false, true, queryRunner);
+                        // }
+                        return [4 /*yield*/, this.updateSalesLineData(params.salesId)];
                     case 7:
-                        if (!(_i < batches_1.length)) return [3 /*break*/, 10];
-                        item = batches_1[_i];
-                        item.transactionClosed = true;
+                        // for (let item of batches) {
+                        // item.transactionClosed = true;
                         // this.inventTransDAO.save(item);
-                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(item, false, true, queryRunner)];
-                    case 8:
-                        // this.inventTransDAO.save(item);
-                        _b.sent();
-                        _b.label = 9;
-                    case 9:
-                        _i++;
-                        return [3 /*break*/, 7];
-                    case 10: return [4 /*yield*/, this.updateSalesLineData(params.salesId)];
-                    case 11:
-                        _b.sent();
+                        // await this.updateInventoryService.updateInventtransTable(item, false, true, queryRunner);
+                        // }
+                        _a.sent();
                         return [4 /*yield*/, this.salesTableDAO.search({ deliveryStreet: params.salesId })];
-                    case 12:
-                        designerServices = _b.sent();
+                    case 8:
+                        designerServices = _a.sent();
                         console.log(designerServices);
-                        _a = 0, designerServices_1 = designerServices;
-                        _b.label = 13;
-                    case 13:
-                        if (!(_a < designerServices_1.length)) return [3 /*break*/, 16];
-                        service = designerServices_1[_a];
+                        _i = 0, designerServices_1 = designerServices;
+                        _a.label = 9;
+                    case 9:
+                        if (!(_i < designerServices_1.length)) return [3 /*break*/, 12];
+                        service = designerServices_1[_i];
                         service.status = "PAID";
                         // this.salesTableService.sessionInfo = {
                         //   useName: "SYSTEM",
@@ -170,15 +177,15 @@ var ReturnOrderReport = /** @class */ (function () {
                         // };
                         this.salesTableService.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.salesTableService.saveQuotation(service, queryRunner)];
-                    case 14:
-                        _b.sent();
-                        _b.label = 15;
-                    case 15:
-                        _a++;
-                        return [3 /*break*/, 13];
-                    case 16: return [4 /*yield*/, this.salesline_query_to_data(params)];
-                    case 17:
-                        salesLine = _b.sent();
+                    case 10:
+                        _a.sent();
+                        _a.label = 11;
+                    case 11:
+                        _i++;
+                        return [3 /*break*/, 9];
+                    case 12: return [4 /*yield*/, this.salesline_query_to_data(params)];
+                    case 13:
+                        salesLine = _a.sent();
                         sNo_1 = 1;
                         data_1.vat = salesLine.length > 0 ? salesLine[0].vat : "-";
                         salesLine.map(function (val) {
@@ -193,21 +200,21 @@ var ReturnOrderReport = /** @class */ (function () {
                         });
                         // console.log(data);
                         return [4 /*yield*/, queryRunner.commitTransaction()];
-                    case 18:
+                    case 14:
                         // console.log(data);
-                        _b.sent();
+                        _a.sent();
                         return [2 /*return*/, data_1];
-                    case 19:
-                        error_1 = _b.sent();
+                    case 15:
+                        error_1 = _a.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 20:
-                        _b.sent();
+                    case 16:
+                        _a.sent();
                         throw error_1;
-                    case 21: return [4 /*yield*/, queryRunner.release()];
-                    case 22:
-                        _b.sent();
+                    case 17: return [4 /*yield*/, queryRunner.release()];
+                    case 18:
+                        _a.sent();
                         return [7 /*endfinally*/];
-                    case 23: return [2 /*return*/];
+                    case 19: return [2 /*return*/];
                 }
             });
         });

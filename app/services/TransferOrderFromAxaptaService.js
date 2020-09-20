@@ -115,7 +115,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                             salesData.custAccount = data.invent_location_id_from;
                             salesData.invoiceDate = data.shipdate;
                             salesData.shippingDateConfirmed = data.shipdate;
-                            salesData.dataareaid = data.data_area_id;
+                            salesData.dataareaid = data.data_area_id.toLowerCase();
                             salesData.lastModifiedDate = new Date(App_1.App.DateNow());
                             salesData.createddatetime = new Date(App_1.App.DateNow());
                             salesData.salesType = 4;
@@ -133,7 +133,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                                 salesLine.configId = v.config_id;
                                 salesLine.inventsizeid = v.invent_size_id;
                                 salesLine.salesQty = parseInt(v.shipped_qty);
-                                salesLine.dataareaid = v.data_area_id;
+                                salesLine.dataareaid = v.data_area_id.toLowerCase();
                                 salesLine.inventLocationId = data.invent_location_id_to;
                                 salesLine.batchNo = v.batch_no;
                                 salesLine.custAccount = data.invent_location_id_from;
@@ -150,7 +150,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                                 batches.configid = salesLine.configId;
                                 batches.inventsizeid = salesLine.inventsizeid;
                                 batches.inventlocationid = salesLine.inventLocationId;
-                                batches.dataareaid = salesLine.dataareaid;
+                                batches.dataareaid = salesLine.dataareaid.toLowerCase();
                                 batches.transactionClosed = false;
                                 batches.dateinvent = new Date(App_1.App.DateNow());
                                 salesLine.batches = batches;
@@ -251,12 +251,13 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         console.log("==========================================================", batches);
                         batches.invoiceid = salesData.salesId;
                         batches.salesLineId = item.id;
+                        batches.transactionClosed = false;
                         // await this.salesLineDAO.save(item);
                         return [4 /*yield*/, queryRunner.manager.getRepository(SalesLine_1.SalesLine).save(item)];
                     case 13:
                         // await this.salesLineDAO.save(item);
                         _a.sent();
-                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches, false, true, queryRunner)];
+                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches, false, false, queryRunner)];
                     case 14:
                         _a.sent();
                         _a.label = 15;

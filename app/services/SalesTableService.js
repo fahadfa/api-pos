@@ -3241,7 +3241,7 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.dofifo = function (item, reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var batches, inventory, val_1, _i, inventory_1, batch, _a, inventory_2, batch;
+            var batches, inventory, val_1, batchList, _i, inventory_1, batch, _a, batchList_1, batch;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -3257,22 +3257,25 @@ var SalesTableService = /** @class */ (function () {
                         console.log("======dofifo=======", inventory);
                         val_1 = parseInt(item.salesQty);
                         console.log("quantity", val_1);
+                        batchList = [];
                         for (_i = 0, inventory_1 = inventory; _i < inventory_1.length; _i++) {
                             batch = inventory_1[_i];
                             if (val_1 > 0) {
                                 if (parseInt(batch.availabilty) >= val_1) {
                                     batch.quantity = val_1;
                                     val_1 = 0;
+                                    batchList.push(batch);
                                     break;
                                 }
                                 else {
                                     batch.quantity = parseInt(batch.availabilty);
                                     val_1 -= parseInt(batch.availabilty);
+                                    batchList.push(batch);
                                 }
                             }
                         }
-                        for (_a = 0, inventory_2 = inventory; _a < inventory_2.length; _a++) {
-                            batch = inventory_2[_a];
+                        for (_a = 0, batchList_1 = batchList; _a < batchList_1.length; _a++) {
+                            batch = batchList_1[_a];
                             if (batch.quantity > 0) {
                                 batch.itemid = item.itemid;
                                 batch.transrefid = reqData.salesId;
@@ -3297,7 +3300,7 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.dofifo__ = function (batch, status) {
         return __awaiter(this, void 0, void 0, function () {
-            var inventory, FIFObatch, val_1, _i, inventory_3, i, fifob, _a, FIFObatch_1, invent;
+            var inventory, FIFObatch, val_1, _i, inventory_2, i, fifob, _a, FIFObatch_1, invent;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4 /*yield*/, this.rawQuery.getInventTrans({
@@ -3313,8 +3316,8 @@ var SalesTableService = /** @class */ (function () {
                         //console.log(val_1);
                         inventory = inventory.filter(function (v) { return v.availabilty > 0; });
                         //console.log(inventory);
-                        for (_i = 0, inventory_3 = inventory; _i < inventory_3.length; _i++) {
-                            i = inventory_3[_i];
+                        for (_i = 0, inventory_2 = inventory; _i < inventory_2.length; _i++) {
+                            i = inventory_2[_i];
                             fifob = {
                                 itemid: batch.itemid,
                                 configid: batch.configid,
