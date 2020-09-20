@@ -66,7 +66,7 @@ var OrderShipmentReport = /** @class */ (function () {
     }
     OrderShipmentReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, id, status_1, data_1, salesLine, list, chunkArray, cond, date, query, inventtransQuery, newSalesline, sNo_1, quantity, _loop_1, this_1, _i, list_1, val, error_1;
+            var queryRunner, id, status_1, data_1, salesLine, list, chunkArray, cond, date_1, query, date, inventtransQuery, newSalesline, sNo_1, quantity, _loop_1, this_1, _i, list_1, val, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -97,39 +97,33 @@ var OrderShipmentReport = /** @class */ (function () {
                         chunkArray = _a.sent();
                         // console.log(chunkArray);
                         list = list.concat(chunkArray);
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 11];
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 10];
                         return [4 /*yield*/, this.stockOnHandCheck(salesLine, data_1.inventLocationId, id)];
                     case 7:
                         cond = _a.sent();
-                        if (!cond) return [3 /*break*/, 10];
-                        date = new Date().toISOString();
+                        if (!cond) return [3 /*break*/, 9];
+                        date_1 = new Date().toISOString();
                         query = "UPDATE salestable SET originalprinted = '" + true + "', status = 'POSTED'";
-                        if (date) {
-                            query += ",lastmodifieddate = '" + date + "' ";
+                        if (date_1) {
+                            query += ",lastmodifieddate = '" + date_1 + "' ";
                         }
                         query += " WHERE salesid = '" + params.salesId.toUpperCase() + "'";
                         return [4 /*yield*/, queryRunner.query(query)];
                     case 8:
                         _a.sent();
+                        return [3 /*break*/, 10];
+                    case 9: throw { message: "SOME_OF_THE_ITEMS_ARE_OUT_OF_STOCK" };
+                    case 10:
+                        date = new Date().toISOString();
                         inventtransQuery = "UPDATE inventtrans SET transactionclosed = " + true + " ";
                         if (date) {
                             inventtransQuery += ",dateinvent = '" + date + "' ";
                         }
                         inventtransQuery += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "'";
-                        return [4 /*yield*/, queryRunner.query(inventtransQuery)
-                            // this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED", new Date().toISOString());
-                            // let batches: any = await this.inventTransDAO.findAll({ invoiceid: params.salesId });
-                            // for (let item of batches) {
-                            //   item.transactionClosed = true;
-                            //   // this.inventTransDAO.save(item);
-                            //   await this.updateInventoryService.updateInventtransTable(item, false, true, queryRunner);
-                            // }
-                        ];
-                    case 9:
+                        return [4 /*yield*/, queryRunner.query(inventtransQuery)];
+                    case 11:
                         _a.sent();
-                        return [3 /*break*/, 11];
-                    case 10: throw { message: "SOME_OF_THE_ITEMS_ARE_OUT_OF_STOCK" };
-                    case 11: return [4 /*yield*/, queryRunner.commitTransaction()];
+                        return [4 /*yield*/, queryRunner.commitTransaction()];
                     case 12:
                         _a.sent();
                         newSalesline = [];

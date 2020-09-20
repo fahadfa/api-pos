@@ -54,7 +54,7 @@ var MovementReport = /** @class */ (function () {
     }
     MovementReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, id, status_1, data_1, salesLine, date, query, voucherData, query_1, inventtransQuery, error_1;
+            var queryRunner, id, status_1, data_1, salesLine, date, query, voucherData, query_1, date, inventtransQuery, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -82,7 +82,7 @@ var MovementReport = /** @class */ (function () {
                         data_1.salesLine = salesLine;
                         data_1.quantity = 0;
                         data_1.salesLine.map(function (v) { data_1.quantity += parseInt(v.salesQty); });
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 10];
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 8];
                         date = new Date().toISOString();
                         query = "UPDATE salestable SET originalprinted = '" + true + "', status = 'POSTED'";
                         if (date) {
@@ -105,6 +105,7 @@ var MovementReport = /** @class */ (function () {
                         _a.label = 8;
                     case 8:
                         if (!(data_1.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 10];
+                        date = new Date().toISOString();
                         inventtransQuery = "UPDATE inventtrans SET transactionclosed = " + true + ", reserve_status = 'POSTED' ";
                         if (date) {
                             inventtransQuery += ",dateinvent = '" + date + "' ";
@@ -140,9 +141,11 @@ var MovementReport = /** @class */ (function () {
                         _a.sent();
                         _a.label = 10;
                     case 10: 
+                    // await Promise.all(promiseList);
                     // console.log(data);
                     return [4 /*yield*/, queryRunner.commitTransaction()];
                     case 11:
+                        // await Promise.all(promiseList);
                         // console.log(data);
                         _a.sent();
                         return [2 /*return*/, data_1];

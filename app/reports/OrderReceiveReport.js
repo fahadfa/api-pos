@@ -52,7 +52,7 @@ var OrderReceiveReport = /** @class */ (function () {
     }
     OrderReceiveReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, id, status_1, data_1, salesLine, i_1, date, query, inventtransQuery, error_1;
+            var queryRunner, id, status_1, data_1, salesLine, i_1, date_1, query, date, inventtransQuery, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -85,22 +85,14 @@ var OrderReceiveReport = /** @class */ (function () {
                         salesLine.map(function (v) {
                             data_1.quantity += parseInt(v.salesQty);
                         });
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 8];
-                        date = new Date().toISOString();
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 7];
+                        date_1 = new Date().toISOString();
                         query = "UPDATE salestable SET originalprinted = '" + true + "', status = 'POSTED'";
-                        if (date) {
-                            query += ",lastmodifieddate = '" + date + "' ";
+                        if (date_1) {
+                            query += ",lastmodifieddate = '" + date_1 + "' ";
                         }
                         query += " WHERE salesid = '" + params.salesId.toUpperCase() + "'";
-                        return [4 /*yield*/, queryRunner.query(query)];
-                    case 6:
-                        _a.sent();
-                        inventtransQuery = "UPDATE inventtrans SET transactionclosed = " + true + " ";
-                        if (date) {
-                            inventtransQuery += ",dateinvent = '" + date + "' ";
-                        }
-                        inventtransQuery += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "'";
-                        return [4 /*yield*/, queryRunner.query(inventtransQuery)
+                        return [4 /*yield*/, queryRunner.query(query)
                             // this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED", new Date().toISOString());
                             // let batches: any[] = await this.inventTransDAO.findAll({ invoiceid: params.salesId });
                             // let groupData: any[] = await this.groupBy(batches, function (item: any) {
@@ -124,10 +116,20 @@ var OrderReceiveReport = /** @class */ (function () {
                             // }
                             // await Promise.all(promiseList);
                         ];
-                    case 7:
+                    case 6:
                         _a.sent();
-                        _a.label = 8;
-                    case 8: return [4 /*yield*/, queryRunner.commitTransaction()];
+                        _a.label = 7;
+                    case 7:
+                        date = new Date().toISOString();
+                        inventtransQuery = "UPDATE inventtrans SET transactionclosed = " + true + " ";
+                        if (date) {
+                            inventtransQuery += ",dateinvent = '" + date + "' ";
+                        }
+                        inventtransQuery += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "'";
+                        return [4 /*yield*/, queryRunner.query(inventtransQuery)];
+                    case 8:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.commitTransaction()];
                     case 9:
                         _a.sent();
                         return [2 /*return*/, data_1];
