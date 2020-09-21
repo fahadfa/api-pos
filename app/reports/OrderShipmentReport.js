@@ -111,7 +111,7 @@ var OrderShipmentReport = /** @class */ (function () {
                         return [4 /*yield*/, queryRunner.query(query)];
                     case 8:
                         _a.sent();
-                        inventtransQuery_1 = "UPDATE inventtrans SET transactionclosed = " + true + " , reserve_status = 'POSTED ";
+                        inventtransQuery_1 = "UPDATE inventtrans SET transactionclosed = " + true + " ";
                         if (date) {
                             inventtransQuery_1 += ",dateinvent = '" + date + "' ";
                         }
@@ -130,7 +130,7 @@ var OrderShipmentReport = /** @class */ (function () {
                         return [3 /*break*/, 11];
                     case 10: throw { message: "SOME_OF_THE_ITEMS_ARE_OUT_OF_STOCK" };
                     case 11:
-                        inventtransQuery = "UPDATE inventtrans SET transactionclosed = " + true + " , reserve_status = 'POSTED ";
+                        inventtransQuery = "UPDATE inventtrans SET transactionclosed = " + true + " ";
                         inventtransQuery += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "'";
                         return [4 /*yield*/, queryRunner.query(inventtransQuery)];
                     case 12:

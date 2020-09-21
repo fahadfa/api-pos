@@ -104,7 +104,7 @@ var MovementReport = /** @class */ (function () {
                         _a.sent();
                         _a.label = 8;
                     case 8:
-                        inventtransQuery_1 = "UPDATE inventtrans SET transactionclosed = " + true + ", reserve_status = 'POSTED' ";
+                        inventtransQuery_1 = "UPDATE inventtrans SET transactionclosed = " + true + " ";
                         if (date) {
                             inventtransQuery_1 += ",dateinvent = '" + date + "' ";
                         }
@@ -114,7 +114,7 @@ var MovementReport = /** @class */ (function () {
                         _a.sent();
                         _a.label = 10;
                     case 10:
-                        inventtransQuery = "UPDATE inventtrans SET transactionclosed = " + true + ", reserve_status = 'POSTED' ";
+                        inventtransQuery = "UPDATE inventtrans SET transactionclosed = " + true + " ";
                         inventtransQuery += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "'";
                         return [4 /*yield*/, queryRunner.query(inventtransQuery)
                             // await this.workflowService.inventryTransUpdate(reqData);
