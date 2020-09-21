@@ -117,7 +117,7 @@ var SalesByOrderReport = /** @class */ (function () {
                             saleslist_1.salesgroup.amount = Number(saleslist_1.salesgroup.amount).toFixed(2);
                             saleslist_1.salesgroup.netamount = Number(saleslist_1.salesgroup.netamount).toFixed(2);
                             saleslist_1.salesgroup.vatamount = Number(saleslist_1.salesgroup.vatamount).toFixed(2);
-                            saleslist_1.salesgroup.disc = Number(saleslist_1.salesgroup.disc).toFixed(2);
+                            saleslist_1.salesgroup.disc = saleslist_1.salesgroup.disc ? Number(saleslist_1.salesgroup.disc).toFixed(2) : 0;
                         }
                         // console.log('=============result=======================');
                         // console.log(result);
@@ -131,7 +131,7 @@ var SalesByOrderReport = /** @class */ (function () {
         saleslist.salesgroup.amount += Number.parseFloat(item.amount);
         saleslist.salesgroup.netamount += Number.parseFloat(item.netamount);
         saleslist.salesgroup.vatamount += Number.parseFloat(item.vatamount);
-        saleslist.salesgroup.disc += Number.parseFloat(item.disc);
+        saleslist.salesgroup.disc += item.disc ? Number.parseFloat(item.disc) : 0;
     };
     SalesByOrderReport.prototype.report = function (result, params) {
         return __awaiter(this, void 0, void 0, function () {

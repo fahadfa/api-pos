@@ -52,7 +52,7 @@ var OrderReceiveReport = /** @class */ (function () {
     }
     OrderReceiveReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, id, status_1, data_1, salesLine, i_1, date, query, inventtransQuery_1, inventtransQuery, error_1;
+            var queryRunner, id, status_1, data_1, salesLine, i_1, checkPrevData, date, query, inventtransQuery_1, inventtransQuery, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -65,7 +65,7 @@ var OrderReceiveReport = /** @class */ (function () {
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        _a.trys.push([3, 11, 13, 15]);
+                        _a.trys.push([3, 12, 14, 16]);
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
                     case 4:
@@ -85,7 +85,14 @@ var OrderReceiveReport = /** @class */ (function () {
                         salesLine.map(function (v) {
                             data_1.quantity += parseInt(v.salesQty);
                         });
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 8];
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 9];
+                        return [4 /*yield*/, this.db.query("select * from salestable where intercompanyoriginalsalesid  = '" + data_1.interCompanyOriginalSalesId + "' and status='POSTED' ")];
+                    case 6:
+                        checkPrevData = _a.sent();
+                        console.log(checkPrevData);
+                        if (checkPrevData && checkPrevData.length > 0) {
+                            throw { message: "CANNOT_PRINT_ORDER" };
+                        }
                         date = new Date().toISOString();
                         query = "UPDATE salestable SET originalprinted = '" + true + "', status = 'POSTED'";
                         if (date) {
@@ -93,7 +100,7 @@ var OrderReceiveReport = /** @class */ (function () {
                         }
                         query += " WHERE salesid = '" + params.salesId.toUpperCase() + "'";
                         return [4 /*yield*/, queryRunner.query(query)];
-                    case 6:
+                    case 7:
                         _a.sent();
                         inventtransQuery_1 = "UPDATE inventtrans SET transactionclosed = " + true + " ,reserve_status = 'POSTED' ";
                         if (date) {
@@ -124,30 +131,30 @@ var OrderReceiveReport = /** @class */ (function () {
                             // }
                             // await Promise.all(promiseList);
                         ];
-                    case 7:
-                        _a.sent();
-                        _a.label = 8;
                     case 8:
+                        _a.sent();
+                        _a.label = 9;
+                    case 9:
                         inventtransQuery = "UPDATE inventtrans SET transactionclosed = " + true + ", reserve_status = 'POSTED' ";
                         inventtransQuery += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "'";
                         return [4 /*yield*/, queryRunner.query(inventtransQuery)];
-                    case 9:
-                        _a.sent();
-                        return [4 /*yield*/, queryRunner.commitTransaction()];
                     case 10:
                         _a.sent();
-                        return [2 /*return*/, data_1];
+                        return [4 /*yield*/, queryRunner.commitTransaction()];
                     case 11:
+                        _a.sent();
+                        return [2 /*return*/, data_1];
+                    case 12:
                         error_1 = _a.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 12:
+                    case 13:
                         _a.sent();
                         throw error_1;
-                    case 13: return [4 /*yield*/, queryRunner.release()];
-                    case 14:
+                    case 14: return [4 /*yield*/, queryRunner.release()];
+                    case 15:
                         _a.sent();
                         return [7 /*endfinally*/];
-                    case 15: return [2 /*return*/];
+                    case 16: return [2 /*return*/];
                 }
             });
         });
