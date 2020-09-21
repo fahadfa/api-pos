@@ -95,7 +95,7 @@ var OrderReceiveReport = /** @class */ (function () {
                         return [4 /*yield*/, queryRunner.query(query)];
                     case 6:
                         _a.sent();
-                        inventtransQuery_1 = "UPDATE inventtrans SET transactionclosed = " + true + " ";
+                        inventtransQuery_1 = "UPDATE inventtrans SET transactionclosed = " + true + " ,reserve_status = 'POSTED' ";
                         if (date) {
                             inventtransQuery_1 += ",dateinvent = '" + date + "' ";
                         }
@@ -128,7 +128,7 @@ var OrderReceiveReport = /** @class */ (function () {
                         _a.sent();
                         _a.label = 8;
                     case 8:
-                        inventtransQuery = "UPDATE inventtrans SET transactionclosed = " + true + " ";
+                        inventtransQuery = "UPDATE inventtrans SET transactionclosed = " + true + ", reserve_status = 'POSTED' ";
                         inventtransQuery += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "'";
                         return [4 /*yield*/, queryRunner.query(inventtransQuery)];
                     case 9:

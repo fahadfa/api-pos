@@ -111,7 +111,7 @@ var OrderShipmentReport = /** @class */ (function () {
                         return [4 /*yield*/, queryRunner.query(query)];
                     case 8:
                         _a.sent();
-                        inventtransQuery_1 = "UPDATE inventtrans SET transactionclosed = " + true + " ";
+                        inventtransQuery_1 = "UPDATE inventtrans SET transactionclosed = " + true + ", reserve_status = 'POSTED' ";
                         if (date) {
                             inventtransQuery_1 += ",dateinvent = '" + date + "' ";
                         }

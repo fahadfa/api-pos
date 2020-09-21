@@ -125,7 +125,7 @@ var ReturnOrderReport = /** @class */ (function () {
                         statusQuery = "UPDATE salestable SET \n                          originalprinted = 'true',\n                          status = 'POSTED',\n                          lastmodifieddate = '" + date_1 + "' \n                          WHERE salesid = '" + params.salesId + "' or \n                          salesgroup = '" + params.salesId + "' or \n                          deliverystreet = '" + params.salesId + "'";
                         // await this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED");
                         queryRunner.query(statusQuery);
-                        inventtransQuery_1 = "UPDATE inventtrans SET transactionclosed = " + true + " ";
+                        inventtransQuery_1 = "UPDATE inventtrans SET transactionclosed = " + true + ", reserve_status = 'POSTED' ";
                         if (date_1) {
                             inventtransQuery_1 += ",dateinvent = '" + date_1 + "' ";
                         }
@@ -200,7 +200,7 @@ var ReturnOrderReport = /** @class */ (function () {
                             data_1.quantity += parseInt(v.salesQty);
                         });
                         date = new Date().toISOString();
-                        inventtransQuery = "UPDATE inventtrans SET transactionclosed = " + true + " ";
+                        inventtransQuery = "UPDATE inventtrans SET transactionclosed = " + true + ", reserve_status = 'POSTED' ";
                         inventtransQuery += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "'";
                         return [4 /*yield*/, queryRunner.query(inventtransQuery)];
                     case 14:
