@@ -69,7 +69,7 @@ var ReturnOrderReport = /** @class */ (function () {
     }
     ReturnOrderReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, data_1, batchesList, result, new_data_1, i_1, date_1, statusQuery, designerServices, _i, designerServices_1, service, salesLine, sNo_1, date, inventtransQuery, error_1;
+            var queryRunner, data_1, batchesList, result, new_data_1, i_1, date_1, statusQuery, inventtransQuery_1, designerServices, _i, designerServices_1, service, salesLine, sNo_1, date, inventtransQuery, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -82,7 +82,7 @@ var ReturnOrderReport = /** @class */ (function () {
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        _a.trys.push([3, 15, 17, 19]);
+                        _a.trys.push([3, 16, 18, 20]);
                         return [4 /*yield*/, this.query_to_data(params)];
                     case 4:
                         data_1 = _a.sent();
@@ -120,11 +120,26 @@ var ReturnOrderReport = /** @class */ (function () {
                             i_1++;
                         });
                         data_1.batches = new_data_1;
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 11];
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 12];
                         date_1 = new Date().toISOString();
                         statusQuery = "UPDATE salestable SET \n                          originalprinted = 'true',\n                          status = 'POSTED',\n                          lastmodifieddate = '" + date_1 + "' \n                          WHERE salesid = '" + params.salesId + "' or \n                          salesgroup = '" + params.salesId + "' or \n                          deliverystreet = '" + params.salesId + "'";
                         // await this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED");
                         queryRunner.query(statusQuery);
+                        inventtransQuery_1 = "UPDATE inventtrans SET transactionclosed = " + true + " , reserve_status = 'POSTED ";
+                        if (date_1) {
+                            inventtransQuery_1 += ",dateinvent = '" + date_1 + "' ";
+                        }
+                        inventtransQuery_1 += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "'";
+                        return [4 /*yield*/, queryRunner.query(inventtransQuery_1)
+                            // let batches: any = await this.inventTransDAO.findAll({ invoiceid: params.salesId });
+                            // for (let item of batches) {
+                            // item.transactionClosed = true;
+                            // this.inventTransDAO.save(item);
+                            // await this.updateInventoryService.updateInventtransTable(item, false, true, queryRunner);
+                            // }
+                        ];
+                    case 6:
+                        _a.sent();
                         // let batches: any = await this.inventTransDAO.findAll({ invoiceid: params.salesId });
                         // for (let item of batches) {
                         // item.transactionClosed = true;
@@ -132,7 +147,7 @@ var ReturnOrderReport = /** @class */ (function () {
                         // await this.updateInventoryService.updateInventtransTable(item, false, true, queryRunner);
                         // }
                         return [4 /*yield*/, this.updateSalesLineData(params.salesId)];
-                    case 6:
+                    case 7:
                         // let batches: any = await this.inventTransDAO.findAll({ invoiceid: params.salesId });
                         // for (let item of batches) {
                         // item.transactionClosed = true;
@@ -141,13 +156,13 @@ var ReturnOrderReport = /** @class */ (function () {
                         // }
                         _a.sent();
                         return [4 /*yield*/, this.salesTableDAO.search({ deliveryStreet: params.salesId })];
-                    case 7:
+                    case 8:
                         designerServices = _a.sent();
                         console.log(designerServices);
                         _i = 0, designerServices_1 = designerServices;
-                        _a.label = 8;
-                    case 8:
-                        if (!(_i < designerServices_1.length)) return [3 /*break*/, 11];
+                        _a.label = 9;
+                    case 9:
+                        if (!(_i < designerServices_1.length)) return [3 /*break*/, 12];
                         service = designerServices_1[_i];
                         service.status = "PAID";
                         // this.salesTableService.sessionInfo = {
@@ -163,14 +178,14 @@ var ReturnOrderReport = /** @class */ (function () {
                         // };
                         this.salesTableService.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.salesTableService.saveQuotation(service, queryRunner)];
-                    case 9:
-                        _a.sent();
-                        _a.label = 10;
                     case 10:
+                        _a.sent();
+                        _a.label = 11;
+                    case 11:
                         _i++;
-                        return [3 /*break*/, 8];
-                    case 11: return [4 /*yield*/, this.salesline_query_to_data(params)];
-                    case 12:
+                        return [3 /*break*/, 9];
+                    case 12: return [4 /*yield*/, this.salesline_query_to_data(params)];
+                    case 13:
                         salesLine = _a.sent();
                         sNo_1 = 1;
                         data_1.vat = salesLine.length > 0 ? salesLine[0].vat : "-";
@@ -185,29 +200,26 @@ var ReturnOrderReport = /** @class */ (function () {
                             data_1.quantity += parseInt(v.salesQty);
                         });
                         date = new Date().toISOString();
-                        inventtransQuery = "UPDATE inventtrans SET transactionclosed = " + true + " ";
-                        if (date) {
-                            inventtransQuery += ",dateinvent = '" + date + "' ";
-                        }
+                        inventtransQuery = "UPDATE inventtrans SET transactionclosed = " + true + " , reserve_status = 'POSTED ";
                         inventtransQuery += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "'";
                         return [4 /*yield*/, queryRunner.query(inventtransQuery)];
-                    case 13:
-                        _a.sent();
-                        return [4 /*yield*/, queryRunner.commitTransaction()];
                     case 14:
                         _a.sent();
-                        return [2 /*return*/, data_1];
+                        return [4 /*yield*/, queryRunner.commitTransaction()];
                     case 15:
+                        _a.sent();
+                        return [2 /*return*/, data_1];
+                    case 16:
                         error_1 = _a.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 16:
+                    case 17:
                         _a.sent();
                         throw error_1;
-                    case 17: return [4 /*yield*/, queryRunner.release()];
-                    case 18:
+                    case 18: return [4 /*yield*/, queryRunner.release()];
+                    case 19:
                         _a.sent();
                         return [7 /*endfinally*/];
-                    case 19: return [2 /*return*/];
+                    case 20: return [2 /*return*/];
                 }
             });
         });

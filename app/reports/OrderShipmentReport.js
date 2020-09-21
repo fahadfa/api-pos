@@ -66,7 +66,7 @@ var OrderShipmentReport = /** @class */ (function () {
     }
     OrderShipmentReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, id, status_1, data_1, salesLine, list, chunkArray, cond, date_1, query, date, inventtransQuery, newSalesline, sNo_1, quantity, _loop_1, this_1, _i, list_1, val, error_1;
+            var queryRunner, id, status_1, data_1, salesLine, list, chunkArray, cond, date, query, inventtransQuery_1, inventtransQuery, newSalesline, sNo_1, quantity, _loop_1, this_1, _i, list_1, val, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -79,7 +79,7 @@ var OrderShipmentReport = /** @class */ (function () {
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        _a.trys.push([3, 17, 19, 21]);
+                        _a.trys.push([3, 18, 20, 22]);
                         console.log("OrderShipmentReport===================");
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
@@ -97,34 +97,46 @@ var OrderShipmentReport = /** @class */ (function () {
                         chunkArray = _a.sent();
                         // console.log(chunkArray);
                         list = list.concat(chunkArray);
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 10];
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 11];
                         return [4 /*yield*/, this.stockOnHandCheck(salesLine, data_1.inventLocationId, id)];
                     case 7:
                         cond = _a.sent();
-                        if (!cond) return [3 /*break*/, 9];
-                        date_1 = new Date().toISOString();
+                        if (!cond) return [3 /*break*/, 10];
+                        date = new Date().toISOString();
                         query = "UPDATE salestable SET originalprinted = '" + true + "', status = 'POSTED'";
-                        if (date_1) {
-                            query += ",lastmodifieddate = '" + date_1 + "' ";
+                        if (date) {
+                            query += ",lastmodifieddate = '" + date + "' ";
                         }
                         query += " WHERE salesid = '" + params.salesId.toUpperCase() + "'";
                         return [4 /*yield*/, queryRunner.query(query)];
                     case 8:
                         _a.sent();
-                        return [3 /*break*/, 10];
-                    case 9: throw { message: "SOME_OF_THE_ITEMS_ARE_OUT_OF_STOCK" };
-                    case 10:
-                        date = new Date().toISOString();
-                        inventtransQuery = "UPDATE inventtrans SET transactionclosed = " + true + " ";
+                        inventtransQuery_1 = "UPDATE inventtrans SET transactionclosed = " + true + " , reserve_status = 'POSTED ";
                         if (date) {
-                            inventtransQuery += ",dateinvent = '" + date + "' ";
+                            inventtransQuery_1 += ",dateinvent = '" + date + "' ";
                         }
+                        inventtransQuery_1 += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "'";
+                        return [4 /*yield*/, queryRunner.query(inventtransQuery_1)
+                            // this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED", new Date().toISOString());
+                            // let batches: any = await this.inventTransDAO.findAll({ invoiceid: params.salesId });
+                            // for (let item of batches) {
+                            //   item.transactionClosed = true;
+                            //   // this.inventTransDAO.save(item);
+                            //   await this.updateInventoryService.updateInventtransTable(item, false, true, queryRunner);
+                            // }
+                        ];
+                    case 9:
+                        _a.sent();
+                        return [3 /*break*/, 11];
+                    case 10: throw { message: "SOME_OF_THE_ITEMS_ARE_OUT_OF_STOCK" };
+                    case 11:
+                        inventtransQuery = "UPDATE inventtrans SET transactionclosed = " + true + " , reserve_status = 'POSTED ";
                         inventtransQuery += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "'";
                         return [4 /*yield*/, queryRunner.query(inventtransQuery)];
-                    case 11:
+                    case 12:
                         _a.sent();
                         return [4 /*yield*/, queryRunner.commitTransaction()];
-                    case 12:
+                    case 13:
                         _a.sent();
                         newSalesline = [];
                         sNo_1 = 1;
@@ -176,18 +188,18 @@ var OrderShipmentReport = /** @class */ (function () {
                         };
                         this_1 = this;
                         _i = 0, list_1 = list;
-                        _a.label = 13;
-                    case 13:
-                        if (!(_i < list_1.length)) return [3 /*break*/, 16];
+                        _a.label = 14;
+                    case 14:
+                        if (!(_i < list_1.length)) return [3 /*break*/, 17];
                         val = list_1[_i];
                         return [5 /*yield**/, _loop_1(val)];
-                    case 14:
-                        _a.sent();
-                        _a.label = 15;
                     case 15:
-                        _i++;
-                        return [3 /*break*/, 13];
+                        _a.sent();
+                        _a.label = 16;
                     case 16:
+                        _i++;
+                        return [3 /*break*/, 14];
+                    case 17:
                         // console.log("#####", newSalesline, "######");
                         data_1.salesLine = newSalesline;
                         data_1.quantity = 0;
@@ -200,17 +212,17 @@ var OrderShipmentReport = /** @class */ (function () {
                         // console.log(qrString);
                         //data.qr = await QRCode.toDataURL("{name: 'naveen'}");
                         return [2 /*return*/, data_1];
-                    case 17:
+                    case 18:
                         error_1 = _a.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 18:
+                    case 19:
                         _a.sent();
                         throw error_1;
-                    case 19: return [4 /*yield*/, queryRunner.release()];
-                    case 20:
+                    case 20: return [4 /*yield*/, queryRunner.release()];
+                    case 21:
                         _a.sent();
                         return [7 /*endfinally*/];
-                    case 21: return [2 /*return*/];
+                    case 22: return [2 /*return*/];
                 }
             });
         });
