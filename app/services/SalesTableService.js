@@ -1582,7 +1582,7 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.salesLineDelete = function (reqData, queryRunner) {
         return __awaiter(this, void 0, void 0, function () {
-            var lineData, _i, lineData_1, i;
+            var lineData, deleteList, _i, lineData_1, i;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.salesLineDAO.findAll({
@@ -1590,20 +1590,18 @@ var SalesTableService = /** @class */ (function () {
                         })];
                     case 1:
                         lineData = _a.sent();
-                        if (!lineData) return [3 /*break*/, 5];
-                        _i = 0, lineData_1 = lineData;
-                        _a.label = 2;
+                        deleteList = [];
+                        if (lineData) {
+                            // await this.salesLineDAO.delete(lineData);
+                            for (_i = 0, lineData_1 = lineData; _i < lineData_1.length; _i++) {
+                                i = lineData_1[_i];
+                                deleteList.push(queryRunner.manager.getRepository(SalesLine_1.SalesLine).delete(i.id));
+                            }
+                        }
+                        return [4 /*yield*/, Promise.all(deleteList)];
                     case 2:
-                        if (!(_i < lineData_1.length)) return [3 /*break*/, 5];
-                        i = lineData_1[_i];
-                        return [4 /*yield*/, queryRunner.manager.getRepository(SalesLine_1.SalesLine).delete(i.id)];
-                    case 3:
                         _a.sent();
-                        _a.label = 4;
-                    case 4:
-                        _i++;
-                        return [3 /*break*/, 2];
-                    case 5: return [2 /*return*/];
+                        return [2 /*return*/];
                 }
             });
         });
@@ -1640,7 +1638,7 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.salesLineItemOrder = function (item, reqData, queryRunner) {
         return __awaiter(this, void 0, void 0, function () {
-            var promiseList, batches, taxItemGroup, _i, _a, batch, availability, fiofoBatches, fiofoBatches, _b, batches_4, batch;
+            var promiseList, batches, taxItemGroup, _i, _a, batch, availability, fiofoBatches, fiofoBatches, uniqueList, groupBatchesList, _b, uniqueList_1, batch;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
@@ -1660,6 +1658,7 @@ var SalesTableService = /** @class */ (function () {
                         taxItemGroup = _c.sent();
                         item.taxItemGroup = taxItemGroup.taxitemgroupid;
                         item.lineAmount = parseFloat(item.salesprice) * parseFloat(item.salesQty);
+                        item.batch = [];
                         if (!(item.batches && item.batches.length > 0)) return [3 /*break*/, 8];
                         item.batches = item.batches.filter(function (v) { return Math.abs(v.quantity) > 0; });
                         _i = 0, _a = item.batches;
@@ -1695,7 +1694,7 @@ var SalesTableService = /** @class */ (function () {
                         batch.qty = -batch.quantity;
                         batch.reserveStatus = reqData.status;
                         batch.dataareaid = this.sessionInfo.dataareaid;
-                        batch.transactionClosed = (reqData.status == "PAID" || reqData.status == "RESERVED") ? true : false;
+                        batch.transactionClosed = reqData.status == "PAID" || reqData.status == "RESERVED" ? true : false;
                         batch.salesLineId = item.id;
                         batch.dateinvent = new Date(App_1.App.DateNow());
                         batches.push(batch);
@@ -1710,12 +1709,18 @@ var SalesTableService = /** @class */ (function () {
                         batches = batches.concat(fiofoBatches);
                         _c.label = 10;
                     case 10:
-                        promiseList = [];
-                        _b = 0, batches_4 = batches;
+                        uniqueList = [];
+                        groupBatchesList = this.groupBy(batches, function (item) {
+                            return [item.itemid, item.batchno, item.configid, item.inventsizeid, item.quantity];
+                        });
+                        groupBatchesList.map(function (v) {
+                            uniqueList.push(v[0]);
+                        });
+                        _b = 0, uniqueList_1 = uniqueList;
                         _c.label = 11;
                     case 11:
-                        if (!(_b < batches_4.length)) return [3 /*break*/, 15];
-                        batch = batches_4[_b];
+                        if (!(_b < uniqueList_1.length)) return [3 /*break*/, 15];
+                        batch = uniqueList_1[_b];
                         item.batch.push({
                             batchNo: batch.batchno,
                             quantity: batch.quantity,
@@ -1739,7 +1744,7 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.saveSalesOrderPaidPursase = function (reqData, condData, queryRunner) {
         return __awaiter(this, void 0, void 0, function () {
-            var batches, _i, batches_5, v;
+            var batches, _i, batches_4, v;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -1752,11 +1757,11 @@ var SalesTableService = /** @class */ (function () {
                             })];
                     case 2:
                         batches = _a.sent();
-                        _i = 0, batches_5 = batches;
+                        _i = 0, batches_4 = batches;
                         _a.label = 3;
                     case 3:
-                        if (!(_i < batches_5.length)) return [3 /*break*/, 6];
-                        v = batches_5[_i];
+                        if (!(_i < batches_4.length)) return [3 /*break*/, 6];
+                        v = batches_4[_i];
                         delete v.id;
                         v.invoiceid = reqData.interCompanyOriginalSalesId;
                         v.transrefid = reqData.salesId;
@@ -2811,7 +2816,7 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.saveOrderReceive = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, salesLine, transactionClosed, salesData, checkStatus, promiseList, transferData, cond, salesTable, batches_6, _i, salesLine_11, item, _a, _b, batches_7, _c, _d, batches_8, returnData, error_20;
+            var queryRunner, salesLine, transactionClosed, salesData, checkStatus, promiseList, transferData, cond, salesTable, batches_5, _i, salesLine_11, item, _a, _b, batches_6, _c, _d, batches_7, returnData, error_20;
             return __generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
@@ -2869,10 +2874,10 @@ var SalesTableService = /** @class */ (function () {
                                 invoiceid: reqData.interCompanyOriginalSalesId,
                             })];
                     case 9:
-                        batches_6 = _e.sent();
-                        if (batches_6.length > 0) {
+                        batches_5 = _e.sent();
+                        if (batches_5.length > 0) {
                             salesLine.map(function (v) {
-                                v.batches = batches_6.filter(function (b) { return b.configid == v.configId && b.itemid == v.itemid && b.inventsizeid == v.inventsizeid; });
+                                v.batches = batches_5.filter(function (b) { return b.configid == v.configId && b.itemid == v.itemid && b.inventsizeid == v.inventsizeid; });
                             });
                         }
                         _i = 0, salesLine_11 = salesLine;
@@ -2890,33 +2895,33 @@ var SalesTableService = /** @class */ (function () {
                         item.jazeeraWarehouse = reqData.jazeeraWarehouse;
                         item.custAccount = reqData.custAccount;
                         item.batch = [];
-                        if (!(batches_6 && batches_6.length > 0)) return [3 /*break*/, 15];
+                        if (!(batches_5 && batches_5.length > 0)) return [3 /*break*/, 15];
                         _a = 0, _b = item.batches;
                         _e.label = 11;
                     case 11:
                         if (!(_a < _b.length)) return [3 /*break*/, 14];
-                        batches_7 = _b[_a];
-                        delete batches_7.id;
-                        batches_7.itemid = item.itemid;
-                        batches_7.transrefid = reqData.interCompanyOriginalSalesId;
-                        batches_7.invoiceid = reqData.salesId;
-                        batches_7.qty = Math.abs(batches_7.qty);
-                        batches_7.batchno = batches_7.batchno;
-                        batches_7.configid = item.configId;
-                        batches_7.inventsizeid = item.inventsizeid;
-                        batches_7.inventlocationid = reqData.inventLocationId;
-                        batches_7.dataareaid = reqData.dataareaid;
-                        batches_7.custvendac = reqData.custAccount;
-                        batches_7.reserveStatus = reqData.status;
-                        batches_7.transactionClosed = false;
-                        batches_7.dateinvent = new Date(App_1.App.DateNow());
-                        batches_7.salesLineId = item.id;
+                        batches_6 = _b[_a];
+                        delete batches_6.id;
+                        batches_6.itemid = item.itemid;
+                        batches_6.transrefid = reqData.interCompanyOriginalSalesId;
+                        batches_6.invoiceid = reqData.salesId;
+                        batches_6.qty = Math.abs(batches_6.qty);
+                        batches_6.batchno = batches_6.batchno;
+                        batches_6.configid = item.configId;
+                        batches_6.inventsizeid = item.inventsizeid;
+                        batches_6.inventlocationid = reqData.inventLocationId;
+                        batches_6.dataareaid = reqData.dataareaid;
+                        batches_6.custvendac = reqData.custAccount;
+                        batches_6.reserveStatus = reqData.status;
+                        batches_6.transactionClosed = false;
+                        batches_6.dateinvent = new Date(App_1.App.DateNow());
+                        batches_6.salesLineId = item.id;
                         item.batch.push({
-                            batchNo: batches_7.batchno,
-                            quantity: batches_7.qty,
+                            batchNo: batches_6.batchno,
+                            quantity: batches_6.qty,
                         });
                         this.updateInventoryService.sessionInfo = this.sessionInfo;
-                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches_7, false, true, queryRunner)];
+                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches_6, false, true, queryRunner)];
                     case 12:
                         _e.sent();
                         _e.label = 13;
@@ -2930,31 +2935,31 @@ var SalesTableService = /** @class */ (function () {
                         _e.label = 16;
                     case 16:
                         if (!(_c < _d.length)) return [3 /*break*/, 19];
-                        batches_8 = _d[_c];
-                        if (!(batches_8.quantity > 0)) return [3 /*break*/, 18];
-                        delete batches_8.id;
-                        batches_8.itemid = item.itemid;
-                        batches_8.transrefid = reqData.interCompanyOriginalSalesId
+                        batches_7 = _d[_c];
+                        if (!(batches_7.quantity > 0)) return [3 /*break*/, 18];
+                        delete batches_7.id;
+                        batches_7.itemid = item.itemid;
+                        batches_7.transrefid = reqData.interCompanyOriginalSalesId
                             ? reqData.interCompanyOriginalSalesId
                             : reqData.salesId;
-                        batches_8.invoiceid = reqData.salesId;
-                        batches_8.qty = parseInt(batches_8.quantity);
-                        batches_8.batchno = batches_8.batchNo;
-                        batches_8.configid = item.configId;
-                        batches_8.inventsizeid = item.inventsizeid;
-                        batches_8.inventlocationid = reqData.inventLocationId;
-                        batches_8.dataareaid = reqData.dataareaid;
-                        batches_8.custvendac = reqData.custAccount;
-                        batches_8.reserveStatus = reqData.status;
-                        batches_8.transactionClosed = false;
-                        batches_8.dateinvent = new Date(App_1.App.DateNow());
-                        batches_8.salesLineId = item.id;
+                        batches_7.invoiceid = reqData.salesId;
+                        batches_7.qty = parseInt(batches_7.quantity);
+                        batches_7.batchno = batches_7.batchNo;
+                        batches_7.configid = item.configId;
+                        batches_7.inventsizeid = item.inventsizeid;
+                        batches_7.inventlocationid = reqData.inventLocationId;
+                        batches_7.dataareaid = reqData.dataareaid;
+                        batches_7.custvendac = reqData.custAccount;
+                        batches_7.reserveStatus = reqData.status;
+                        batches_7.transactionClosed = false;
+                        batches_7.dateinvent = new Date(App_1.App.DateNow());
+                        batches_7.salesLineId = item.id;
                         item.batch.push({
-                            batchNo: batches_8.batchNo,
-                            quantity: batches_8.quantity,
+                            batchNo: batches_7.batchNo,
+                            quantity: batches_7.quantity,
                         });
                         this.updateInventoryService.sessionInfo = this.sessionInfo;
-                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches_8, false, true, queryRunner)];
+                        return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches_7, false, true, queryRunner)];
                     case 17:
                         _e.sent();
                         _e.label = 18;
@@ -2999,7 +3004,7 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.saveInventoryMovementOrder = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, salesLine, transactionClosed, salesData, checkStatus, promiseList, cond, _i, salesLine_12, item, _a, _b, batches, batches, _c, batches_9, batch, returnData, error_21;
+            var queryRunner, salesLine, transactionClosed, salesData, checkStatus, promiseList, cond, _i, salesLine_12, item, _a, _b, batches, batches, _c, batches_8, batch, returnData, error_21;
             return __generator(this, function (_d) {
                 switch (_d.label) {
                     case 0:
@@ -3109,11 +3114,11 @@ var SalesTableService = /** @class */ (function () {
                         })];
                     case 11:
                         batches = _d.sent();
-                        _c = 0, batches_9 = batches;
+                        _c = 0, batches_8 = batches;
                         _d.label = 12;
                     case 12:
-                        if (!(_c < batches_9.length)) return [3 /*break*/, 15];
-                        batch = batches_9[_c];
+                        if (!(_c < batches_8.length)) return [3 /*break*/, 15];
+                        batch = batches_8[_c];
                         delete batch.id;
                         batch.transrefid = reqData.interCompanyOriginalSalesId;
                         batch.invoiceid = reqData.salesId;
@@ -3295,72 +3300,6 @@ var SalesTableService = /** @class */ (function () {
                         }
                         return [4 /*yield*/, batches];
                     case 2: return [2 /*return*/, _b.sent()];
-                }
-            });
-        });
-    };
-    SalesTableService.prototype.dofifo__ = function (batch, status) {
-        return __awaiter(this, void 0, void 0, function () {
-            var inventory, FIFObatch, val_1, _i, inventory_2, i, fifob, _a, FIFObatch_1, invent;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0: return [4 /*yield*/, this.rawQuery.getInventTrans({
-                            inventlocationid: this.sessionInfo.inventlocationid,
-                            itemId: batch.itemid,
-                            configid: batch.configid,
-                            inventsizeid: batch.inventsizeid,
-                        })];
-                    case 1:
-                        inventory = _b.sent();
-                        FIFObatch = [];
-                        val_1 = Math.abs(batch.qty);
-                        //console.log(val_1);
-                        inventory = inventory.filter(function (v) { return v.availabilty > 0; });
-                        //console.log(inventory);
-                        for (_i = 0, inventory_2 = inventory; _i < inventory_2.length; _i++) {
-                            i = inventory_2[_i];
-                            fifob = {
-                                itemid: batch.itemid,
-                                configid: batch.configid,
-                                inventsizeid: batch.inventsizeid,
-                                invoiceid: batch.invoiceid,
-                                transrefid: batch.transrefid,
-                                inventlocationid: batch.inventlocationid,
-                                batchno: i.batchno,
-                                transactionclosed: status == "PAID" || status == "RESERVED" ? true : false,
-                                dateinvent: new Date(App_1.App.DateNow()),
-                                reserveStatus: status,
-                            };
-                            if (i.availabilty >= val_1) {
-                                fifob.qty = val_1;
-                                val_1 = 0;
-                                FIFObatch.push(fifob);
-                                //console.log(val_1);
-                            }
-                            else {
-                                fifob.qty = val_1;
-                                val_1 -= i.availabilty;
-                            }
-                            if (val_1 == 0) {
-                                break;
-                            }
-                        }
-                        _a = 0, FIFObatch_1 = FIFObatch;
-                        _b.label = 2;
-                    case 2:
-                        if (!(_a < FIFObatch_1.length)) return [3 /*break*/, 5];
-                        invent = FIFObatch_1[_a];
-                        return [4 /*yield*/, this.inventTransDAO.save(invent)];
-                    case 3:
-                        _b.sent();
-                        _b.label = 4;
-                    case 4:
-                        _a++;
-                        return [3 /*break*/, 2];
-                    case 5: return [4 /*yield*/, this.inventTransDAO.delete(batch)];
-                    case 6:
-                        _b.sent();
-                        return [2 /*return*/];
                 }
             });
         });
