@@ -203,7 +203,6 @@ var InventsizeService = /** @class */ (function () {
                             reqData.pricegroup = defaultcustomer.pricegroup;
                             reqData.currency = defaultcustomer.currency;
                         }
-                        reqData.spGroup = "SP";
                         queryData = {
                             custaccount: reqData.custaccount,
                             itemid: reqData.itemid,
