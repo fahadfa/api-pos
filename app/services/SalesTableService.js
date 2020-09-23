@@ -2402,33 +2402,35 @@ var SalesTableService = /** @class */ (function () {
                         console.log(prevReturnLines);
                         returnLines = reqData.salesLine;
                         _loop_3 = function (val) {
-                            console.log(val.batches);
-                            var _loop_4 = function (v) {
-                                var lineData = prevReturnLines.find(function (d) {
-                                    return d.itemid == val.itemid &&
-                                        d.configId == val.configId &&
-                                        d.inventsizeid == val.inventsizeid &&
-                                        d.batchno == v.batchno;
-                                });
-                                console.log(lineData);
-                                if (lineData && parseInt(lineData.quantity) < 0) {
-                                    console.log(Math.abs(lineData.quantity), v.returnQuantity);
-                                    if (Math.abs(lineData.quantity) >= v.returnQuantity) {
+                            if (val.salesQty > 0) {
+                                console.log(val.batches);
+                                var _loop_4 = function (v) {
+                                    var lineData = prevReturnLines.find(function (d) {
+                                        return d.itemid == val.itemid &&
+                                            d.configId == val.configId &&
+                                            d.inventsizeid == val.inventsizeid &&
+                                            d.batchno == v.batchno;
+                                    });
+                                    console.log(lineData);
+                                    if (lineData && parseInt(lineData.quantity) < 0) {
                                         console.log(Math.abs(lineData.quantity), v.returnQuantity);
+                                        if (Math.abs(lineData.quantity) >= v.returnQuantity) {
+                                            console.log(Math.abs(lineData.quantity), v.returnQuantity);
+                                        }
+                                        else {
+                                            return { value: false };
+                                        }
                                     }
                                     else {
                                         return { value: false };
                                     }
+                                };
+                                for (var _i = 0, _a = val.batches; _i < _a.length; _i++) {
+                                    var v = _a[_i];
+                                    var state_2 = _loop_4(v);
+                                    if (typeof state_2 === "object")
+                                        return state_2;
                                 }
-                                else {
-                                    return { value: false };
-                                }
-                            };
-                            for (var _i = 0, _a = val.batches; _i < _a.length; _i++) {
-                                var v = _a[_i];
-                                var state_2 = _loop_4(v);
-                                if (typeof state_2 === "object")
-                                    return state_2;
                             }
                         };
                         for (_i = 0, returnLines_1 = returnLines; _i < returnLines_1.length; _i++) {
