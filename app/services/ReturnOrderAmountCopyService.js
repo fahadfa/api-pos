@@ -651,7 +651,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 },
                                             ],
                                         });
-                                        reqData.salesLine[i].lineAmount = (parseFloat(reqData.salesLine[i].salesprice) + parseFloat(reqData.salesLine[i].colorantprice)) * parseInt(reqData.salesLine[i].salesQty);
+                                        reqData.salesLine[i].lineAmount =
+                                            (parseFloat(reqData.salesLine[i].salesprice) + parseFloat(reqData.salesLine[i].colorantprice)) *
+                                                parseInt(reqData.salesLine[i].salesQty);
                                         reqData.salesLine[i].appliedDiscounts = freeItemDiscounts;
                                         reqData.salesLine[i].lineamountafterdiscount = parseFloat(reqData.salesLine[i].priceAfterdiscount);
                                         reqData.salesLine[i].vat = reqData.vat;
@@ -692,7 +694,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         return [4 /*yield*/, this_1.noDiscount(reqData.salesLine[i], reqData)];
                                     case 11:
                                         _g.sent();
-                                        reqData.salesLine[i].lineAmount = (parseFloat(reqData.salesLine[i].salesprice) + parseFloat(reqData.salesLine[i].colorantprice)) * parseInt(reqData.salesLine[i].salesQty);
+                                        reqData.salesLine[i].lineAmount =
+                                            (parseFloat(reqData.salesLine[i].salesprice) + parseFloat(reqData.salesLine[i].colorantprice)) *
+                                                parseInt(reqData.salesLine[i].salesQty);
                                         reqData.salesLine[i].lineamountafterdiscount = parseFloat(reqData.salesLine[i].priceAfterdiscount);
                                         reqData.salesLine[i].vat = reqData.vat;
                                         reqData.salesLine[i].vatamount =
@@ -1287,9 +1291,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         console.log(salesOrderLine);
                                         console.log("====================================");
                                         if (salesOrderLine) {
-                                            console.log("====================================", salesOrderLine.batches, line.batches, parseFloat(salesOrderLine.salesQty));
+                                            console.log(salesOrderLine.batches, line.batches, parseFloat(salesOrderLine.salesQty), "====================================\n", line.lineAmount);
                                             line.salesQty -= parseFloat(salesOrderLine.salesQty);
-                                            line.lineAmount -= parseFloat(salesOrderLine.lineAmount);
+                                            line.lineAmount -= parseFloat(salesOrderLine.salesprice) * parseInt(salesOrderLine.salesQty);
                                             line.lineTotalDisc = line.lineTotalDisc ? line.lineTotalDisc : 0;
                                             line.lineTotalDisc -= parseFloat(salesOrderLine.lineTotalDisc);
                                             line.vatamount -= parseFloat(salesOrderLine.vatamount);

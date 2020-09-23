@@ -261,6 +261,9 @@ var RawQuery = /** @class */ (function () {
                             if (reqData.inventsizeid) {
                                 query = query + (" and LOWER(i.inventsizeid)=LOWER('" + reqData.inventsizeid + "')");
                             }
+                            if (reqData.salesId) {
+                                query = query + (" and LOWER(i.invoiceid)!=LOWER('" + reqData.salesId + "')");
+                            }
                         }
                         query += " group by i.itemid, i.configid, i.inventsizeid, i.batchno,  i.inventlocationid,\n  bs.namealias, bs.itemname, b.expdate, sz.description, sz.\"name\") as a where (a.availabilty + a.reservedquantity) >0\n    ";
                         return [4 /*yield*/, this.db.query(query)];

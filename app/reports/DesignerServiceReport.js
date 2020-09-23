@@ -41,6 +41,8 @@ var SalesTableService_1 = require("../services/SalesTableService");
 var RawQuery_1 = require("../common/RawQuery");
 var InventTransDAO_1 = require("../repos/InventTransDAO");
 var UpdateInventoryService_1 = require("../services/UpdateInventoryService");
+var Designerservice_1 = require("../../entities/Designerservice");
+var DesignerserviceRepository_1 = require("../repos/DesignerserviceRepository");
 var DesignerServiceReport = /** @class */ (function () {
     function DesignerServiceReport() {
         this.db = typeorm_1.getManager();
@@ -48,27 +50,65 @@ var DesignerServiceReport = /** @class */ (function () {
         this.rawQuery = new RawQuery_1.RawQuery();
         this.inventTransDAO = new InventTransDAO_1.InventorytransDAO();
         this.updateInventoryService = new UpdateInventoryService_1.UpdateInventoryService();
+        this.designerServiceDAO = new DesignerserviceRepository_1.DesignerserviceRepository();
     }
     DesignerServiceReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, status_1, data_1, salesLine, error_1;
+            var queryRunner, id, status_1, data_1, date, status_2, statusQuery, desinerService, amount, designerServiceData, salesLine, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
-                        id = params.salesId;
-                        return [4 /*yield*/, this.salestable_query_to_data(id)];
+                        queryRunner = typeorm_1.getConnection().createQueryRunner();
+                        return [4 /*yield*/, queryRunner.connect()];
                     case 1:
-                        data_1 = _a.sent();
-                        data_1 = data_1.length >= 1 ? data_1[0] : {};
-                        data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
-                        if (!(data_1.originalPrinted == false)) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "PAID", new Date().toISOString())];
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.startTransaction()];
                     case 2:
                         _a.sent();
                         _a.label = 3;
-                    case 3: return [4 /*yield*/, this.salesline_query_to_data(id)];
+                    case 3:
+                        _a.trys.push([3, 11, 13, 15]);
+                        id = params.salesId;
+                        return [4 /*yield*/, this.salestable_query_to_data(id)];
                     case 4:
+                        data_1 = _a.sent();
+                        data_1 = data_1.length >= 1 ? data_1[0] : {};
+                        data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
+                        if (!(data_1.originalPrinted == false && (data_1.status != "PAID" || data_1.status != "POSTED"))) return [3 /*break*/, 8];
+                        date = new Date().toISOString();
+                        status_2 = data_1.transkind == "DESIGNERSERSERVICE" ? "PAID" : "POSTED";
+                        statusQuery = "UPDATE salestable SET \n                          originalprinted = 'true',\n                          status = '" + status_2 + "',\n                          lastmodifieddate = '" + date + "' \n                          WHERE salesid = '" + params.salesId + "' ";
+                        // await this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "PAID", new Date().toISOString());
+                        queryRunner.query(statusQuery);
+                        if (!(data_1.transkind == "DESIGNERSERVICERETURN")) return [3 /*break*/, 8];
+                        return [4 /*yield*/, this.designerServiceDAO.search({
+                                invoiceid: data_1.interCompanyOriginalSalesId,
+                            })];
+                    case 5:
+                        desinerService = _a.sent();
+                        console.log(desinerService, data_1.interCompanyOriginalSalesId);
+                        amount = desinerService.reduce(function (res, item) { return res + parseFloat(item.amount); }, 0);
+                        console.log("=========================amount===================", amount, data_1.netAmount);
+                        if (!(amount >= data_1.netAmount)) return [3 /*break*/, 7];
+                        return [4 /*yield*/, this.designerServiceDAO.findOne({
+                                invoiceid: data_1.interCompanyOriginalSalesId,
+                            })];
+                    case 6:
+                        designerServiceData = _a.sent();
+                        delete designerServiceData.serviceid;
+                        designerServiceData.recordtype = 0;
+                        designerServiceData.amount = -data_1.netAmount;
+                        designerServiceData.salesorderid = data_1.salesId;
+                        designerServiceData.invoiceid = data_1.interCompanyOriginalSalesId;
+                        designerServiceData.createddatetime = App_1.App.DateNow();
+                        designerServiceData.lastmodifieddate = App_1.App.DateNow();
+                        designerServiceData.lastmodifiedby = data_1.lastModifiedBy;
+                        // await this.designerServiceDAO.save(designerServiceData);
+                        queryRunner.manager.getRepository(Designerservice_1.Designerservice).save(designerServiceData);
+                        return [3 /*break*/, 8];
+                    case 7: throw { message: "CANNOT_PRINT_ORDER" };
+                    case 8: return [4 /*yield*/, this.salesline_query_to_data(id)];
+                    case 9:
                         salesLine = _a.sent();
                         // salesLine = salesLine.length > 0 ? salesLine : [];
                         data_1.salesLine = salesLine;
@@ -77,11 +117,21 @@ var DesignerServiceReport = /** @class */ (function () {
                             data_1.quantity += parseInt(v.salesQty);
                         });
                         console.log(data_1);
+                        return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 10:
+                        _a.sent();
                         return [2 /*return*/, data_1];
-                    case 5:
+                    case 11:
                         error_1 = _a.sent();
+                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                    case 12:
+                        _a.sent();
                         throw error_1;
-                    case 6: return [2 /*return*/];
+                    case 13: return [4 /*yield*/, queryRunner.release()];
+                    case 14:
+                        _a.sent();
+                        return [7 /*endfinally*/];
+                    case 15: return [2 /*return*/];
                 }
             });
         });
@@ -108,7 +158,7 @@ var DesignerServiceReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "\n    select \n    st.salesid as \"salesId\",\n    st.custaccount as \"custAccount\",\n    st.status as status,\n    als.en as \"statusEn\",\n    als.ar as \"statusAr\",\n    alt.en as \"transkindEn\",\n    alt.ar as \"transkindAr\",\n    st.transkind as transkind,\n    to_char(st.vatamount, 'FM999999999990.00')  as vatamount,\n    to_char(st.netamount, 'FM999999999990.00')  as \"netAmount\",\n    to_char(coalesce(st.disc, 0), 'FM999999999990.00')  as disc,\n    to_char(st.amount , 'FM999999999990.00') as amount,\n    c.name as cname,\n    c.namealias as \"cnamealias\",\n    c.phone as \"cphone\",\n    to_char(st.createddatetime, 'DD-MM-YYYY') as createddatetime,\n    st.originalprinted as \"originalPrinted\",\n    st.inventlocationid as \"inventLocationId\",\n    w.namealias as wnamealias,\n    w.name as wname,\n    coalesce(st.deliveryaddress, ' ') || (' ') || coalesce(st.citycode, ' ') || (' ') || coalesce(st.districtcode, ' ') || (' ') || coalesce(st.country_code, ' ') as deliveryaddress,\n    d.\"name\" as salesman,\n    to_char(st.deliverydate, 'DD-MM-YYYY') as \"deliveryDate\"\n    from salestable st \n    left join inventlocation w on w.inventlocationid = st.inventlocationid\n    left join custtable c on c.accountnum = st.custaccount\n    left join dimensions d on d.num = st.dimension6_\n    left join app_lang als on als.id = st.status\n    left join app_lang alt on alt.id = st.transkind\n    where salesid='" + id + "'\n    ";
+                        query = "\n    select \n    st.salesid as \"salesId\",\n    st.custaccount as \"custAccount\",\n    st.intercompanyoriginalsalesid as \"interCompanyOriginalSalesId\",\n    st.status as status,\n    als.en as \"statusEn\",\n    als.ar as \"statusAr\",\n    alt.en as \"transkindEn\",\n    alt.ar as \"transkindAr\",\n    st.transkind as transkind,\n    to_char(st.vatamount, 'FM999999999990.00')  as vatamount,\n    to_char(st.netamount, 'FM999999999990.00')  as \"netAmount\",\n    to_char(coalesce(st.disc, 0), 'FM999999999990.00')  as disc,\n    to_char(st.amount , 'FM999999999990.00') as amount,\n    c.name as cname,\n    c.namealias as \"cnamealias\",\n    c.phone as \"cphone\",\n    to_char(st.createddatetime, 'DD-MM-YYYY') as createddatetime,\n    st.originalprinted as \"originalPrinted\",\n    st.inventlocationid as \"inventLocationId\",\n    st.lastmodifiedby as \"lastModifiedBy\",\n    w.namealias as wnamealias,\n    w.name as wname,\n    coalesce(st.deliveryaddress, ' ') || (' ') || coalesce(st.citycode, ' ') || (' ') || coalesce(st.districtcode, ' ') || (' ') || coalesce(st.country_code, ' ') as deliveryaddress,\n    d.\"name\" as salesman,\n    to_char(st.deliverydate, 'DD-MM-YYYY') as \"deliveryDate\"\n    from salestable st \n    left join inventlocation w on w.inventlocationid = st.inventlocationid\n    left join custtable c on c.accountnum = st.custaccount\n    left join dimensions d on d.num = st.dimension6_\n    left join app_lang als on als.id = st.status\n    left join app_lang alt on alt.id = st.transkind\n    where salesid='" + id + "'\n    ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
