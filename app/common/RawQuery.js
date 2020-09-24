@@ -889,7 +889,7 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select\n        sum(i.qty) as availabilty\n        from inventtrans  i\n        where i.inventlocationid='" + data.inventlocationid + "'\n        and i.itemid = '" + data.itemid + "' and i.configid='" + data.configid + "' and \n        i.inventsizeid='" + data.inventsizeid + "' and i.batchno = '" + data.batchno + "'\n        GROUP BY i.itemid,  i.configid, i.inventsizeid, i.batchno\n        ";
+                        query = "select\n        sum(i.qty) as availabilty\n        from inventtrans  i\n        where i.inventlocationid='" + data.inventlocationid + "'\n        and i.itemid = '" + data.itemid + "' and UPPER(i.configid)=UPPER('" + data.configid + "') and \n        UPPER(i.inventsizeid)=UPPER('" + data.inventsizeid + "') and i.batchno = '" + data.batchno + "' and transactionclosed = true\n        GROUP BY i.itemid,  UPPER(i.configid), UPPER(i.inventsizeid), i.batchno\n        ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         result = _a.sent();

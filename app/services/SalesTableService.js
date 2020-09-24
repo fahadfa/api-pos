@@ -1674,6 +1674,7 @@ var SalesTableService = /** @class */ (function () {
                     case 2:
                         if (!(_i < _a.length)) return [3 /*break*/, 7];
                         batch = _a[_i];
+                        console.log(batch);
                         return [4 /*yield*/, this.rawQuery.getbatchavailability({
                                 inventlocationid: this.sessionInfo.inventlocationid,
                                 itemid: item.itemid,
@@ -1684,10 +1685,11 @@ var SalesTableService = /** @class */ (function () {
                     case 3:
                         availability = _c.sent();
                         if (!(availability <= 0 || availability < Math.abs(batch.qty))) return [3 /*break*/, 5];
-                        return [4 /*yield*/, this.dofifo(item, reqData)];
+                        return [4 /*yield*/, this.dofifo(item, batch.quantity, reqData)];
                     case 4:
                         fiofoBatches = _c.sent();
                         batches = batches.concat(fiofoBatches);
+                        console.log(batches);
                         return [3 /*break*/, 6];
                     case 5:
                         batch.itemid = item.itemid;
@@ -1711,7 +1713,7 @@ var SalesTableService = /** @class */ (function () {
                         _i++;
                         return [3 /*break*/, 2];
                     case 7: return [3 /*break*/, 10];
-                    case 8: return [4 /*yield*/, this.dofifo(item, reqData)];
+                    case 8: return [4 /*yield*/, this.dofifo(item, item.salesQty, reqData)];
                     case 9:
                         fiofoBatches = _c.sent();
                         batches = batches.concat(fiofoBatches);
@@ -1726,6 +1728,7 @@ var SalesTableService = /** @class */ (function () {
                         });
                         qty = uniqueList.reduce(function (res, item) { return res + parseInt(item.quantity); }, 0);
                         console.log("qty", qty, item.salesQty);
+                        console.log(uniqueList);
                         if (parseInt(item.salesQty) != qty) {
                             throw {
                                 id: reqData.salesId,
@@ -2111,14 +2114,12 @@ var SalesTableService = /** @class */ (function () {
                                     console.log("qty", qty, v.salesQty);
                                     if (v.salesQty != qty) {
                                         throw {
-                                            id: reqData.salesId,
                                             message: "selected line quantities and selected batches quantities are not matching",
                                         };
                                     }
                                 }
                                 else {
                                     throw {
-                                        id: reqData.salesId,
                                         message: "selected line quantities and selected batches quantities are not matching",
                                     };
                                 }
@@ -2759,7 +2760,7 @@ var SalesTableService = /** @class */ (function () {
                         _a++;
                         return [3 /*break*/, 10];
                     case 13: return [3 /*break*/, 19];
-                    case 14: return [4 /*yield*/, this.dofifo(item, reqData)];
+                    case 14: return [4 /*yield*/, this.dofifo(item, item.salesQty, reqData)];
                     case 15:
                         fiofoBatches = _e.sent();
                         _c = 0, fiofoBatches_1 = fiofoBatches;
@@ -2779,7 +2780,7 @@ var SalesTableService = /** @class */ (function () {
                         _c++;
                         return [3 /*break*/, 16];
                     case 19: return [3 /*break*/, 25];
-                    case 20: return [4 /*yield*/, this.dofifo(item, reqData)];
+                    case 20: return [4 /*yield*/, this.dofifo(item, item.salesQty, reqData)];
                     case 21:
                         fiofoBatches = _e.sent();
                         _d = 0, fiofoBatches_2 = fiofoBatches;
@@ -3265,7 +3266,7 @@ var SalesTableService = /** @class */ (function () {
             });
         });
     };
-    SalesTableService.prototype.dofifo = function (item, reqData) {
+    SalesTableService.prototype.dofifo = function (item, qty, reqData) {
         return __awaiter(this, void 0, void 0, function () {
             var batches, inventory, val_1, batchList, _i, inventory_1, batch, _a, batchList_1, batch;
             return __generator(this, function (_b) {
@@ -3280,8 +3281,7 @@ var SalesTableService = /** @class */ (function () {
                             })];
                     case 1:
                         inventory = _b.sent();
-                        console.log("======dofifo=======", inventory);
-                        val_1 = parseInt(item.salesQty);
+                        val_1 = parseInt(qty);
                         console.log("quantity", val_1);
                         batchList = [];
                         for (_i = 0, inventory_1 = inventory; _i < inventory_1.length; _i++) {
