@@ -876,7 +876,9 @@ var SalesTableService = /** @class */ (function () {
                         }
                         if (salesLine) {
                             salesLine.forEach(function (element) {
-                                if (!element.itemid || !element.configId || !element.inventsizeid || !element.salesQty) {
+                                console.log(element.itemid, element.configId, element.inventsizeid, element.salesQty);
+                                if (!element.itemid || !element.configId || !element.inventsizeid) {
+                                    console.log(element.itemid, element.configId, element.inventsizeid, element.salesQty);
                                     throw { message: "INVALID_DATA" };
                                 }
                             });
