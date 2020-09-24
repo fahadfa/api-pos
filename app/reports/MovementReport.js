@@ -54,7 +54,7 @@ var MovementReport = /** @class */ (function () {
     }
     MovementReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, id, status_1, data_1, salesLine, date, query, voucherData, query_1, inventtransQuery_1, inventtransQuery, error_1;
+            var queryRunner, id, status_1, data_1, salesLine, date, query, salesLineQuery, voucherData, query_1, inventtransQuery_1, inventtransQuery, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -92,6 +92,8 @@ var MovementReport = /** @class */ (function () {
                         return [4 /*yield*/, queryRunner.query(query)];
                     case 6:
                         _a.sent();
+                        salesLineQuery = " UPDATE salesline SET \n        status = 'POSTED',\n        lastmodifieddate = '" + date + "' \n        WHERE salesid = '" + params.salesId + "' ";
+                        queryRunner.query(salesLineQuery);
                         if (!data_1.voucherDiscChecked) return [3 /*break*/, 8];
                         voucherData = {
                             salesId: data_1.salesId,

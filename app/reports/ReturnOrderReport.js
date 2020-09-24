@@ -69,7 +69,7 @@ var ReturnOrderReport = /** @class */ (function () {
     }
     ReturnOrderReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, data_1, batchesList, result, new_data_1, i_1, date_1, statusQuery, inventtransQuery_1, designerServices, _i, designerServices_1, service, salesLine, sNo_1, date, inventtransQuery, error_1;
+            var queryRunner, data_1, batchesList, result, new_data_1, i_1, date_1, statusQuery, salesLineQuery, inventtransQuery_1, designerServices, _i, designerServices_1, service, salesLine, sNo_1, date, inventtransQuery, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -125,6 +125,8 @@ var ReturnOrderReport = /** @class */ (function () {
                         statusQuery = "UPDATE salestable SET \n                          originalprinted = 'true',\n                          status = 'POSTED',\n                          lastmodifieddate = '" + date_1 + "' \n                          WHERE salesid = '" + params.salesId + "' or \n                          salesgroup = '" + params.salesId + "' or \n                          deliverystreet = '" + params.salesId + "'";
                         // await this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED");
                         queryRunner.query(statusQuery);
+                        salesLineQuery = " UPDATE salesline SET \n        status = 'POSTED',\n        lastmodifieddate = '" + date_1 + "' \n        WHERE salesid = '" + params.salesId + "' ";
+                        queryRunner.query(salesLineQuery);
                         inventtransQuery_1 = "UPDATE inventtrans SET transactionclosed = " + true + ", reserve_status = 'POSTED' ";
                         if (date_1) {
                             inventtransQuery_1 += ",dateinvent = '" + date_1 + "' ";

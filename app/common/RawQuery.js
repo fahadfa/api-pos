@@ -149,7 +149,7 @@ var RawQuery = /** @class */ (function () {
     RawQuery.prototype.updateSalesTable = function (salesId, status, date) {
         if (date === void 0) { date = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var query, data;
+            var query, saleslineQuery, data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -158,9 +158,13 @@ var RawQuery = /** @class */ (function () {
                             query += "\n      ,lastmodifieddate = '" + date + "' ";
                         }
                         query += " WHERE salesid = '" + salesId + "' or salesgroup = '" + salesId + "' or deliverystreet = '" + salesId + "' ";
+                        saleslineQuery = "UPDATE salesline SET status = '" + status + "' WHERE salesid = '" + salesId + "' ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
+                        return [4 /*yield*/, this.db.query(saleslineQuery)];
+                    case 2:
+                        _a.sent();
                         return [2 /*return*/, data];
                 }
             });

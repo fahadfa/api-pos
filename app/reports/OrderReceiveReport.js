@@ -52,7 +52,7 @@ var OrderReceiveReport = /** @class */ (function () {
     }
     OrderReceiveReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, id, status_1, data_1, salesLine, i_1, checkPrevData, date, query, inventtransQuery_1, inventtransQuery, error_1;
+            var queryRunner, id, status_1, data_1, salesLine, i_1, checkPrevData, date, query, salesLineQuery, inventtransQuery_1, inventtransQuery, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -102,6 +102,8 @@ var OrderReceiveReport = /** @class */ (function () {
                         return [4 /*yield*/, queryRunner.query(query)];
                     case 7:
                         _a.sent();
+                        salesLineQuery = " UPDATE salesline SET \n        status = 'POSTED',\n        lastmodifieddate = '" + date + "' \n        WHERE salesid = '" + params.salesId + "' ";
+                        queryRunner.query(salesLineQuery);
                         inventtransQuery_1 = "UPDATE inventtrans SET transactionclosed = " + true + " ,reserve_status = 'POSTED' ";
                         if (date) {
                             inventtransQuery_1 += ",dateinvent = '" + date + "' ";
