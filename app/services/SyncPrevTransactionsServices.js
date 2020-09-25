@@ -550,17 +550,17 @@ var SyncPrevTransactionsService = /** @class */ (function () {
     SyncPrevTransactionsService.prototype.syncInventTransData = function (inventTransData, queryData, transactionclosed) {
         if (queryData === void 0) { queryData = []; }
         return __awaiter(this, void 0, void 0, function () {
-            var inventoryOnHandQuery, text, _i, inventTransData_1, trans, salesOrderData, salesOrderData, saleslinequery, salesLineData, query, onhanddata, onhandquery, onhandquery, err_7;
+            var inventoryOnHandQuery, text, _i, inventTransData_1, trans, salesOrderData, salesOrderData, saleslinequery, salesLineData, query, err_7;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 13, , 14]);
+                        _a.trys.push([0, 11, , 12]);
                         inventoryOnHandQuery = [];
                         text = void 0;
                         _i = 0, inventTransData_1 = inventTransData;
                         _a.label = 1;
                     case 1:
-                        if (!(_i < inventTransData_1.length)) return [3 /*break*/, 10];
+                        if (!(_i < inventTransData_1.length)) return [3 /*break*/, 8];
                         trans = inventTransData_1[_i];
                         if (!(trans.TRANSTYPE == 4)) return [3 /*break*/, 3];
                         text = "select salesid from salestable where intercompanyoriginalsalesid = '" + trans.TRANSREFID + "' limit 1";
@@ -588,51 +588,54 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         // log.info(salesLineData);
                         trans.saleslineid = salesLineData.rows[0] ? salesLineData.rows[0].id : "";
                         query = "INSERT INTO public.inventtrans\n        (id, itemid, qty, datephysical, transtype, transrefid, invoiceid, dataareaid, recversion, recid, inventsizeid, configid, batchno, inventlocationid, transactionclosed, reserve_status, sales_line_id, dateinvent)\n        VALUES('" + (uuid() + App_1.App.UniqueNumber()) + "', '" + trans.ITEMID + "', " + trans.QTY + ", '" + trans.DATEPHYSICAL + "'," + trans.TRANSTYPE + ", '" + trans.TRANSREFID + "', '" + trans.INVOICEID + "', '" + trans.DATAAREAID + "', " + trans.RECVERSION + ", " + trans.RECID + ", '" + trans.InventSizeId + "',\n         '" + trans.ConfigId + "', '" + trans.BATCHNO + "', '" + this.dateObj.inventlocationid + "', " + transactionclosed + ", 'OLD_POS_DATA', '" + trans.saleslineid + "', now());\n        ";
-                        if (!(transactionclosed == true && trans.ITEMID != "HSN-00001")) return [3 /*break*/, 8];
-                        text = "select * from inventory_onhand where itemid = '" + trans.ITEMID + "' AND configid = '" + trans.ConfigId + "' and inventsizeid = '" + trans.InventSizeId + "' and batchno = '" + trans.BATCHNO + "' and inventlocationid = '" + this.dateObj.inventlocationid + "'";
-                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(this.localDbConfig, text)];
-                    case 7:
-                        onhanddata = _a.sent();
-                        Log_1.log.info(onhanddata);
-                        if (onhanddata && onhanddata.rows.length > 0) {
-                            trans.qty_in =
-                                parseInt(trans.QTY) > 0
-                                    ? parseInt(onhanddata.rows[0].qty_in) + Math.abs(parseInt(trans.QTY))
-                                    : parseInt(onhanddata.rows[0].qty_in) + 0;
-                            trans.qty_out =
-                                parseInt(trans.QTY) <= 0
-                                    ? parseInt(onhanddata.rows[0].qty_out) + Math.abs(parseInt(trans.QTY))
-                                    : parseInt(onhanddata.rows[0].qty_out) + 0;
-                            onhandquery = "UPDATE public.inventory_onhand SET  qty_in='" + trans.qty_in + "', qty_out= '" + trans.qty_out + "', updated_on=now() WHERE id='" + onhanddata.rows[0].id + "'";
-                            inventoryOnHandQuery.push(onhandquery);
-                        }
-                        else {
-                            trans.qty_in = parseInt(trans.QTY) > 0 ? Math.abs(parseInt(trans.QTY)) : 0;
-                            trans.qty_out = parseInt(trans.QTY) <= 0 ? Math.abs(parseInt(trans.QTY)) : 0;
-                            onhandquery = "INSERT INTO public.inventory_onhand (id, itemid, configid, inventsizeid, batchno, qty_in, qty_out, qty_reserved, dataareaid, inventlocationid, updated_on, \"name\", updated_by) VALUES( '" + (uuid() + App_1.App.UniqueNumber()) + "', '" + trans.ITEMID + "', '" + trans.ConfigId + "', '" + trans.InventSizeId + "', '" + trans.BATCHNO + "', '" + trans.qty_in + "', '" + trans.qty_out + "', 0, '" + trans.DATAAREAID.toLowerCase() + "', '" + this.dateObj.inventlocationid + "', now(), 'inventory', 'SYSTEM');";
-                            inventoryOnHandQuery.push(onhandquery);
-                        }
-                        _a.label = 8;
-                    case 8:
+                        // log.info(query);
+                        // if (transactionclosed == true && trans.ITEMID != "HSN-00001") {
+                        //   text = `select * from inventory_onhand where itemid = '${trans.ITEMID}' AND configid = '${trans.ConfigId}' and inventsizeid = '${trans.InventSizeId}' and batchno = '${trans.BATCHNO}' and inventlocationid = '${this.dateObj.inventlocationid}'`;
+                        //   let onhanddata = await SyncServiceHelper.ExecuteQuery(this.localDbConfig, text);
+                        //   log.info(onhanddata);
+                        //   if (onhanddata && onhanddata.rows.length > 0) {
+                        //     trans.qty_in =
+                        //       parseInt(trans.QTY) > 0
+                        //         ? parseInt(onhanddata.rows[0].qty_in) + Math.abs(parseInt(trans.QTY))
+                        //         : parseInt(onhanddata.rows[0].qty_in) + 0;
+                        //     trans.qty_out =
+                        //       parseInt(trans.QTY) <= 0
+                        //         ? parseInt(onhanddata.rows[0].qty_out) + Math.abs(parseInt(trans.QTY))
+                        //         : parseInt(onhanddata.rows[0].qty_out) + 0;
+                        //     let onhandquery = `UPDATE public.inventory_onhand SET  qty_in='${trans.qty_in}', qty_out= '${trans.qty_out}', updated_on=now() WHERE id='${onhanddata.rows[0].id}'`;
+                        //     inventoryOnHandQuery.push(onhandquery);
+                        //   } else {
+                        //     trans.qty_in = parseInt(trans.QTY) > 0 ? Math.abs(parseInt(trans.QTY)) : 0;
+                        //     trans.qty_out = parseInt(trans.QTY) <= 0 ? Math.abs(parseInt(trans.QTY)) : 0;
+                        //     let onhandquery = `INSERT INTO public.inventory_onhand (id, itemid, configid, inventsizeid, batchno, qty_in, qty_out, qty_reserved, dataareaid, inventlocationid, updated_on, "name", updated_by) VALUES( '${
+                        //       uuid() + App.UniqueNumber()
+                        //     }', '${trans.ITEMID}', '${trans.ConfigId}', '${trans.InventSizeId}', '${trans.BATCHNO}', '${
+                        //       trans.qty_in
+                        //     }', '${trans.qty_out}', 0, '${trans.DATAAREAID.toLowerCase()}', '${
+                        //       this.dateObj.inventlocationid
+                        //     }', now(), 'inventory', 'SYSTEM');`;
+                        //     inventoryOnHandQuery.push(onhandquery);
+                        //   }
+                        // }
                         queryData.push(query);
-                        _a.label = 9;
-                    case 9:
+                        _a.label = 7;
+                    case 7:
                         _i++;
                         return [3 /*break*/, 1];
-                    case 10:
+                    case 8:
                         Log_1.log.info(inventoryOnHandQuery);
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(this.localDbConfig, queryData)];
-                    case 11:
+                    case 9:
                         _a.sent();
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(this.localDbConfig, inventoryOnHandQuery)];
-                    case 12:
+                    case 10:
                         _a.sent();
-                        return [3 /*break*/, 14];
-                    case 13:
+                        return [3 /*break*/, 12];
+                    case 11:
                         err_7 = _a.sent();
                         Log_1.log.error(err_7);
-                        return [3 /*break*/, 14];
-                    case 14: return [2 /*return*/];
+                        return [3 /*break*/, 12];
+                    case 12: return [2 /*return*/];
                 }
             });
         });

@@ -136,12 +136,12 @@ var OpeningBalanceService = /** @class */ (function () {
     };
     OpeningBalanceService.prototype.save = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var chunkData, _i, chunkData_1, item, inventtransData, onhandInventoryData, child_process, syncFile, returnData, err_2;
+            var chunkData, _i, chunkData_1, item, inventtransData, child_process, syncFile, returnData, err_2;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 8, , 9]);
+                        _a.trys.push([0, 7, , 8]);
                         return [4 /*yield*/, this.rawQuery.deleteBalances(this.sessionInfo.inventlocationid)];
                     case 1:
                         _a.sent();
@@ -151,7 +151,7 @@ var OpeningBalanceService = /** @class */ (function () {
                         _i = 0, chunkData_1 = chunkData;
                         _a.label = 3;
                     case 3:
-                        if (!(_i < chunkData_1.length)) return [3 /*break*/, 7];
+                        if (!(_i < chunkData_1.length)) return [3 /*break*/, 6];
                         item = chunkData_1[_i];
                         item.map(function (v) {
                             v.id = uuid() + App_1.App.UniqueCode();
@@ -165,33 +165,11 @@ var OpeningBalanceService = /** @class */ (function () {
                         return [4 /*yield*/, this.inventtransDAO.savearr(item)];
                     case 4:
                         inventtransData = _a.sent();
-                        // }
-                        // let fs = require("fs");
-                        // let jsonString = fs.readFileSync(`${__dirname}/data.json`, "utf-8");
-                        // let dateObj = JSON.parse(jsonString);
-                        // dateObj.date = new Date().toISOString().slice(0, 10);
-                        // let onhandData = await this.get_open_bal_data_for_onhand(dateObj);
-                        // chunkData = await this.chunkArray(onhandData, 100);
-                        // for (let item of chunkData) {
-                        item.map(function (v) {
-                            v.id = uuid() + App_1.App.UniqueCode();
-                            v.qtyIn = v.qty;
-                            v.qtyOut = 0;
-                            v.qtyReserved = 0;
-                            v.updatedOn = new Date(App_1.App.DateNow());
-                            v.updatedBy = _this.sessionInfo.userName;
-                            v.name = "OPEN_BALANCE";
-                            v.inventlocationid = _this.sessionInfo.inventlocationid;
-                            v.dataareaid = "ajp";
-                        });
-                        return [4 /*yield*/, this.inventoryOnhandDAO.savearr(item)];
+                        _a.label = 5;
                     case 5:
-                        onhandInventoryData = _a.sent();
-                        _a.label = 6;
-                    case 6:
                         _i++;
                         return [3 /*break*/, 3];
-                    case 7:
+                    case 6:
                         child_process = require("child_process");
                         syncFile = __dirname + "/SyncPrevTransactionsServices.ts";
                         syncFile = fs.existsSync(syncFile)
@@ -200,11 +178,11 @@ var OpeningBalanceService = /** @class */ (function () {
                         child_process.fork(syncFile);
                         returnData = { message: "SAVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
-                    case 8:
+                    case 7:
                         err_2 = _a.sent();
                         Log_1.log.error(err_2);
                         throw err_2;
-                    case 9: return [2 /*return*/];
+                    case 8: return [2 /*return*/];
                 }
             });
         });
