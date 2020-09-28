@@ -1,6 +1,6 @@
 {
   "name": "jpos-api",
-  "version": "2.4.92",
+  "version": "2.4.93",
   "main": "index.js",
   "scripts": {
     "start": "npm run build:live",
@@ -67,5 +67,4 @@
     "branch": "master"
   }
 }
-
 
