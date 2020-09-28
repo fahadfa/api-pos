@@ -384,7 +384,7 @@ var DiscountService = /** @class */ (function () {
                                         })
                                             .map(function (o) { return parseInt(o.quantity); }, 0));
                                         parentQuantity = parentQuantity == -Infinity ? 0 : parentQuantity;
-                                        console.log("====================", parentQuantity);
+                                        console.log("====================", parentQuantity, parseInt(item.quantity));
                                         if (!(promotionalDiscountDetails && item.isParent && parseInt(item.quantity) == parentQuantity)) return [3 /*break*/, 9];
                                         if (!(promotionalDiscountDetails.multipleQty && selectedQuantity >= promotionalDiscountDetails.multipleQty)) return [3 /*break*/, 8];
                                         isPromotionDiscount = true;
@@ -442,7 +442,9 @@ var DiscountService = /** @class */ (function () {
                                         _g.label = 8;
                                     case 8: return [3 /*break*/, 10];
                                     case 9:
-                                        item.isParent = false;
+                                        if (promotionalDiscountDetails && item.isParent && parseInt(item.quantity) != parentQuantity) {
+                                            item.isParent = false;
+                                        }
                                         _g.label = 10;
                                     case 10:
                                         if (promotionalDiscountAmount > 0) {
