@@ -167,6 +167,7 @@ var ItemBalanceReport = /** @class */ (function () {
                         if (params.batchno) {
                             query = query + (" and i.batchno='" + params.batchno + "'");
                         }
+                        query = query + " and i.reserve_status!='RESERVED' ";
                         query =
                             query +
                                 "  ) as ib \n      inner join inventlocation w on w.inventlocationid=ib.inventlocationid\n      left join inventbatch b on ib.batchno = b.inventbatchid  and ib.itemid = b.itemid and ib.configid = b.configid \n      left join inventtable bs on ib.itemid = bs.itemid\n      left join inventsize sz on sz.inventsizeid = ib.inventsizeid and sz.itemid = ib.itemid\n      GROUP BY\n      ib.itemid,  ib.configid, \n      ib.inventsizeid, ib.batchno, b.expdate, bs.namealias, \n      bs.itemname, sz.name, sz.description, \n      ib.inventlocationid, w.name, w.namealias, ib.location\n                   ";

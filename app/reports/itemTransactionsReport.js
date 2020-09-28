@@ -234,6 +234,7 @@ var itemTransactionsReport = /** @class */ (function () {
                         if (params.inventsizeid) {
                             query += " and  i.inventsizeid = '" + params.inventsizeid + "' ";
                         }
+                        query = query + " and i.reserve_status!='RESERVED' ";
                         query += " ) as j group by \n    j.invoiceid,\n    j.transtype,\n    j.statusen,\n    j.statusar,\n    j.transkinden,\n    j.transkindar,\n    j.date,\n    j.configid,\n    j.itemid,\n    j.inventsizeid,\n    j.batchno,\n    j.inventlocationid,\n    j.warehousenamear,\n    j.wareHousenameen,\n    j.itemnamear,\n    j.itemnameen,\n    j.sizenameen,\n    j.sizenamear\n    order by j.date \n    ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 4: return [2 /*return*/, _a.sent()];
