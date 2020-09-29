@@ -520,7 +520,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         isValidVoucherItem = isValidVoucherItem ? true : false;
                                         instantDiscountRanges = item.appliedDiscounts.find(function (v) { return v.discountType == "INSTANT_DISCOUNT"; });
                                         isInstantDiscount = instantDiscountRanges ? true : false;
-                                        instantDiscountPercent = parseFloat(instantDiscountRanges.percentage);
+                                        instantDiscountPercent = instantDiscountRanges ? parseFloat(instantDiscountRanges.percentage) : 0;
                                         instantDiscountRanges = instantDiscountRanges ? instantDiscountRanges.cond : [];
                                         isSalesDiscount = false;
                                         MultiLineDiscountData = item.appliedDiscounts.find(function (v) { return v.discountType == "MULTI_LINE_DISCOUNT"; });
