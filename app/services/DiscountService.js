@@ -325,7 +325,7 @@ var DiscountService = /** @class */ (function () {
                         _b.label = 12;
                     case 12:
                         _loop_1 = function (item) {
-                            var isValidVoucherItem, instantDiscountPercent, isSalesDiscount, _i, instantDiscountRanges_1, item_1, multilinefilter, salesDiscount, condition, appliedDiscounts, freeQty, freeItem, promotionalDiscountAmount, buy_one_get_one, promotionalDiscountDetails, isPromotionDiscount, isBuyOneGetOneDiscount, buyOneGetOneDiscountDetails, selectedQuantity, parentQuantity, freeItems, _a, _b, _c, j, i, freeItems, _d, _e, _f, j, i, itemDiscount;
+                            var isValidVoucherItem, instantDiscountPercent, isSalesDiscount, _i, instantDiscountRanges_1, data, lineAmount, multilinefilter, salesDiscount, condition, appliedDiscounts, freeQty, freeItem, promotionalDiscountAmount, buy_one_get_one, promotionalDiscountDetails, isPromotionDiscount, isBuyOneGetOneDiscount, buyOneGetOneDiscountDetails, selectedQuantity, parentQuantity, freeItems, _a, _b, _c, j, i, freeItems, _d, _e, _f, j, i, itemDiscount;
                             return __generator(this, function (_g) {
                                 switch (_g.label) {
                                     case 0:
@@ -336,13 +336,16 @@ var DiscountService = /** @class */ (function () {
                                             isInstantDiscount = true;
                                             instantDiscountExcludeItems = reqData.instantDiscountExcludeItems;
                                             for (_i = 0, instantDiscountRanges_1 = instantDiscountRanges; _i < instantDiscountRanges_1.length; _i++) {
-                                                item_1 = instantDiscountRanges_1[_i];
-                                                if (reqData.instantDiscGrossTotal &&
-                                                    reqData.instantDiscGrossTotal >= parseFloat(item_1.minamount) &&
-                                                    reqData.instantDiscGrossTotal <= parseFloat(item_1.maxamount)) {
-                                                    instantDiscountPercent = item_1.discpercent;
+                                                data = instantDiscountRanges_1[_i];
+                                                lineAmount = parseFloat(item.price) * parseInt(item.quantity);
+                                                if (lineAmount >= parseFloat(data.minamount) &&
+                                                    lineAmount <= parseFloat(data.maxamount)) {
+                                                    instantDiscountPercent = data.discpercent;
                                                     break;
                                                 }
+                                            }
+                                            if (instantDiscountPercent <= 0) {
+                                                instantDiscountPercent = instantDiscountRanges[0].discpercent;
                                             }
                                         }
                                         isMultiLineDiscount = multilineDiscRanges.length > 0 ? true : false;
@@ -384,7 +387,6 @@ var DiscountService = /** @class */ (function () {
                                         })
                                             .map(function (o) { return parseInt(o.quantity); }, 0));
                                         parentQuantity = parentQuantity == -Infinity ? 0 : parentQuantity;
-                                        console.log("====================", parentQuantity, parseInt(item.quantity));
                                         if (!(promotionalDiscountDetails && item.isParent && parseInt(item.quantity) == parentQuantity)) return [3 /*break*/, 9];
                                         if (!(promotionalDiscountDetails.multipleQty && selectedQuantity >= promotionalDiscountDetails.multipleQty)) return [3 /*break*/, 8];
                                         isPromotionDiscount = true;
