@@ -77,12 +77,12 @@ var DiscountService = /** @class */ (function () {
                         _b.label = 3;
                     case 3:
                         reqData.selectedItems.map(function (v) {
-                            reqData.grossTotal += (parseFloat(v.price) + parseFloat(v.colorantprice)) * parseFloat(v.quantity);
+                            reqData.grossTotal += parseFloat(v.price) * parseFloat(v.quantity);
                             if (reqData.instantDiscountExcludeItems.includes(v.itemid) ||
                                 reqData.instantDiscountExcludeItems.includes(v.product.itemGroupId || v.product.intExt != 4)) {
                             }
                             else {
-                                reqData.instantDiscGrossTotal += (parseFloat(v.price) + parseFloat(v.colorantprice)) * parseFloat(v.quantity);
+                                reqData.instantDiscGrossTotal += parseFloat(v.price) * parseFloat(v.quantity);
                             }
                         });
                         if (reqData.orderType == "purchase") {
@@ -325,7 +325,7 @@ var DiscountService = /** @class */ (function () {
                         _b.label = 12;
                     case 12:
                         _loop_1 = function (item) {
-                            var isValidVoucherItem, instantDiscountPercent, isSalesDiscount, _i, instantDiscountRanges_1, data, lineAmount, multilinefilter, salesDiscount, condition, appliedDiscounts, freeQty, freeItem, promotionalDiscountAmount, buy_one_get_one, promotionalDiscountDetails, isPromotionDiscount, isBuyOneGetOneDiscount, buyOneGetOneDiscountDetails, selectedQuantity, parentQuantity, freeItems, _a, _b, _c, j, i, freeItems, _d, _e, _f, j, i, itemDiscount;
+                            var isValidVoucherItem, instantDiscountPercent, isSalesDiscount, _i, instantDiscountRanges_1, data, multilinefilter, salesDiscount, condition, appliedDiscounts, freeQty, freeItem, promotionalDiscountAmount, buy_one_get_one, promotionalDiscountDetails, isPromotionDiscount, isBuyOneGetOneDiscount, buyOneGetOneDiscountDetails, selectedQuantity, parentQuantity, freeItems, _a, _b, _c, j, i, freeItems, _d, _e, _f, j, i, itemDiscount;
                             return __generator(this, function (_g) {
                                 switch (_g.label) {
                                     case 0:
@@ -337,9 +337,8 @@ var DiscountService = /** @class */ (function () {
                                             instantDiscountExcludeItems = reqData.instantDiscountExcludeItems;
                                             for (_i = 0, instantDiscountRanges_1 = instantDiscountRanges; _i < instantDiscountRanges_1.length; _i++) {
                                                 data = instantDiscountRanges_1[_i];
-                                                lineAmount = parseFloat(item.price) * parseInt(item.quantity);
-                                                if (lineAmount >= parseFloat(data.minamount) &&
-                                                    lineAmount <= parseFloat(data.maxamount)) {
+                                                if (reqData.instantDiscGrossTotal >= parseFloat(data.minamount) &&
+                                                    reqData.instantDiscGrossTotal <= parseFloat(data.maxamount)) {
                                                     instantDiscountPercent = data.discpercent;
                                                     break;
                                                 }

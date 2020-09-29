@@ -414,11 +414,11 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                 var instantData = v.appliedDiscounts.find(function (v) { return v.discountType == "INSTANT_DISCOUNT"; });
                                 if (instantData) {
                                     reqData.instantDiscGrossTotal +=
-                                        (parseFloat(v.salesprice) + parseFloat(v.colorantprice)) * parseFloat(v.salesQty);
+                                        parseFloat(v.salesprice) * parseFloat(v.salesQty);
                                 }
                             }
                             v.colorantprice = v.colorantprice ? v.colorantprice : 0;
-                            reqData.grossTotal += (parseFloat(v.salesprice) + parseFloat(v.colorantprice)) * parseFloat(v.salesQty);
+                            reqData.grossTotal += parseFloat(v.salesprice) * parseFloat(v.salesQty);
                         });
                         reqData.disc = 0;
                         reqData.vatamount = 0;
@@ -509,9 +509,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         isInstantDiscount = false;
                         isCashDisc = false;
                         _loop_3 = function (item) {
-                            var instantDiscountPercent, isValidVoucherItem, isSalesDiscount, MultiLineDiscountData, salesDiscount, condition, appliedDiscounts, freeQty, promotionalDiscountAmount, buy_one_get_one, promotionalDiscountDetails, discountAmount, isPromotionDiscount, isBuyOneGetOneDiscount, buyOneGetOneDiscountDetails, selectedQuantity, getFreeQty, discountOnEachItem, freeItems, _a, _b, _i, j, i, freeItemDiscounts, itemDiscount, freeItems, _c, _d, _e, j, i, freeItemDiscounts, itemDiscount, buyOneGetOneDiscountDetails, isNotB1G1;
-                            return __generator(this, function (_f) {
-                                switch (_f.label) {
+                            var instantDiscountPercent, isValidVoucherItem, isSalesDiscount, _i, instantDiscountRanges_1, item_1, MultiLineDiscountData, salesDiscount, condition, appliedDiscounts, freeQty, promotionalDiscountAmount, buy_one_get_one, promotionalDiscountDetails, discountAmount, isPromotionDiscount, isBuyOneGetOneDiscount, buyOneGetOneDiscountDetails, selectedQuantity, getFreeQty, discountOnEachItem, freeItems, _a, _b, _c, j, i, freeItemDiscounts, itemDiscount, freeItems, _d, _e, _f, j, i, freeItemDiscounts, itemDiscount, buyOneGetOneDiscountDetails, isNotB1G1;
+                            return __generator(this, function (_g) {
+                                switch (_g.label) {
                                     case 0:
                                         item.lineTotalDisc = 0;
                                         item.colorantprice = item.colorantprice ? item.colorantprice : 0;
@@ -520,9 +520,20 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         isValidVoucherItem = isValidVoucherItem ? true : false;
                                         instantDiscountRanges = item.appliedDiscounts.find(function (v) { return v.discountType == "INSTANT_DISCOUNT"; });
                                         isInstantDiscount = instantDiscountRanges ? true : false;
-                                        instantDiscountPercent = instantDiscountRanges ? parseFloat(instantDiscountRanges.percentage) : 0;
                                         instantDiscountRanges = instantDiscountRanges ? instantDiscountRanges.cond : [];
                                         isSalesDiscount = false;
+                                        if (instantDiscountRanges.length > 0) {
+                                            isInstantDiscount = true;
+                                            for (_i = 0, instantDiscountRanges_1 = instantDiscountRanges; _i < instantDiscountRanges_1.length; _i++) {
+                                                item_1 = instantDiscountRanges_1[_i];
+                                                if (reqData.instantDiscGrossTotal &&
+                                                    reqData.instantDiscGrossTotal >= parseFloat(item_1.minamount) &&
+                                                    reqData.instantDiscGrossTotal <= parseFloat(item_1.maxamount)) {
+                                                    instantDiscountPercent = item_1.discpercent;
+                                                    break;
+                                                }
+                                            }
+                                        }
                                         MultiLineDiscountData = item.appliedDiscounts.find(function (v) { return v.discountType == "MULTI_LINE_DISCOUNT"; });
                                         multilineDiscRanges = MultiLineDiscountData ? MultiLineDiscountData.cond : [];
                                         isMultiLineDiscount = MultiLineDiscountData ? true : false;
@@ -581,22 +592,22 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         isNoDiscount = true;
                                         return [4 /*yield*/, this_1.noDiscount(item, reqData)];
                                     case 1:
-                                        _f.sent();
+                                        _g.sent();
                                         total += parseFloat(item.priceAfterVat) * parseInt(item.salesQty);
                                         totalBeforeVat += parseFloat(item.lineamountafterdiscount);
                                         grossTotal += (parseFloat(item.salesprice) + parseFloat(item.colorantprice)) * parseInt(item.salesQty);
-                                        _f.label = 2;
+                                        _g.label = 2;
                                     case 2:
                                         if (!isBuyOneGetOneDiscount) return [3 /*break*/, 9];
                                         freeItems = reqData.salesLine.filter(function (v) { return v.linkId == item.linkId && v.isItemFree == true; });
                                         _a = [];
                                         for (_b in freeItems)
                                             _a.push(_b);
-                                        _i = 0;
-                                        _f.label = 3;
+                                        _c = 0;
+                                        _g.label = 3;
                                     case 3:
-                                        if (!(_i < _a.length)) return [3 /*break*/, 8];
-                                        j = _a[_i];
+                                        if (!(_c < _a.length)) return [3 /*break*/, 8];
+                                        j = _a[_c];
                                         i = reqData.salesLine.indexOf(freeItems[j]);
                                         freeItemDiscounts = [];
                                         itemDiscount = parseFloat(reqData.salesLine[i].salesprice) / 2;
@@ -606,7 +617,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         if (!(isCashDisc || isTotalDiscount)) return [3 /*break*/, 5];
                                         return [4 /*yield*/, this_1.totalDiscount(reqData.salesLine[i], reqData)];
                                     case 4:
-                                        _f.sent();
+                                        _g.sent();
                                         if (reqData.salesLine[i].enddiscamt > 0) {
                                             freeItemDiscounts.push({
                                                 discountType: "TOTAL_DISCOUNT",
@@ -617,10 +628,10 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         }
                                         reqData.salesLine[i].buyOneGetOneDiscount -= parseFloat(reqData.salesLine[i].enddiscamt) / 2;
                                         buy_one_get_one -= parseFloat(reqData.salesLine[i].enddiscamt) / 2;
-                                        _f.label = 5;
+                                        _g.label = 5;
                                     case 5: return [4 /*yield*/, this_1.buyOneGetOneDiscount(reqData.salesLine[i], reqData)];
                                     case 6:
-                                        _f.sent();
+                                        _g.sent();
                                         freeItemDiscounts.push({
                                             discountType: "BUY_ONE_GET_ONE_DISCOUNT",
                                             discountAmount: parseFloat(reqData.salesLine[i].buyOneGetOneDiscount),
@@ -646,9 +657,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         grossTotal +=
                                             (parseFloat(reqData.salesLine[i].salesprice) + parseFloat(reqData.salesLine[i].colorantprice)) *
                                                 parseInt(reqData.salesLine[i].salesQty);
-                                        _f.label = 7;
+                                        _g.label = 7;
                                     case 7:
-                                        _i++;
+                                        _c++;
                                         return [3 /*break*/, 3];
                                     case 8:
                                         if (buy_one_get_one > 0) {
@@ -660,20 +671,20 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         return [3 /*break*/, 13];
                                     case 9:
                                         freeItems = reqData.salesLine.filter(function (v) { return v.linkId == item.linkId && v.isItemFree == true; });
-                                        _c = [];
-                                        for (_d in freeItems)
-                                            _c.push(_d);
-                                        _e = 0;
-                                        _f.label = 10;
+                                        _d = [];
+                                        for (_e in freeItems)
+                                            _d.push(_e);
+                                        _f = 0;
+                                        _g.label = 10;
                                     case 10:
-                                        if (!(_e < _c.length)) return [3 /*break*/, 13];
-                                        j = _c[_e];
+                                        if (!(_f < _d.length)) return [3 /*break*/, 13];
+                                        j = _d[_f];
                                         i = reqData.salesLine.indexOf(freeItems[j]);
                                         freeItemDiscounts = [];
                                         itemDiscount = parseFloat(reqData.salesLine[i].salesprice) / 2;
                                         return [4 /*yield*/, this_1.noDiscount(reqData.salesLine[i], reqData)];
                                     case 11:
-                                        _f.sent();
+                                        _g.sent();
                                         reqData.salesLine[i].lineAmount =
                                             (parseFloat(reqData.salesLine[i].salesprice) + parseFloat(reqData.salesLine[i].colorantprice)) *
                                                 parseInt(reqData.salesLine[i].salesQty);
@@ -688,16 +699,16 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         grossTotal +=
                                             (parseFloat(reqData.salesLine[i].salesprice) + parseFloat(reqData.salesLine[i].colorantprice)) *
                                                 parseInt(reqData.salesLine[i].salesQty);
-                                        _f.label = 12;
+                                        _g.label = 12;
                                     case 12:
-                                        _e++;
+                                        _f++;
                                         return [3 /*break*/, 10];
                                     case 13:
                                         if (!!isNoDiscount) return [3 /*break*/, 35];
                                         if (!isValidVoucherItem) return [3 /*break*/, 15];
                                         return [4 /*yield*/, this_1.calVoucherDiscount(item, reqData)];
                                     case 14:
-                                        _f.sent();
+                                        _g.sent();
                                         if (item.voucherdiscamt > 0) {
                                             appliedDiscounts.push({
                                                 discountType: "VOUCHER_DISCOUNT",
@@ -713,7 +724,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         if (!(isSalesDiscount && !isNoDiscount)) return [3 /*break*/, 19];
                                         return [4 /*yield*/, this_1.calSalesDiscount(item, reqData)];
                                     case 16:
-                                        _f.sent();
+                                        _g.sent();
                                         if (item.salesdiscamt > 0) {
                                             appliedDiscounts.push({
                                                 discountType: "SALES_DISCOUNT",
@@ -724,7 +735,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         if (!(isTotalDiscount && !isNoDiscount)) return [3 /*break*/, 18];
                                         return [4 /*yield*/, this_1.totalDiscount(item, reqData)];
                                     case 17:
-                                        _f.sent();
+                                        _g.sent();
                                         if (item.enddiscamt > 0) {
                                             appliedDiscounts.push({
                                                 discountType: "TOTAL_DISCOUNT",
@@ -733,7 +744,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 cond: [],
                                             });
                                         }
-                                        _f.label = 18;
+                                        _g.label = 18;
                                     case 18:
                                         item.lineamountafterdiscount = parseFloat(item.priceAfterdiscount);
                                         item.vat = parseFloat(reqData.vat);
@@ -747,7 +758,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         if (!(isInstantDiscount && !isNoDiscount && !isSalesDiscount)) return [3 /*break*/, 21];
                                         return [4 /*yield*/, this_1.calInstantDiscount(reqData, item, instantDiscountPercent)];
                                     case 20:
-                                        _f.sent();
+                                        _g.sent();
                                         total += parseFloat(item.priceAfterVat);
                                         totalBeforeVat += item.lineamountafterdiscount;
                                         grossTotal += (parseFloat(item.salesprice) + parseFloat(item.colorantprice)) * parseInt(item.salesQty);
@@ -768,7 +779,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                             !isBuyOneGetOneDiscount)) return [3 /*break*/, 23];
                                         return [4 /*yield*/, this_1.noDiscount(item, reqData)];
                                     case 22:
-                                        _f.sent();
+                                        _g.sent();
                                         total += parseFloat(item.priceAfterVat);
                                         totalBeforeVat += parseFloat(item.lineamountafterdiscount);
                                         grossTotal += item.lineAmount;
@@ -777,7 +788,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         if (!(isTotalDiscount && !isNoDiscount)) return [3 /*break*/, 25];
                                         return [4 /*yield*/, this_1.totalDiscount(item, reqData)];
                                     case 24:
-                                        _f.sent();
+                                        _g.sent();
                                         if (item.enddiscamt > 0) {
                                             appliedDiscounts.push({
                                                 discountType: "TOTAL_DISCOUNT",
@@ -786,12 +797,12 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 cond: [],
                                             });
                                         }
-                                        _f.label = 25;
+                                        _g.label = 25;
                                     case 25:
                                         if (!(isLineDiscount && !isNoDiscount && !isMultiLineDiscount)) return [3 /*break*/, 27];
                                         return [4 /*yield*/, this_1.lineDiscount(item, reqData)];
                                     case 26:
-                                        _f.sent();
+                                        _g.sent();
                                         if (item.linediscamt > 0) {
                                             appliedDiscounts.push({
                                                 discountType: "LINE_DISCOUNT",
@@ -800,15 +811,15 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 cond: [],
                                             });
                                         }
-                                        _f.label = 27;
+                                        _g.label = 27;
                                     case 27:
                                         if (!(isMultiLineDiscount && !isNoDiscount)) return [3 /*break*/, 30];
                                         return [4 /*yield*/, this_1.getMultiLinePercent(item, multilineDiscRanges, multilineQuantity)];
                                     case 28:
-                                        _f.sent();
+                                        _g.sent();
                                         return [4 /*yield*/, this_1.multiLineDiscount(item, reqData)];
                                     case 29:
-                                        _f.sent();
+                                        _g.sent();
                                         if (item.multilnPercent > 0) {
                                             appliedDiscounts.push({
                                                 discountType: "MULTI_LINE_DISCOUNT",
@@ -819,7 +830,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         }
                                         item.multilndisc;
                                         item.multilnPercent;
-                                        _f.label = 30;
+                                        _g.label = 30;
                                     case 30:
                                         if (!(isPromotionDiscount && !isNoDiscount)) return [3 /*break*/, 32];
                                         if (!(promotionalDiscountAmount > 0)) return [3 /*break*/, 32];
@@ -828,7 +839,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         item.supplFreeQty = promotionalDiscountDetails.freeQty;
                                         return [4 /*yield*/, this_1.promotionalDiscount(item, reqData)];
                                     case 31:
-                                        _f.sent();
+                                        _g.sent();
                                         appliedDiscounts.push({
                                             discountType: "PROMOTIONAL_DISCOUNT",
                                             discountAmount: parseFloat(item.promotionalDiscount),
@@ -839,13 +850,13 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 },
                                             ],
                                         });
-                                        _f.label = 32;
+                                        _g.label = 32;
                                     case 32:
                                         if (!(isBuyOneGetOneDiscount && !isNoDiscount)) return [3 /*break*/, 34];
                                         item.buyOneGetOneDiscount = buy_one_get_one;
                                         return [4 /*yield*/, this_1.buyOneGetOneDiscount(item, reqData)];
                                     case 33:
-                                        _f.sent();
+                                        _g.sent();
                                         appliedDiscounts.push({
                                             discountType: "BUY_ONE_GET_ONE_DISCOUNT",
                                             discountAmount: buy_one_get_one,
@@ -856,7 +867,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 },
                                             ],
                                         });
-                                        _f.label = 34;
+                                        _g.label = 34;
                                     case 34:
                                         item.lineamountafterdiscount = parseFloat(item.priceAfterdiscount);
                                         item.vat = reqData.vat;
@@ -865,7 +876,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         total += parseFloat(item.priceAfterVat);
                                         totalBeforeVat += item.lineamountafterdiscount;
                                         grossTotal += (parseFloat(item.salesprice) + parseFloat(item.colorantprice)) * parseInt(item.salesQty);
-                                        _f.label = 35;
+                                        _g.label = 35;
                                     case 35:
                                         appliedDiscounts.map(function (v) {
                                             v.percentage = v.percentage ? parseFloat(v.percentage) : v.percentage;
@@ -879,7 +890,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         if (!isNotB1G1) return [3 /*break*/, 38];
                                         return [4 /*yield*/, this_1.totalDiscount(item, reqData)];
                                     case 37:
-                                        _f.sent();
+                                        _g.sent();
                                         if (item.enddiscamt > 0) {
                                             appliedDiscounts.push({
                                                 discountType: "TOTAL_DISCOUNT",
@@ -896,7 +907,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                         totalBeforeVat += item.lineamountafterdiscount;
                                         grossTotal += (parseFloat(item.salesprice) + parseFloat(item.colorantprice)) * parseInt(item.salesQty);
                                         item.appliedDiscounts = appliedDiscounts;
-                                        _f.label = 38;
+                                        _g.label = 38;
                                     case 38: return [2 /*return*/];
                                 }
                             });
