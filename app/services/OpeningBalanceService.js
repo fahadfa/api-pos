@@ -159,6 +159,7 @@ var OpeningBalanceService = /** @class */ (function () {
                             v.datephysical = new Date(App_1.App.DateNow());
                             v.transactionClosed = true;
                             v.invoiceid = "OPEN_BALANCE";
+                            v.reserveStatus = 'OPEN_BALANCE';
                             v.inventlocationid = _this.sessionInfo.inventlocationid;
                             v.dataareaid = "ajp";
                         });

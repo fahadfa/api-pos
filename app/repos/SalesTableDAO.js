@@ -169,7 +169,7 @@ var SalesTableDAO = /** @class */ (function () {
                                     query += "and (\"SalesTable\".\"salesid\" ILike '%" + data.filter + "%' or  \n                            \"SalesTable\".\"salesname\" ILike '%" + data.filter + "%' or \n                            \"SalesTable\".\"custaccount\" ILike '%" + data.filter + "%' or\n                            \"customer\".\"name\"='%" + data.filter + "%' or\n                            \"customer\".\"namealias\"='%" + data.filter + "%' or\n                            \"customer\".\"phone\"='%" + data.filter + "%' or\n                            \"SalesTable\".\"status\" ILike '%" + data.filter + "%'\n                            )";
                                 }
                                 if (data.status == "PAID") {
-                                    query += " AND \"SalesTable\".\"status\" IN ('PAID', 'POSTED') ";
+                                    query += " AND \"SalesTable\".\"status\" IN ('PAID', 'POSTED', 'PRINTED') ";
                                     if (data.type == "designerservice") {
                                         query += " AND \"SalesTable\".\"salesid\" NOT IN  ( \n              select intercompanyoriginalsalesid from salestable \n              where transkind = 'DESIGNERSERVICERETURN'\n              )  ";
                                     }

@@ -81,7 +81,7 @@ var OverDueDAO = /** @class */ (function () {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.dao
                             .createQueryBuilder("overdue")
-                            .where("overdue.accountnum = '" + custAccNum + "' and overdue.payment=0 and overdue.duedate :: timestamp < now()")
+                            .where("overdue.accountnum = '" + custAccNum + "' and overdue.payment=0 and overdue.duedate :: timestamp < now() and overdue.invoiceamount>=0")
                             // .select(["overdue.invoiceamount"])
                             .getMany()];
                     case 1: return [2 /*return*/, _a.sent()];

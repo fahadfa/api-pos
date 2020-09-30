@@ -134,10 +134,10 @@ var SalesOrdersReport = /** @class */ (function () {
                         result.status = "CREATED";
                     }
                     else if (params.status == "POSTED") {
-                        result.status = "POSTED/PAID";
+                        result.status = "PRINTED/PAID";
                     }
                     else if (params.status == "PAID") {
-                        result.status = "PAID/POSTED";
+                        result.status = "PAID/PRINTED";
                     }
                 }
                 result.user = params.user;
@@ -198,10 +198,13 @@ var SalesOrdersReport = /** @class */ (function () {
                                 query += " and s.status in ('CREATED') ";
                             }
                             else if (params.status == "POSTED") {
-                                query += " and s.status in ('POSTED','PAID') ";
+                                query += " and s.status in ('POSTED','PAID','PRINTED') ";
                             }
                             else if (params.status == "PAID") {
-                                query += " and s.status in ('PAID','POSTED') ";
+                                query += " and s.status in ('PAID','POSTED','PRINTED') ";
+                            }
+                            else if (params.status == "PRINTED") {
+                                query += " and s.status in ('PAID','POSTED','PRINTED') ";
                             }
                         }
                         if (params.paymentMode != "ALL") {

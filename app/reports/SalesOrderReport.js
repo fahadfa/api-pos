@@ -51,11 +51,11 @@ var SalesOrderReport = /** @class */ (function () {
     }
     SalesOrderReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, data_1, salesLine, list_1, j, chunkArray, newSalesline_1, sNo_1, quantity_1, error_1;
+            var id, data_1, date, inventtransQuery, salesLine, list_1, j, chunkArray, newSalesline_1, sNo_1, quantity_1, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 4, , 5]);
+                        _a.trys.push([0, 6, , 7]);
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
                     case 1:
@@ -80,20 +80,27 @@ var SalesOrderReport = /** @class */ (function () {
                             data_1.paymentModeAr = "السيولة النقدية";
                         }
                         data_1.twoCopies = data_1.originalPrinted ? false : true;
-                        // console.log(data.status);
-                        if (data_1.status != "RESERVED") {
-                            data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
-                            if (data_1.originalPrinted == false) {
-                                this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "PAID", new Date().toISOString());
-                            }
+                        if (!(data_1.status != "RESERVED")) return [3 /*break*/, 3];
+                        data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
+                        if (!(data_1.originalPrinted == false)) return [3 /*break*/, 3];
+                        date = new Date().toISOString();
+                        this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "PRINTED", date);
+                        inventtransQuery = "UPDATE inventtrans set reserve_status = 'PRINTED' ";
+                        if (date) {
+                            inventtransQuery += ",dateinvent = '" + date + "' ";
                         }
-                        return [4 /*yield*/, this.salesline_query_to_data(id)];
+                        inventtransQuery += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "'";
+                        return [4 /*yield*/, this.db.query(inventtransQuery)];
                     case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3: return [4 /*yield*/, this.salesline_query_to_data(id)];
+                    case 4:
                         salesLine = _a.sent();
                         list_1 = [];
                         j = 0;
                         return [4 /*yield*/, this.chunkArray(salesLine, 12)];
-                    case 3:
+                    case 5:
                         chunkArray = _a.sent();
                         // console.log(chunkArray)
                         list_1 = list_1.concat(chunkArray);
@@ -180,11 +187,11 @@ var SalesOrderReport = /** @class */ (function () {
                             });
                             return [2 /*return*/, data_1];
                         }
-                        return [3 /*break*/, 5];
-                    case 4:
+                        return [3 /*break*/, 7];
+                    case 6:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 5: return [2 /*return*/];
+                    case 7: return [2 /*return*/];
                 }
             });
         });
