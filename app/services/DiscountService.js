@@ -49,7 +49,7 @@ var DiscountService = /** @class */ (function () {
     }
     DiscountService.prototype.getDiscount = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var result, checkCustomer, discountBlockItems, vendorCustomerAccount, defaultCustomer, _a, vatData, discountBlockItemsArray_1, sabicCustomers, INTERIOR_AND_EXTERIOR, aramkoTahkomDiscounts, error_1;
+            var result, checkCustomer, discountBlockItems, vendorCustomerAccount, defaultCustomer, _a, promotionalItems_1, vatData, discountBlockItemsArray_1, sabicCustomers, INTERIOR_AND_EXTERIOR, aramkoTahkomDiscounts, error_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -76,10 +76,18 @@ var DiscountService = /** @class */ (function () {
                             : [];
                         _b.label = 3;
                     case 3:
+                        promotionalItems_1 = [];
+                        reqData.selectedItems.map(function (v) {
+                            if (v.isItemFree) {
+                                promotionalItems_1.push(v.linkId);
+                            }
+                        });
                         reqData.selectedItems.map(function (v) {
                             reqData.grossTotal += parseFloat(v.price) * parseFloat(v.quantity);
+                            console.log(v.isParent, v.isItemFree);
                             if (reqData.instantDiscountExcludeItems.includes(v.itemid) ||
-                                reqData.instantDiscountExcludeItems.includes(v.product.itemGroupId || v.product.intExt != 4)) {
+                                reqData.instantDiscountExcludeItems.includes(v.product.itemGroupId || v.product.intExt != 4)
+                                || promotionalItems_1.includes(v.linkId)) {
                             }
                             else {
                                 reqData.instantDiscGrossTotal += parseFloat(v.price) * parseFloat(v.quantity);
@@ -343,10 +351,8 @@ var DiscountService = /** @class */ (function () {
                                                     break;
                                                 }
                                             }
-                                            if (instantDiscountPercent <= 0) {
-                                                instantDiscountPercent = instantDiscountRanges[0].discpercent;
-                                            }
                                         }
+                                        console.log("instantDiscountPercent:", instantDiscountPercent, reqData.instantDiscGrossTotal);
                                         isMultiLineDiscount = multilineDiscRanges.length > 0 ? true : false;
                                         if (isMultiLineDiscount) {
                                             multilinefilter = checkDiscounts.filter(function (v) { return v.multilinedisc == multilineDiscRanges[0].itemrelation && v.itemid == item.itemid; });

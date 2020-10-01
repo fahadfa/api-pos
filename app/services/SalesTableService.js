@@ -823,7 +823,8 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.checkSalesStatus(item.salesId)];
                     case 2:
                         statusData = _a.sent();
-                        if (statusData.status == "PAID" || statusData.status == "POSTED") {
+                        console.log(statusData);
+                        if (statusData.status == "PAID" || statusData.status == "POSTED" || statusData.status == "PRINTED") {
                             return [2 /*return*/, "ALREADY_PAID"];
                         }
                         _a.label = 3;
