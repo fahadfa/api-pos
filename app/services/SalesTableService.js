@@ -1731,11 +1731,13 @@ var SalesTableService = /** @class */ (function () {
                         qty = uniqueList.reduce(function (res, item) { return res + parseInt(item.quantity); }, 0);
                         console.log("qty", qty, item.salesQty);
                         console.log(uniqueList);
-                        if (parseInt(item.salesQty) != qty) {
-                            throw {
-                                id: reqData.salesId,
-                                message: "selected line quantities and selected batches quantities are not matching",
-                            };
+                        if (reqData.status == 'PAID' || reqData.status == 'RESERVED') {
+                            if (parseInt(item.salesQty) != qty) {
+                                throw {
+                                    id: reqData.salesId,
+                                    message: "selected line quantities and selected batches quantities are not matching",
+                                };
+                            }
                         }
                         _b = 0, uniqueList_1 = uniqueList;
                         _c.label = 11;

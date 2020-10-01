@@ -84,7 +84,7 @@ var DiscountService = /** @class */ (function () {
                         });
                         reqData.selectedItems.map(function (v) {
                             reqData.grossTotal += parseFloat(v.price) * parseFloat(v.quantity);
-                            console.log(v.isParent, v.isItemFree);
+                            // console.log(v.isParent, v.isItemFree)
                             if (reqData.instantDiscountExcludeItems.includes(v.itemid) ||
                                 reqData.instantDiscountExcludeItems.includes(v.product.itemGroupId || v.product.intExt != 4)
                                 || promotionalItems_1.includes(v.linkId)) {
@@ -352,7 +352,7 @@ var DiscountService = /** @class */ (function () {
                                                 }
                                             }
                                         }
-                                        console.log("instantDiscountPercent:", instantDiscountPercent, reqData.instantDiscGrossTotal);
+                                        // console.log("instantDiscountPercent:", instantDiscountPercent, reqData.instantDiscGrossTotal)
                                         isMultiLineDiscount = multilineDiscRanges.length > 0 ? true : false;
                                         if (isMultiLineDiscount) {
                                             multilinefilter = checkDiscounts.filter(function (v) { return v.multilinedisc == multilineDiscRanges[0].itemrelation && v.itemid == item.itemid; });
