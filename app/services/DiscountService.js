@@ -934,7 +934,7 @@ var DiscountService = /** @class */ (function () {
                                         grossTotal += (parseFloat(item.price) + parseFloat(item.colorantprice)) * parseInt(item.quantity);
                                         return [3 /*break*/, 3];
                                     case 2:
-                                        item.aramkoTahkomDiscount = parseFloat(item.price) * item.quantity * (parseFloat(totalPercentage) / 100);
+                                        item.aramkoTahkomDiscount = (parseFloat(item.price) + parseFloat(item.colorantprice)) * item.quantity * (parseFloat(totalPercentage) / 100);
                                         item.priceAfterdiscount =
                                             (parseFloat(item.price) + parseFloat(item.colorantprice)) * item.quantity -
                                                 parseFloat(item.aramkoTahkomDiscount);
@@ -1066,7 +1066,7 @@ var DiscountService = /** @class */ (function () {
                         grossTotal += (parseFloat(item.price) + parseFloat(item.colorantprice)) * item.quantity;
                         return [3 /*break*/, 4];
                     case 3:
-                        item.sabicCustomerDiscount = parseFloat(item.price) * item.quantity * (parseFloat(totalPercentage) / 100);
+                        item.sabicCustomerDiscount = (parseFloat(item.price) + parseFloat(item.colorantprice)) * item.quantity * (parseFloat(totalPercentage) / 100);
                         item.priceAfterdiscount =
                             (parseFloat(item.price) + parseFloat(item.colorantprice)) * item.quantity -
                                 parseFloat(item.sabicCustomerDiscount);
