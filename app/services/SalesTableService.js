@@ -2684,7 +2684,7 @@ var SalesTableService = /** @class */ (function () {
                         transactionClosed = false;
                         salesData = void 0;
                         checkStatus = false;
-                        return [4 /*yield*/, this.db.query("select * from salestable where intercompanyoriginalsalesid  = '" + reqData.interCompanyOriginalSalesId + "' ")];
+                        return [4 /*yield*/, this.db.query("select * from salestable where intercompanyoriginalsalesid  = '" + reqData.interCompanyOriginalSalesId + "' and salesid!= '" + reqData.salesId + "' ")];
                     case 4:
                         checkPrevData = _e.sent();
                         console.log(checkPrevData);
@@ -2875,7 +2875,7 @@ var SalesTableService = /** @class */ (function () {
                         salesData = void 0;
                         checkStatus = false;
                         promiseList = [];
-                        return [4 /*yield*/, this.db.query("select * from salestable where intercompanyoriginalsalesid  = '" + reqData.interCompanyOriginalSalesId + "' ")];
+                        return [4 /*yield*/, this.db.query("select * from salestable where intercompanyoriginalsalesid  = '" + reqData.interCompanyOriginalSalesId + "' and salesid!= '" + reqData.salesId + "' ")];
                     case 4:
                         checkPrevData = _c.sent();
                         console.log(checkPrevData);
