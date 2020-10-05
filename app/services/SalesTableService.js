@@ -1656,7 +1656,7 @@ var SalesTableService = /** @class */ (function () {
                         promiseList = [];
                         batches = [];
                         item.batch = [];
-                        if (!(item.salesQty > 0)) return [3 /*break*/, 10];
+                        if (!(item.salesQty > 0)) return [3 /*break*/, 12];
                         item.salesId = reqData.salesId;
                         item.createddatetime = new Date(App_1.App.DateNow());
                         item.createdBy = this.sessionInfo.userName;
@@ -1665,18 +1665,23 @@ var SalesTableService = /** @class */ (function () {
                         item.jazeeraWarehouse = reqData.jazeeraWarehouse;
                         item.taxGroup = reqData.taxGroup;
                         item.status = reqData.status;
-                        return [4 /*yield*/, this.rawQuery.getItemTaxGroup(item.itemid)];
-                    case 1:
+                        if (!(item.taxGroup == 'VAT_GRP_5%')) return [3 /*break*/, 1];
+                        item.taxItemGroup = 'VAT_ITEM_5%';
+                        return [3 /*break*/, 3];
+                    case 1: return [4 /*yield*/, this.rawQuery.getItemTaxGroup(item.itemid)];
+                    case 2:
                         taxItemGroup = _c.sent();
                         item.taxItemGroup = taxItemGroup.taxitemgroupid;
+                        _c.label = 3;
+                    case 3:
                         item.lineAmount = parseFloat(item.salesprice) * parseFloat(item.salesQty);
                         item.batch = [];
-                        if (!(item.batches && item.batches.length > 0)) return [3 /*break*/, 8];
+                        if (!(item.batches && item.batches.length > 0)) return [3 /*break*/, 10];
                         item.batches = item.batches.filter(function (v) { return Math.abs(v.quantity) > 0; });
                         _i = 0, _a = item.batches;
-                        _c.label = 2;
-                    case 2:
-                        if (!(_i < _a.length)) return [3 /*break*/, 7];
+                        _c.label = 4;
+                    case 4:
+                        if (!(_i < _a.length)) return [3 /*break*/, 9];
                         batch = _a[_i];
                         console.log(batch);
                         return [4 /*yield*/, this.rawQuery.getbatchavailability({
@@ -1686,16 +1691,16 @@ var SalesTableService = /** @class */ (function () {
                                 inventsizeid: item.inventsizeid,
                                 batchno: batch.batchNo,
                             })];
-                    case 3:
+                    case 5:
                         availability = _c.sent();
-                        if (!(availability <= 0 || availability < Math.abs(batch.qty))) return [3 /*break*/, 5];
+                        if (!(availability <= 0 || availability < Math.abs(batch.qty))) return [3 /*break*/, 7];
                         return [4 /*yield*/, this.dofifo(item, batch.quantity, reqData)];
-                    case 4:
+                    case 6:
                         fiofoBatches = _c.sent();
                         batches = batches.concat(fiofoBatches);
                         console.log(batches);
-                        return [3 /*break*/, 6];
-                    case 5:
+                        return [3 /*break*/, 8];
+                    case 7:
                         batch.itemid = item.itemid;
                         batch.transrefid = item.salesId;
                         batch.invoiceid = item.salesId;
@@ -1712,17 +1717,17 @@ var SalesTableService = /** @class */ (function () {
                         batch.salesLineId = item.id;
                         batch.dateinvent = new Date(App_1.App.DateNow());
                         batches.push(batch);
-                        _c.label = 6;
-                    case 6:
+                        _c.label = 8;
+                    case 8:
                         _i++;
-                        return [3 /*break*/, 2];
-                    case 7: return [3 /*break*/, 10];
-                    case 8: return [4 /*yield*/, this.dofifo(item, item.salesQty, reqData)];
-                    case 9:
+                        return [3 /*break*/, 4];
+                    case 9: return [3 /*break*/, 12];
+                    case 10: return [4 /*yield*/, this.dofifo(item, item.salesQty, reqData)];
+                    case 11:
                         fiofoBatches = _c.sent();
                         batches = batches.concat(fiofoBatches);
-                        _c.label = 10;
-                    case 10:
+                        _c.label = 12;
+                    case 12:
                         uniqueList = [];
                         groupBatchesList = this.groupBy(batches, function (item) {
                             return [item.itemid, item.batchno, item.configid, item.inventsizeid, item.quantity];
@@ -1742,9 +1747,9 @@ var SalesTableService = /** @class */ (function () {
                             }
                         }
                         _b = 0, uniqueList_1 = uniqueList;
-                        _c.label = 11;
-                    case 11:
-                        if (!(_b < uniqueList_1.length)) return [3 /*break*/, 15];
+                        _c.label = 13;
+                    case 13:
+                        if (!(_b < uniqueList_1.length)) return [3 /*break*/, 17];
                         batch = uniqueList_1[_b];
                         item.batch.push({
                             batchNo: batch.batchno,
@@ -1753,16 +1758,16 @@ var SalesTableService = /** @class */ (function () {
                         batch.salesLineId = item.id;
                         this.updateInventoryService.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batch, true, true, queryRunner)];
-                    case 12:
+                    case 14:
                         _c.sent();
                         return [4 /*yield*/, Promise.all(promiseList)];
-                    case 13:
+                    case 15:
                         _c.sent();
-                        _c.label = 14;
-                    case 14:
+                        _c.label = 16;
+                    case 16:
                         _b++;
-                        return [3 /*break*/, 11];
-                    case 15: return [2 /*return*/];
+                        return [3 /*break*/, 13];
+                    case 17: return [2 /*return*/];
                 }
             });
         });
