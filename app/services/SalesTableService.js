@@ -294,7 +294,7 @@ var SalesTableService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!(data.status != "PAID" && data.status != "POSTED")) return [3 /*break*/, 2];
+                        if (!(data.status != "PAID" && data.status != "POSTED" && data.status != "PRINTED")) return [3 /*break*/, 2];
                         data = data ? data : {};
                         return [4 /*yield*/, this.rawQuery.workflowstatus(data.salesId)];
                     case 1:
@@ -1025,7 +1025,7 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.checkSalesStatus(data.orderId)];
                     case 4:
                         statusData = _d.sent();
-                        if (statusData.status == "PAID" || statusData.status == "POSTED") {
+                        if (statusData.status == "PAID" || statusData.status == "POSTED" || statusData.status == "PRINTED") {
                             throw "ALREADY_PAID";
                         }
                         return [4 /*yield*/, this.salestableDAO.entity(data.orderId)];
@@ -1665,8 +1665,8 @@ var SalesTableService = /** @class */ (function () {
                         item.jazeeraWarehouse = reqData.jazeeraWarehouse;
                         item.taxGroup = reqData.taxGroup;
                         item.status = reqData.status;
-                        if (!(item.taxGroup == 'VAT_GRP_5%')) return [3 /*break*/, 1];
-                        item.taxItemGroup = 'VAT_ITEM_5%';
+                        if (!(item.taxGroup == "VAT_GRP_5%")) return [3 /*break*/, 1];
+                        item.taxItemGroup = "VAT_ITEM_5%";
                         return [3 /*break*/, 3];
                     case 1: return [4 /*yield*/, this.rawQuery.getItemTaxGroup(item.itemid)];
                     case 2:
@@ -1738,7 +1738,7 @@ var SalesTableService = /** @class */ (function () {
                         qty = uniqueList.reduce(function (res, item) { return res + parseInt(item.quantity); }, 0);
                         console.log("qty", qty, item.salesQty);
                         console.log(uniqueList);
-                        if (reqData.status == 'PAID' || reqData.status == 'RESERVED') {
+                        if (reqData.status == "PAID" || reqData.status == "RESERVED") {
                             if (parseInt(item.salesQty) != qty) {
                                 throw {
                                     id: reqData.salesId,
@@ -2250,7 +2250,7 @@ var SalesTableService = /** @class */ (function () {
                             promiseList.push(this.saveSalesVisitorData(reqData, customerDetails, queryRunner));
                         }
                         userName = this.sessionInfo.userName;
-                        if ((reqData.paymtermid != "CASH" || reqData.payment != "CASH") && !reqData.isCash) {
+                        if ((reqData.paymtermid != "CASH" || reqData.payment != "CASH") && reqData.isCash == false) {
                             reqData.paymtermid = reqData.paymtermid ? reqData.paymtermid : reqData.payment;
                             promiseList.push(this.saveSalesOrderOverDue(reqData, userName, salesTable_1, queryRunner));
                         }
@@ -2929,7 +2929,7 @@ var SalesTableService = /** @class */ (function () {
                         salesLine = salesLine.filter(function (v) { return v.status == "RECEIVED"; });
                         return [4 /*yield*/, this.inventTransDAO.findAll({
                                 invoiceid: reqData.interCompanyOriginalSalesId,
-                                transactionClosed: true
+                                transactionClosed: true,
                             })];
                     case 10:
                         batches_5 = _c.sent();

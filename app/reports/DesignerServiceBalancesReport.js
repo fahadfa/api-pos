@@ -108,10 +108,13 @@ var DesignerServiceBalancesReport = /** @class */ (function () {
                                 query += " and st.status in ('CREATED') ";
                             }
                             else if (params.status == "POSTED") {
-                                query += " and st.status in ('POSTED','PAID') ";
+                                query += " and st.status in ('POSTED','PAID', 'PRINTED') ";
                             }
                             else if (params.status == "PAID") {
-                                query += " and st.status in ('PAID','POSTED') ";
+                                query += " and st.status in ('PAID','POSTED', 'PRINTED') ";
+                            }
+                            else if (params.status == "PRINTED") {
+                                query += " and st.status in ('PAID','POSTED', 'PRINTED') ";
                             }
                         }
                         if (params.custaccount) {

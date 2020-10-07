@@ -571,7 +571,7 @@ var SalestargetService = /** @class */ (function () {
                             .select("SUM(salestable.netamount :: float)", "sum")
                             // .andWhere("salestable.transkind IN (:...transkind)", { transkind: ["SALESORDER"] })
                             .andWhere("salestable.transkind IN (:...transkind)", { transkind: ["SALESORDER", "DESIGNERSERVICE"] })
-                            .andWhere("salestable.status IN (:...status)", { status: ["PAID", "POSTED"] })
+                            .andWhere("salestable.status IN (:...status)", { status: ["PAID", "POSTED", 'PRINTED'] })
                             .andWhere("salestable.lastmodifieddate ::date = :lastmodifieddate", date)
                             .andWhere("salestable.inventlocationid = :inventlocationid", data)
                             .getRawOne()];
@@ -592,7 +592,7 @@ var SalestargetService = /** @class */ (function () {
                             .select("SUM(salestable.netamount :: float)", "sum")
                             // .andWhere("salestable.transkind IN (:...transkind)", { transkind: ["SALESORDER"] })
                             .andWhere("salestable.transkind IN (:...transkind)", { transkind: ["SALESORDER", "DESIGNERSERVICE"] })
-                            .andWhere("salestable.status IN (:...status)", { status: ["PAID", "POSTED"] })
+                            .andWhere("salestable.status IN (:...status)", { status: ["PAID", "POSTED", "PRINTED"] })
                             .andWhere("salestable.inventlocationid = :inventlocationid", data)
                             .andWhere(new typeorm_1.Brackets(function (qb) {
                             qb.where("salestable.lastmodifieddate::date >= :fromDate", {

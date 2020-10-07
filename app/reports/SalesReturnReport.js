@@ -153,10 +153,10 @@ var SalesReturnReport = /** @class */ (function () {
                                 query += " and s.status in ('CREATED') ";
                             }
                             else if (params.status == "POSTED") {
-                                query += " and s.status in ('POSTED','PAID') ";
+                                query += " and s.status in ('POSTED','PAID', 'PRINTED') ";
                             }
                             else if (params.status == "PAID") {
-                                query += " and s.status in ('PAID','POSTED') ";
+                                query += " and s.status in ('PAID','POSTED', 'PRINTED') ";
                             }
                         }
                         if (!(params.inventlocationid == "ALL")) return [3 /*break*/, 2];
