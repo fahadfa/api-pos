@@ -120,7 +120,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             }
                         });
                         reqData.selectedBatches.map(function (v) {
-                            salesLineIds_1.push(v.salesLineId);
+                            salesLineIds_1.push({ id: v.salesLineId, linkId: v.linkId });
                         });
                         return [4 /*yield*/, this.calReturnOrders(prevReturnOrders)];
                     case 6:
@@ -1250,11 +1250,12 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         salesLine = [];
                         linenum = 1;
                         _loop_4 = function (item) {
-                            var line, prevReturnLine, salesOrderLine, promotionalDiscount, buyOneGetOneDiscount, totalDiscount, lineDiscount, multilineDiscount, voucherDiscount, sabicCustomerDiscount, InteriorAndExteriorDiscount, instantDisocunt, salesDiscount, discount, discount, discount, discount, discount, discount, discount, discount, discount, discount;
+                            var data, line, prevReturnLine, salesOrderLine, promotionalDiscount, buyOneGetOneDiscount, totalDiscount, lineDiscount, multilineDiscount, voucherDiscount, sabicCustomerDiscount, InteriorAndExteriorDiscount, instantDisocunt, salesDiscount, discount, discount, discount, discount, discount, discount, discount, discount, discount, discount;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
-                                        if (!salesLineIds.includes(item.id)) return [3 /*break*/, 2];
+                                        data = salesLineIds.find(function (v) { return v.id == item.id || v.linkId == item.linkId; });
+                                        if (!data) return [3 /*break*/, 2];
                                         line = {};
                                         return [4 /*yield*/, this_2.allocateReturnItem(item)];
                                     case 1:

@@ -2563,7 +2563,7 @@ var SalesTableService = /** @class */ (function () {
                         if (!(_i < salesLine_9.length)) return [3 /*break*/, 24];
                         item = salesLine_9[_i];
                         item.batch = [];
-                        if (!(item.salesQty > 0)) return [3 /*break*/, 23];
+                        if (!(item.salesQty >= 0)) return [3 /*break*/, 23];
                         delete item.id;
                         item.id = uuid();
                         item.salesId = reqData.salesId;
@@ -2708,14 +2708,14 @@ var SalesTableService = /** @class */ (function () {
                         salesData = _e.sent();
                         //console.log(salesData);
                         if (salesData) {
-                            salesData.status = "SHIPPED";
+                            salesData.status = reqData.status;
                             salesData.salesType = 2;
                             salesData.lastModifiedDate = new Date(App_1.App.DateNow());
                             // await this.salestableDAO.save(salesData);
                             queryRunner.manager.getRepository(SalesTable_1.SalesTable).save(salesData);
                             reqData.salesType = 2;
                             reqData.isMovementIn = false;
-                            reqData.status = "SHIPPED";
+                            reqData.status = reqData.status;
                             transactionClosed = true;
                         }
                         return [4 /*yield*/, this.validate(reqData, salesLine)];
@@ -3243,7 +3243,7 @@ var SalesTableService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 4, , 5]);
+                        _a.trys.push([0, 7, , 8]);
                         return [4 /*yield*/, this.salestableDAO.entity(reqData.salesId)];
                     case 1:
                         transferorder = _a.sent();
@@ -3252,18 +3252,26 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.salestableDAO.save(transferorder)];
                     case 2:
                         transferorder = _a.sent();
-                        return [4 /*yield*/, this.rawQuery.updateSalesLine(reqData.salesId, "REJECTED")];
+                        if (!(transferorder.transkind == 'ORDERSHIPMENT')) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.salestableDAO.save({ salesId: transferorder.interCompanyOriginalSalesId, status: 'REJECTED' })];
                     case 3:
+                        transferorder = _a.sent();
+                        return [4 /*yield*/, this.rawQuery.updateSalesLine(transferorder.interCompanyOriginalSalesId, "REJECTED")];
+                    case 4:
+                        _a.sent();
+                        _a.label = 5;
+                    case 5: return [4 /*yield*/, this.rawQuery.updateSalesLine(reqData.salesId, "REJECTED")];
+                    case 6:
                         _a.sent();
                         return [2 /*return*/, {
                                 id: transferorder.salesId,
                                 message: "REJECTED",
                                 status: transferorder.status,
                             }];
-                    case 4:
+                    case 7:
                         error_23 = _a.sent();
                         throw error_23;
-                    case 5: return [2 /*return*/];
+                    case 8: return [2 /*return*/];
                 }
             });
         });

@@ -218,11 +218,11 @@ var WorkflowService = /** @class */ (function () {
                         transactions = _a.sent();
                         transactions = transactions.filter(function (v) { return v.qty < 0; });
                         date = new Date().toISOString();
-                        inventtransQuery = "UPDATE inventtrans SET transactionclosed = " + true + ", reserve_status = 'RESERVED' ";
+                        inventtransQuery = " UPDATE inventtrans SET transactionclosed = " + true + ", reserve_status = 'RESERVED'  ";
                         if (date) {
                             inventtransQuery += ",dateinvent = '" + date + "' ";
                         }
-                        inventtransQuery += " WHERE invoiceid = '" + salesData.salesId.toUpperCase() + "'";
+                        inventtransQuery += " WHERE invoiceid = '" + salesData.salesId.toUpperCase() + "' and qty < 0";
                         return [4 /*yield*/, queryRunner.query(inventtransQuery)];
                     case 18:
                         _a.sent();
