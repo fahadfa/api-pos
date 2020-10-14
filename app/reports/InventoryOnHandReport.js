@@ -142,7 +142,13 @@ var InventoryOnHandReport = /** @class */ (function () {
                         if (params.batchno && params.batchCheck) {
                             query = query + (" and LOWER(i.batchno)=LOWER('" + params.batchno + "') ");
                         }
-                        query += " and transactionclosed  = true group by i.itemid, i.configid, i.inventsizeid, i.inventlocationid,\n      bs.namealias, bs.itemname, w.name, w.namealias,  sz.description, sz.\"name\" " + (params.batchCheck ? ", i.batchno, b.expdate" : "") + " ) as a where (a.availabilty + a.reservedquantity) > 0 ";
+                        query += " and transactionclosed  = true group by i.itemid, i.configid, i.inventsizeid, i.inventlocationid,\n      bs.namealias, bs.itemname, w.name, w.namealias,  sz.description, sz.\"name\" " + (params.batchCheck ? ", i.batchno, b.expdate" : "") + " ) as a where  ";
+                        if (params.withZero) {
+                            query += " (a.availabilty + a.reservedquantity) >= 0 ";
+                        }
+                        else {
+                            query += " (a.availabilty + a.reservedquantity) > 0 ";
+                        }
                         return [4 /*yield*/, this.db.query(query)];
                     case 4: return [2 /*return*/, _a.sent()];
                 }
