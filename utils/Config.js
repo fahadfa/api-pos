@@ -30,22 +30,13 @@ exports.mssqlDbOptions = {
 exports.stageDbOptions = {
     name: "stage",
     type: "postgres",
-    host: "jpos.cw34ebrphxxg.eu-central-1.rds.amazonaws.com",
+    host: "jpos.xxxx.com",
     port: 5432,
-    username: "jpos",
-    password: "Mpfrdsjposdb",
-    database: "jpos_qa",
+    username: "xx",
+    password: "xxx",
+    database: "xx",
 };
-// =============== PROD STAGING DATABASE =================
-// export let stageDbOptions: any = {
-//   name: "stage",
-//   type: "postgres",
-//   host: "jposprod.cw34ebrphxxg.eu-central-1.rds.amazonaws.com",
-//   port: 5432,
-//   username: "jpos",
-//   password: "jposrdbmspwd",
-//   database: "jpos",
-// };
+
 exports.localDbOptions = {
     name: "local",
     type: "postgres",
@@ -85,68 +76,4 @@ exports.setEnvConfig = function () {
     }
     console.log(envData);
 };
-//============ PRE PROD_DB DATABASE ==========
-// export let dbOptions: any = {
-//     name: "default",
-//     type: "postgres",
-//     host: "database-1.cw34ebrphxxg.eu-central-1.rds.amazonaws.com",
-//     port: 5432,
-//     username: "mpos_pre_prod_user",
-//     password: "jazeera@1234",
-//     database: "mpos_pre_prod_db",
-//     logging: true,
-//     synchronize: false,
-//     entities: [__dirname + "/../entities/**/*{.ts,.js}"]
-// };
-//============  PROD DATABASE ==========
-// export let dbOptions: any = {
-//   name: "default",
-//   type: "postgres",
-//   host: "database-1.cw34ebrphxxg.eu-central-1.rds.amazonaws.com",
-//   port: 5432,
-//   username: "mpos_pre_prod_user",
-//   password: "jazeera@1234",
-//   database: "mpos_pre_prod_db",
-//   logging: true,
-//   synchronize: false,
-//   entities: [__dirname + "/../entities/**/*{.ts,.js}"]
-// };
-//======= PREPROD FOR KEY USERS DATABASE ======
-// export let dbOptions: any = {
-//     name: "default",
-//     type: "postgres",
-//     host: "mposdb-preprod.cw34ebrphxxg.eu-central-1.rds.amazonaws.com",
-//     port: 5432,
-//     username: "mposdb",
-//     password: "mdbmpfpp",
-//     database: "mpos_preprod",
-//     logging: true,
-//     synchronize: false,
-//     entities: [__dirname + "/../entities/**/*{.ts,.js}"]
-// };
-// export let dbOptions: any = {
-//   name: "default",
-//   type: "postgres",
-//   host: "database-1.cw34ebrphxxg.eu-central-1.rds.amazonaws.com",
-//   port: 5432,
-//   username: "qa_db",
-//   password: "jazeera#1234",
-//   database: "mpos_qa_db",
-//   logging: true,
-//   synchronize: false,
-//   entities: [__dirname + "/../entities/**/*{.ts,.js}"]
-// };
-//============== QA DATABASE ================
-// export let dbOptions: any = {
-//     name: "default",
-//     type: "postgres",
-//     host: "qa-jazsales.cuy19ulnh0kz.us-east-1.rds.amazonaws.com",
-//     port: 5432,
-//     username: "jazsales",
-//     password: "Evoke1234",
-//     database: "jazsalesqa",
-//     logging: true,
-//     synchronize: false,
-//     entities: [__dirname + "/../entities/**/*{.ts,.js}"]
-// };
 
