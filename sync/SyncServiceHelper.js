@@ -60,11 +60,11 @@ pg_1.types.setTypeParser(1114, function (stringValue) {
     return stringValue.replace(" ", "T");
 });
 var log = Log_1.log;
+Config.setStagingConfig();
 var SyncServiceHelper = /** @class */ (function () {
     function SyncServiceHelper() {
     }
     SyncServiceHelper.SetLog = function (slog) {
-        Config.setStagingConfig();
         log = slog;
     };
     SyncServiceHelper.BatchQuery = function (config, sqls) {
