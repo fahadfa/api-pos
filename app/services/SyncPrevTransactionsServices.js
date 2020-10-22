@@ -34,40 +34,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var Config = __importStar(require("../../utils/Config"));
 var SyncServiceHelper_1 = require("../../sync/SyncServiceHelper");
 var Log_1 = require("../../utils/Log");
 var App_1 = require("../../utils/App");
 var uuid = require("uuid");
-// let mssqlDbOptions = {
-//   username: "SA",
-//   password: "Jazeera123",
-//   host: "3.80.2.102",
-//   database: "jpos_dev",
-//   port: 1433
-// };
-// let mssqlDbOptions = Config.mssqlDbOptions
-// let mssqlString = `mssql://${mssqlDbOptions.username}:${mssqlDbOptions.password}@${mssqlDbOptions.host}/${mssqlDbOptions.database}`;
 var SyncPrevTransactionsService = /** @class */ (function () {
     function SyncPrevTransactionsService() {
         var _this = this;
         this.run = function () { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 try {
-                    //const mssqlClient = require("mssql/msnodesqlv8");
-                    // const connectionString =
-                    //   "server=localhost;Database=DAX;Trusted_Connection=Yes;Driver={SQL Server Native Client 11.0}";
-                    // let mssqlString = `mssql://${mssqlDbOptions.username}:${mssqlDbOptions.password}@${mssqlDbOptions.host}/${mssqlDbOptions.database}`;
-                    // const connectionString = mssqlString;
-                    // this.pool = new mssqlClient.ConnectionPool(connectionString);
                 }
                 catch (err) {
                     Log_1.log.error(err);
@@ -81,7 +58,6 @@ var SyncPrevTransactionsService = /** @class */ (function () {
         this.jsonString = this.fs.readFileSync(__dirname + "/data.json", "utf-8");
         this.dateObj = JSON.parse(this.jsonString);
         // this.fs.unlinkSync(`${__dirname}/data.json`);
-        this.mssqlDbOptions = Config.mssqlDbOptions;
         // this.mssqlDbOptions = mssqlDbOptions;
         this.localDbConfig = SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions();
         // this.localDbConfig = LocalDBOptions();

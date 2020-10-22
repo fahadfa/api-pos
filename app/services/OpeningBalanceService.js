@@ -51,23 +51,6 @@ var RawQuery_1 = require("../common/RawQuery");
 var uuid = require("uuid");
 var fs = __importStar(require("fs"));
 var Log_1 = require("../../utils/Log");
-// let mssqlDbOptions = {
-//   username: 'sysoffline',
-//   password: 'binjzrpos',
-//   host: 'localhost',
-//   database: 'DAX',
-//   port: 1433
-// }
-// let mssqlDbOptions = {
-//   username: "SA",
-//   password: "Jazeera123",
-//   host: "3.80.2.102",
-//   database: "jpos_dev",
-//   port: 1433
-// };
-// let mssqlDbOptions = Config.mssqlDbOptions
-// let mssqlString = `mssql://${mssqlDbOptions.username}:${mssqlDbOptions.password}@${mssqlDbOptions.host}/${mssqlDbOptions.database}`;
-// const query = "SELECT name FROM sys.databases";
 var OpeningBalanceService = /** @class */ (function () {
     function OpeningBalanceService() {
         var _this = this;
@@ -159,7 +142,7 @@ var OpeningBalanceService = /** @class */ (function () {
                             v.datephysical = new Date(App_1.App.DateNow());
                             v.transactionClosed = true;
                             v.invoiceid = "OPEN_BALANCE";
-                            v.reserveStatus = 'OPEN_BALANCE';
+                            v.reserveStatus = "OPEN_BALANCE";
                             v.inventlocationid = _this.sessionInfo.inventlocationid;
                             v.dataareaid = "ajp";
                         });

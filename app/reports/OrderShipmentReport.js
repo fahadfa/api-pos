@@ -118,15 +118,7 @@ var OrderShipmentReport = /** @class */ (function () {
                             inventtransQuery_1 += ",dateinvent = '" + date + "' ";
                         }
                         inventtransQuery_1 += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "'";
-                        return [4 /*yield*/, queryRunner.query(inventtransQuery_1)
-                            // this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED", new Date().toISOString());
-                            // let batches: any = await this.inventTransDAO.findAll({ invoiceid: params.salesId });
-                            // for (let item of batches) {
-                            //   item.transactionClosed = true;
-                            //   // this.inventTransDAO.save(item);
-                            //   await this.updateInventoryService.updateInventtransTable(item, false, true, queryRunner);
-                            // }
-                        ];
+                        return [4 /*yield*/, queryRunner.query(inventtransQuery_1)];
                     case 9:
                         _a.sent();
                         return [3 /*break*/, 11];
@@ -179,10 +171,12 @@ var OrderShipmentReport = /** @class */ (function () {
                                         return [4 /*yield*/, this_1.dataToQrString(lines)];
                                     case 1:
                                         qrString = _b.sent();
+                                        console.log(qrString);
                                         _a = lines;
                                         return [4 /*yield*/, this_1.genrateQRCode(qrString)];
                                     case 2:
                                         _a.qr = _b.sent();
+                                        lines.qrSting = qrString;
                                         newSalesline.push(lines);
                                         return [2 /*return*/];
                                 }
