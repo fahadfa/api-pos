@@ -56,7 +56,7 @@ var CrpytoData_1 = require("./CrpytoData");
 var fs_1 = require("fs");
 exports.setStagingConfig = function () {
     try {
-        var data = fs_1.readFileSync(__dirname + "/../../id_rsa", "utf-8");
+        var data = fs_1.readFileSync(__dirname + "/../id_rsa", "utf-8");
         console.log("readFileSync Data:", data);
         var decodeData = CrpytoData_1.decrypt(JSON.parse(data));
         data = JSON.parse(decodeData);
