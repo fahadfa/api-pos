@@ -90,6 +90,8 @@ exports.stlog = log4js_1.getLogger("sync");
 exports.stlog.addContext("type", "synct");
 exports.s1log = log4js_1.getLogger("sync");
 exports.s1log.addContext("type", "sync1");
+exports.s2log = log4js_1.getLogger("sync");
+exports.s2log.addContext("type", "sync2");
 exports.sflog = log4js_1.getLogger("sync");
 exports.sflog.addContext("type", "syncf");
 exports.ulog = log4js_1.getLogger("update");

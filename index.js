@@ -132,7 +132,7 @@ var run = function () { return __awaiter(_this, void 0, void 0, function () {
 }); };
 run();
 var sync = function () { return __awaiter(_this, void 0, void 0, function () {
-    var child_process, fs, syncFileUpdate, syncDFile, macAddress, _a, syncMFile, syncTFile, sync1File, syncFFile, err_1;
+    var child_process, fs, syncFileUpdate, syncDFile, macAddress, _a, syncMFile, syncTFile, sync1File, sync2File, syncFFile, err_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -169,7 +169,11 @@ var sync = function () { return __awaiter(_this, void 0, void 0, function () {
                 sync1File = __dirname + "/sync1.ts";
                 sync1File = fs.existsSync(sync1File) ? __dirname + "/sync1.ts" : __dirname + "/sync1.js";
                 child_process.fork(sync1File);
-                Log_1.log.warn("syncFile:", sync1File);
+                Log_1.log.warn("syncFile1:", sync1File);
+                sync2File = __dirname + "/sync2.ts";
+                sync2File = fs.existsSync(sync2File) ? __dirname + "/sync2.ts" : __dirname + "/sync2.js";
+                child_process.fork(sync2File);
+                Log_1.log.warn("syncFile2:", sync2File);
                 syncFFile = __dirname + "/syncF.ts";
                 syncFFile = fs.existsSync(syncFFile) ? __dirname + "/syncF.ts" : __dirname + "/syncF.js";
                 child_process.fork(syncFFile);

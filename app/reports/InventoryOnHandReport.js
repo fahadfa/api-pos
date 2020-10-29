@@ -149,7 +149,7 @@ var InventoryOnHandReport = /** @class */ (function () {
                         else {
                             query += " (a.availabilty + a.reservedquantity) > 0 ";
                         }
-                        query += " order by i.itemid ";
+                        query += " order by a.itemid ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 4: return [2 /*return*/, _a.sent()];
                 }

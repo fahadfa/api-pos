@@ -59,6 +59,9 @@ var SyncService = /** @class */ (function () {
             case "1":
                 log = Log_1.s1log;
                 break;
+            case "2":
+                log = Log_1.s2log;
+                break;
             case "F":
                 log = Log_1.sflog;
                 break;
@@ -89,6 +92,9 @@ var SyncService = /** @class */ (function () {
                         break;
                     case "1":
                         this.priority1();
+                        break;
+                    case "2":
+                        this.priority2();
                         break;
                     case "F":
                         this.fallback();
@@ -308,6 +314,56 @@ var SyncService = /** @class */ (function () {
             });
         });
     };
+    SyncService.prototype.priority2 = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var isPriorityProceed, toggleSync;
+            var _this = this;
+            return __generator(this, function (_a) {
+                isPriorityProceed = true;
+                toggleSync = "T";
+                cron.schedule("*/13 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
+                    var error_5;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                _a.trys.push([0, 7, , 8]);
+                                toggleSync = toggleSync == "M" ? "T" : "M";
+                                if (!(isPriorityProceed == true)) return [3 /*break*/, 5];
+                                isPriorityProceed = false;
+                                log.debug("(((((((((( SYNC START PRIORITY 2 ))))))))))");
+                                return [4 /*yield*/, this.checkInternet()];
+                            case 1:
+                                if (!_a.sent()) return [3 /*break*/, 3];
+                                return [4 /*yield*/, this.syncDMLService.execute(toggleSync, 2)];
+                            case 2:
+                                _a.sent();
+                                return [3 /*break*/, 4];
+                            case 3:
+                                log.warn(">>>>>>>>>>>>>>>>> No Internet connection <<<<<<<<<<<<<<<<<<<<");
+                                _a.label = 4;
+                            case 4:
+                                log.debug("(((((((((( SYNC CLOSE PRIORITY 2 ))))))))))");
+                                isPriorityProceed = true;
+                                return [3 /*break*/, 6];
+                            case 5:
+                                log.warn("PRIORITY 2 still processing ...................................");
+                                _a.label = 6;
+                            case 6: return [3 /*break*/, 8];
+                            case 7:
+                                error_5 = _a.sent();
+                                isPriorityProceed = true;
+                                log.error("--------- CRON PRIORITY 2 ERROR ---------");
+                                log.error(error_5);
+                                log.error("--------- CRON PRIORITY 2 ERROR ---------");
+                                return [3 /*break*/, 8];
+                            case 8: return [2 /*return*/];
+                        }
+                    });
+                }); });
+                return [2 /*return*/];
+            });
+        });
+    };
     SyncService.prototype.fallback = function () {
         return __awaiter(this, void 0, void 0, function () {
             var isFallBackProceed;
@@ -315,7 +371,7 @@ var SyncService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 isFallBackProceed = true;
                 cron.schedule("*/23 * * * * *", function () { return __awaiter(_this, void 0, void 0, function () {
-                    var data, error_5;
+                    var data, error_6;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
@@ -351,10 +407,10 @@ var SyncService = /** @class */ (function () {
                                 _a.label = 9;
                             case 9: return [3 /*break*/, 11];
                             case 10:
-                                error_5 = _a.sent();
+                                error_6 = _a.sent();
                                 isFallBackProceed = true;
                                 log.error("--------- CRON FALLBACK ERROR ---------");
-                                log.error(error_5);
+                                log.error(error_6);
                                 log.error("--------- CRON FALLBACK ERROR ---------");
                                 return [3 /*break*/, 11];
                             case 11: return [2 /*return*/];
