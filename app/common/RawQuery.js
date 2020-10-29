@@ -742,7 +742,7 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "SELECT \n                  id, \n                  dataareaid, \n                  salesid, \n                  custaccount, \n                  is_used, \n                  is_enabled,\n                  voucher_num, \n                  voucher_type, \n                  discount_percent, \n                  allowed_numbers, \n                  used_numbers, \n                  expiry_date\n                  FROM public.discountvoucher\n                  WHERE voucher_num='" + code + "' and dataareaid = '" + dataareaid + "' limit 1;\n                 ";
+                        query = "SELECT \n                  id, \n                  dataareaid, \n                  salesid, \n                  custaccount, \n                  is_used, \n                  is_enabled,\n                  voucher_num, \n                  voucher_type, \n                  discount_percent, \n                  allowed_numbers, \n                  used_numbers, \n                  expiry_date,\n                  voucher_rules as \"voucherRules\"\n                  FROM public.discountvoucher\n                  WHERE voucher_num='" + code + "' and dataareaid = '" + dataareaid + "' limit 1;\n                 ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
@@ -893,7 +893,11 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select\n        sum(i.qty) as availabilty\n        from inventtrans  i\n        where i.inventlocationid='" + data.inventlocationid + "'\n        and i.itemid = '" + data.itemid + "' and UPPER(i.configid)=UPPER('" + data.configid + "') and \n        UPPER(i.inventsizeid)=UPPER('" + data.inventsizeid + "') and i.batchno = '" + data.batchno + "' and transactionclosed = true\n        GROUP BY i.itemid,  UPPER(i.configid), UPPER(i.inventsizeid), i.batchno\n        ";
+                        query = "select\n        sum(i.qty) as availabilty\n        from inventtrans  i\n        where i.inventlocationid='" + data.inventlocationid + "'\n        and i.itemid = '" + data.itemid + "' and UPPER(i.configid)=UPPER('" + data.configid + "') and \n        UPPER(i.inventsizeid)=UPPER('" + data.inventsizeid + "') and i.batchno = '" + data.batchno + "' and transactionclosed = true \n        ";
+                        if (data.invoiceid) {
+                            query += " and i.invoiceid != '" + data.invoiceid + "' ";
+                        }
+                        query += " GROUP BY i.itemid,  UPPER(i.configid), UPPER(i.inventsizeid), i.batchno ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         result = _a.sent();

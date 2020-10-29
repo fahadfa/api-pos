@@ -13,6 +13,8 @@ var Props = /** @class */ (function () {
     Props.AXAPTA_URL = "http://pos.al-jazeerapaints.com:200/api/";
     Props.ECOMMERCE_PAYMENT_URL = "https://qa.jazeerapaints.com/jpos_orders/";
     //public static ECOMMERCE_PAYMENT_URL = "https://pre-prod.jazeerapaints.com/jpos_orders/";
+    Props._URL = "https://qa-api-mpos-sync.jazeerapaints.com/api/axaptaorders/";
+    Props._TOKEN = "UmVzdEFkbWluOkFkbTFuMHdu";
     Props.DAY = "day";
     Props.WEEK = "week";
     Props.MONTH = "month";
@@ -83,7 +85,7 @@ var Props = /** @class */ (function () {
         6: [6, "Family", "عوائل"],
         7: [7, "Real Estate", "العقاريون"],
         8: [8, "Tile Workers", "مبلطين"],
-        9: [9, "ISOLATION", "عوازل"]
+        9: [9, "ISOLATION", "عوازل"],
     };
     Props.rcusttypeEn = {
         Charity: 0,
@@ -95,7 +97,7 @@ var Props = /** @class */ (function () {
         Family: 6,
         "Real Estate": 7,
         "Tile Workers": 8,
-        ISOLATION: 9
+        ISOLATION: 9,
     };
     Props.rcusttypeAr = {
         "الاعمال الخيرية": 0,
@@ -107,7 +109,7 @@ var Props = /** @class */ (function () {
         عوائل: 6,
         العقاريون: 7,
         مبلطين: 8,
-        عوازل: 9
+        عوازل: 9,
     };
     Props.WORKFLOW_ORDER_TYPE = {
         SALESQUOTATION: [2, "SALESQUOTATION", "Sales Quotation"],
@@ -118,7 +120,7 @@ var Props = /** @class */ (function () {
         RETURNORDER: [7, "RETURNORDER", "Return Order"],
         PURCHSERETURNORDER: [8, "PURCHSERETURNORDER", "Purchase Return Order"],
         DESIGNERSERVICERETURN: [9, "DESIGNERSERVICERETURN", "designer Service Return Order"],
-        DESIGNERSERVICE: [10, "DESIGNERSERVICE", "designer Service"]
+        DESIGNERSERVICE: [10, "DESIGNERSERVICE", "designer Service"],
     };
     Props.Workflow_Order_Type = {
         2: [2, "SALESQUOTATION", "Sales Quotation"],
@@ -129,7 +131,7 @@ var Props = /** @class */ (function () {
         7: [7, "RETURNORDER", "Return Order"],
         8: [8, "PURCHSERETURNORDER", "Purchase Return Order"],
         9: [9, "DESIGNERSERVICERETURN", "designer Service Return Order"],
-        10: [10, "DESIGNERSERVICE", "designer Service"]
+        10: [10, "DESIGNERSERVICE", "designer Service"],
     };
     Props.CUSTTYPE = {
         0: ["CHARITY", 0, "Charity", "Charity"],
@@ -140,7 +142,7 @@ var Props = /** @class */ (function () {
         5: ["NONE", 5, "None", "None"],
         6: ["OEM", 6, "OEM", "OEM"],
         7: ["WHOLESALE", 7, "Wholesale", "Wholesale"],
-        8: ["WEBSITE", 8, "Website", "Website"]
+        8: ["WEBSITE", 8, "Website", "Website"],
     };
     Props.WORKFLOW_STATUSID = {
         RO_DRAFTED: ["DRAFTED", "Drafted", "تم الانشاء"],
@@ -150,12 +152,12 @@ var Props = /** @class */ (function () {
         PENDINGRMAPPROVAL: [
             "PENDINGRMAPPROVAL",
             "Pending for Regional Manager approval",
-            "بانتظار موافقة مدير مبيعات المنطقة"
+            "بانتظار موافقة مدير مبيعات المنطقة",
         ],
         PENDINGRAAPPROVAL: [
             "PENDINGRAAPPROVAL",
             "Pending for Regional Accountant approval",
-            "بانتظار موافقة محاسب المنطقة"
+            "بانتظار موافقة محاسب المنطقة",
         ],
         REJECTEDBYRM: ["REJECTEDBYRM", "Rejected by Regional Manager", "تم رفضها من قبل مدير مبيعات المنطقة"],
         APPROVEDBYRA: ["APPROVEDBYRA", "Approved by Regional Accountant", "تمت الموافقة من قبل محاسب المنطقة"],
@@ -163,7 +165,7 @@ var Props = /** @class */ (function () {
         REJECTEDBYRA: ["REJECTEDBYRA", "Rejected by Regional Accountant", "تم رفضها من قبل محاسب المنطقة"],
         RO_POSTED: ["POSTED", "Posted", "تم التأكيد"],
         PENDINGINGFORDESIGNERAPPROVAL: ["PENDINGINGFORDESIGNERAPPROVAL", "Pending For Designer Approval", "تم التأكيد"],
-        APPROVEDBYDESIGNER: ["APPROVEDBYDESIGNER", "Approved By Designer", "تم التأكيد"]
+        APPROVEDBYDESIGNER: ["APPROVEDBYDESIGNER", "Approved By Designer", "تم التأكيد"],
     };
     Props.DIMENSION_CODE = {
         REGION: 0,
@@ -173,7 +175,7 @@ var Props = /** @class */ (function () {
         SALESMAN: 102,
         COSTCENTER: 2,
         BRAND: 103,
-        EMPLOYEE: 100
+        EMPLOYEE: 100,
     };
     Props.ACCOUNT_TYPE = {
         0: "Profit And Loss",
@@ -184,20 +186,20 @@ var Props = /** @class */ (function () {
         5: "Liability",
         6: "Header",
         9: "Total",
-        10: "Group Total"
+        10: "Group Total",
     };
     Props.DIMENSION_OPTIONS = {
         0: "Optional",
         1: "ToBeFilledIn",
         2: "List",
-        3: "Fixed"
+        3: "Fixed",
     };
     Props.ITEM_TYPE = {
         0: "NONE",
         1: "INTERIOR",
         2: "EXTERIOR",
         3: "BOTH",
-        4: "CEMENT"
+        4: "CEMENT",
     };
     return Props;
 }());

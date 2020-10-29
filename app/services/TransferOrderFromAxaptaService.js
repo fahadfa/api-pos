@@ -51,6 +51,7 @@ var Props_1 = require("../../constants/Props");
 var SalesTable_1 = require("../../entities/SalesTable");
 var SalesLine_1 = require("../../entities/SalesLine");
 var UpdateInventoryService_1 = require("../services/UpdateInventoryService");
+var Log_1 = require("../../utils/Log");
 var BaseSizesDAO_1 = require("../repos/BaseSizesDAO");
 var ColorsDAO_1 = require("../repos/ColorsDAO");
 var SalesTableDAO_1 = require("../repos/SalesTableDAO");
@@ -89,6 +90,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                     case 4: return [3 /*break*/, 6];
                     case 5:
                         error_1 = _a.sent();
+                        Log_1.log.error(error_1);
                         throw error_1;
                     case 6: return [2 /*return*/];
                 }
@@ -148,6 +150,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                                 batches.invoiceid = salesLine.salesId;
                                 batches.batchno = salesLine.batchNo;
                                 batches.configid = salesLine.configId;
+                                batches.reservationid = salesLine.colorantId;
                                 batches.inventsizeid = salesLine.inventsizeid;
                                 batches.inventlocationid = salesLine.inventLocationId;
                                 batches.dataareaid = salesLine.dataareaid.toLowerCase();
@@ -168,6 +171,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         error_2 = _b.sent();
+                        Log_1.log.error(error_2);
                         throw error_2;
                     case 3: return [2 /*return*/];
                 }
@@ -212,7 +216,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         _a.label = 7;
                     case 7:
                         if (!salesIdExists) return [3 /*break*/, 10];
-                        return [4 /*yield*/, this.getSalesid('ORDERRECEIVE', salesData)];
+                        return [4 /*yield*/, this.getSalesid("ORDERRECEIVE", salesData)];
                     case 8:
                         uid = _a.sent();
                         return [4 /*yield*/, this.salesTableDAO.findOne(uid)];
@@ -273,6 +277,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                     case 20: return [3 /*break*/, 25];
                     case 21:
                         error_3 = _a.sent();
+                        Log_1.log.error(error_3);
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
                     case 22:
                         _a.sent();
@@ -398,31 +403,39 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
     };
     TransferOrderFromAxaptaService.prototype.getTransferOrder = function (transferID) {
         return __awaiter(this, void 0, void 0, function () {
-            var token, url, data, error_5;
+            var url, reqData, data, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
-                        return [4 /*yield*/, this.getToken()];
-                    case 1:
-                        token = _a.sent();
-                        console.log(token);
-                        url = Props_1.Props.AXAPTA_URL + ("ShippedTransferOrder?transferID=" + transferID);
+                        _a.trys.push([0, 2, , 3]);
+                        url = Props_1.Props._URL + "transferorder";
                         console.log("axpta url :  ", url);
-                        this.axios.defaults.headers["Token"] = token;
+                        this.axios.defaults.headers["Authorization"] = Props_1.Props._TOKEN;
                         console.log(this.axios.defaults.headers);
-                        return [4 /*yield*/, this.axios.get(url)];
-                    case 2:
+                        reqData = {
+                            data: {
+                                transferID: transferID,
+                            },
+                        };
+                        return [4 /*yield*/, this.axios.post(url, reqData)];
+                    case 1:
                         data = _a.sent();
                         console.log(Object.keys(data));
-                        console.log();
-                        return [2 /*return*/, data.data];
-                    case 3:
+                        data = data.data;
+                        if (data.error) {
+                            throw data.error.message;
+                        }
+                        else {
+                            return [2 /*return*/, data.data];
+                        }
+                        return [3 /*break*/, 3];
+                    case 2:
                         error_5 = _a.sent();
+                        Log_1.log.error(error_5);
                         // console.log(Object.keys(error));
                         // console.log(error.response.data.Message);
-                        throw { status: 0, message: error_5.response.data.Message };
-                    case 4: return [2 /*return*/];
+                        throw { status: 0, message: error_5 };
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -554,6 +567,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                     }
                 }
                 catch (err) {
+                    Log_1.log.error(err);
                     throw { message: err };
                 }
                 return [2 /*return*/];
@@ -577,6 +591,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         return [2 /*return*/, token];
                     case 2:
                         error_6 = _a.sent();
+                        Log_1.log.error(error_6);
                         throw { status: 0, message: error_6 };
                     case 3: return [2 /*return*/];
                 }

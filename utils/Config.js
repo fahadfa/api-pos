@@ -73,4 +73,3 @@ exports.setStagingConfig = function () {
         console.error(error);
     }
 };
-

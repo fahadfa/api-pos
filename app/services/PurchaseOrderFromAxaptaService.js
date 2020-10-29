@@ -252,31 +252,39 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
     };
     PurchaseOrderFromAxaptaService.prototype.getPurchaseOrder = function (purchID, inventLocationId) {
         return __awaiter(this, void 0, void 0, function () {
-            var token, url, data, error_4;
+            var url, reqData, data, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
-                        return [4 /*yield*/, this.getToken()];
-                    case 1:
-                        token = _a.sent();
-                        console.log(token);
-                        url = Props_1.Props.AXAPTA_URL + ("PurchLine?purchID=" + purchID + "&inventLocationId=" + inventLocationId);
+                        _a.trys.push([0, 2, , 3]);
+                        url = Props_1.Props._URL + "purchaseorder";
                         console.log("axpta url :  ", url);
-                        this.axios.defaults.headers["Token"] = token;
+                        this.axios.defaults.headers["Authorization"] = Props_1.Props._TOKEN;
                         console.log(this.axios.defaults.headers);
-                        return [4 /*yield*/, this.axios.get(url)];
-                    case 2:
+                        reqData = {
+                            data: {
+                                transferID: purchID,
+                                inventLocationId: inventLocationId,
+                            },
+                        };
+                        return [4 /*yield*/, this.axios.post(url, reqData)];
+                    case 1:
                         data = _a.sent();
                         console.log(Object.keys(data));
-                        console.log();
-                        return [2 /*return*/, data.data];
-                    case 3:
+                        data = data.data;
+                        if (data.error) {
+                            throw data.error.message;
+                        }
+                        else {
+                            return [2 /*return*/, data.data];
+                        }
+                        return [3 /*break*/, 3];
+                    case 2:
                         error_4 = _a.sent();
                         // console.log(Object.keys(error));
                         // console.log(error.response.data.Message);
-                        throw { status: 0, message: error_4.response.data.Message };
-                    case 4: return [2 /*return*/];
+                        throw { status: 0, message: error_4 };
+                    case 3: return [2 /*return*/];
                 }
             });
         });

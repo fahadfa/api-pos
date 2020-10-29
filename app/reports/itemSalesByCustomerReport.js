@@ -163,7 +163,7 @@ var itemSalesByCustomerReport = /** @class */ (function () {
                         if (params.inventsizeid) {
                             query += " and  i.inventsizeid = '" + params.inventsizeid + "' ";
                         }
-                        query += ") as i \n            group by i.name, i.nameAlias, i.wareHouseNameAr , \n           i.wareHouseNameEn , i.sizeNameEn, i.sizeNameAr , i.customerName,\n           i.nameEn , i.nameAr , i.configId, i.itemid, i.inventsizeid, i.colorantprice, i.batchno ";
+                        query += ") as i \n            group by i.name, i.nameAlias, i.wareHouseNameAr , \n           i.wareHouseNameEn , i.sizeNameEn, i.sizeNameAr , i.customerName,\n           i.nameEn , i.nameAr , i.configId, i.itemid, i.inventsizeid, i.colorantprice, i.batchno order by i.itemid ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 4: return [2 /*return*/, _a.sent()];
                 }

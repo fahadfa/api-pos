@@ -1263,8 +1263,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 v.colorantId == item.colorantId &&
                                                 v.linkId == item.linkId &&
                                                 v.isItemFree == item.isItemFree &&
-                                                v.addedBatch == true;
+                                                (v.addedBatch == true || v.isParent == true);
                                         });
+                                        // console.log(salesOrderLine)
                                         if (salesOrderLine) {
                                             line.salesQty -= parseFloat(salesOrderLine.salesQty);
                                             line.lineAmount -= parseFloat(salesOrderLine.salesprice) * parseInt(salesOrderLine.salesQty);
@@ -1441,6 +1442,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         _i++;
                         return [3 /*break*/, 1];
                     case 4:
+                        console.log(salesLine.length);
                         cashAmount = 0;
                         redeemAmount = 0;
                         designServiceRedeemAmount = 0;
@@ -1471,6 +1473,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                 ? parseFloat(prevReturnOrderEquals.redeemAmount)
                                 : 0;
                         }
+                        console.log("designerServiceAmount", returnData.designServiceRedeemAmount);
                         designServiceRedeemAmount = returnData.designServiceRedeemAmount;
                         // returnData.amount -= parseFloat(returnOrderData.amount);
                         // returnData.netAmount -= parseFloat(returnOrderData.netAmount);
@@ -1492,6 +1495,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             else {
                                 returnNetAmount -= returnData.designServiceRedeemAmount;
                             }
+                        }
+                        else {
+                            returnData.designServiceRedeemAmount = 0;
                         }
                         if (returnNetAmount > 0) {
                             redeemAmount = returnNetAmount;

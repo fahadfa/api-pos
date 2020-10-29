@@ -1690,6 +1690,7 @@ var SalesTableService = /** @class */ (function () {
                                 configid: item.configId,
                                 inventsizeid: item.inventsizeid,
                                 batchno: batch.batchNo,
+                                invoiceid: reqData.salesId,
                             })];
                     case 5:
                         availability = _c.sent();
@@ -2578,7 +2579,7 @@ var SalesTableService = /** @class */ (function () {
                         taxItemGroup = _c.sent();
                         item.taxItemGroup = taxItemGroup.taxitemgroupid;
                         item.status = reqData.status;
-                        if (!(item.batches && item.batches.length > 0)) return [3 /*break*/, 22];
+                        if (!(item.batches && item.batches.length > 0 && item.salesQty > 0)) return [3 /*break*/, 22];
                         _a = 0, _b = item.batches;
                         _c.label = 19;
                     case 19:
@@ -2614,6 +2615,7 @@ var SalesTableService = /** @class */ (function () {
                         _a++;
                         return [3 /*break*/, 19];
                     case 22:
+                        item.batches = [];
                         promiseList.push(queryRunner.manager.getRepository(SalesLine_1.SalesLine).save(item));
                         _c.label = 23;
                     case 23:
@@ -2771,6 +2773,7 @@ var SalesTableService = /** @class */ (function () {
                         batches.dataareaid = reqData.dataareaid;
                         batches.reserveStatus = reqData.status;
                         batches.transactionClosed = false;
+                        batches.reservationid = item.colorantId;
                         batches.custvendac = reqData.custAccount;
                         batches.dateinvent = moment().format();
                         batches.salesLineId = item.id;
@@ -2935,7 +2938,12 @@ var SalesTableService = /** @class */ (function () {
                         batches_5 = _c.sent();
                         if (batches_5.length > 0) {
                             salesLine.map(function (v) {
-                                v.batches = batches_5.filter(function (b) { return b.configid == v.configId && b.itemid == v.itemid && b.inventsizeid == v.inventsizeid; });
+                                v.batches = batches_5.filter(function (b) {
+                                    return b.configid == v.configId &&
+                                        b.itemid == v.itemid &&
+                                        b.inventsizeid == v.inventsizeid &&
+                                        v.colorantId == b.reservationid;
+                                });
                             });
                         }
                         _i = 0, salesLine_11 = salesLine;
@@ -2972,6 +2980,7 @@ var SalesTableService = /** @class */ (function () {
                         batches_6.dataareaid = reqData.dataareaid;
                         batches_6.custvendac = reqData.custAccount;
                         batches_6.reserveStatus = reqData.status;
+                        batches_6.reservationid = item.colorantId;
                         batches_6.transactionClosed = false;
                         batches_6.dateinvent = new Date(App_1.App.DateNow());
                         batches_6.salesLineId = item.id;
@@ -3252,8 +3261,11 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.salestableDAO.save(transferorder)];
                     case 2:
                         transferorder = _a.sent();
-                        if (!(transferorder.transkind == 'ORDERSHIPMENT')) return [3 /*break*/, 5];
-                        return [4 /*yield*/, this.salestableDAO.save({ salesId: transferorder.interCompanyOriginalSalesId, status: 'REJECTED' })];
+                        if (!(transferorder.transkind == "ORDERSHIPMENT")) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.salestableDAO.save({
+                                salesId: transferorder.interCompanyOriginalSalesId,
+                                status: "REJECTED",
+                            })];
                     case 3:
                         transferorder = _a.sent();
                         return [4 /*yield*/, this.rawQuery.updateSalesLine(transferorder.interCompanyOriginalSalesId, "REJECTED")];
@@ -3574,7 +3586,7 @@ var SalesTableService = /** @class */ (function () {
                         _a.trys.push([0, 5, , 6]);
                         console.log(item);
                         if (!item.inventlocationid) return [3 /*break*/, 3];
-                        query = " select st.salesid ,st.salesname,st.painter,\n        ct.namealias as \"customerNameEn\",ct.name as \"customerNameAr\",\n        st.netamount as amount,st.lastmodifieddate\n        from salestable  st \n        inner join custtable ct on\n        ct.accountnum =st.invoiceaccount \n        where st.transkind ='SALESORDER'\n                       and st.inventlocationid ='" + item.inventlocationid + "'\n                       and  COALESCE(st.painter, '') != '' \n                       order by st.lastmodifieddate desc;;\n        ";
+                        query = " select st.salesid ,st.salesname,st.painter,\n        ct.namealias as \"customerNameEn\",ct.name as \"customerNameAr\",\n        st.netamount as amount,st.lastmodifieddate\n        from salestable  st \n        inner join custtable ct on\n        ct.accountnum =st.invoiceaccount \n        where st.transkind ='SALESORDER'\n        and st.status  in ('POSTED','PAID')\n                       and st.inventlocationid ='" + item.inventlocationid + "'\n                       and  COALESCE(st.painter, '') != '' \n                       order by st.lastmodifieddate desc;;\n        ";
                         return [4 /*yield*/, this.salestableDAO.getDAO().query(query)];
                     case 1:
                         data_1 = _a.sent();

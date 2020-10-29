@@ -86,8 +86,8 @@ var DiscountService = /** @class */ (function () {
                             reqData.grossTotal += parseFloat(v.price) * parseFloat(v.quantity);
                             // console.log(v.isParent, v.isItemFree)
                             if (reqData.instantDiscountExcludeItems.includes(v.itemid) ||
-                                reqData.instantDiscountExcludeItems.includes(v.product.itemGroupId || v.product.intExt != 4)
-                                || promotionalItems_1.includes(v.linkId)) {
+                                reqData.instantDiscountExcludeItems.includes(v.product.itemGroupId || v.product.intExt != 4) ||
+                                promotionalItems_1.includes(v.linkId)) {
                             }
                             else {
                                 reqData.instantDiscGrossTotal += parseFloat(v.price) * parseFloat(v.quantity);
@@ -137,6 +137,7 @@ var DiscountService = /** @class */ (function () {
                         vatData = _b.sent();
                         _b.label = 10;
                     case 10:
+                        console.log("=====================", vatData);
                         reqData.vat = vatData ? vatData.vat : 15;
                         reqData.vat = parseFloat(reqData.vat);
                         return [4 /*yield*/, this.rawQuery.getDiscountBlockItems(checkCustomer.custgroup, checkCustomer.accountnum, reqData.inventLocationId)];
@@ -198,7 +199,7 @@ var DiscountService = /** @class */ (function () {
     };
     DiscountService.prototype.calDiscount = function (reqData, discountBlockItemsArray) {
         return __awaiter(this, void 0, void 0, function () {
-            var getDiscountsList, checkDiscounts, promotionalDiscountItems, buyOneGetOneDiscountItems, salesDiscountItems, discounts, isTotalDiscount, isLineDiscount, isMultiLineDiscount, isNoDiscount, totalPercentage, linePercentage, multilineDiscRanges, multilineQuantity, multiLineItemCode, multlineDiscItems, total, totalBeforeVat, grossTotal, vouchers, isValidVoucher, isVoucherApplied, voucherDiscountedItems, message, instantDiscountRanges, isInstantDiscount, instantDiscountExcludeItems, isCashDisc, inQueryStr_1, voucherDiscountedItem, _loop_1, this_1, _i, _a, item;
+            var getDiscountsList, checkDiscounts, promotionalDiscountItems, buyOneGetOneDiscountItems, salesDiscountItems, discounts, isTotalDiscount, isLineDiscount, isMultiLineDiscount, totalPercentage, linePercentage, multilineDiscRanges, multilineQuantity, multiLineItemCode, multlineDiscItems, total, totalBeforeVat, grossTotal, vouchers, isValidVoucher, isVoucherApplied, voucherDiscountedItems, message, instantDiscountRanges, isInstantDiscount, instantDiscountExcludeItems, isCashDisc, voucherType, voucherAmount, inQueryStr_1, voucherDiscountedItem, _loop_1, this_1, _i, _a, item;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4 /*yield*/, this.getDiscountsList(reqData)];
@@ -214,7 +215,6 @@ var DiscountService = /** @class */ (function () {
                         isTotalDiscount = discounts[0].enddisc && discounts[0].enddisc != "" ? true : false;
                         isLineDiscount = discounts[0].linedisc && discounts[0].linedisc != "" ? true : false;
                         isMultiLineDiscount = discounts[0].multilinedisc && discounts[0].multilinedisc != "" ? true : false;
-                        isNoDiscount = false;
                         return [4 /*yield*/, this.rawQuery.getTotalDiscPercentage(discounts[0].enddisc, reqData.currency, this.sessionInfo.dataareaid)];
                     case 2:
                         totalPercentage = _b.sent();
@@ -246,6 +246,8 @@ var DiscountService = /** @class */ (function () {
                         instantDiscountRanges = [];
                         isInstantDiscount = false;
                         isCashDisc = false;
+                        voucherType = "percentage";
+                        voucherAmount = 0;
                         if (reqData.paymtermid != "CASH" &&
                             reqData.paymtermid != "" &&
                             reqData.isCash == true &&
@@ -277,6 +279,11 @@ var DiscountService = /** @class */ (function () {
                     case 9:
                         vouchers = _b.sent();
                         if (!vouchers) return [3 /*break*/, 11];
+                        if (vouchers.voucherRules) {
+                            // console.log("========", vouchers.voucherRules);
+                            voucherType = vouchers.voucherRules.discountType;
+                            voucherAmount = parseFloat(vouchers.voucherRules.discountAmount);
+                        }
                         if (vouchers.voucher_type == "JUNE_SALES_VOUCHER_DISCOUNT") {
                             reqData.isOTPRequired = true;
                         }
@@ -333,10 +340,11 @@ var DiscountService = /** @class */ (function () {
                         _b.label = 12;
                     case 12:
                         _loop_1 = function (item) {
-                            var isValidVoucherItem, instantDiscountPercent, isSalesDiscount, _i, instantDiscountRanges_1, data, multilinefilter, salesDiscount, condition, appliedDiscounts, freeQty, freeItem, promotionalDiscountAmount, buy_one_get_one, promotionalDiscountDetails, isPromotionDiscount, isBuyOneGetOneDiscount, buyOneGetOneDiscountDetails, selectedQuantity, parentQuantity, freeItems, _a, _b, _c, j, i, freeItems, _d, _e, _f, j, i, itemDiscount;
+                            var isNoDiscount, isValidVoucherItem, instantDiscountPercent, isSalesDiscount, _i, instantDiscountRanges_1, data, multilinefilter, salesDiscount, condition, appliedDiscounts, freeQty, freeItem, promotionalDiscountAmount, buy_one_get_one, promotionalDiscountDetails, isPromotionDiscount, isBuyOneGetOneDiscount, buyOneGetOneDiscountDetails, selectedQuantity, parentQuantity, freeItems, _a, _b, _c, j, i, freeItems, _d, _e, _f, j, i, itemDiscount;
                             return __generator(this, function (_g) {
                                 switch (_g.label) {
                                     case 0:
+                                        isNoDiscount = false;
                                         isValidVoucherItem = isValidVoucher;
                                         instantDiscountPercent = 0;
                                         isSalesDiscount = false;
@@ -367,9 +375,13 @@ var DiscountService = /** @class */ (function () {
                                                 message = "voucher is not valid for selected products";
                                             }
                                         }
-                                        condition = '!item.isItemFree';
+                                        condition = "!item.isItemFree";
                                         condition = eval(condition);
                                         item.lineTotalDisc = 0;
+                                        console.log("isTotalDiscount", isTotalDiscount);
+                                        console.log("isMultiLineDiscount", isMultiLineDiscount);
+                                        console.log("isLineDiscount", isLineDiscount);
+                                        console.log("isSalesDiscount", isSalesDiscount);
                                         if (!condition) return [3 /*break*/, 43];
                                         appliedDiscounts = [];
                                         freeQty = 0;
@@ -386,10 +398,7 @@ var DiscountService = /** @class */ (function () {
                                             .filter(function (v) { return v.itemid == v.itemid && v.inventsizeid == v.inventsizeid; })
                                             .reduce(function (res, item) { return res + parseInt(item.quantity); }, 0);
                                         parentQuantity = Math.max.apply(Math, reqData.selectedItems
-                                            .filter(function (v) {
-                                            return v.linkId == item.linkId &&
-                                                v.isItemFree == false;
-                                        })
+                                            .filter(function (v) { return v.linkId == item.linkId && v.isItemFree == false; })
                                             .map(function (o) { return parseInt(o.quantity); }, 0));
                                         parentQuantity = parentQuantity == -Infinity ? 0 : parentQuantity;
                                         if (!(promotionalDiscountDetails && item.isParent && parseInt(item.quantity) == parentQuantity)) return [3 /*break*/, 9];
@@ -526,8 +535,7 @@ var DiscountService = /** @class */ (function () {
                                         reqData.selectedItems[i].vatamount =
                                             parseFloat(reqData.selectedItems[i].priceAfterdiscount) * (reqData.selectedItems[i].vat / 100);
                                         reqData.selectedItems[i].priceAfterVat =
-                                            parseFloat(reqData.selectedItems[i].priceAfterdiscount) +
-                                                parseFloat(reqData.selectedItems[i].vatamount);
+                                            parseFloat(reqData.selectedItems[i].priceAfterdiscount) + parseFloat(reqData.selectedItems[i].vatamount);
                                         total += item.priceAfterVat;
                                         totalBeforeVat += reqData.selectedItems[i].lineamountafterdiscount;
                                         grossTotal +=
@@ -567,6 +575,12 @@ var DiscountService = /** @class */ (function () {
                                         }
                                         if (!isValidVoucherItem) return [3 /*break*/, 21];
                                         isVoucherApplied = true;
+                                        //parseFloat(item.price) * item.quantity * (parseFloat(voucher.discount_percent) / 100)
+                                        if (voucherType == "amount") {
+                                            vouchers.voucherAmount = voucherAmount;
+                                            vouchers.voucherType = voucherType;
+                                            // console.log(vouchers);
+                                        }
                                         return [4 /*yield*/, this_1.calVoucherDiscount(item, reqData, vouchers)];
                                     case 20:
                                         _g.sent();
@@ -610,14 +624,17 @@ var DiscountService = /** @class */ (function () {
                                         item.lineamountafterdiscount = parseFloat(item.priceAfterdiscount);
                                         item.vat = reqData.vat;
                                         item.vatamount = parseFloat(item.priceAfterdiscount) * (item.vat / 100);
-                                        console.log(item.priceAfterdiscount, item.vatamount);
                                         item.priceAfterVat = parseFloat(item.priceAfterdiscount) + parseFloat(item.vatamount);
                                         total += item.priceAfterVat;
                                         totalBeforeVat += parseFloat(item.lineamountafterdiscount);
                                         grossTotal += (parseFloat(item.price) + parseFloat(item.colorantprice)) * parseInt(item.quantity);
                                         return [3 /*break*/, 41];
                                     case 25:
-                                        if (!(isInstantDiscount && !isNoDiscount && !isSalesDiscount && !isPromotionDiscount && !isBuyOneGetOneDiscount)) return [3 /*break*/, 27];
+                                        if (!(isInstantDiscount &&
+                                            !isNoDiscount &&
+                                            !isSalesDiscount &&
+                                            !isPromotionDiscount &&
+                                            !isBuyOneGetOneDiscount)) return [3 /*break*/, 27];
                                         return [4 /*yield*/, this_1.calInstantDiscount(reqData, item, instantDiscountPercent)];
                                     case 26:
                                         _g.sent();
@@ -747,6 +764,7 @@ var DiscountService = /** @class */ (function () {
                                             v.percentage = v.percentage ? parseFloat(v.percentage) : v.percentage;
                                         });
                                         item.appliedDiscounts = appliedDiscounts;
+                                        console.log("===========================", item.itemid, ":", item.vat, item.vatamount, item.priceAfterdiscount);
                                         _g.label = 43;
                                     case 43: return [2 /*return*/];
                                 }
@@ -796,6 +814,7 @@ var DiscountService = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var enddisc, dummyData;
             return __generator(this, function (_a) {
+                console.log("totalDiscount");
                 enddisc = checkDiscounts.filter(function (v) { return v.itemid == item.itemid; });
                 dummyData = {};
                 dummyData.enddisc = "";
@@ -827,6 +846,7 @@ var DiscountService = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var linedisc, dummyData;
             return __generator(this, function (_a) {
+                console.log("lineDiscount");
                 linedisc = checkDiscounts.filter(function (v) { return v.itemid == item.itemid; });
                 dummyData = {};
                 dummyData.linedisc = "";
@@ -855,6 +875,7 @@ var DiscountService = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var productPrice;
             return __generator(this, function (_a) {
+                console.log("multiLineDiscount");
                 line.multilnPercent = line.multilnPercent ? parseFloat(line.multilnPercent) : 0;
                 line.multilndisc = parseFloat(line.price) * parseInt(line.quantity) * (parseFloat(line.multilnPercent) / 100);
                 productPrice = (parseFloat(line.price) + parseFloat(line.colorantprice)) * line.quantity;
@@ -871,6 +892,7 @@ var DiscountService = /** @class */ (function () {
     DiscountService.prototype.buyOneGetOneDiscount = function (item, reqData) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
+                console.log("buyOneGetOneDiscount");
                 item.priceAfterdiscount = parseFloat(item.priceAfterdiscount)
                     ? parseFloat(item.priceAfterdiscount) - parseFloat(item.buyOneGetOneDiscount)
                     : (parseFloat(item.price) + parseFloat(item.colorantprice)) * item.quantity -
@@ -885,6 +907,7 @@ var DiscountService = /** @class */ (function () {
     DiscountService.prototype.promotionalDiscount = function (item, reqData) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
+                console.log("promotionalDiscount");
                 item.priceAfterdiscount = parseFloat(item.priceAfterdiscount)
                     ? parseFloat(item.priceAfterdiscount) - item.promotionalDiscount
                     : (parseFloat(item.price) + parseFloat(item.colorantprice)) * item.quantity - item.promotionalDiscount;
@@ -934,7 +957,7 @@ var DiscountService = /** @class */ (function () {
                                         grossTotal += (parseFloat(item.price) + parseFloat(item.colorantprice)) * parseInt(item.quantity);
                                         return [3 /*break*/, 3];
                                     case 2:
-                                        item.aramkoTahkomDiscount = (parseFloat(item.price) + parseFloat(item.colorantprice)) * item.quantity * (parseFloat(totalPercentage) / 100);
+                                        item.aramkoTahkomDiscount = parseFloat(item.price) * item.quantity * (parseFloat(totalPercentage) / 100);
                                         item.priceAfterdiscount =
                                             (parseFloat(item.price) + parseFloat(item.colorantprice)) * item.quantity -
                                                 parseFloat(item.aramkoTahkomDiscount);
@@ -991,8 +1014,17 @@ var DiscountService = /** @class */ (function () {
     DiscountService.prototype.calVoucherDiscount = function (item, reqData, voucher) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                item.voucherdisc = parseFloat(voucher.discount_percent);
-                item.voucherdiscamt = parseFloat(item.price) * item.quantity * (parseFloat(voucher.discount_percent) / 100);
+                console.log("calVoucherDiscount");
+                if (voucher.voucherType == "amount") {
+                    voucher.discount_percent = (parseFloat(item.price) * parseInt(item.quantity)) / parseFloat(reqData.grossTotal);
+                    item.voucherdisc = parseFloat(voucher.discount_percent);
+                    item.voucherdiscamt = voucher.voucherAmount * parseFloat(voucher.discount_percent);
+                }
+                else {
+                    item.voucherdisc = parseFloat(voucher.discount_percent);
+                    item.voucherdiscamt = parseFloat(item.price) * item.quantity * (parseFloat(voucher.discount_percent) / 100);
+                }
+                console.log(item.voucherdiscamt);
                 item.priceAfterdiscount =
                     (parseFloat(item.price) + parseFloat(item.colorantprice)) * item.quantity - parseFloat(item.voucherdiscamt);
                 item.lineamountafterdiscount = parseFloat(item.priceAfterdiscount);
@@ -1010,6 +1042,7 @@ var DiscountService = /** @class */ (function () {
     DiscountService.prototype.calSalesDiscount = function (item, reqData, salesDiscount) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
+                console.log("calSalesDiscount");
                 item.salesdisc = parseFloat(salesDiscount.discount);
                 item.salesdiscamt = parseFloat(item.price) * item.quantity * (parseFloat(salesDiscount.discount) / 100);
                 item.priceAfterdiscount = item.priceAfterdiscount
@@ -1026,6 +1059,7 @@ var DiscountService = /** @class */ (function () {
     DiscountService.prototype.calInstantDiscount = function (reqData, item, discount) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
+                console.log("calInstantDiscount");
                 item.instantDisc = discount;
                 item.instantdiscamt = parseFloat(item.price) * item.quantity * (discount / 100);
                 item.priceAfterdiscount =
@@ -1066,7 +1100,7 @@ var DiscountService = /** @class */ (function () {
                         grossTotal += (parseFloat(item.price) + parseFloat(item.colorantprice)) * item.quantity;
                         return [3 /*break*/, 4];
                     case 3:
-                        item.sabicCustomerDiscount = (parseFloat(item.price) + parseFloat(item.colorantprice)) * item.quantity * (parseFloat(totalPercentage) / 100);
+                        item.sabicCustomerDiscount = parseFloat(item.price) * item.quantity * (parseFloat(totalPercentage) / 100);
                         item.priceAfterdiscount =
                             (parseFloat(item.price) + parseFloat(item.colorantprice)) * item.quantity -
                                 parseFloat(item.sabicCustomerDiscount);
@@ -1109,6 +1143,7 @@ var DiscountService = /** @class */ (function () {
     DiscountService.prototype.noDiscount = function (item, reqData) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
+                console.log("noDiscount");
                 item.priceAfterdiscount = (parseFloat(item.price) + parseFloat(item.colorantprice)) * item.quantity;
                 item.lineamountafterdiscount = parseFloat(item.priceAfterdiscount);
                 item.vat = reqData.vat;
