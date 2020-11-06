@@ -179,7 +179,7 @@ var FiscalYearCloseService = /** @class */ (function () {
                         _a.label = 4;
                     case 4: return [4 /*yield*/, this.fiscalyearcloseRepository.search({
                             yearNo: item.yearNo,
-                            endingDate: App_1.App.DaysBack(new Date(item.yearNo, item.endingDate, 1), 1)
+                            endingDate: App_1.App.DaysBack(new Date(item.yearNo, item.endingDate, 1), 1),
                         })];
                     case 5:
                         previousData = _a.sent();

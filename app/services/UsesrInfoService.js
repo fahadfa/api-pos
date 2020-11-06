@@ -194,15 +194,13 @@ var UsesrInfoService = /** @class */ (function () {
                         item.id = uuid();
                         item.deleted = false;
                         console.log(item.id);
-                        item.normalPassword = Math.random()
-                            .toString(36)
-                            .substring(7);
+                        item.normalPassword = Math.random().toString(36).substring(7);
                         item.password = App_1.App.HashSync(item.normalPassword);
                         item.createddatetime = new Date(App_1.App.DateNow());
                         item.createdby = this.sessionInfo.userName;
                         return [4 /*yield*/, App_1.App.SendMail(item.email, "Jaz Sales account activation for '" + item.userName, "User", {
                                 name: item.userName,
-                                password: item.normalPassword
+                                password: item.normalPassword,
                             })];
                     case 6:
                         _a.sent();

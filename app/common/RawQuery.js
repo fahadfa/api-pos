@@ -327,13 +327,13 @@ var RawQuery = /** @class */ (function () {
                                     // }
                                 }
                                 else if (reqData.type == "PURCHASEORDER") {
-                                    query += "where (i.invoiceid = '" + reqData.salesid + "' or i.transrefid = '" + reqData.salesid + "') and transactionclosed=" + transactionclosed + " and i.inventlocationid = '" + reqData.inventlocationid + "'";
+                                    query += "where (i.invoiceid = '" + reqData.salesid + "' or i.transrefid = '" + reqData.salesid + "') and transactionclosed=" + transactionclosed + " ";
                                 }
                                 else if (reqData.type == "SALESORDER") {
-                                    query += "where  i.transrefid = '" + reqData.salesid + "' and i.inventlocationid = '" + reqData.inventlocationid + "'";
+                                    query += "where  i.transrefid = '" + reqData.salesid + "' ";
                                 }
                                 else {
-                                    query += "where  i.transrefid = '" + reqData.salesid + "' and transactionclosed=" + transactionclosed + " and i.inventlocationid = '" + reqData.inventlocationid + "'";
+                                    query += "where  i.transrefid = '" + reqData.salesid + "' and transactionclosed=" + transactionclosed + " ";
                                 }
                                 query += " order by sl.link_id ";
                                 // query +=

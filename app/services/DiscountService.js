@@ -1143,7 +1143,7 @@ var DiscountService = /** @class */ (function () {
     DiscountService.prototype.noDiscount = function (item, reqData) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                console.log("noDiscount");
+                console.log("++++++++++++++++noDiscount+++++++++++++++++");
                 item.priceAfterdiscount = (parseFloat(item.price) + parseFloat(item.colorantprice)) * item.quantity;
                 item.lineamountafterdiscount = parseFloat(item.priceAfterdiscount);
                 item.vat = reqData.vat;

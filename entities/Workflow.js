@@ -100,6 +100,10 @@ var Workflow = /** @class */ (function () {
         __metadata("design:type", String)
     ], Workflow.prototype, "usergroupid", void 0);
     __decorate([
+        typeorm_1.Column({ name: "selected_lines", type: "json" }),
+        __metadata("design:type", Object)
+    ], Workflow.prototype, "selectedLines", void 0);
+    __decorate([
         typeorm_1.JoinColumn({ name: "inventlocationid" }),
         typeorm_1.ManyToOne(function (type) { return Inventlocation_1.Inventlocation; }),
         __metadata("design:type", Inventlocation_1.Inventlocation)

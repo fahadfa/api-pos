@@ -201,6 +201,35 @@ var Props = /** @class */ (function () {
         3: "BOTH",
         4: "CEMENT",
     };
+    // public static REGION_NAME = "REGION";
+    // public static PROJECT_NAME = "PROJECT";
+    // public static DEPARTMENT_NAME = "DEPARTMENT";
+    // public static PRODUCTLINE_NAME = "PRODUCTLINE";
+    // public static SALESMAN_NAME = "SALESMAN";
+    // public static COSTCENTER_NAME = "COSTCENTER";
+    // public static BRAND_NAME = "BRAND";
+    // public static EMPLOYEE_NAME = "EMPLOYEE";
+    Props.testStoreIds = [
+        'RMAW - 0010',
+        'DMKSST-0074',
+        'JMHY-0033',
+        'RYENKS-44',
+        'RYHDWM-19',
+        'RYWADS-29',
+        'JSRW-0024',
+        'JMAW-0021',
+        'DMRW-0078',
+        'DMAK-0081',
+        'D91W-0032',
+        'JSTW-0023',
+        'JEDAAQ-0037',
+        'DKZW-0030',
+        'DMAW-0027',
+        'RTPW-0012',
+        'BQFN-53',
+        'JTMW-0022',
+        'HYD-002'
+    ];
     return Props;
 }());
 exports.Props = Props;

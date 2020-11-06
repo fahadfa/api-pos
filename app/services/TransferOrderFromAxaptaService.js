@@ -77,22 +77,26 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
+                        _a.trys.push([0, 8, , 9]);
                         return [4 /*yield*/, this.getTransferOrder(transferID)];
                     case 1:
                         axaptaData = _a.sent();
                         console.log("data-----------------", axaptaData);
-                        axaptaData.invent_location_id_to.trim();
-                        if (!(axaptaData.invent_location_id_to.trim() == this.sessionInfo.inventlocationid)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.checkTransferOrder(axaptaData)];
+                    case 2:
+                        if (!_a.sent()) return [3 /*break*/, 6];
+                        if (!(axaptaData.invent_location_id_to.trim() == this.sessionInfo.inventlocationid)) return [3 /*break*/, 4];
                         return [4 /*yield*/, this.mapSalesData(axaptaData)];
-                    case 2: return [2 /*return*/, _a.sent()];
-                    case 3: throw { message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
-                    case 4: return [3 /*break*/, 6];
-                    case 5:
+                    case 3: return [2 /*return*/, _a.sent()];
+                    case 4: throw { message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
+                    case 5: return [3 /*break*/, 7];
+                    case 6: throw { message: "cant receive order from test participating stores" };
+                    case 7: return [3 /*break*/, 9];
+                    case 8:
                         error_1 = _a.sent();
                         Log_1.log.error(error_1);
                         throw error_1;
-                    case 6: return [2 /*return*/];
+                    case 9: return [2 /*return*/];
                 }
             });
         });
@@ -128,38 +132,40 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                             i = 1;
                             for (_i = 0, _a = data.orderLines; _i < _a.length; _i++) {
                                 v = _a[_i];
-                                salesLine = new SalesLine_1.SalesLine();
-                                salesLine.salesId = v.transfer_id;
-                                salesLine.lineNum = i;
-                                salesLine.itemid = v.item_id;
-                                salesLine.configId = v.config_id;
-                                salesLine.inventsizeid = v.invent_size_id;
-                                salesLine.salesQty = parseInt(v.shipped_qty);
-                                salesLine.dataareaid = v.data_area_id.toLowerCase();
-                                salesLine.inventLocationId = data.invent_location_id_to;
-                                salesLine.batchNo = v.batch_no;
-                                salesLine.custAccount = data.invent_location_id_from;
-                                // salesLine.colors = await this.colorsDAO.findOne({ code: v.config_id });
-                                // salesLine.baseSizes = await this.baseSizeDAO.findOneforaxaptadata({ base: { code: v.item_id }, sizes: { code: v.invent_size_id } });
-                                salesLine.lastModifiedDate = new Date(App_1.App.DateNow());
-                                salesLine.createddatetime = new Date(App_1.App.DateNow());
-                                batches = {};
-                                batches.qty = parseInt(v.shipped_qty);
-                                batches.itemid = salesLine.itemid;
-                                batches.transrefid = salesLine.salesId;
-                                batches.invoiceid = salesLine.salesId;
-                                batches.batchno = salesLine.batchNo;
-                                batches.configid = salesLine.configId;
-                                batches.reservationid = salesLine.colorantId;
-                                batches.inventsizeid = salesLine.inventsizeid;
-                                batches.inventlocationid = salesLine.inventLocationId;
-                                batches.dataareaid = salesLine.dataareaid.toLowerCase();
-                                batches.transactionClosed = false;
-                                batches.dateinvent = new Date(App_1.App.DateNow());
-                                salesLine.batches = batches;
-                                // await this.updateInventoryService.updateInventtransTable(batches);
-                                salesData.salesLines.push(salesLine);
-                                i += 1;
+                                if (v.item_id != "HSN-00001") {
+                                    salesLine = new SalesLine_1.SalesLine();
+                                    salesLine.salesId = v.transfer_id;
+                                    salesLine.lineNum = i;
+                                    salesLine.itemid = v.item_id;
+                                    salesLine.configId = v.config_id;
+                                    salesLine.inventsizeid = v.invent_size_id;
+                                    salesLine.salesQty = parseInt(v.shipped_qty);
+                                    salesLine.dataareaid = v.data_area_id.toLowerCase();
+                                    salesLine.inventLocationId = data.invent_location_id_to;
+                                    salesLine.batchNo = v.batch_no;
+                                    salesLine.custAccount = data.invent_location_id_from;
+                                    // salesLine.colors = await this.colorsDAO.findOne({ code: v.config_id });
+                                    // salesLine.baseSizes = await this.baseSizeDAO.findOneforaxaptadata({ base: { code: v.item_id }, sizes: { code: v.invent_size_id } });
+                                    salesLine.lastModifiedDate = new Date(App_1.App.DateNow());
+                                    salesLine.createddatetime = new Date(App_1.App.DateNow());
+                                    batches = {};
+                                    batches.qty = parseInt(v.shipped_qty);
+                                    batches.itemid = salesLine.itemid;
+                                    batches.transrefid = salesLine.salesId;
+                                    batches.invoiceid = salesLine.salesId;
+                                    batches.batchno = salesLine.batchNo;
+                                    batches.configid = salesLine.configId;
+                                    batches.reservationid = salesLine.colorantId;
+                                    batches.inventsizeid = salesLine.inventsizeid;
+                                    batches.inventlocationid = salesLine.inventLocationId;
+                                    batches.dataareaid = salesLine.dataareaid.toLowerCase();
+                                    batches.transactionClosed = false;
+                                    batches.dateinvent = new Date(App_1.App.DateNow());
+                                    salesLine.batches = batches;
+                                    // await this.updateInventoryService.updateInventtransTable(batches);
+                                    salesData.salesLines.push(salesLine);
+                                    i += 1;
+                                }
                             }
                             salesData.status = 1;
                             // return { message: Props.SAVED_SUCCESSFULLY };
@@ -595,6 +601,26 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         throw { status: 0, message: error_6 };
                     case 3: return [2 /*return*/];
                 }
+            });
+        });
+    };
+    TransferOrderFromAxaptaService.prototype.checkTransferOrder = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                if (process.env.ENV_STORE_ID && process.env.ENV_STORE_ID != "") {
+                    console.log(Props_1.Props.testStoreIds);
+                    console.log(Props_1.Props.testStoreIds.includes(data.invent_location_id_from));
+                    if (Props_1.Props.testStoreIds.includes(data.invent_location_id_from)) {
+                        return [2 /*return*/, false];
+                    }
+                    else {
+                        return [2 /*return*/, true];
+                    }
+                }
+                else {
+                    return [2 /*return*/, true];
+                }
+                return [2 /*return*/];
             });
         });
     };

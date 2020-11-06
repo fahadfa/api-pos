@@ -167,25 +167,28 @@ var FixedAssetTableService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
+                        _a.trys.push([0, 7, , 8]);
+                        if (!id) return [3 /*break*/, 5];
+                        console.log(id);
                         return [4 /*yield*/, this.fixedassettableRepository.entity(id)];
                     case 1:
                         entity = _a.sent();
-                        if (entity) {
-                            entity.deleted = true;
-                        }
-                        else {
-                            throw { MESSAGE: "RECORD_NOT_FOUND" };
-                        }
+                        console.log(entity);
+                        if (!entity) return [3 /*break*/, 3];
+                        entity.deleted = true;
                         entity.deletedby = this.sessionInfo.userName;
                         return [4 /*yield*/, this.fixedassettableRepository.save(entity)];
                     case 2:
                         _a.sent();
                         return [2 /*return*/, { id: entity.assetId, message: "REMOVED" }];
-                    case 3:
+                    case 3: throw { message: "RECORD_NOT_FOUND" };
+                    case 4: return [3 /*break*/, 6];
+                    case 5: throw { message: "INVALID_DATA" };
+                    case 6: return [3 /*break*/, 8];
+                    case 7:
                         error_4 = _a.sent();
                         throw error_4;
-                    case 4: return [2 /*return*/];
+                    case 8: return [2 /*return*/];
                 }
             });
         });

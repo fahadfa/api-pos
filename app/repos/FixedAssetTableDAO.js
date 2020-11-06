@@ -76,10 +76,10 @@ var FixedAssetTableDAO = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.dao.findOne(id, {
                             join: {
                                 alias: "FixedAssetTable",
-                                innerJoinAndSelect: {
-                                    fixedAssetGroup: "FixedAssetTable.fixedAssetGroup"
-                                }
-                            }
+                                leftJoinAndSelect: {
+                                    fixedAssetGroup: "FixedAssetTable.fixedAssetGroup",
+                                },
+                            },
                         })];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
@@ -105,10 +105,10 @@ var FixedAssetTableDAO = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.dao.findOne(data, {
                             join: {
                                 alias: "FixedAssetTable",
-                                innerJoinAndSelect: {
-                                    fixedAssetGroup: "FixedAssetTable.fixedAssetGroup"
-                                }
-                            }
+                                leftJoinAndSelect: {
+                                    fixedAssetGroup: "FixedAssetTable.fixedAssetGroup",
+                                },
+                            },
                         })];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
