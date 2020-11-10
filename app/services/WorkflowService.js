@@ -139,7 +139,7 @@ var WorkflowService = /** @class */ (function () {
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        _a.trys.push([3, 33, 35, 37]);
+                        _a.trys.push([3, 34, 36, 38]);
                         status_1 = item.status;
                         promistList = [];
                         return [4 /*yield*/, this.rawQuery.workflowconditions(this.sessionInfo.usergroupconfigid)];
@@ -147,7 +147,7 @@ var WorkflowService = /** @class */ (function () {
                         condition = _a.sent();
                         usergroupid = this.sessionInfo.groupid;
                         selectedLinesData = null;
-                        if (!(item.id || item.orderId)) return [3 /*break*/, 31];
+                        if (!(item.id || item.orderId)) return [3 /*break*/, 32];
                         if (!item.id) return [3 /*break*/, 6];
                         return [4 /*yield*/, this.workflowDAO.entity(item.id)];
                     case 5:
@@ -375,40 +375,42 @@ var WorkflowService = /** @class */ (function () {
                         salesSaveData.salesId = item.orderId;
                         salesSaveData.status = item.statusId;
                         salesSaveData.lastModifiedDate = new Date(App_1.App.DateNow());
-                        selectedLinesData.id = item.id;
-                        selectedLinesData.updatedOn = new Date(App_1.App.DateNow());
-                        selectedLinesData.createdOn = new Date(App_1.App.DateNow());
                         console.log("lastModifiedDate", salesSaveData.lastModifiedDate, salesSaveData.status);
                         // promistList.push(this.workflowDAO.save(item), this.salesTableDAO.save(salesSaveData));
                         return [4 /*yield*/, queryRunner.manager.getRepository(Workflow_1.Workflow).save(item)];
                     case 27:
                         // promistList.push(this.workflowDAO.save(item), this.salesTableDAO.save(salesSaveData));
                         _a.sent();
+                        if (!selectedLinesData) return [3 /*break*/, 29];
+                        selectedLinesData.id = item.id;
+                        selectedLinesData.updatedOn = new Date(App_1.App.DateNow());
+                        selectedLinesData.createdOn = new Date(App_1.App.DateNow());
                         return [4 /*yield*/, queryRunner.manager.getRepository(SelectedLines_1.SelectedLines).save(selectedLinesData)];
                     case 28:
                         _a.sent();
-                        return [4 /*yield*/, queryRunner.manager.getRepository(SalesTable_1.SalesTable).save(salesSaveData)];
-                    case 29:
+                        _a.label = 29;
+                    case 29: return [4 /*yield*/, queryRunner.manager.getRepository(SalesTable_1.SalesTable).save(salesSaveData)];
+                    case 30:
                         _a.sent();
                         // let salesTableData: any = await this.salesTableDAO.save(salesData);
                         return [4 /*yield*/, queryRunner.commitTransaction()];
-                    case 30:
+                    case 31:
                         // let salesTableData: any = await this.salesTableDAO.save(salesData);
                         _a.sent();
                         return [2 /*return*/, { id: item.id, status: item.statusId, message: "SAVED_SUCCESSFULLY" }];
-                    case 31: throw { message: "INVALID_DATA" };
-                    case 32: return [3 /*break*/, 37];
-                    case 33:
+                    case 32: throw { message: "INVALID_DATA" };
+                    case 33: return [3 /*break*/, 38];
+                    case 34:
                         error_3 = _a.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 34:
+                    case 35:
                         _a.sent();
                         throw error_3;
-                    case 35: return [4 /*yield*/, queryRunner.release()];
-                    case 36:
+                    case 36: return [4 /*yield*/, queryRunner.release()];
+                    case 37:
                         _a.sent();
                         return [7 /*endfinally*/];
-                    case 37: return [2 /*return*/];
+                    case 38: return [2 /*return*/];
                 }
             });
         });
