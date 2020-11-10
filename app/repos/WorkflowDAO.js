@@ -52,6 +52,8 @@ var WorkflowDAO = /** @class */ (function () {
                                 .leftJoin("Workflow.Inventlocation", "Inventlocation")
                                 .innerJoin("Workflow.SalesTable", "SalesTable")
                                 .addSelect("SalesTable.salesId")
+                                .leftJoin("Workflow.selectedLines", "selectedLines")
+                                .addSelect("selectedLines.lines")
                                 .leftJoinAndSelect("SalesTable.movementType", "MovementType")
                                 .addSelect("Inventlocation.name")
                                 .addSelect("Inventlocation.nameAlias")

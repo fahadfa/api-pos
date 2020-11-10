@@ -12,12 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var Inventlocation_1 = require("./Inventlocation");
 var SalesTable_1 = require("./SalesTable");
+var SelectedLines_1 = require("./SelectedLines");
 var Workflow = /** @class */ (function () {
     function Workflow() {
     }
     __decorate([
         typeorm_1.PrimaryColumn({ name: "id" }),
-        __metadata("design:type", Number)
+        __metadata("design:type", String)
     ], Workflow.prototype, "id", void 0);
     __decorate([
         typeorm_1.Column({ name: "ordertype" }),
@@ -100,8 +101,9 @@ var Workflow = /** @class */ (function () {
         __metadata("design:type", String)
     ], Workflow.prototype, "usergroupid", void 0);
     __decorate([
-        typeorm_1.Column({ name: "selected_lines", type: "json" }),
-        __metadata("design:type", Object)
+        typeorm_1.JoinColumn({ name: "id" }),
+        typeorm_1.ManyToOne(function (type) { return SelectedLines_1.SelectedLines; }),
+        __metadata("design:type", SelectedLines_1.SelectedLines)
     ], Workflow.prototype, "selectedLines", void 0);
     __decorate([
         typeorm_1.JoinColumn({ name: "inventlocationid" }),

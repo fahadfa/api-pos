@@ -41,6 +41,9 @@ var WorkflowDAO_1 = require("../repos/WorkflowDAO");
 var Props_1 = require("../../constants/Props");
 var RawQuery_1 = require("../common/RawQuery");
 var SalesTableDAO_1 = require("../repos/SalesTableDAO");
+var Workflow_1 = require("../../entities/Workflow");
+var SalesTable_1 = require("../../entities/SalesTable");
+var SelectedLines_1 = require("../../entities/SelectedLines");
 var UsergroupconfigDAO_1 = require("../repos/UsergroupconfigDAO");
 var UpdateInventoryService_1 = require("../services/UpdateInventoryService");
 var InventtransService_1 = require("../services/InventtransService");
@@ -108,6 +111,7 @@ var WorkflowService = /** @class */ (function () {
                             // item.inventoryTypeAr = item.SalesTable.movementType.movementArabic;
                             item.inventoryType = item.SalesTable ? item.SalesTable.movementType : null;
                             item.inventoryTypeAr = item.SalesTable ? item.SalesTable.movementType : null;
+                            item.selectedLines = item.selectedLines ? item.selectedLines.lines : null;
                             delete item.SalesTable;
                         });
                         return [2 /*return*/, data];
@@ -122,7 +126,7 @@ var WorkflowService = /** @class */ (function () {
     WorkflowService.prototype.save = function (item, type) {
         if (type === void 0) { type = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, status_1, promistList, condition, usergroupid, salesData, RM_AND_RA, canSendForApproval, transactions, date, inventtransQuery, _i, transactions_1, v, selectedLines, salesSaveData, error_3;
+            var queryRunner, status_1, promistList, condition, usergroupid, selectedLinesData, salesData, RM_AND_RA, canSendForApproval, transactions, date, inventtransQuery, _i, transactions_1, v, selectedLines, salesSaveData, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -135,14 +139,15 @@ var WorkflowService = /** @class */ (function () {
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        _a.trys.push([3, 31, 33, 35]);
+                        _a.trys.push([3, 33, 35, 37]);
                         status_1 = item.status;
                         promistList = [];
                         return [4 /*yield*/, this.rawQuery.workflowconditions(this.sessionInfo.usergroupconfigid)];
                     case 4:
                         condition = _a.sent();
                         usergroupid = this.sessionInfo.groupid;
-                        if (!(item.id || item.orderId)) return [3 /*break*/, 29];
+                        selectedLinesData = null;
+                        if (!(item.id || item.orderId)) return [3 /*break*/, 31];
                         if (!item.id) return [3 /*break*/, 6];
                         return [4 /*yield*/, this.workflowDAO.entity(item.id)];
                     case 5:
@@ -267,7 +272,9 @@ var WorkflowService = /** @class */ (function () {
                             })];
                     case 23:
                         selectedLines = _a.sent();
-                        item.selectedLines = selectedLines;
+                        selectedLinesData = {
+                            lines: selectedLines,
+                        };
                         return [3 /*break*/, 25];
                     case 24:
                         // console.log(item.statusId);
@@ -368,30 +375,40 @@ var WorkflowService = /** @class */ (function () {
                         salesSaveData.salesId = item.orderId;
                         salesSaveData.status = item.statusId;
                         salesSaveData.lastModifiedDate = new Date(App_1.App.DateNow());
+                        selectedLinesData.id = item.id;
+                        selectedLinesData.updatedOn = new Date(App_1.App.DateNow());
+                        selectedLinesData.createdOn = new Date(App_1.App.DateNow());
                         console.log("lastModifiedDate", salesSaveData.lastModifiedDate, salesSaveData.status);
-                        promistList.push(this.workflowDAO.save(item), this.salesTableDAO.save(salesSaveData));
-                        // let salesTableData: any = await this.salesTableDAO.save(salesData);
-                        return [4 /*yield*/, Promise.all(promistList)];
+                        // promistList.push(this.workflowDAO.save(item), this.salesTableDAO.save(salesSaveData));
+                        return [4 /*yield*/, queryRunner.manager.getRepository(Workflow_1.Workflow).save(item)];
                     case 27:
-                        // let salesTableData: any = await this.salesTableDAO.save(salesData);
+                        // promistList.push(this.workflowDAO.save(item), this.salesTableDAO.save(salesSaveData));
                         _a.sent();
-                        return [4 /*yield*/, queryRunner.commitTransaction()];
+                        return [4 /*yield*/, queryRunner.manager.getRepository(SelectedLines_1.SelectedLines).save(selectedLinesData)];
                     case 28:
                         _a.sent();
+                        return [4 /*yield*/, queryRunner.manager.getRepository(SalesTable_1.SalesTable).save(salesSaveData)];
+                    case 29:
+                        _a.sent();
+                        // let salesTableData: any = await this.salesTableDAO.save(salesData);
+                        return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 30:
+                        // let salesTableData: any = await this.salesTableDAO.save(salesData);
+                        _a.sent();
                         return [2 /*return*/, { id: item.id, status: item.statusId, message: "SAVED_SUCCESSFULLY" }];
-                    case 29: throw { message: "INVALID_DATA" };
-                    case 30: return [3 /*break*/, 35];
-                    case 31:
+                    case 31: throw { message: "INVALID_DATA" };
+                    case 32: return [3 /*break*/, 37];
+                    case 33:
                         error_3 = _a.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 32:
-                        _a.sent();
-                        throw error_3;
-                    case 33: return [4 /*yield*/, queryRunner.release()];
                     case 34:
                         _a.sent();
+                        throw error_3;
+                    case 35: return [4 /*yield*/, queryRunner.release()];
+                    case 36:
+                        _a.sent();
                         return [7 /*endfinally*/];
-                    case 35: return [2 /*return*/];
+                    case 37: return [2 /*return*/];
                 }
             });
         });
