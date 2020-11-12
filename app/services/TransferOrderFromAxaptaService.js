@@ -77,26 +77,25 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 8, , 9]);
+                        _a.trys.push([0, 6, , 7]);
                         return [4 /*yield*/, this.getTransferOrder(transferID)];
                     case 1:
                         axaptaData = _a.sent();
                         console.log("data-----------------", axaptaData);
                         return [4 /*yield*/, this.checkTransferOrder(axaptaData)];
                     case 2:
-                        if (!_a.sent()) return [3 /*break*/, 6];
-                        if (!(axaptaData.invent_location_id_to.trim() == this.sessionInfo.inventlocationid)) return [3 /*break*/, 4];
+                        if (!_a.sent()) return [3 /*break*/, 4];
                         return [4 /*yield*/, this.mapSalesData(axaptaData)];
-                    case 3: return [2 /*return*/, _a.sent()];
-                    case 4: throw { message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
+                    case 3: 
+                    // if (axaptaData.invent_location_id_to.trim() == this.sessionInfo.inventlocationid) {
+                    return [2 /*return*/, _a.sent()];
+                    case 4: throw { message: "cant receive order from test participating stores" };
                     case 5: return [3 /*break*/, 7];
-                    case 6: throw { message: "cant receive order from test participating stores" };
-                    case 7: return [3 /*break*/, 9];
-                    case 8:
+                    case 6:
                         error_1 = _a.sent();
                         Log_1.log.error(error_1);
                         throw error_1;
-                    case 9: return [2 /*return*/];
+                    case 7: return [2 /*return*/];
                 }
             });
         });
@@ -112,69 +111,64 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                     case 1:
                         salesData = _b.sent();
                         console.log(data.invent_location_id_to, this.sessionInfo.inventlocationid);
-                        if (data.invent_location_id_to == this.sessionInfo.inventlocationid) {
-                            salesData = new SalesTable_1.SalesTable();
-                            salesData.salesId = data.transfer_id;
-                            salesData.inventLocationId = data.invent_location_id_to;
-                            salesData.transkind = "TRANSFERORDER";
-                            salesData.saleStatus = "RECEIVED";
-                            salesData.custAccount = data.invent_location_id_from;
-                            salesData.invoiceDate = data.shipdate;
-                            salesData.shippingDateConfirmed = data.shipdate;
-                            salesData.dataareaid = data.data_area_id.toLowerCase();
-                            salesData.lastModifiedDate = new Date(App_1.App.DateNow());
-                            salesData.createddatetime = new Date(App_1.App.DateNow());
-                            salesData.salesType = 4;
-                            // await this.salesTableDAO.save(salesData);
-                            // let salesLines = await this.salesLineDAO.findAll({ salesId: salesData.salesId });
-                            // await this.salesLineDAO.delete(salesLines);
-                            salesData.salesLines = [];
-                            i = 1;
-                            for (_i = 0, _a = data.orderLines; _i < _a.length; _i++) {
-                                v = _a[_i];
-                                if (v.item_id != "HSN-00001") {
-                                    salesLine = new SalesLine_1.SalesLine();
-                                    salesLine.salesId = v.transfer_id;
-                                    salesLine.lineNum = i;
-                                    salesLine.itemid = v.item_id;
-                                    salesLine.configId = v.config_id;
-                                    salesLine.inventsizeid = v.invent_size_id;
-                                    salesLine.salesQty = parseInt(v.shipped_qty);
-                                    salesLine.dataareaid = v.data_area_id.toLowerCase();
-                                    salesLine.inventLocationId = data.invent_location_id_to;
-                                    salesLine.batchNo = v.batch_no;
-                                    salesLine.custAccount = data.invent_location_id_from;
-                                    // salesLine.colors = await this.colorsDAO.findOne({ code: v.config_id });
-                                    // salesLine.baseSizes = await this.baseSizeDAO.findOneforaxaptadata({ base: { code: v.item_id }, sizes: { code: v.invent_size_id } });
-                                    salesLine.lastModifiedDate = new Date(App_1.App.DateNow());
-                                    salesLine.createddatetime = new Date(App_1.App.DateNow());
-                                    batches = {};
-                                    batches.qty = parseInt(v.shipped_qty);
-                                    batches.itemid = salesLine.itemid;
-                                    batches.transrefid = salesLine.salesId;
-                                    batches.invoiceid = salesLine.salesId;
-                                    batches.batchno = salesLine.batchNo;
-                                    batches.configid = salesLine.configId;
-                                    batches.reservationid = salesLine.colorantId;
-                                    batches.inventsizeid = salesLine.inventsizeid;
-                                    batches.inventlocationid = salesLine.inventLocationId;
-                                    batches.dataareaid = salesLine.dataareaid.toLowerCase();
-                                    batches.transactionClosed = false;
-                                    batches.dateinvent = new Date(App_1.App.DateNow());
-                                    salesLine.batches = batches;
-                                    // await this.updateInventoryService.updateInventtransTable(batches);
-                                    salesData.salesLines.push(salesLine);
-                                    i += 1;
-                                }
+                        // if (data.invent_location_id_to == this.sessionInfo.inventlocationid) {
+                        salesData = new SalesTable_1.SalesTable();
+                        salesData.salesId = data.transfer_id;
+                        salesData.inventLocationId = data.invent_location_id_to;
+                        salesData.transkind = "TRANSFERORDER";
+                        salesData.saleStatus = "RECEIVED";
+                        salesData.custAccount = data.invent_location_id_from;
+                        salesData.invoiceDate = data.shipdate;
+                        salesData.shippingDateConfirmed = data.shipdate;
+                        salesData.dataareaid = data.data_area_id.toLowerCase();
+                        salesData.lastModifiedDate = new Date(App_1.App.DateNow());
+                        salesData.createddatetime = new Date(App_1.App.DateNow());
+                        salesData.salesType = 4;
+                        // await this.salesTableDAO.save(salesData);
+                        // let salesLines = await this.salesLineDAO.findAll({ salesId: salesData.salesId });
+                        // await this.salesLineDAO.delete(salesLines);
+                        salesData.salesLines = [];
+                        i = 1;
+                        for (_i = 0, _a = data.orderLines; _i < _a.length; _i++) {
+                            v = _a[_i];
+                            if (v.item_id != "HSN-00001" && v.invent_size_id != "GROUP") {
+                                salesLine = new SalesLine_1.SalesLine();
+                                salesLine.salesId = v.transfer_id;
+                                salesLine.lineNum = i;
+                                salesLine.itemid = v.item_id;
+                                salesLine.configId = v.config_id;
+                                salesLine.inventsizeid = v.invent_size_id;
+                                salesLine.salesQty = parseInt(v.shipped_qty);
+                                salesLine.dataareaid = v.data_area_id.toLowerCase();
+                                salesLine.inventLocationId = data.invent_location_id_to;
+                                salesLine.batchNo = v.batch_no;
+                                salesLine.custAccount = data.invent_location_id_from;
+                                // salesLine.colors = await this.colorsDAO.findOne({ code: v.config_id });
+                                // salesLine.baseSizes = await this.baseSizeDAO.findOneforaxaptadata({ base: { code: v.item_id }, sizes: { code: v.invent_size_id } });
+                                salesLine.lastModifiedDate = new Date(App_1.App.DateNow());
+                                salesLine.createddatetime = new Date(App_1.App.DateNow());
+                                batches = {};
+                                batches.qty = parseInt(v.shipped_qty);
+                                batches.itemid = salesLine.itemid;
+                                batches.transrefid = salesLine.salesId;
+                                batches.invoiceid = salesLine.salesId;
+                                batches.batchno = salesLine.batchNo;
+                                batches.configid = salesLine.configId;
+                                batches.reservationid = salesLine.colorantId;
+                                batches.inventsizeid = salesLine.inventsizeid;
+                                batches.inventlocationid = salesLine.inventLocationId;
+                                batches.dataareaid = salesLine.dataareaid.toLowerCase();
+                                batches.transactionClosed = false;
+                                batches.dateinvent = new Date(App_1.App.DateNow());
+                                salesLine.batches = batches;
+                                // await this.updateInventoryService.updateInventtransTable(batches);
+                                salesData.salesLines.push(salesLine);
+                                i += 1;
                             }
-                            salesData.status = 1;
-                            // return { message: Props.SAVED_SUCCESSFULLY };
-                            return [2 /*return*/, salesData];
                         }
-                        else {
-                            throw { status: 1, message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
-                        }
-                        return [3 /*break*/, 3];
+                        salesData.status = 1;
+                        // return { message: Props.SAVED_SUCCESSFULLY };
+                        return [2 /*return*/, salesData];
                     case 2:
                         error_2 = _b.sent();
                         Log_1.log.error(error_2);
@@ -199,9 +193,8 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        _a.trys.push([3, 21, 23, 25]);
+                        _a.trys.push([3, 19, 21, 23]);
                         console.log(data);
-                        if (!(data.inventLocationId == this.sessionInfo.inventlocationid)) return [3 /*break*/, 19];
                         salesData = void 0;
                         return [4 /*yield*/, this.salesTableDAO.findOne({ interCompanyOriginalSalesId: data.salesId })];
                     case 4:
@@ -278,21 +271,19 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                     case 17:
                         _a.sent();
                         return [2 /*return*/, { status: 1, id: salesData.salesId, message: Props_1.Props.SAVED_SUCCESSFULLY }];
-                    case 18: return [3 /*break*/, 20];
-                    case 19: throw { status: 0, message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
-                    case 20: return [3 /*break*/, 25];
-                    case 21:
+                    case 18: return [3 /*break*/, 23];
+                    case 19:
                         error_3 = _a.sent();
                         Log_1.log.error(error_3);
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 22:
+                    case 20:
                         _a.sent();
                         throw error_3;
-                    case 23: return [4 /*yield*/, queryRunner.release()];
-                    case 24:
+                    case 21: return [4 /*yield*/, queryRunner.release()];
+                    case 22:
                         _a.sent();
                         return [7 /*endfinally*/];
-                    case 25: return [2 /*return*/];
+                    case 23: return [2 /*return*/];
                 }
             });
         });

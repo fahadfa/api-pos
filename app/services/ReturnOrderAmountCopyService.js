@@ -435,7 +435,14 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         for (_i = 0, _a = reqData.salesLine; _i < _a.length; _i++) {
                             item = _a[_i];
                             sabicCustomers = item.appliedDiscounts.find(function (v) { return v.discountType == "SABIC_CUSTOMER_DISCOUNT"; });
+                            if (sabicCustomers) {
+                                break;
+                            }
                             INTERIOR_AND_EXTERIOR = item.appliedDiscounts.find(function (v) { return v.discountType == "INTERIOR_AND_EXTERIOR"; });
+                            if (INTERIOR_AND_EXTERIOR) {
+                                console.log(INTERIOR_AND_EXTERIOR);
+                                break;
+                            }
                             if (sabicCustomers) {
                                 sabicCustomers = true;
                             }
@@ -1256,6 +1263,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 v.linkId == item.linkId &&
                                                 v.isItemFree == item.isItemFree;
                                         });
+                                        console.log(item.id, returnOrderData.salesLine[0].id);
                                         salesOrderLine = returnOrderData.salesLine.find(function (v) {
                                             return v.itemid == item.itemid &&
                                                 v.inventsizeid == item.inventsizeid &&
@@ -1263,7 +1271,8 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 v.colorantId == item.colorantId &&
                                                 v.linkId == item.linkId &&
                                                 v.isItemFree == item.isItemFree &&
-                                                (v.addedBatch == true || v.isParent == true);
+                                                (v.addedBatch == true || v.isParent == true) &&
+                                                v.id == item.id;
                                         });
                                         // console.log(salesOrderLine)
                                         if (salesOrderLine) {
