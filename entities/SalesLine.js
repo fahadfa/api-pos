@@ -272,7 +272,7 @@ var SalesLine = /** @class */ (function () {
     __decorate([
         typeorm_1.Column({ name: "customprice" }),
         __metadata("design:type", Number)
-    ], SalesLine.prototype, "customPrice", void 0);
+    ], SalesLine.prototype, "linesCount", void 0);
     __decorate([
         typeorm_1.Column({ name: "createdby" }),
         __metadata("design:type", String)

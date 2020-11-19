@@ -394,6 +394,14 @@ var DiscountService = /** @class */ (function () {
                                         buyOneGetOneDiscountDetails = void 0;
                                         // if ((!reqData.voucherDiscountChecked || isValidVoucherItem == false) && !reqData.instantDiscountChecked) {
                                         promotionalDiscountDetails = promotionalDiscountDetails.length > 0 ? promotionalDiscountDetails[0] : null;
+                                        console.log(promotionalDiscountDetails);
+                                        if (promotionalDiscountDetails &&
+                                            (promotionalDiscountDetails.inventsizeid.trim() != '' && promotionalDiscountDetails.inventsizeid != null)) {
+                                            if (promotionalDiscountDetails.inventsizeid != item.inventsizeid) {
+                                                promotionalDiscountDetails = null;
+                                                item.checkFreeItem = false;
+                                            }
+                                        }
                                         selectedQuantity = reqData.selectedItems
                                             .filter(function (v) { return v.itemid == v.itemid && v.inventsizeid == v.inventsizeid; })
                                             .reduce(function (res, item) { return res + parseInt(item.quantity); }, 0);

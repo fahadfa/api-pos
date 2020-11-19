@@ -201,10 +201,6 @@ var SalesTable = /** @class */ (function () {
         __metadata("design:type", String)
     ], SalesTable.prototype, "vehicleCode", void 0);
     __decorate([
-        typeorm_1.Column({ name: "apptype" }),
-        __metadata("design:type", Number)
-    ], SalesTable.prototype, "appType", void 0);
-    __decorate([
         typeorm_1.Column({ name: "vouchernum" }),
         __metadata("design:type", String)
     ], SalesTable.prototype, "voucherNum", void 0);
@@ -430,6 +426,10 @@ var SalesTable = /** @class */ (function () {
         typeorm_1.Column({ name: "info", type: "json" }),
         __metadata("design:type", Object)
     ], SalesTable.prototype, "info", void 0);
+    __decorate([
+        typeorm_1.Column({ name: "apptype" }),
+        __metadata("design:type", Number)
+    ], SalesTable.prototype, "linesCount", void 0);
     SalesTable = __decorate([
         typeorm_1.Entity("salestable")
     ], SalesTable);

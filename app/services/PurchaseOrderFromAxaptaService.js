@@ -195,6 +195,7 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                         salesData.transkind = "PURCHASEORDER";
                         salesLines = data.salesLines;
                         delete salesData.salesLines;
+                        salesData.linesCount = salesLines.length;
                         // await this.salesTableDAO.save(salesData);
                         return [4 /*yield*/, queryRunner.manager.getRepository(SalesTable_1.SalesTable).save(salesData)];
                     case 7:
