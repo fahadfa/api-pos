@@ -1663,16 +1663,15 @@ var SalesTableService = /** @class */ (function () {
             });
         });
     };
-    SalesTableService.prototype.salesLineItemOrder = function (item, reqData, queryRunner) {
+    SalesTableService.prototype.salesLineItemOrder = function (item, reqData, queryRunner, salesLine) {
         return __awaiter(this, void 0, void 0, function () {
-            var promiseList, batches, taxItemGroup, _i, _a, batch, availability, fiofoBatches, fiofoBatches, uniqueList, groupBatchesList, qty, _b, uniqueList_1, batch;
+            var batches, taxItemGroup, _loop_2, this_1, _i, _a, batch, fiofoBatches, uniqueList, groupBatchesList, qty, _b, uniqueList_1, batch;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        promiseList = [];
                         batches = [];
                         item.batch = [];
-                        if (!(item.salesQty > 0)) return [3 /*break*/, 12];
+                        if (!(item.salesQty > 0)) return [3 /*break*/, 10];
                         item.salesId = reqData.salesId;
                         item.createddatetime = new Date(App_1.App.DateNow());
                         item.createdBy = this.sessionInfo.userName;
@@ -1692,59 +1691,90 @@ var SalesTableService = /** @class */ (function () {
                     case 3:
                         item.lineAmount = parseFloat(item.salesprice) * parseFloat(item.salesQty);
                         item.batch = [];
-                        if (!(item.batches && item.batches.length > 0)) return [3 /*break*/, 10];
+                        if (!(item.batches && item.batches.length > 0)) return [3 /*break*/, 8];
                         item.batches = item.batches.filter(function (v) { return Math.abs(v.quantity) > 0; });
+                        _loop_2 = function (batch) {
+                            var availability, similarLines, fiofoBatches;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0:
+                                        console.log(batch);
+                                        return [4 /*yield*/, this_1.rawQuery.getbatchavailability({
+                                                inventlocationid: this_1.sessionInfo.inventlocationid,
+                                                itemid: item.itemid,
+                                                configid: item.configId,
+                                                inventsizeid: item.inventsizeid,
+                                                batchno: batch.batchNo,
+                                                invoiceid: reqData.salesId,
+                                            })];
+                                    case 1:
+                                        availability = _a.sent();
+                                        similarLines = salesLine.filter(function (v) {
+                                            return v.itemId == item.itemId &&
+                                                v.configId == item.configId &&
+                                                v.inventsizeid == item.inventsizeid &&
+                                                v.batchesAdded == true;
+                                        });
+                                        availability = parseInt(availability);
+                                        similarLines.map(function (v) {
+                                            v.batches.map(function (v) {
+                                                if (v.batchNo == batch.batchNo) {
+                                                    availability -= parseInt(batch.quantity);
+                                                }
+                                            });
+                                        });
+                                        console.log("==========================================", similarLines, availability);
+                                        if (!(availability <= 0 || availability < Math.abs(batch.quantity))) return [3 /*break*/, 3];
+                                        console.log("======================mission pass====================", availability);
+                                        return [4 /*yield*/, this_1.dofifo(item, batch.quantity, reqData, salesLine)];
+                                    case 2:
+                                        fiofoBatches = _a.sent();
+                                        batches = batches.concat(fiofoBatches);
+                                        console.log(batches);
+                                        return [3 /*break*/, 4];
+                                    case 3:
+                                        batch.itemid = item.itemid;
+                                        batch.transrefid = item.salesId;
+                                        batch.invoiceid = item.salesId;
+                                        batch.batchno = batch.batchNo;
+                                        batch.configid = item.configId;
+                                        batch.inventsizeid = item.inventsizeid;
+                                        batch.custvendac = reqData.custAccount;
+                                        batch.inventlocationid = this_1.sessionInfo.inventlocationid;
+                                        batch.dataareaid = this_1.sessionInfo.dataareaid;
+                                        batch.qty = -batch.quantity;
+                                        batch.reserveStatus = reqData.status;
+                                        batch.dataareaid = this_1.sessionInfo.dataareaid;
+                                        batch.transactionClosed = reqData.status == "PAID" || reqData.status == "RESERVED" ? true : false;
+                                        batch.salesLineId = item.id;
+                                        batch.dateinvent = new Date(App_1.App.DateNow());
+                                        batches.push(batch);
+                                        _a.label = 4;
+                                    case 4: return [2 /*return*/];
+                                }
+                            });
+                        };
+                        this_1 = this;
                         _i = 0, _a = item.batches;
                         _c.label = 4;
                     case 4:
-                        if (!(_i < _a.length)) return [3 /*break*/, 9];
+                        if (!(_i < _a.length)) return [3 /*break*/, 7];
                         batch = _a[_i];
-                        console.log(batch);
-                        return [4 /*yield*/, this.rawQuery.getbatchavailability({
-                                inventlocationid: this.sessionInfo.inventlocationid,
-                                itemid: item.itemid,
-                                configid: item.configId,
-                                inventsizeid: item.inventsizeid,
-                                batchno: batch.batchNo,
-                                invoiceid: reqData.salesId,
-                            })];
+                        return [5 /*yield**/, _loop_2(batch)];
                     case 5:
-                        availability = _c.sent();
-                        if (!(availability <= 0 || availability < Math.abs(batch.qty))) return [3 /*break*/, 7];
-                        return [4 /*yield*/, this.dofifo(item, batch.quantity, reqData)];
+                        _c.sent();
+                        _c.label = 6;
                     case 6:
-                        fiofoBatches = _c.sent();
-                        batches = batches.concat(fiofoBatches);
-                        console.log(batches);
-                        return [3 /*break*/, 8];
-                    case 7:
-                        batch.itemid = item.itemid;
-                        batch.transrefid = item.salesId;
-                        batch.invoiceid = item.salesId;
-                        batch.batchno = batch.batchNo;
-                        batch.configid = item.configId;
-                        batch.inventsizeid = item.inventsizeid;
-                        batch.custvendac = reqData.custAccount;
-                        batch.inventlocationid = this.sessionInfo.inventlocationid;
-                        batch.dataareaid = this.sessionInfo.dataareaid;
-                        batch.qty = -batch.quantity;
-                        batch.reserveStatus = reqData.status;
-                        batch.dataareaid = this.sessionInfo.dataareaid;
-                        batch.transactionClosed = reqData.status == "PAID" || reqData.status == "RESERVED" ? true : false;
-                        batch.salesLineId = item.id;
-                        batch.dateinvent = new Date(App_1.App.DateNow());
-                        batches.push(batch);
-                        _c.label = 8;
-                    case 8:
                         _i++;
                         return [3 /*break*/, 4];
-                    case 9: return [3 /*break*/, 12];
-                    case 10: return [4 /*yield*/, this.dofifo(item, item.salesQty, reqData)];
-                    case 11:
+                    case 7: return [3 /*break*/, 10];
+                    case 8: return [4 /*yield*/, this.dofifo(item, item.salesQty, reqData, salesLine)];
+                    case 9:
                         fiofoBatches = _c.sent();
                         batches = batches.concat(fiofoBatches);
-                        _c.label = 12;
-                    case 12:
+                        _c.label = 10;
+                    case 10:
+                        item.batchesAdded = true;
                         uniqueList = [];
                         groupBatchesList = this.groupBy(batches, function (item) {
                             return [item.itemid, item.batchno, item.configid, item.inventsizeid, item.quantity];
@@ -1764,9 +1794,9 @@ var SalesTableService = /** @class */ (function () {
                             }
                         }
                         _b = 0, uniqueList_1 = uniqueList;
-                        _c.label = 13;
-                    case 13:
-                        if (!(_b < uniqueList_1.length)) return [3 /*break*/, 17];
+                        _c.label = 11;
+                    case 11:
+                        if (!(_b < uniqueList_1.length)) return [3 /*break*/, 14];
                         batch = uniqueList_1[_b];
                         item.batch.push({
                             batchNo: batch.batchno,
@@ -1775,16 +1805,13 @@ var SalesTableService = /** @class */ (function () {
                         batch.salesLineId = item.id;
                         this.updateInventoryService.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batch, true, true, queryRunner)];
-                    case 14:
+                    case 12:
                         _c.sent();
-                        return [4 /*yield*/, Promise.all(promiseList)];
-                    case 15:
-                        _c.sent();
-                        _c.label = 16;
-                    case 16:
+                        _c.label = 13;
+                    case 13:
                         _b++;
-                        return [3 /*break*/, 13];
-                    case 17: return [2 /*return*/];
+                        return [3 /*break*/, 11];
+                    case 14: return [2 /*return*/];
                 }
             });
         });
@@ -1980,7 +2007,7 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.saveReturnOrderDesignerService = function (reqData, queryRunner) {
         return __awaiter(this, void 0, void 0, function () {
-            var designerservice, designerServiceAmount, _loop_2, this_1, _i, designerservice_1, item, error_13;
+            var designerservice, designerServiceAmount, _loop_3, this_2, _i, designerservice_1, item, error_13;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -1992,13 +2019,13 @@ var SalesTableService = /** @class */ (function () {
                     case 1:
                         designerservice = _a.sent();
                         designerServiceAmount = reqData.designServiceRedeemAmount;
-                        _loop_2 = function (item) {
+                        _loop_3 = function (item) {
                             var desinerServiceDetails, amount, leftReturnAmount;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
                                         if (!(designerServiceAmount > 0)) return [3 /*break*/, 3];
-                                        return [4 /*yield*/, this_1.rawQuery.getReturnedDesignerServiceList(reqData.interCompanyOriginalSalesId)];
+                                        return [4 /*yield*/, this_2.rawQuery.getReturnedDesignerServiceList(reqData.interCompanyOriginalSalesId)];
                                     case 1:
                                         desinerServiceDetails = _a.sent();
                                         console.log(desinerServiceDetails);
@@ -2044,7 +2071,7 @@ var SalesTableService = /** @class */ (function () {
                                         delete item.salesLine.salesId;
                                         console.log("=========================amount===================", designerServiceAmount, item.netAmount);
                                         if (!(parseFloat(item.netAmount) > 0)) return [3 /*break*/, 3];
-                                        return [4 /*yield*/, this_1.saveQuotation(item, queryRunner)];
+                                        return [4 /*yield*/, this_2.saveQuotation(item, queryRunner)];
                                     case 2:
                                         _a.sent();
                                         _a.label = 3;
@@ -2052,13 +2079,13 @@ var SalesTableService = /** @class */ (function () {
                                 }
                             });
                         };
-                        this_1 = this;
+                        this_2 = this;
                         _i = 0, designerservice_1 = designerservice;
                         _a.label = 2;
                     case 2:
                         if (!(_i < designerservice_1.length)) return [3 /*break*/, 5];
                         item = designerservice_1[_i];
-                        return [5 /*yield**/, _loop_2(item)];
+                        return [5 /*yield**/, _loop_3(item)];
                     case 3:
                         _a.sent();
                         _a.label = 4;
@@ -2124,7 +2151,7 @@ var SalesTableService = /** @class */ (function () {
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        _a.trys.push([3, 26, 28, 30]);
+                        _a.trys.push([3, 25, 27, 29]);
                         promiseList = [];
                         salesLine_7 = reqData.salesLine;
                         returnData = void 0;
@@ -2174,7 +2201,7 @@ var SalesTableService = /** @class */ (function () {
                         };
                         return [2 /*return*/, returnData];
                     case 8:
-                        if (!(cond == true)) return [3 /*break*/, 25];
+                        if (!(cond == true)) return [3 /*break*/, 24];
                         !reqData.warehouse ? (reqData.warehouse = {}) : (reqData.warehouse = reqData.warehouse);
                         reqData.warehouse.inventLocationId = this.sessionInfo.inventlocationid;
                         reqData.url = reqData.onlineAmount > 0 ? Props_1.Props.ECOMMERCE_PAYMENT_URL + reqData.salesId : null;
@@ -2219,7 +2246,6 @@ var SalesTableService = /** @class */ (function () {
                     case 14:
                         _a.sent();
                         console.log("4----------------------------");
-                        promiseList = [];
                         _i = 0, salesLine_6 = salesLine_7;
                         _a.label = 15;
                     case 15:
@@ -2228,23 +2254,20 @@ var SalesTableService = /** @class */ (function () {
                         item.linesCount = reqData.linesCount;
                         item.id = reqData.paymentType == "ONLINE" ? item.id : uuid();
                         item.salesId = reqData.salesId;
-                        return [4 /*yield*/, promiseList.push(this.salesLineItemOrder(item, reqData, queryRunner))];
+                        return [4 /*yield*/, this.salesLineItemOrder(item, reqData, queryRunner, salesLine_7)];
                     case 16:
                         _a.sent();
                         _a.label = 17;
                     case 17:
                         _i++;
                         return [3 /*break*/, 15];
-                    case 18: return [4 /*yield*/, Promise.all(promiseList)];
+                    case 18: return [4 /*yield*/, queryRunner.manager.getRepository(SalesLine_1.SalesLine).save(salesLine_7)];
                     case 19:
-                        _a.sent();
-                        return [4 /*yield*/, queryRunner.manager.getRepository(SalesLine_1.SalesLine).save(salesLine_7)];
-                    case 20:
                         salesline = _a.sent();
                         promiseList = [];
-                        if (!(reqData.status == "PAID")) return [3 /*break*/, 22];
+                        if (!(reqData.status == "PAID")) return [3 /*break*/, 21];
                         return [4 /*yield*/, this.rawQuery.salesTableData(reqData.interCompanyOriginalSalesId)];
-                    case 21:
+                    case 20:
                         condData = _a.sent();
                         condData = condData.length >= 0 ? condData[0] : {};
                         //console.log(condData);
@@ -2278,8 +2301,8 @@ var SalesTableService = /** @class */ (function () {
                         if (reqData.designServiceRedeemAmount > 0) {
                             promiseList.push(this.saveSalesOrderDesignerService(reqData, queryRunner));
                         }
-                        _a.label = 22;
-                    case 22:
+                        _a.label = 21;
+                    case 21:
                         console.log("6---------------------------- " + reqData.paymentType + reqData.onlineAmount);
                         if (reqData.onlineAmount > 0 && reqData.status != "PAID") {
                             ptokenData = function () { return __awaiter(_this, void 0, void 0, function () {
@@ -2392,11 +2415,11 @@ var SalesTableService = /** @class */ (function () {
                             promiseList.push(imail());
                         }
                         return [4 /*yield*/, Promise.all(promiseList)];
-                    case 23:
+                    case 22:
                         _a.sent();
                         // throw { message: "error" };
                         return [4 /*yield*/, queryRunner.commitTransaction()];
-                    case 24:
+                    case 23:
                         // throw { message: "error" };
                         _a.sent();
                         console.log("7----------------------------");
@@ -2408,26 +2431,26 @@ var SalesTableService = /** @class */ (function () {
                             url: reqData.url,
                         };
                         return [2 /*return*/, returnData];
-                    case 25: return [3 /*break*/, 30];
-                    case 26:
+                    case 24: return [3 /*break*/, 29];
+                    case 25:
                         error_15 = _a.sent();
                         console.log(error_15);
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 27:
+                    case 26:
                         _a.sent();
                         throw error_15;
-                    case 28: return [4 /*yield*/, queryRunner.release()];
-                    case 29:
+                    case 27: return [4 /*yield*/, queryRunner.release()];
+                    case 28:
                         _a.sent();
                         return [7 /*endfinally*/];
-                    case 30: return [2 /*return*/];
+                    case 29: return [2 /*return*/];
                 }
             });
         });
     };
     SalesTableService.prototype.validateReturnOrder = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var prevReturnLines, returnLines, _loop_3, _i, returnLines_1, val, state_1;
+            var prevReturnLines, returnLines, _loop_4, _i, returnLines_1, val, state_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.rawQuery.getReturnLines(reqData.interCompanyOriginalSalesId)];
@@ -2435,10 +2458,10 @@ var SalesTableService = /** @class */ (function () {
                         prevReturnLines = _a.sent();
                         console.log(prevReturnLines);
                         returnLines = reqData.salesLine;
-                        _loop_3 = function (val) {
+                        _loop_4 = function (val) {
                             if (val.salesQty > 0) {
                                 console.log(val.batches);
-                                var _loop_4 = function (v) {
+                                var _loop_5 = function (v) {
                                     var lineData = prevReturnLines.find(function (d) {
                                         return d.itemid == val.itemid &&
                                             d.configId == val.configId &&
@@ -2461,7 +2484,7 @@ var SalesTableService = /** @class */ (function () {
                                 };
                                 for (var _i = 0, _a = val.batches; _i < _a.length; _i++) {
                                     var v = _a[_i];
-                                    var state_2 = _loop_4(v);
+                                    var state_2 = _loop_5(v);
                                     if (typeof state_2 === "object")
                                         return state_2;
                                 }
@@ -2469,7 +2492,7 @@ var SalesTableService = /** @class */ (function () {
                         };
                         for (_i = 0, returnLines_1 = returnLines; _i < returnLines_1.length; _i++) {
                             val = returnLines_1[_i];
-                            state_1 = _loop_3(val);
+                            state_1 = _loop_4(val);
                             if (typeof state_1 === "object")
                                 return [2 /*return*/, state_1.value];
                         }
@@ -2552,7 +2575,7 @@ var SalesTableService = /** @class */ (function () {
                         console.log(desinerService, reqData.interCompanyOriginalSalesId);
                         amount = desinerService.reduce(function (res, item) { return res + parseFloat(item.amount); }, 0);
                         console.log("=========================amount===================", amount, reqData.netAmount);
-                        if (!(amount >= reqData.netAmount)) return [3 /*break*/, 15];
+                        if (!(parseFloat(amount.toFixed(2)) >= parseFloat(reqData.netAmount.toFixed(2)))) return [3 /*break*/, 15];
                         return [4 /*yield*/, this.designerServiceDAO.findOne({
                                 invoiceid: reqData.interCompanyOriginalSalesId,
                             })];
@@ -2811,7 +2834,7 @@ var SalesTableService = /** @class */ (function () {
                         _a++;
                         return [3 /*break*/, 11];
                     case 14: return [3 /*break*/, 20];
-                    case 15: return [4 /*yield*/, this.dofifo(item, item.salesQty, reqData)];
+                    case 15: return [4 /*yield*/, this.dofifo(item, item.salesQty, reqData, salesLine)];
                     case 16:
                         fiofoBatches = _e.sent();
                         _c = 0, fiofoBatches_1 = fiofoBatches;
@@ -2831,7 +2854,7 @@ var SalesTableService = /** @class */ (function () {
                         _c++;
                         return [3 /*break*/, 17];
                     case 20: return [3 /*break*/, 26];
-                    case 21: return [4 /*yield*/, this.dofifo(item, item.salesQty, reqData)];
+                    case 21: return [4 /*yield*/, this.dofifo(item, item.salesQty, reqData, salesLine)];
                     case 22:
                         fiofoBatches = _e.sent();
                         _d = 0, fiofoBatches_2 = fiofoBatches;
@@ -3310,9 +3333,9 @@ var SalesTableService = /** @class */ (function () {
             });
         });
     };
-    SalesTableService.prototype.dofifo = function (item, qty, reqData) {
+    SalesTableService.prototype.dofifo = function (item, qty, reqData, salesLine) {
         return __awaiter(this, void 0, void 0, function () {
-            var batches, inventory, val_1, batchList, _i, inventory_1, batch, _a, batchList_1, batch;
+            var batches, inventory, similarLines, val_1, batchList, _loop_6, _i, inventory_1, batch, state_3, _a, batchList_1, batch;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -3325,17 +3348,36 @@ var SalesTableService = /** @class */ (function () {
                             })];
                     case 1:
                         inventory = _b.sent();
+                        similarLines = salesLine.filter(function (v) {
+                            return v.itemId == item.itemId &&
+                                v.configId == item.configId &&
+                                v.inventsizeid == item.inventsizeid &&
+                                v.batchesAdded == true;
+                        });
                         val_1 = parseInt(qty);
-                        console.log("quantity", val_1);
+                        console.log("quantity", val_1, similarLines);
                         batchList = [];
-                        for (_i = 0, inventory_1 = inventory; _i < inventory_1.length; _i++) {
-                            batch = inventory_1[_i];
+                        _loop_6 = function (batch) {
+                            batch.availabilty = parseInt(batch.availabilty);
+                            if (similarLines.length > 0) {
+                                // batchNo: batch.batchno,
+                                // quantity: batch.quantity,
+                                console.log(batch);
+                                similarLines.map(function (v) {
+                                    v.batches.map(function (b) {
+                                        if (b.batchNo == batch.batchno) {
+                                            batch.availabilty -= parseInt(b.quantity);
+                                        }
+                                    });
+                                });
+                            }
+                            console.log(batch.availabilty);
                             if (val_1 > 0) {
                                 if (parseInt(batch.availabilty) >= val_1) {
                                     batch.quantity = val_1;
                                     val_1 = 0;
                                     batchList.push(batch);
-                                    break;
+                                    return "break";
                                 }
                                 else {
                                     batch.quantity = parseInt(batch.availabilty);
@@ -3343,6 +3385,12 @@ var SalesTableService = /** @class */ (function () {
                                     batchList.push(batch);
                                 }
                             }
+                        };
+                        for (_i = 0, inventory_1 = inventory; _i < inventory_1.length; _i++) {
+                            batch = inventory_1[_i];
+                            state_3 = _loop_6(batch);
+                            if (state_3 === "break")
+                                break;
                         }
                         for (_a = 0, batchList_1 = batchList; _a < batchList_1.length; _a++) {
                             batch = batchList_1[_a];
@@ -3413,7 +3461,7 @@ var SalesTableService = /** @class */ (function () {
                         for (_i = 0, salesLine_13 = salesLine; _i < salesLine_13.length; _i++) {
                             item = salesLine_13[_i];
                             console.log(item);
-                            promiseList.push(this.salesLineItemOrder(item, reqData, queryRunner));
+                            promiseList.push(this.salesLineItemOrder(item, reqData, queryRunner, salesLine));
                         }
                         promiseList.push(this.saveSalesOrderUpdateVocharDiscount(reqData, queryRunner));
                         if (reqData.mobileNo) {

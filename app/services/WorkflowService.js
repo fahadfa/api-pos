@@ -126,7 +126,7 @@ var WorkflowService = /** @class */ (function () {
     WorkflowService.prototype.save = function (item, type) {
         if (type === void 0) { type = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, status_1, promistList, condition, usergroupid, selectedLinesData, salesData, RM_AND_RA, canSendForApproval, transactions, date, inventtransQuery, _i, transactions_1, v, selectedLines, salesSaveData, error_3;
+            var queryRunner, status_1, promistList, condition, usergroupid, selectedLinesData, salesData, RM_AND_RA, canSendForApproval, transactions, date, inventtransQuery, _i, transactions_1, v, selectedLines, cond, salesSaveData, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -139,7 +139,7 @@ var WorkflowService = /** @class */ (function () {
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        _a.trys.push([3, 34, 36, 38]);
+                        _a.trys.push([3, 36, 38, 40]);
                         status_1 = item.status;
                         promistList = [];
                         return [4 /*yield*/, this.rawQuery.workflowconditions(this.sessionInfo.usergroupconfigid)];
@@ -147,7 +147,7 @@ var WorkflowService = /** @class */ (function () {
                         condition = _a.sent();
                         usergroupid = this.sessionInfo.groupid;
                         selectedLinesData = null;
-                        if (!(item.id || item.orderId)) return [3 /*break*/, 32];
+                        if (!(item.id || item.orderId)) return [3 /*break*/, 34];
                         if (!item.id) return [3 /*break*/, 6];
                         return [4 /*yield*/, this.workflowDAO.entity(item.id)];
                     case 5:
@@ -370,7 +370,8 @@ var WorkflowService = /** @class */ (function () {
                         item.lastModifiedDate = new Date(App_1.App.DateNow());
                         return [4 /*yield*/, this.validate(item)];
                     case 26:
-                        _a.sent();
+                        cond = _a.sent();
+                        if (!(cond == true)) return [3 /*break*/, 32];
                         salesSaveData = {};
                         salesSaveData.salesId = item.orderId;
                         salesSaveData.status = item.statusId;
@@ -398,19 +399,28 @@ var WorkflowService = /** @class */ (function () {
                         // let salesTableData: any = await this.salesTableDAO.save(salesData);
                         _a.sent();
                         return [2 /*return*/, { id: item.id, status: item.statusId, message: "SAVED_SUCCESSFULLY" }];
-                    case 32: throw { message: "INVALID_DATA" };
-                    case 33: return [3 /*break*/, 38];
-                    case 34:
+                    case 32:
+                        if (cond == "ALREADY_MODIFIED") {
+                            throw { message: "ALREADY_MODIFIED" };
+                        }
+                        else {
+                            throw { message: "INVALID_DATA" };
+                        }
+                        _a.label = 33;
+                    case 33: return [3 /*break*/, 35];
+                    case 34: throw { message: "INVALID_DATA" };
+                    case 35: return [3 /*break*/, 40];
+                    case 36:
                         error_3 = _a.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 35:
-                        _a.sent();
-                        throw error_3;
-                    case 36: return [4 /*yield*/, queryRunner.release()];
                     case 37:
                         _a.sent();
+                        throw error_3;
+                    case 38: return [4 /*yield*/, queryRunner.release()];
+                    case 39:
+                        _a.sent();
                         return [7 /*endfinally*/];
-                    case 38: return [2 /*return*/];
+                    case 40: return [2 /*return*/];
                 }
             });
         });
@@ -428,12 +438,22 @@ var WorkflowService = /** @class */ (function () {
                     case 1: return [4 /*yield*/, this.workflowDAO.findOne({ orderId: item.orderId })];
                     case 2:
                         oldItem = _a.sent();
+                        if (oldItem) {
+                            console.log("=====================", oldItem.pendingWith, this.sessionInfo.groupid);
+                            if (oldItem.pendingWith == this.sessionInfo.groupid) {
+                                item = oldItem;
+                                return [2 /*return*/, true];
+                            }
+                            else {
+                                return [2 /*return*/, "ALREADY_MODIFIED"];
+                            }
+                        }
                         _a.label = 3;
                     case 3:
                         if (!!item.id) return [3 /*break*/, 6];
                         if (!oldItem) return [3 /*break*/, 4];
                         item = oldItem;
-                        return [3 /*break*/, 6];
+                        return [2 /*return*/, true];
                     case 4: return [4 /*yield*/, this.getWorkflowId()];
                     case 5:
                         uid = _a.sent();
