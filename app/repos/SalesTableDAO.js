@@ -37,7 +37,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var SalesTable_1 = require("../../entities/SalesTable");
-var App_1 = require("../../utils/App");
 var SalesTableDAO = /** @class */ (function () {
     function SalesTableDAO() {
         this.dao = typeorm_1.getRepository(SalesTable_1.SalesTable);
@@ -180,16 +179,16 @@ var SalesTableDAO = /** @class */ (function () {
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         result = _a.sent();
-                        if (data.timeZoneOffSet) {
-                            result.map(function (v) {
-                                v.lastModifiedDate = v.lastModifiedDate
-                                    ? App_1.App.convertUTCDateToLocalDate(new Date(v.lastModifiedDate), parseInt(data.timeZoneOffSet)).toLocaleString()
-                                    : v.lastModifiedDate;
-                                v.createddatetime = v.createddatetime
-                                    ? App_1.App.convertUTCDateToLocalDate(new Date(v.createddatetime), parseInt(data.timeZoneOffSet)).toLocaleString()
-                                    : v.createddatetime;
-                            });
-                        }
+                        // if (data.timeZoneOffSet) {
+                        //   result.map((v: any) => {
+                        //     v.lastModifiedDate = v.lastModifiedDate
+                        //       ? App.convertUTCDateToLocalDate(new Date(v.lastModifiedDate), parseInt(data.timeZoneOffSet)).toLocaleString()
+                        //       : v.lastModifiedDate;
+                        //     v.createddatetime = v.createddatetime
+                        //       ? App.convertUTCDateToLocalDate(new Date(v.createddatetime), parseInt(data.timeZoneOffSet)).toLocaleString()
+                        //       : v.createddatetime;
+                        //   });
+                        // }
                         return [2 /*return*/, result];
                 }
             });
@@ -203,11 +202,11 @@ var SalesTableDAO = /** @class */ (function () {
                     case 0:
                         result = [];
                         query = "";
-                        //   ` (case 
+                        //   ` (case
                         //     when "SalesTable"."status" = 'POSTED' then "SalesTable"."status"
                         //     when w.statusid = '' then  "SalesTable"."status"
                         //     when w.statusid is null then  "SalesTable"."status"
-                        //     else w.statusid 
+                        //     else w.statusid
                         //     end
                         //  ) as status,`
                         switch (data.type) {
@@ -230,16 +229,16 @@ var SalesTableDAO = /** @class */ (function () {
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         result = _a.sent();
-                        if (data.timeZoneOffSet) {
-                            result.map(function (v) {
-                                v.lastModifiedDate = v.lastModifiedDate
-                                    ? App_1.App.convertUTCDateToLocalDate(new Date(v.lastModifiedDate), parseInt(data.timeZoneOffSet)).toLocaleString()
-                                    : v.lastModifiedDate;
-                                v.createddatetime = v.createddatetime
-                                    ? App_1.App.convertUTCDateToLocalDate(new Date(v.createddatetime), parseInt(data.timeZoneOffSet)).toLocaleString()
-                                    : v.createddatetime;
-                            });
-                        }
+                        // if (data.timeZoneOffSet) {
+                        //   result.map((v: any) => {
+                        //     v.lastModifiedDate = v.lastModifiedDate
+                        //       ? App.convertUTCDateToLocalDate(new Date(v.lastModifiedDate), parseInt(data.timeZoneOffSet)).toLocaleString()
+                        //       : v.lastModifiedDate;
+                        //     v.createddatetime = v.createddatetime
+                        //       ? App.convertUTCDateToLocalDate(new Date(v.createddatetime), parseInt(data.timeZoneOffSet)).toLocaleString()
+                        //       : v.createddatetime;
+                        //   });
+                        // }
                         return [2 /*return*/, result];
                 }
             });

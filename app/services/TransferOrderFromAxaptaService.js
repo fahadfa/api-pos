@@ -450,22 +450,27 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.qrToData(data.qrStringList)];
+                    case 0: return [4 /*yield*/, this.qrToData(data.qrStringList, data.timeOffset)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
     };
-    TransferOrderFromAxaptaService.prototype.qrToData = function (qrStringList) {
+    TransferOrderFromAxaptaService.prototype.qrToData = function (qrStringList, timeOffset) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataList, pageCount, salesId, scannedPages_1, _i, qrStringList_1, qrString, list, header, warehousearray, pages, salestable, salesLines, _a, _b, item, salesline, lineArray, batches, salesData, salesLine_1, i_1, totalPages, missingPages_1, i;
+            var dataList, pageCount, salesId, scannedPages_1, _i, qrStringList_1, qrString, list, header, warehousearray, pages, salestable, salesOrderWithId, salesLines, _a, _b, item, salesline, lineArray, batches, salesData, salesLine_1, i_1, totalPages, missingPages_1, i, err_1;
             return __generator(this, function (_c) {
-                try {
-                    dataList = [];
-                    pageCount = 0;
-                    salesId = "0";
-                    scannedPages_1 = [];
-                    for (_i = 0, qrStringList_1 = qrStringList; _i < qrStringList_1.length; _i++) {
+                switch (_c.label) {
+                    case 0:
+                        _c.trys.push([0, 6, , 7]);
+                        dataList = [];
+                        pageCount = 0;
+                        salesId = "0";
+                        scannedPages_1 = [];
+                        _i = 0, qrStringList_1 = qrStringList;
+                        _c.label = 1;
+                    case 1:
+                        if (!(_i < qrStringList_1.length)) return [3 /*break*/, 5];
                         qrString = qrStringList_1[_i];
                         list = qrString.split("|");
                         header = list[0];
@@ -478,6 +483,16 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                             inventLocationId: warehousearray[2],
                             page: pages[0],
                         };
+                        if (!salestable.salesId) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.salesTableDAO.findOne({
+                                salesId: salestable.salesId
+                            })];
+                    case 2:
+                        salesOrderWithId = _c.sent();
+                        console.log("Sales==============>", salesOrderWithId);
+                        salestable.lastModifiedDate = salesOrderWithId.lastModifiedDate;
+                        _c.label = 3;
+                    case 3:
                         scannedPages_1.push(parseInt(salestable.page));
                         if (salesId == "0") {
                             salesId = salestable.salesId;
@@ -526,57 +541,65 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         }
                         salestable.salesLine = salesLines;
                         dataList.push(salestable);
-                    }
-                    if (pageCount == qrStringList.length) {
-                        dataList.sort(function (a, b) {
-                            if (a.page < b.page)
-                                return -1;
-                            if (a.page > b.page)
-                                return 1;
-                            return 0;
-                        });
-                        salesData = __assign({}, dataList[0]);
-                        delete salesData.salesLine;
-                        salesLine_1 = [];
-                        dataList.map(function (v) {
-                            salesLine_1.push.apply(salesLine_1, v.salesLine);
-                        });
-                        i_1 = 1;
-                        salesLine_1.map(function (v) {
-                            v.lineNum = i_1;
-                            i_1 += 1;
-                        });
-                        salesData.lastModifiedDate = new Date(App_1.App.DateNow());
-                        salesData.createddatetime = new Date(App_1.App.DateNow());
-                        salesData.transkind = "ORDERSHIPMENT";
-                        salesData.saleStatus = "RECEIVED";
-                        salesData.dataareaid = this.sessionInfo.dataareaid;
-                        salesData.salesType = 4;
-                        salesData.salesLines = salesLine_1;
-                        console.log(scannedPages_1);
-                        return [2 /*return*/, salesData];
-                    }
-                    else {
-                        console.log(scannedPages_1);
-                        totalPages = [];
-                        missingPages_1 = [];
-                        for (i = 1; i <= pageCount; i++) {
-                            totalPages.push(i);
+                        _c.label = 4;
+                    case 4:
+                        _i++;
+                        return [3 /*break*/, 1];
+                    case 5:
+                        if (pageCount == qrStringList.length) {
+                            dataList.sort(function (a, b) {
+                                if (a.page < b.page)
+                                    return -1;
+                                if (a.page > b.page)
+                                    return 1;
+                                return 0;
+                            });
+                            salesData = __assign({}, dataList[0]);
+                            console.log("====================Get Qr code console=======================");
+                            console.log(salesData);
+                            console.log("----------------------------------------------------------");
+                            delete salesData.salesLine;
+                            salesLine_1 = [];
+                            dataList.map(function (v) {
+                                salesLine_1.push.apply(salesLine_1, v.salesLine);
+                            });
+                            i_1 = 1;
+                            salesLine_1.map(function (v) {
+                                v.lineNum = i_1;
+                                i_1 += 1;
+                            });
+                            salesData.lastModifiedDate = salesData.lastModifiedDate ? App_1.App.convertUTCDateToLocalDate(salesData.lastModifiedDate, timeOffset) : new Date(App_1.App.DateNow());
+                            salesData.createddatetime = new Date(App_1.App.DateNow());
+                            salesData.transkind = "ORDERSHIPMENT";
+                            salesData.saleStatus = "RECEIVED";
+                            salesData.dataareaid = this.sessionInfo.dataareaid;
+                            salesData.salesType = 4;
+                            salesData.salesLines = salesLine_1;
+                            console.log(scannedPages_1);
+                            return [2 /*return*/, salesData];
                         }
-                        totalPages.map(function (v) {
-                            if (!scannedPages_1.includes(v)) {
-                                missingPages_1.push(v);
+                        else {
+                            console.log(scannedPages_1);
+                            totalPages = [];
+                            missingPages_1 = [];
+                            for (i = 1; i <= pageCount; i++) {
+                                totalPages.push(i);
                             }
-                        });
-                        console.log(totalPages, scannedPages_1);
-                        throw { message: "PLEASE_SCAN_ALL_PAGES", missingPages: missingPages_1 };
-                    }
+                            totalPages.map(function (v) {
+                                if (!scannedPages_1.includes(v)) {
+                                    missingPages_1.push(v);
+                                }
+                            });
+                            console.log(totalPages, scannedPages_1);
+                            throw { message: "PLEASE_SCAN_ALL_PAGES", missingPages: missingPages_1 };
+                        }
+                        return [3 /*break*/, 7];
+                    case 6:
+                        err_1 = _c.sent();
+                        Log_1.log.error(err_1);
+                        throw { message: err_1 };
+                    case 7: return [2 /*return*/];
                 }
-                catch (err) {
-                    Log_1.log.error(err);
-                    throw { message: err };
-                }
-                return [2 /*return*/];
             });
         });
     };

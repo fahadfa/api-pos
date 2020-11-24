@@ -63,7 +63,7 @@ var InventsizeService = /** @class */ (function () {
     };
     InventsizeService.prototype.search = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, items_1, error_2;
+            var data, items, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -73,12 +73,9 @@ var InventsizeService = /** @class */ (function () {
                         if (!(reqData.itemid && reqData.configid)) return [3 /*break*/, 6];
                         return [4 /*yield*/, this.rawQuery.getSizeCodes(reqData)];
                     case 1:
-                        items_1 = _a.sent();
-                        if (!(items_1.length > 0)) return [3 /*break*/, 3];
-                        items_1.map(function (v) {
-                            items_1.push(v.toLowerCase());
-                        });
-                        return [4 /*yield*/, this.inventsizeDAO.search(reqData, items_1)];
+                        items = _a.sent();
+                        if (!(items.length > 0)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.inventsizeDAO.search(reqData, items)];
                     case 2:
                         data = _a.sent();
                         return [3 /*break*/, 4];
@@ -101,29 +98,21 @@ var InventsizeService = /** @class */ (function () {
     };
     InventsizeService.prototype.searchSalesOrderSizes = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var t0, items_2, data, t1, error_3;
+            var items, data, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 8, , 9]);
                         console.log(params);
                         if (!(params.itemid && params.configid)) return [3 /*break*/, 6];
-                        t0 = new Date().getTime();
                         params.inventlocationid = this.sessionInfo.inventlocationid;
                         return [4 /*yield*/, this.rawQuery.getSizeCodesInStock(params)];
                     case 1:
-                        items_2 = _a.sent();
-                        // console.log(Items);
-                        items_2.map(function (v) {
-                            items_2.push(v.toLowerCase());
-                        });
-                        if (!(items_2.length > 0)) return [3 /*break*/, 4];
-                        return [4 /*yield*/, this.inventsizeDAO.search(params, items_2)];
+                        items = _a.sent();
+                        if (!(items.length > 0)) return [3 /*break*/, 4];
+                        return [4 /*yield*/, this.inventsizeDAO.search(params, items)];
                     case 2:
                         data = _a.sent();
-                        console.log(data.length);
-                        t1 = new Date().getTime();
-                        console.log("took " + (t1 - t0) / 1000 + " milliseconds.");
                         params.sizes = data;
                         return [4 /*yield*/, this.getPrices(params)];
                     case 3: return [2 /*return*/, _a.sent()];
@@ -141,7 +130,7 @@ var InventsizeService = /** @class */ (function () {
     };
     InventsizeService.prototype.searchSizesWithNoPrice = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var t0, data, items_3, t1, error_4;
+            var t0, data, items, t1, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -153,12 +142,9 @@ var InventsizeService = /** @class */ (function () {
                         params.inventlocationid = this.sessionInfo.inventlocationid;
                         return [4 /*yield*/, this.rawQuery.getSizeCodes(params)];
                     case 1:
-                        items_3 = _a.sent();
-                        items_3.map(function (v) {
-                            items_3.push(v.toLowerCase());
-                        });
-                        if (!(items_3.length > 0)) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.inventsizeDAO.search(params, items_3)];
+                        items = _a.sent();
+                        if (!(items.length > 0)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.inventsizeDAO.search(params, items)];
                     case 2:
                         data = _a.sent();
                         return [3 /*break*/, 4];
@@ -193,16 +179,17 @@ var InventsizeService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.getCustomer(reqData.custaccount)];
                     case 1:
                         getCustomer = _d.sent();
-                        return [4 /*yield*/, this.rawQuery.getCustomer(this.sessionInfo.defaultcustomerid)];
-                    case 2:
-                        defaultcustomer = _d.sent();
                         if (getCustomer.walkincustomer == true) {
                             reqData.custaccount = this.sessionInfo.defaultcustomerid;
                         }
-                        if (!reqData.pricegroup) {
-                            reqData.pricegroup = defaultcustomer.pricegroup;
-                            reqData.currency = defaultcustomer.currency;
-                        }
+                        if (!!reqData.pricegroup) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.rawQuery.getCustomer(this.sessionInfo.defaultcustomerid)];
+                    case 2:
+                        defaultcustomer = _d.sent();
+                        reqData.pricegroup = defaultcustomer.pricegroup;
+                        reqData.currency = defaultcustomer.currency;
+                        _d.label = 3;
+                    case 3:
                         queryData = {
                             custaccount: reqData.custaccount,
                             itemid: reqData.itemid,
@@ -218,12 +205,17 @@ var InventsizeService = /** @class */ (function () {
                         }
                         queryData.inventsizeids = queryData.inventsizeids.map(function (d) { return "'" + d + "'"; }).join(",");
                         return [4 /*yield*/, this.rawQuery.allSizePrices(queryData)];
-                    case 3:
+                    case 4:
                         prices = _d.sent();
                         _loop_1 = function (size) {
-                            var amount = prices.filter(function (v) { return v.inventsizeid.toLowerCase() == size.code.toLowerCase() && v.accountrelation == queryData.custaccount; });
+                            var amount = prices.filter(function (v) {
+                                return v.inventsizeid.toLowerCase() == size.code.toLowerCase() && v.accountrelation == queryData.custaccount;
+                            });
                             if (amount.length <= 0) {
-                                amount = prices.filter(function (v) { return v.inventsizeid.toLowerCase() == size.code.toLowerCase() && v.accountrelation.toLowerCase() == queryData.pricegroup.toLowerCase(); });
+                                amount = prices.filter(function (v) {
+                                    return v.inventsizeid.toLowerCase() == size.code.toLowerCase() &&
+                                        v.accountrelation.toLowerCase() == queryData.pricegroup.toLowerCase();
+                                });
                             }
                             if (amount.length <= 0) {
                                 amount = prices.filter(function (v) { return v.inventsizeid.toLowerCase() == size.code.toLowerCase() && v.accountrelation == queryData.spGroup; });
@@ -235,7 +227,6 @@ var InventsizeService = /** @class */ (function () {
                                 size.price = 0;
                             }
                         };
-                        // console.log(prices);
                         for (_b = 0, _c = reqData.sizes; _b < _c.length; _b++) {
                             size = _c[_b];
                             _loop_1(size);

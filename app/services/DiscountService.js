@@ -396,7 +396,8 @@ var DiscountService = /** @class */ (function () {
                                         promotionalDiscountDetails = promotionalDiscountDetails.length > 0 ? promotionalDiscountDetails[0] : null;
                                         console.log(promotionalDiscountDetails);
                                         if (promotionalDiscountDetails &&
-                                            (promotionalDiscountDetails.inventsizeid.trim() != '' && promotionalDiscountDetails.inventsizeid != null)) {
+                                            promotionalDiscountDetails.inventsizeid.trim() != "" &&
+                                            promotionalDiscountDetails.inventsizeid != null) {
                                             if (promotionalDiscountDetails.inventsizeid != item.inventsizeid) {
                                                 promotionalDiscountDetails = null;
                                                 item.checkFreeItem = false;
@@ -1188,7 +1189,6 @@ var DiscountService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.getSalesDisocuntItems(inQueryStr.substr(0, inQueryStr.length - 1), reqData.inventLocationId, reqData.custaccount, reqData.custtype)];
                     case 5:
                         salesDiscountItems = _a.sent();
-                        console.log(salesDiscountItems);
                         return [4 /*yield*/, {
                                 checkDiscounts: checkDiscounts,
                                 promotionalDiscountItems: promotionalDiscountItems,
@@ -1196,7 +1196,9 @@ var DiscountService = /** @class */ (function () {
                                 buyOneGetOneDiscountItems: buyOneGetOneDiscountItems,
                                 salesDiscountItems: salesDiscountItems,
                             }];
-                    case 6: return [2 /*return*/, _a.sent()];
+                    case 6: 
+                    // console.log(salesDiscountItems);
+                    return [2 /*return*/, _a.sent()];
                 }
             });
         });

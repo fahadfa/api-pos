@@ -504,7 +504,7 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select distinct sz.inventsizeid from inventsize sz\n               inner join inventtable i on i.itemid = sz.itemid\n               inner join configtable c on c.itemid = sz.itemid\n                where sz.itemid = '" + param.itemid + "' and c.configid = '" + param.configid + "'";
+                        query = "select distinct lower(sz.inventsizeid) as inventsizeid from inventsize sz\n               inner join inventtable i on i.itemid = sz.itemid\n               inner join configtable c on c.itemid = sz.itemid\n                where sz.itemid = '" + param.itemid + "' and c.configid = '" + param.configid + "'";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
@@ -523,7 +523,7 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = " select distinct io.inventsizeid from inventtrans io\n                  where io.inventlocationid='" + param.inventlocationid + "' and io.itemid = '" + param.itemid + "' and lower(io.configid) = lower('" + param.configid + "')\n                  and transactionclosed = true\n                  group by  io.inventsizeid having SUM(qty)>0 \n               ";
+                        query = " select distinct lower(io.inventsizeid) as inventsizeid from inventtrans io\n                  where io.inventlocationid='" + param.inventlocationid + "' and io.itemid = '" + param.itemid + "' and lower(io.configid) = lower('" + param.configid + "')\n                  and transactionclosed = true\n                  group by  io.inventsizeid having SUM(qty)>0 \n               ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
@@ -583,7 +583,7 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "\n            select amount as price, tinventsizeid as inventsizeid, configid, itemrelation as itemid, accountrelation as accountrelation\n            from pricedisctable \n            where (itemcode = 0) and (accountcode = 1 or accountcode = 0) \n            and currency = '" + data.currency + "' and \n            lower(itemrelation) = lower('" + data.itemid + "') and (lower(configid)=lower('" + data.configid + "') or configid='--') and \n            (lower(accountrelation) = lower('" + data.pricegroup + "') or lower(accountrelation) = lower('" + data.custaccount + "') \n            or lower(accountrelation) = lower('" + data.spGroup + "')) and lower(tinventsizeid) in (" + data.inventsizeids + ")\n            ";
+                        query = "\n            select amount as price, tinventsizeid as inventsizeid, configid, itemrelation as itemid, accountrelation as accountrelation\n            from pricedisctable \n            where (itemcode = 0) and (accountcode = 1 or accountcode = 0) \n            and currency = '" + data.currency + "' and \n            lower(itemrelation) = lower('" + data.itemid + "') and (lower(configid)=lower('" + data.configid + "') or configid='--') and \n            (lower(accountrelation) = lower('" + data.pricegroup + "') or lower(accountrelation) = lower('" + data.custaccount + "') \n            ) and lower(tinventsizeid) in (" + data.inventsizeids + ")\n            ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
