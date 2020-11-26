@@ -1150,53 +1150,13 @@ var LoadService = /** @class */ (function () {
     };
     LoadService.prototype.numbersequence = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var numbersequencequery, numbersequencedata, str, query;
+            var query;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        numbersequencequery = "select\n    fixedassestgroupsequencegroup, \n    quotationsequencegroup, \n    salesordersequencegroup,\n    purchaseordersequencegroup,\n    purchaserequestsequencegroup,\n    transferordersequencegroup,\n    orderreceivesequencegroup,\n    returnordersequencegroup,\n    movementsequencegroup,\n    ordershipmentsequencegroup\n    from usergroupconfig where inventlocationid  = '" + this.sessionInfo.inventlocationid + "'";
-                        return [4 /*yield*/, this.db.query(numbersequencequery)];
-                    case 1:
-                        numbersequencedata = _a.sent();
-                        console.log(numbersequencedata);
-                        numbersequencedata = numbersequencedata.length > 0 ? numbersequencedata[0] : {};
-                        str = "";
-                        if (numbersequencedata.fixedassestgroupsequencegroup && numbersequencedata.fixedassestgroupsequencegroup != "") {
-                            str += "'" + numbersequencedata.fixedassestgroupsequencegroup + "',";
-                        }
-                        if (numbersequencedata.quotationsequencegroup && numbersequencedata.quotationsequencegroup != "") {
-                            str += "'" + numbersequencedata.quotationsequencegroup + "',";
-                        }
-                        if (numbersequencedata.salesordersequencegroup && numbersequencedata.salesordersequencegroup != "") {
-                            str += "'" + numbersequencedata.salesordersequencegroup + "',";
-                        }
-                        if (numbersequencedata.purchaseordersequencegroup && numbersequencedata.purchaseordersequencegroup != "") {
-                            str += "'" + numbersequencedata.purchaseordersequencegroup + "',";
-                        }
-                        if (numbersequencedata.purchaserequestsequencegroup && numbersequencedata.purchaserequestsequencegroup != "") {
-                            str += "'" + numbersequencedata.purchaserequestsequencegroup + "',";
-                        }
-                        if (numbersequencedata.transferordersequencegroup && numbersequencedata.transferordersequencegroup != "") {
-                            str += "'" + numbersequencedata.transferordersequencegroup + "',";
-                        }
-                        if (numbersequencedata.orderreceivesequencegroup && numbersequencedata.orderreceivesequencegroup != "") {
-                            str += "'" + numbersequencedata.orderreceivesequencegroup + "',";
-                        }
-                        if (numbersequencedata.returnordersequencegroup && numbersequencedata.returnordersequencegroup != "") {
-                            str += "'" + numbersequencedata.returnordersequencegroup + "',";
-                        }
-                        if (numbersequencedata.movementsequencegroup && numbersequencedata.movementsequencegroup != "") {
-                            str += "'" + numbersequencedata.movementsequencegroup + "',";
-                        }
-                        if (numbersequencedata.ordershipmentsequencegroup && numbersequencedata.ordershipmentsequencegroup != "") {
-                            str += "'" + numbersequencedata.ordershipmentsequencegroup + "',";
-                        }
-                        str = str.length > 0 ? str.substr(0, str.length - 1) : "";
-                        if (!(str.length > 0)) return [3 /*break*/, 3];
-                        query = "\n      select recid as id,\n      numbersequence as numbersequence,\n      format as format,\n      dataareaid as dataareaid\n      from numbersequencetable where numbersequence in (" + str + ")\n      ";
+                        query = "\n      select recid as id,\n      numbersequence as numbersequence,\n      format as format,\n      dataareaid as dataareaid\n      from numbersequencetable where inventlocationid in ('" + this.sessionInfo.inventlocationid + "')\n      ";
                         return [4 /*yield*/, this.db.query(query)];
-                    case 2: return [2 /*return*/, _a.sent()];
-                    case 3: return [2 /*return*/, []];
+                    case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });

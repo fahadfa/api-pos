@@ -91,21 +91,20 @@ var InventtableService = /** @class */ (function () {
     };
     InventtableService.prototype.searchSalesOrderProducts = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var t0, Items, data, t1, error_3;
+            var Items, data, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        t0 = new Date().getTime();
                         return [4 /*yield*/, this.rawQuery.getItemsInStock(this.sessionInfo.inventlocationid)];
                     case 1:
                         Items = _a.sent();
                         return [4 /*yield*/, this.inventtableDAO.search(params.dataareaid, Items)];
                     case 2:
                         data = _a.sent();
-                        console.log(data.length);
-                        t1 = new Date().getTime();
-                        console.log("took " + (t1 - t0) / 1000 + " milliseconds.");
+                        // console.log(data.length);
+                        // var t1 = new Date().getTime();
+                        // console.log("took " + (t1 - t0) / 1000 + " milliseconds.");
                         return [2 /*return*/, data];
                     case 3:
                         error_3 = _a.sent();

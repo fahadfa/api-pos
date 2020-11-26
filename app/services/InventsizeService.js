@@ -171,25 +171,26 @@ var InventsizeService = /** @class */ (function () {
     };
     InventsizeService.prototype.getPrices = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var getCustomer, defaultcustomer, queryData, _i, _a, size, prices, _loop_1, _b, _c, size;
+            var getCustomers, getCustomer, defaultcustomer, queryData, _i, _a, size, prices, _loop_1, _b, _c, size;
+            var _this = this;
             return __generator(this, function (_d) {
                 switch (_d.label) {
                     case 0:
                         this.rawQuery.sessionInfo = this.sessionInfo;
-                        return [4 /*yield*/, this.rawQuery.getCustomer(reqData.custaccount)];
+                        return [4 /*yield*/, this.rawQuery.getCustomer(reqData.custaccount, this.sessionInfo.defaultcustomerid)];
                     case 1:
-                        getCustomer = _d.sent();
-                        if (getCustomer.walkincustomer == true) {
+                        getCustomers = _d.sent();
+                        getCustomer = getCustomers.find(function (v) { return v.accountnum == reqData.custaccount; });
+                        getCustomer = getCustomer ? getCustomer : {};
+                        defaultcustomer = getCustomers.find(function (v) { return v.accountnum == _this.sessionInfo.defaultcustomerid; });
+                        defaultcustomer = defaultcustomer ? defaultcustomer : {};
+                        if (getCustomer.walkincustomer == true || getCustomer == {}) {
                             reqData.custaccount = this.sessionInfo.defaultcustomerid;
                         }
-                        if (!!reqData.pricegroup) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.rawQuery.getCustomer(this.sessionInfo.defaultcustomerid)];
-                    case 2:
-                        defaultcustomer = _d.sent();
-                        reqData.pricegroup = defaultcustomer.pricegroup;
-                        reqData.currency = defaultcustomer.currency;
-                        _d.label = 3;
-                    case 3:
+                        if (!reqData.pricegroup) {
+                            reqData.pricegroup = defaultcustomer.pricegroup;
+                            reqData.currency = defaultcustomer.currency;
+                        }
                         queryData = {
                             custaccount: reqData.custaccount,
                             itemid: reqData.itemid,
@@ -205,7 +206,7 @@ var InventsizeService = /** @class */ (function () {
                         }
                         queryData.inventsizeids = queryData.inventsizeids.map(function (d) { return "'" + d + "'"; }).join(",");
                         return [4 /*yield*/, this.rawQuery.allSizePrices(queryData)];
-                    case 4:
+                    case 2:
                         prices = _d.sent();
                         _loop_1 = function (size) {
                             var amount = prices.filter(function (v) {

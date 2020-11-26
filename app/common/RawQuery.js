@@ -67,17 +67,28 @@ var RawQuery = /** @class */ (function () {
             });
         });
     };
-    RawQuery.prototype.getCustomer = function (accountNum) {
+    RawQuery.prototype.getCustomer = function (accountNum1, accountnum2) {
+        if (accountnum2 === void 0) { accountnum2 = null; }
         return __awaiter(this, void 0, void 0, function () {
             var query, data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select \n        c.accountnum, \n        c.name, \n        c.namealias, \n        c.address, \n        c.phone, \n        c.rcusttype, \n        c.pricegroup,\n        c.inventlocation,\n        c.dataareaid,\n        c.walkincustomer,\n        c.custgroup,\n        c.districtcode,\n        c.citycode,\n        c.cashdisc,\n        c.paymtermid,\n        c.salesgroup,\n        c.creditmax,\n        c.currency,\n        c.vendaccount,\n        c.multilinedisc,\n        c.vatnum,\n        c.countryregionid,\n        c.inventlocation,\n        c.email,\n        c.url,\n        c.blocked,\n        c.taxgroup,\n        c.paymmode,\n        c.bankaccount,\n        c.namealias,\n        c.invoiceaddress,\n        c.incltax,\n        c.numbersequencegroup,\n        c.city,\n        c.custclassificationid,\n        c.identificationnumber,\n        c.modifieddatetime,\n        c.createddatetime,\n        c.dimension6_ as salesmanid,\n        c.dataareaid,\n        c.recversion,\n        c.recid,\n        c.custtype,\n        c.walkincustomer,\n        c.lastmodifiedby,\n        c.lastmodifieddate,\n        c.createdby,\n        c.zipcode,\n         (CASE \n              WHEN c.dimension6_!='' THEN concat(d.num,' - ', d.description)\n              ELSE '" + (this.sessionInfo.salesmanid.length > 0 ? this.sessionInfo.salesmanid[0].salesman : null) + "'\n          END\n           ) as salesman,\n           (CASE \n            WHEN c.dimension6_!='' THEN concat(d.num)\n            ELSE '" + (this.sessionInfo.salesmanid.length > 0 ? this.sessionInfo.salesmanid[0].salesmanid : null) + "'\n        END\n         ) as salesmanid\n       from custtable c\n       left join dimensions d on c.dimension6_ = d.num\n       where accountnum='" + accountNum + "' LIMIT 1";
+                        query = "select \n        c.accountnum, \n        c.name, \n        c.namealias, \n        c.address, \n        c.phone, \n        c.rcusttype, \n        c.pricegroup,\n        c.inventlocation,\n        c.dataareaid,\n        c.walkincustomer,\n        c.custgroup,\n        c.districtcode,\n        c.citycode,\n        c.cashdisc,\n        c.paymtermid,\n        c.salesgroup,\n        c.creditmax,\n        c.currency,\n        c.vendaccount,\n        c.multilinedisc,\n        c.vatnum,\n        c.countryregionid,\n        c.inventlocation,\n        c.email,\n        c.url,\n        c.blocked,\n        c.taxgroup,\n        c.paymmode,\n        c.bankaccount,\n        c.namealias,\n        c.invoiceaddress,\n        c.incltax,\n        c.numbersequencegroup,\n        c.city,\n        c.custclassificationid,\n        c.identificationnumber,\n        c.modifieddatetime,\n        c.createddatetime,\n        c.dimension6_ as salesmanid,\n        c.dataareaid,\n        c.recversion,\n        c.recid,\n        c.custtype,\n        c.walkincustomer,\n        c.lastmodifiedby,\n        c.lastmodifieddate,\n        c.createdby,\n        c.zipcode,\n         (CASE \n              WHEN c.dimension6_!='' THEN concat(d.num,' - ', d.description)\n              ELSE '" + (this.sessionInfo.salesmanid.length > 0 ? this.sessionInfo.salesmanid[0].salesman : null) + "'\n          END\n           ) as salesman,\n           (CASE \n            WHEN c.dimension6_!='' THEN concat(d.num)\n            ELSE '" + (this.sessionInfo.salesmanid.length > 0 ? this.sessionInfo.salesmanid[0].salesmanid : null) + "'\n        END\n         ) as salesmanid\n       from custtable c\n       left join dimensions d on c.dimension6_ = d.num\n       where accountnum in ('" + accountNum1 + "' ";
+                        if (accountnum2) {
+                            query += ", '" + accountnum2 + "'";
+                        }
+                        query += ") ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
-                        return [2 /*return*/, data.length > 0 ? data[0] : {}];
+                        if (accountnum2) {
+                            return [2 /*return*/, data];
+                        }
+                        else {
+                            return [2 /*return*/, data.length > 0 ? data[0] : {}];
+                        }
+                        return [2 /*return*/];
                 }
             });
         });
@@ -447,7 +458,7 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select distinct itemid from\n              (\n              select i.itemid from inventtable i\n               inner join configtable c on c.itemid = i.itemid\n               inner join inventsize sz on sz.itemid = i.itemid\n               inner join inventtrans ioh on ioh.itemid = i.itemid\n               where ioh.inventlocationid='" + inventlocationid + "'  and transactionclosed = true GROUP BY\n               i.itemid\n               having SUM(qty)>0\n               ) as i";
+                        query = "\n              select distinct i.itemid from inventtable i\n               inner join configtable c on c.itemid = i.itemid\n               inner join inventsize sz on sz.itemid = i.itemid\n               inner join inventtrans ioh on ioh.itemid = i.itemid\n               where ioh.inventlocationid='" + inventlocationid + "'  and transactionclosed = true GROUP BY\n               i.itemid\n               having SUM(qty)>0 ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
@@ -523,7 +534,11 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = " select distinct lower(io.inventsizeid) as inventsizeid from inventtrans io\n                  where io.inventlocationid='" + param.inventlocationid + "' and io.itemid = '" + param.itemid + "' and lower(io.configid) = lower('" + param.configid + "')\n                  and transactionclosed = true\n                  group by  io.inventsizeid having SUM(qty)>0 \n               ";
+                        query = " select distinct lower(io.inventsizeid) as inventsizeid from inventtrans io\n                  where io.inventlocationid='" + param.inventlocationid + "' and io.itemid = '" + param.itemid + "' and lower(io.configid) = lower('" + param.configid + "')\n                  and transactionclosed = true ";
+                        if (param.salesId) {
+                            query += " and io.invoiceid !=  '" + param.salesId + "' ";
+                        }
+                        query += " group by  io.inventsizeid having SUM(qty)>0  ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();

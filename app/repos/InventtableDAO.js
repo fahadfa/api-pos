@@ -57,7 +57,9 @@ var InventtableDAO = /** @class */ (function () {
                     case 1:
                         result = _a.sent();
                         result.map(function (v) {
-                            v.product = v.product ? v.product : {};
+                            if (!v.product) {
+                                v.product = {};
+                            }
                         });
                         return [3 /*break*/, 3];
                     case 2:
@@ -116,6 +118,21 @@ var InventtableDAO = /** @class */ (function () {
                             select: ["nameEn", "nameAr", "code"],
                             where: {
                                 code: typeorm_1.In(ids)
+                            }
+                        })];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    InventtableDAO.prototype.findByItemIds = function (itemIds) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.dao.find({
+                            select: ["nameEn", "nameAr", "code"],
+                            where: {
+                                code: typeorm_1.In(itemIds)
                             }
                         })];
                     case 1: return [2 /*return*/, _a.sent()];

@@ -76,13 +76,14 @@ var DiscountService = /** @class */ (function () {
                             : [];
                         _b.label = 3;
                     case 3:
-                        promotionalItems_1 = [];
-                        reqData.selectedItems.map(function (v) {
-                            if (v.isItemFree) {
-                                promotionalItems_1.push(v.linkId);
-                            }
+                        promotionalItems_1 = reqData.selectedItems
+                            .filter(function (v) { return v.isItemFree == true; })
+                            .map(function (d) {
+                            return d.linkId;
                         });
+                        // console.log("=====================", promotionalItems);
                         reqData.selectedItems.map(function (v) {
+                            v.lineNum = reqData.selectedItems.indexOf(v);
                             reqData.grossTotal += parseFloat(v.price) * parseFloat(v.quantity);
                             // console.log(v.isParent, v.isItemFree)
                             if (reqData.instantDiscountExcludeItems.includes(v.itemid) ||
@@ -137,7 +138,7 @@ var DiscountService = /** @class */ (function () {
                         vatData = _b.sent();
                         _b.label = 10;
                     case 10:
-                        console.log("=====================", vatData);
+                        // console.log("=====================", vatData);
                         reqData.vat = vatData ? vatData.vat : 15;
                         reqData.vat = parseFloat(reqData.vat);
                         return [4 /*yield*/, this.rawQuery.getDiscountBlockItems(checkCustomer.custgroup, checkCustomer.accountnum, reqData.inventLocationId)];
@@ -339,6 +340,13 @@ var DiscountService = /** @class */ (function () {
                         message = "INVALID_VOUCHER";
                         _b.label = 12;
                     case 12:
+                        reqData.selectedItems.sort(function (a, b) {
+                            if (a.quantity > b.quantity)
+                                return -1;
+                            if (a.quantity < b.quantity)
+                                return 1;
+                            return 0;
+                        });
                         _loop_1 = function (item) {
                             var isNoDiscount, isValidVoucherItem, instantDiscountPercent, isSalesDiscount, _i, instantDiscountRanges_1, data, multilinefilter, salesDiscount, condition, appliedDiscounts, freeQty, freeItem, promotionalDiscountAmount, buy_one_get_one, promotionalDiscountDetails, isPromotionDiscount, isBuyOneGetOneDiscount, buyOneGetOneDiscountDetails, selectedQuantity, parentQuantity, freeItems, _a, _b, _c, j, i, freeItems, _d, _e, _f, j, i, itemDiscount;
                             return __generator(this, function (_g) {
@@ -378,10 +386,6 @@ var DiscountService = /** @class */ (function () {
                                         condition = "!item.isItemFree";
                                         condition = eval(condition);
                                         item.lineTotalDisc = 0;
-                                        console.log("isTotalDiscount", isTotalDiscount);
-                                        console.log("isMultiLineDiscount", isMultiLineDiscount);
-                                        console.log("isLineDiscount", isLineDiscount);
-                                        console.log("isSalesDiscount", isSalesDiscount);
                                         if (!condition) return [3 /*break*/, 43];
                                         appliedDiscounts = [];
                                         freeQty = 0;
@@ -404,7 +408,7 @@ var DiscountService = /** @class */ (function () {
                                             }
                                         }
                                         selectedQuantity = reqData.selectedItems
-                                            .filter(function (v) { return v.itemid == v.itemid && v.inventsizeid == v.inventsizeid; })
+                                            .filter(function (v) { return v.itemid == item.itemid && v.inventsizeid == item.inventsizeid; })
                                             .reduce(function (res, item) { return res + parseInt(item.quantity); }, 0);
                                         parentQuantity = Math.max.apply(Math, reqData.selectedItems
                                             .filter(function (v) { return v.linkId == item.linkId && v.isItemFree == false; })
@@ -474,6 +478,11 @@ var DiscountService = /** @class */ (function () {
                                     case 10:
                                         if (promotionalDiscountAmount > 0) {
                                             isPromotionDiscount = true;
+                                            reqData.selectedItems.map(function (v) {
+                                                if (v.linkId == item.linkId) {
+                                                    v.isPromotionDiscountApplied = true;
+                                                }
+                                            });
                                         }
                                         else {
                                             isPromotionDiscount = false;
@@ -643,7 +652,8 @@ var DiscountService = /** @class */ (function () {
                                             !isNoDiscount &&
                                             !isSalesDiscount &&
                                             !isPromotionDiscount &&
-                                            !isBuyOneGetOneDiscount)) return [3 /*break*/, 27];
+                                            !isBuyOneGetOneDiscount &&
+                                            !item.isPromotionDiscountApplied)) return [3 /*break*/, 27];
                                         return [4 /*yield*/, this_1.calInstantDiscount(reqData, item, instantDiscountPercent)];
                                     case 26:
                                         _g.sent();
@@ -814,6 +824,13 @@ var DiscountService = /** @class */ (function () {
                         return [4 /*yield*/, this.calData(reqData)];
                     case 17:
                         _b.sent();
+                        reqData.selectedItems.sort(function (a, b) {
+                            if (a.lineNum < b.lineNum)
+                                return -1;
+                            if (a.lineNum > b.lineNum)
+                                return 1;
+                            return 0;
+                        });
                         return [2 /*return*/, reqData];
                 }
             });

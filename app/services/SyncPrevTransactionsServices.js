@@ -306,9 +306,9 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                                     case 3:
                                         InstantDiscRanges = _a.sent();
                                         line.applied_discounts.push({
-                                            discountType: "MULTI_LINE_DISCOUNT",
+                                            discountType: "INSTANT_DISCOUNT",
                                             percentage: (parseFloat(line.InstantDisc) * 100) / parseFloat(line.LINEAMOUNT),
-                                            discountAmount: parseFloat(line.MultiLnDisc),
+                                            discountAmount: parseFloat(line.InstantDisc),
                                             cond: InstantDiscRanges.rows,
                                         });
                                         _a.label = 4;

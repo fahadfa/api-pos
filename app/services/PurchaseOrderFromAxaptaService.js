@@ -49,6 +49,7 @@ var UsergroupconfigDAO_1 = require("../repos/UsergroupconfigDAO");
 var RawQuery_1 = require("../common/RawQuery");
 var SalesTableService_1 = require("./SalesTableService");
 var typeorm_1 = require("typeorm");
+var InventtableDAO_1 = require("../repos/InventtableDAO");
 var PurchaseOrderFromAxaptaService = /** @class */ (function () {
     function PurchaseOrderFromAxaptaService() {
         this.axios = require("axios");
@@ -60,6 +61,7 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
         this.usergroupconfigDAO = new UsergroupconfigDAO_1.UsergroupconfigDAO();
         this.salesTableService = new SalesTableService_1.SalesTableService();
         this.rawQuery = new RawQuery_1.RawQuery();
+        this.inventtableDAO = new InventtableDAO_1.InventtableDAO();
     }
     PurchaseOrderFromAxaptaService.prototype.get = function (purchaseID) {
         return __awaiter(this, void 0, void 0, function () {
@@ -88,13 +90,13 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 7, , 8]);
-                        if (!(data.length > 0)) return [3 /*break*/, 5];
+                        _a.trys.push([0, 8, , 9]);
+                        if (!(data.length > 0)) return [3 /*break*/, 6];
                         return [4 /*yield*/, this.salesTableDAO.findOne({ salesId: data[0].transfer_id })];
                     case 1:
                         salesData = _a.sent();
                         console.log(data, this.sessionInfo.inventlocationid);
-                        if (!(data[0].invent_location_id.trim() == this.sessionInfo.inventlocationid)) return [3 /*break*/, 3];
+                        if (!(data[0].invent_location_id.trim() == this.sessionInfo.inventlocationid)) return [3 /*break*/, 4];
                         salesData = new SalesTable_1.SalesTable();
                         salesData.salesId = data[0].purch_id;
                         salesData.inventLocationId = data[0].invent_location_id.trim();
@@ -149,16 +151,19 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                             salesData.salesLines.push(salesLine);
                             i += 1;
                         }
+                        return [4 /*yield*/, App_1.App.getItemNamesInSalesLines(salesData.salesLines, this.inventtableDAO)];
+                    case 3:
+                        _a.sent();
                         salesData.status = 1;
                         return [2 /*return*/, salesData];
-                    case 3: throw { status: 1, message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
-                    case 4: return [3 /*break*/, 6];
-                    case 5: throw { status: 1, message: "DATA_NOT_FOUND" };
-                    case 6: return [3 /*break*/, 8];
-                    case 7:
+                    case 4: throw { status: 1, message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
+                    case 5: return [3 /*break*/, 7];
+                    case 6: throw { status: 1, message: "DATA_NOT_FOUND" };
+                    case 7: return [3 /*break*/, 9];
+                    case 8:
                         error_2 = _a.sent();
                         throw error_2;
-                    case 8: return [2 /*return*/];
+                    case 9: return [2 /*return*/];
                 }
             });
         });
@@ -410,6 +415,9 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                             // line.batches = batches;
                             salesLine.push(line);
                         });
+                        return [4 /*yield*/, App_1.App.getItemNamesInSalesLines(salesLine, this.inventtableDAO)];
+                    case 2:
+                        _a.sent();
                         salesData.salesLine = salesLine;
                         return [2 /*return*/, salesData];
                 }
