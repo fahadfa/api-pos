@@ -148,17 +148,6 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         _i++;
                         return [3 /*break*/, 5];
                     case 15:
-                        // query = salesLineQuery + slCond;
-                        // log.info(cond);
-                        // rows = await this.pool.request().query(query);
-                        // data = await this.chunkArray(rows.recordset, 5000);
-                        // for (let item of data) {
-                        //   try {
-                        //     await this.sync_salesLineData(item);
-                        //   } catch (err) {
-                        //     log.error(err);
-                        //   }
-                        // }
                         query = inventTransQuery + tCond;
                         return [4 /*yield*/, this.pool.request().query(query)];
                     case 16:
@@ -225,7 +214,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                             item.documentstatus = item.documentstatus == 0 ? false : true;
                             item.netamount = item.netamount ? item.netamount : 0;
                             item.custaccount = item.custaccount ? item.custaccount.trim() : item.custaccount;
-                            query = "INSERT INTO public.salestable (salesid,salesname, reservation, custaccount, invoiceaccount, deliverydate,\n          deliveryaddress, documentstatus, currencycode, dataareaid, recversion,\n          recid, languageid, payment, custgroup, pricegroupid, shippingdaterequested,\n          deliverystreet, salestype, salesstatus, numbersequencegroup, cashdisc,\n           intercompanyoriginalsalesid, salesgroup, shippingdateconfirmed, deadline, fixedduedate, returndeadline, createddatetime, createdby, syncstatus, amount, disc, netamount,\n           citycode, districtcode, latitude, vehiclecode, vouchernum, painter, ajpenddisc, taxgroup, sumtax, inventlocationid, vatamount, invoicedate, invoicecreatedby, multilinediscountgroupid,\n           lastmodifiedby, lastmodifieddate, originalprinted, iscash,  transkind, status, redeempts, redeemptsamt, deliverytype, customerref, loyalty_status,loyaltystatus, country_code,\n            cash_amount, card_amount,\n           design_service_redeem_amount, online_amount, shipping_amount, payment_type\n           ) VALUES(\n           '" + item.salesid + "','" + item.salesname + "'," + item.reservation + ",'" + item.custaccount + "','" + item.invoiceaccount + "','" + item.deliverydate + "', '" + item.deliveryaddress + "'," + item.documentstatus + ",'" + item.currencycode + "','" + item.dataareaid + "',\n          " + item.recversion + "," + item.recid + ", '" + item.languageid + "', '" + item.payment + "', '" + item.custgroup + "','" + item.pricegroupid + "', '" + item.shippingdaterequested + "', '" + item.deliverystreet + "',\n          " + item.salestype + "," + item.salesstatus + ",'" + item.numbersequencegroup + "','" + item.cashdisc + "','" + (item.salestype == 4 ? item.customerref : item.intercompanyoriginalsalesid) + "','" + item.salesgroup + "','" + item.shippingdateconfirmed + "',\n          '" + item.deadline + "','" + item.fixedduedate + "','" + item.returndeadline + "',\n          '" + item.createddatetime + "','" + item.createdby + "'," + item.syncstatus + "," + item.amount + "," + item.disc + "," + item.netamount + ",'" + item.citycode + "','" + item.districtcode + "','" + item.latitude + "','" + item.vehiclecode + "','" + item.vouchernum + "',\n          '" + item.painter + "','" + item.ajpenddisc + "','" + item.taxgroup + "'," + item.sumtax + ",'" + item.inventlocationid + "',\n           " + item.vatamount + ",'" + item.createddatetime + "','" + item.invoicecreatedby + "','" + item.multilinediscountgroupid + "','" + item.lastmodifiedby + "',\n           '" + item.createddatetime + "'," + item.originalprinted + ",'" + item.iscash + "','" + item.transkind + "', '" + item.status + "', " + item.redeempts + "," + item.redeemptsamt + ",'" + item.deliverytype + "', '" + item.customerref + "', 4,4, 966, " + item.netamount + ", 0,0,0,0,'OFFLINE' );";
+                            query = "INSERT INTO public.salestable (salesid,salesname, reservation, custaccount, invoiceaccount, deliverydate,\n          deliveryaddress, documentstatus, currencycode, dataareaid, recversion,\n          recid, languageid, payment, custgroup, pricegroupid, shippingdaterequested,\n          deliverystreet, salestype, salesstatus, numbersequencegroup, cashdisc,\n           intercompanyoriginalsalesid, salesgroup, shippingdateconfirmed, deadline, fixedduedate, returndeadline, createddatetime, createdby, syncstatus, amount, disc, netamount,\n           citycode, districtcode, latitude, vehiclecode, vouchernum, painter, ajpenddisc, taxgroup, sumtax, inventlocationid, vatamount, invoicedate, invoicecreatedby, multilinediscountgroupid,\n           lastmodifiedby, lastmodifieddate, originalprinted, iscash,  transkind, status, redeempts, redeemptsamt, deliverytype, customerref, loyalty_status,loyaltystatus, country_code,\n            cash_amount, card_amount,\n           design_service_redeem_amount, online_amount, shipping_amount, payment_type, forcustomer\n           ) VALUES(\n           '" + item.salesid + "','" + item.salesname + "'," + item.reservation + ",'" + item.custaccount + "','" + item.invoiceaccount + "','" + item.deliverydate + "', '" + item.deliveryaddress + "'," + item.documentstatus + ",'" + item.currencycode + "','" + item.dataareaid + "',\n          " + item.recversion + "," + item.recid + ", '" + item.languageid + "', '" + item.payment + "', '" + item.custgroup + "','" + item.pricegroupid + "', '" + item.shippingdaterequested + "', '" + item.deliverystreet + "',\n          " + item.salestype + "," + item.salesstatus + ",'" + item.numbersequencegroup + "','" + item.cashdisc + "','" + (item.salestype == 4 ? item.customerref : item.intercompanyoriginalsalesid) + "','" + item.salesgroup + "','" + item.shippingdateconfirmed + "',\n          '" + item.deadline + "','" + item.fixedduedate + "','" + item.returndeadline + "',\n          '" + item.createddatetime + "','" + item.createdby + "'," + item.syncstatus + "," + item.amount + "," + item.disc + "," + item.netamount + ",'" + item.citycode + "','" + item.districtcode + "','" + item.latitude + "','" + item.vehiclecode + "','" + item.vouchernum + "',\n          '" + item.painter + "','" + item.ajpenddisc + "','" + item.taxgroup + "'," + item.sumtax + ",'" + item.inventlocationid + "',\n           " + item.vatamount + ",'" + item.createddatetime + "','" + item.invoicecreatedby + "','" + item.multilinediscountgroupid + "','" + item.lastmodifiedby + "',\n           '" + item.createddatetime + "'," + item.originalprinted + ",'" + item.iscash + "','" + item.transkind + "', '" + item.status + "', " + item.redeempts + "," + item.redeemptsamt + ",'" + item.deliverytype + "', '" + item.customerref + "', 4,4, 966, " + item.netamount + ", 0,0,0,0,'OFFLINE', 0);";
                             Log_1.log.info(query);
                             queryData.push(query);
                         }
@@ -394,139 +383,10 @@ var SyncPrevTransactionsService = /** @class */ (function () {
             });
         });
     };
-    SyncPrevTransactionsService.prototype.sync_salesLineData = function (salesLineData, queryData) {
-        if (queryData === void 0) { queryData = []; }
-        return __awaiter(this, void 0, void 0, function () {
-            var _i, salesLineData_3, line, MultiLineDiscRangesQuery, MultiLineDiscRanges, InstantDiscRangesQuery, InstantDiscRanges, PromotionalDiscountCondQuery, PromotionalDiscountRanges, query, err_6;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 11, , 12]);
-                        _i = 0, salesLineData_3 = salesLineData;
-                        _a.label = 1;
-                    case 1:
-                        if (!(_i < salesLineData_3.length)) return [3 /*break*/, 9];
-                        line = salesLineData_3[_i];
-                        line.applied_discounts = [];
-                        if (line.InteriorExteriorAmount && line.InteriorExteriorAmount > 0) {
-                            line.applied_discounts.push({
-                                discountType: "INTERIOR_AND_EXTERIOR",
-                                percentage: parseFloat(line.InteriorExteriorPer),
-                                discountAmount: parseFloat(line.InteriorExteriorAmount),
-                            });
-                        }
-                        if (line.VoucherDisc && line.VoucherDisc > 0) {
-                            line.applied_discounts.push({
-                                discountType: "VOUCHER_DISCOUNT",
-                                percentage: (parseFloat(line.VoucherDisc) * 100) / parseFloat(line.LINEAMOUNT),
-                                discountAmount: parseFloat(line.InteriorExteriorAmount),
-                            });
-                        }
-                        if (line.CUSTOMDISCAMT && line.CUSTOMDISCAMT > 0) {
-                            line.applied_discounts.push({
-                                discountType: "TOTAL_DISCOUNT",
-                                percentage: (parseFloat(line.CUSTOMDISCAMT) * 100) / parseFloat(line.LINEAMOUNT),
-                                discountAmount: parseFloat(line.CUSTOMDISCAMT),
-                                cond: [],
-                            });
-                        }
-                        if (line.LINEDISCAMT && line.LINEDISCAMT > 0) {
-                            line.applied_discounts.push({
-                                discountType: "LINE_DISCOUNT",
-                                percentage: (parseFloat(line.LINEDISCAMT) * 100) / parseFloat(line.LINEAMOUNT),
-                                discountAmount: parseFloat(line.LINEDISCAMT),
-                                cond: [],
-                            });
-                        }
-                        if (!(line.MultiLnDisc && line.MultiLnDisc > 0)) return [3 /*break*/, 3];
-                        MultiLineDiscRangesQuery = "SELECT itemrelation, ACCOUNTRELATION,QUANTITYAMOUNT,\n                                          CURRENCY,PERCENT1 FROM \n                                          PRICEDISCTABLE WHERE MODULE = 1 AND \n                                          ITEMCODE = 1 AND ACCOUNTCODE = 1 AND \n                                          ACCOUNTRELATION = '" + line.CUSTACCOUNT + "' AND LOWER(DATAAREAID) = LOWER('" + line.DATAAREAID + "') AND CURRENCY='" + line.CURRENCYCODE + "'";
-                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(this.localDbConfig, MultiLineDiscRangesQuery)];
-                    case 2:
-                        MultiLineDiscRanges = _a.sent();
-                        line.applied_discounts.push({
-                            discountType: "MULTI_LINE_DISCOUNT",
-                            percentage: parseFloat(line.MultiLnPercent),
-                            discountAmount: parseFloat(line.MultiLnDisc),
-                            cond: MultiLineDiscRanges.rows,
-                        });
-                        _a.label = 3;
-                    case 3:
-                        if (!(line.InstantDisc && line.InstantDisc > 0)) return [3 /*break*/, 5];
-                        InstantDiscRangesQuery = "select \n          * from custtotaldiscount where dataareaid ='ajp' and custaccount = '" + line.CUSTACCOUNT + "' order by minamount";
-                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(this.localDbConfig, InstantDiscRangesQuery)];
-                    case 4:
-                        InstantDiscRanges = _a.sent();
-                        line.applied_discounts.push({
-                            discountType: "MULTI_LINE_DISCOUNT",
-                            percentage: (parseFloat(line.InstantDisc) * 100) / parseFloat(line.LINEAMOUNT),
-                            discountAmount: parseFloat(line.MultiLnDisc),
-                            cond: InstantDiscRanges.rows,
-                        });
-                        _a.label = 5;
-                    case 5:
-                        if (!(line.PromotionDisc && line.PromotionDisc > 0)) return [3 /*break*/, 7];
-                        PromotionalDiscountCondQuery = "select\n          dataareaid, \n          inventlocationid, \n          itemid,\n          inventsizeid,\n          configid,\n          multiple_qty as \"multipleQty\", \n          free_qty as \"freeQty\"\n          from sales_promotion_items where \n          inventlocationid = '" + line.INVENTLOCATIONID + "' and itemid = '" + line.ITEMID + "' limit 1";
-                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(this.localDbConfig, PromotionalDiscountCondQuery)];
-                    case 6:
-                        PromotionalDiscountRanges = _a.sent();
-                        line.is_parent = true;
-                        line.applied_discounts.push({
-                            discountType: "PROMOTIONAL_DISCOUNT",
-                            discountAmount: parseFloat(line.PromotionDisc),
-                            cond: [
-                                {
-                                    multipleQty: PromotionalDiscountRanges.rows.length > 0 ? PromotionalDiscountRanges.rows[0].multipleQty : 10,
-                                    freeQty: PromotionalDiscountRanges.rows.length > 0 ? PromotionalDiscountRanges.rows[0].freeQty : 1,
-                                },
-                            ],
-                        });
-                        _a.label = 7;
-                    case 7:
-                        if (line.PromotionDiscEqual && line.PromotionDiscEqual > 0) {
-                            line.link_id = line.PromotionDiscEqualRecId ? line.PromotionDiscEqualRecId.split(",")[0] : line.RECID;
-                            line.isitemfree = line.PromotionDiscEqualRecId ? true : false;
-                            line.applied_discounts.push({
-                                discountType: "BUY_ONE_GET_ONE_DISCOUNT",
-                                discountAmount: parseFloat(line.PromotionDiscEqual),
-                                cond: [
-                                    {
-                                        multipleQty: 1,
-                                        freeQty: 1,
-                                    },
-                                ],
-                            });
-                        }
-                        line.applied_discounts = JSON.stringify(line.applied_discounts);
-                        line.batches = JSON.stringify([
-                            {
-                                batchNo: line.BATCHNO,
-                                quantity: line.SALESQTY,
-                            },
-                        ]);
-                        query = "INSERT INTO public.salesline\n        (id, salesid, linenum, itemid, \"name\", salesprice, currencycode, salesqty, lineamount, salesunit, priceunit, qtyordered, remainsalesphysical, remainsalesfinancial,\n        salestype, dataareaid, custgroup, custaccount, inventsizeid, configid, numbersequencegroupid, inventlocationid, salesdelivernow, salesstatus, \"location\", batchno, instantdisc, voucherdisc,\n          redeemdisc, promotiondisc, linetotaldisc, linesalestax, netamttax, linesalestaxpercent, taxgroup, taxitemgroup, linediscamt, customdiscamt, supplmultipleqty, supplfreeqty, multilndisc, multilnpercent, enddisc,\n          createdby, createddatetime, lastmodifiedby, lastmodifieddate, \n            vatamount, vat, voucherdiscamt, sabic_customer_discount, is_item_free, link_id, batches, applied_discounts, is_parent, status)\n        VALUES('" + (uuid() + App_1.App.UniqueNumber()) + "' ,'" + line.SALESID + "', " + line.LINENUM + ", '" + line.ITEMID + "', '" + line.NAME + "', " + line.SALESPRICE + ", '" + line.CURRENCYCODE + "', " + line.SALESQTY + ", " + line.LINEAMOUNT + ", '" + line.SALESUNIT + "', " + line.PRICEUNIT + ", " + line.QTYORDERED + ", \n        " + line.REMAINSALESPHYSICAL + ", " + line.REMAINSALESFINANCIAL + ",  " + line.SALESTYPE + ", '" + (line.DATAAREAID ? line.DATAAREAID.toLowerCase() : null) + "', '" + line.CUSTGROUP + "', '" + line.CUSTACCOUNT + "', '" + line.INVENTSIZEID + "', '" + line.CONFIGID + "',\n         '" + line.NUMBERSEQUENCEGROUPID + "', '" + line.INVENTLOCATIONID + "', " + line.SALESDELIVERNOW + ", " + line.SALESSTATUS + ", '" + line.LOCATION + "', '" + line.BATCHNO + "', " + (line.InstantDisc ? line.InstantDisc : 0) + ", " + (line.VoucherDisc ? line.VoucherDisc : 0) + ", " + (line.RedeemDisc ? line.RedeemDisc : 0) + ", " + (line.PromotionDisc ? line.PromotionDisc : 0) + ", \n         " + (line.LineTotalDisc ? line.LineTotalDisc : 0) + ", " + (line.LineSalesTax ? line.LineSalesTax : 0) + ", " + (line.NetAmtTax ? line.NetAmtTax : 0) + ", " + (line.LineSalesTaxPercent ? line.LineSalesTaxPercent : 0) + ", '" + line.TAXGROUP + "', '" + line.TAXITEMGROUP + "', " + (line.LINEDISCAMT ? line.LINEDISCAMT : 0) + ", " + (line.CUSTOMDISCAMT ? line.CUSTOMDISCAMT : 0) + ", " + (line.SupplMultipleQty ? line.SupplMultipleQty : 0) + ", " + (line.SupplFreeQty ? line.SupplFreeQty : 0) + ",\n         " + (line.MulLnDisc ? line.MultiLineDisc : 0) + ", " + (line.MultiPercent ? line.MultiPercent : 0) + ", " + (line.CUSTOMDISCAMT ? line.CUSTOMDISCAMT : 0) + ", '" + line.createdby + "', now(), '" + line.createdby + "', now(),\n          " + (line.LineSalesTax ? line.LineSalesTax : 0) + ", " + (line.LineSalesTaxPercent ? line.LineSalesTaxPercent : 0) + ",\n           " + (line.VoucherDisc ? line.VoucherDisc : 0) + ", " + (line.InteriorExteriorAmount ? line.InteriorExteriorAmount : 0) + ", " + (line.isitemfree ? line.isitemfree : false) + ", '" + line.link_id + "', '" + line.batches + "', '" + line.applied_discounts + "', " + line.is_parent + ", 'POSTED')\n        ";
-                        // log.info(query)
-                        queryData.push(query);
-                        _a.label = 8;
-                    case 8:
-                        _i++;
-                        return [3 /*break*/, 1];
-                    case 9: return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(this.localDbConfig, queryData)];
-                    case 10:
-                        _a.sent();
-                        return [3 /*break*/, 12];
-                    case 11:
-                        err_6 = _a.sent();
-                        Log_1.log.error(err_6);
-                        return [3 /*break*/, 12];
-                    case 12: return [2 /*return*/];
-                }
-            });
-        });
-    };
     SyncPrevTransactionsService.prototype.syncInventTransData = function (inventTransData, queryData, transactionclosed) {
         if (queryData === void 0) { queryData = []; }
         return __awaiter(this, void 0, void 0, function () {
-            var inventoryOnHandQuery, text, _i, inventTransData_1, trans, salesOrderData, salesOrderData, saleslinequery, salesLineData, query, err_7;
+            var inventoryOnHandQuery, text, _i, inventTransData_1, trans, salesOrderData, salesOrderData, saleslinequery, salesLineData, query, err_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -608,8 +468,8 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         _a.sent();
                         return [3 /*break*/, 12];
                     case 11:
-                        err_7 = _a.sent();
-                        Log_1.log.error(err_7);
+                        err_6 = _a.sent();
+                        Log_1.log.error(err_6);
                         return [3 /*break*/, 12];
                     case 12: return [2 /*return*/];
                 }

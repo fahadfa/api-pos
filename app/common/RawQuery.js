@@ -346,7 +346,7 @@ var RawQuery = /** @class */ (function () {
                                 else {
                                     query += "where  i.transrefid = '" + reqData.salesid + "' and transactionclosed=" + transactionclosed + " ";
                                 }
-                                query += " order by sl.link_id ";
+                                query += " and i.itemid !='HSN-00001' order by sl.link_id ";
                                 // query +=
                                 //     reqData.type == "RETURNORDER" || reqData.type == "INVENTORYMOVEMENT" || reqData.type == "PURCHASEORDER"
                                 //         ? ` and i.invoiceid = '${reqData.salesid}'`

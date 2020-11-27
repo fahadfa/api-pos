@@ -39,14 +39,14 @@ var express_1 = require("express");
 var App_1 = require("../../utils/App");
 var Props_1 = require("../../constants/Props");
 var DiscountService_1 = require("../services/DiscountService");
-var ReturnOrderAmountCopyService_1 = require("../services/ReturnOrderAmountCopyService");
+var ReturnOrderAmountService_1 = require("../services/ReturnOrderAmountService");
 var PriceService_1 = require("../services/PriceService");
 var PriceController = /** @class */ (function () {
     function PriceController() {
         this.componentName = "SalesTable";
         this.router = express_1.Router();
         this.discountService = new DiscountService_1.DiscountService();
-        this.returnOrderAmountService = new ReturnOrderAmountCopyService_1.ReturnOrderAmountService();
+        this.returnOrderAmountService = new ReturnOrderAmountService_1.ReturnOrderAmountService();
         this.priceService = new PriceService_1.PriceService();
     }
     PriceController.prototype.moduleName = function () {
