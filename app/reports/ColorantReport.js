@@ -68,6 +68,10 @@ var ColorantReport = /** @class */ (function () {
                         renderData_1.totalQuantity = 0;
                         renderData_1.totalAmount = 0;
                         data.map(function (v) {
+                            if (v.transkind == "RETURNORDER") {
+                                v.quantity = -parseInt(v.quantity);
+                                v.totalAmount = -parseFloat(v.totalAmount);
+                            }
                             renderData_1.totalQuantity += parseInt(v.quantity);
                             renderData_1.totalAmount += parseFloat(v.totalAmount);
                         });
@@ -131,7 +135,7 @@ var ColorantReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "\n    select \n        distinct\n        sl.salesid as \"salesId\",\n        sl.itemid as itemid,\n        sl.colorantid as colorant,\n        sl.colorantprice  as price,\n        to_char(sl.salesprice,  'FM999999999.00') as \"salesPrice\",\n        to_char(sl.salesqty, 'FM999999990') as quantity,\n        to_char((sl.salesqty * sl.colorantprice), 'FM999999990.00') as \"totalAmount\",\n        sl.inventsizeid as inventsizeid,\n        sz.description as \"sizeNameEn\",\n        sz.\"name\" as \"sizeNameAr\",\n        w.name as \"wareHouseNameAr\",\n        w.namealias as \"wareHouseNameEn\"\n        from salesline sl\n        left join inventlocation w on w.inventlocationid=sl.inventlocationid\n        left join inventsize sz on sz.inventsizeid = sl.inventsizeid and sz.itemid = sl.itemid \n        left join salestable st on st.salesid = sl.salesid\n        where sl.createddatetime >= '" + params.fromDate + "' ::date\n        and  sl.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval)\n        and st.transkind != 'SALESQUOTATION' AND st.transkind != 'TRANSFERORDER' and st.status in ('POSTED', 'PAID', 'PRINTED') AND sl.colorantprice > 0\n   ";
+                        query = "\n    select \n        distinct\n        sl.salesid as \"salesId\",\n        sl.itemid as itemid,\n        sl.colorantid as colorant,\n        sl.colorantprice  as price,\n        to_char(sl.salesprice,  'FM999999999.00') as \"salesPrice\",\n        to_char(sl.salesqty, 'FM999999990') as quantity,\n        to_char((sl.salesqty * sl.colorantprice), 'FM999999990.00') as \"totalAmount\",\n        sl.inventsizeid as inventsizeid,\n        sz.description as \"sizeNameEn\",\n        sz.\"name\" as \"sizeNameAr\",\n        w.name as \"wareHouseNameAr\",\n        w.namealias as \"wareHouseNameEn\",\n        st.transkind as transkind\n        from salesline sl\n        left join inventlocation w on w.inventlocationid=sl.inventlocationid\n        left join inventsize sz on sz.inventsizeid = sl.inventsizeid and sz.itemid = sl.itemid \n        left join salestable st on st.salesid = sl.salesid\n        where sl.createddatetime >= '" + params.fromDate + "' ::date\n        and  sl.createddatetime < ('" + params.toDate + "' ::date + '1 day'::interval)\n        and st.transkind not in ('SALESQUOTATION', 'TRANSFERORDER') and st.status in ('POSTED', 'PAID', 'PRINTED') AND sl.colorantprice > 0\n   ";
                         if (params.inventlocationid != "ALL") {
                             query += "  and sl.inventlocationid = '" + params.inventlocationid + "' ";
                         }

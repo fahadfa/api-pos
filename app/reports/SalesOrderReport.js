@@ -74,7 +74,7 @@ var SalesOrderReport = /** @class */ (function () {
                                 : data_1.lastmodifieddate;
                         }
                         else {
-                            data_1.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(data_1.lastmodifieddate), parseInt(params.timeZoneOffSet)).toLocaleString();
+                            data_1.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(data_1.lastmodifieddate), parseInt(params.timeZoneOffSet));
                         }
                         if (data_1.paymentMode != "CASH" && data_1.paymentMode != "ONLINE") {
                             if (data_1.iscash) {

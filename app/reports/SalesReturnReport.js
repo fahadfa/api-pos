@@ -52,7 +52,7 @@ var SalesReturnReport = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         data.map(function (v) {
-                            v.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(v.lastmodifieddate), parseInt(params.timeZoneOffSet)).toLocaleString();
+                            v.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(v.lastmodifieddate), parseInt(params.timeZoneOffSet));
                             v.phone = v.phone && v.phone != "null" ? v.phone : null;
                         });
                         return [2 /*return*/, data];
@@ -86,7 +86,7 @@ var SalesReturnReport = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         renderData = {
-                            printDate: App_1.App.convertUTCDateToLocalDate(new Date(App_1.App.DateNow()), parseInt(params.timeZoneOffSet)).toLocaleString(),
+                            printDate: App_1.App.convertUTCDateToLocalDate(new Date(App_1.App.DateNow()), parseInt(params.timeZoneOffSet)),
                             fromDate: params.fromDate,
                             toDate: params.toDate,
                             status: params.status,

@@ -59,7 +59,7 @@ var TransOrderReport = /** @class */ (function () {
                                     : item.createddatetime;
                             }
                             else {
-                                item.deliverydate = App_1.App.convertUTCDateToLocalDate(new Date(item.createddatetime), parseInt(params.timeZoneOffSet)).toLocaleString();
+                                item.deliverydate = App_1.App.convertUTCDateToLocalDate(new Date(item.createddatetime), parseInt(params.timeZoneOffSet));
                             }
                             if (process.env.ENV_STORE_ID) {
                                 item.lastmodifieddate = item.lastmodifieddate
@@ -67,13 +67,13 @@ var TransOrderReport = /** @class */ (function () {
                                     : item.lastmodifieddate;
                             }
                             else {
-                                item.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(item.lastmodifieddate), parseInt(params.timeZoneOffSet)).toLocaleString();
+                                item.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(item.lastmodifieddate), parseInt(params.timeZoneOffSet));
                             }
                             if (process.env.ENV_STORE_ID) {
                                 item.deliverydate = item.deliverydate ? new Date(item.deliverydate).toLocaleString() : item.deliverydate;
                             }
                             else {
-                                item.deliverydate = App_1.App.convertUTCDateToLocalDate(new Date(item.deliverydate), parseInt(params.timeZoneOffSet)).toLocaleString();
+                                item.deliverydate = App_1.App.convertUTCDateToLocalDate(new Date(item.deliverydate), parseInt(params.timeZoneOffSet));
                             }
                         });
                         // console.log(data);
@@ -119,7 +119,6 @@ var TransOrderReport = /** @class */ (function () {
                         console.log(params);
                         renderData = {
                             printDate: App_1.App.convertUTCDateToLocalDate(new Date(App_1.App.DateNow()), parseInt(params.timeZoneOffSet))
-                                .toLocaleDateString()
                                 .replace(/T/, " ") // replace T with a space
                                 .replace(/\..+/, ""),
                             fromDate: params.fromDate,

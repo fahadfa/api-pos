@@ -59,7 +59,7 @@ var RedeemPointsReport = /** @class */ (function () {
                             mobile: params.mobileNo.length == 9 ? "0" + params.mobileNo : params.mobileNo,
                             // mobile: "0550590391",
                             // inventLocationId: params.inventlocationid,
-                            inventLocationId: "RMAW-0010"
+                            inventLocationId: "RMAW-0010",
                         };
                         return [4 /*yield*/, this.redeemService.getCustomerPoints(reqData)];
                     case 1:
@@ -82,7 +82,6 @@ var RedeemPointsReport = /** @class */ (function () {
                 renderData = params;
                 renderData.data = result;
                 renderData.printDate = App_1.App.convertUTCDateToLocalDate(new Date(App_1.App.DateNow()), parseInt(params.timeZoneOffSet))
-                    .toLocaleString()
                     .replace(/T/, " ") // replace T with a space
                     .replace(/\..+/, "");
                 renderData.fromDate = new Date(renderData.fromDate).toLocaleDateString();

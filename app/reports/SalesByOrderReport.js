@@ -89,7 +89,7 @@ var SalesByOrderReport = /** @class */ (function () {
                         }
                         _loop_1 = function (item) {
                             saleslist = result.data.find(function (ele) { return ele.salesgroup.salesmanId == item.salesmanId; });
-                            item.deliverydate = App_1.App.convertUTCDateToLocalDate(new Date(item.deliverydate), parseInt(params.timeZoneOffSet)).toLocaleString();
+                            item.deliverydate = App_1.App.convertUTCDateToLocalDate(new Date(item.deliverydate), parseInt(params.timeZoneOffSet));
                             if (saleslist) {
                                 this_1.updateAmount(saleslist, item);
                                 saleslist.salesdata.push(item);

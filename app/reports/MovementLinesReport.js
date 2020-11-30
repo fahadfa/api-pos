@@ -64,7 +64,7 @@ var MovementLinesReport = /** @class */ (function () {
                         data = _a.sent();
                         data.map(function (item) {
                             item.Quantity = parseInt(item.Quantity);
-                            item.createddatetime = App_1.App.convertUTCDateToLocalDate(new Date(item.createddatetime), parseInt(params.timeZoneOffSet)).toLocaleDateString();
+                            item.createddatetime = App_1.App.convertUTCDateToLocalDate(new Date(item.createddatetime), parseInt(params.timeZoneOffSet));
                         });
                         return [2 /*return*/, data];
                     case 2:
@@ -87,7 +87,6 @@ var MovementLinesReport = /** @class */ (function () {
                     wareHouseId: params.inventlocationid,
                     status: params.status,
                     printDate: App_1.App.convertUTCDateToLocalDate(new Date(App_1.App.DateNow()), parseInt(params.timeZoneOffSet))
-                        .toLocaleDateString()
                         .replace(/T/, " ") // replace T with a space
                         .replace(/\..+/, ""),
                 };

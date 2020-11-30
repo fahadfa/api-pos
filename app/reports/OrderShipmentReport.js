@@ -280,7 +280,7 @@ var OrderShipmentReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 // console.log(result.salesLine[0].product.nameEnglish);
                 renderData = result;
-                renderData.printDate = App_1.App.convertUTCDateToLocalDate(new Date(App_1.App.DateNow()), parseInt(params.timeZoneOffSet)).toLocaleString();
+                renderData.printDate = App_1.App.convertUTCDateToLocalDate(new Date(App_1.App.DateNow()), parseInt(params.timeZoneOffSet));
                 file = params.lang == "en" ? "os-en" : "os-ar";
                 // try {
                 return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];

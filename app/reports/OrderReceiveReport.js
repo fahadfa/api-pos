@@ -110,30 +110,7 @@ var OrderReceiveReport = /** @class */ (function () {
                             inventtransQuery_1 += ",dateinvent = '" + date + "' ";
                         }
                         inventtransQuery_1 += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "'";
-                        return [4 /*yield*/, this.db.query(inventtransQuery_1)
-                            // this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED", new Date().toISOString());
-                            // let batches: any[] = await this.inventTransDAO.findAll({ invoiceid: params.salesId });
-                            // let groupData: any[] = await this.groupBy(batches, function (item: any) {
-                            //   return [item.itemid, item.batchno, item.configid, item.inventsizeid];
-                            // });
-                            // let inventoryOnHandBatches: any[] = [];
-                            // groupData.forEach(function (groupitem: any) {
-                            //   const qty = groupitem.reduce((res: number, item: any) => res + parseInt(item.qty), 0);
-                            //   groupitem[0].qty = Math.abs(qty);
-                            //   inventoryOnHandBatches.push({ ...groupitem[0] });
-                            // });
-                            // for (let item of batches) {
-                            // item.transactionClosed = true;
-                            // this.inventTransDAO.save(item);
-                            // await this.updateInventoryService.updateInventtransTable(item, false, false, queryRunner)
-                            // }
-                            // for (let item of inventoryOnHandBatches) {
-                            //   item.transactionClosed = true;
-                            // this.inventTransDAO.save(item);
-                            // promiseList.push(this.updateInventoryService.updateInventoryOnhandTable(item, false, queryRunner));
-                            // }
-                            // await Promise.all(promiseList);
-                        ];
+                        return [4 /*yield*/, this.db.query(inventtransQuery_1)];
                     case 8:
                         _a.sent();
                         _a.label = 9;
@@ -198,7 +175,7 @@ var OrderReceiveReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 // console.log(result.salesLine[0].product.nameEnglish);
                 renderData = result;
-                renderData.printDate = renderData.printDate = App_1.App.convertUTCDateToLocalDate(new Date(App_1.App.DateNow()), parseInt(params.timeZoneOffSet)).toLocaleString();
+                renderData.printDate = renderData.printDate = App_1.App.convertUTCDateToLocalDate(new Date(App_1.App.DateNow()), parseInt(params.timeZoneOffSet));
                 console.log(params.lang);
                 file = params.lang == "en" ? "or-en" : "or-ar";
                 try {

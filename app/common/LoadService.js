@@ -46,9 +46,29 @@ var LoadService = /** @class */ (function () {
         this.rawQuery = new RawQuery_1.RawQuery();
         this.menuGroupRepository = new MenuGroupDAO_1.MenuGroupDAO();
     }
-    LoadService.prototype.customer = function (param) {
+    LoadService.prototype.historicalCustomer = function (param) {
         return __awaiter(this, void 0, void 0, function () {
             var query, data, error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        query = "select distinct on (c.accountnum) \n      c.accountnum,c.phone,c.name as name, \n      c.namealias  from custtable c \n      where (c.phone ILike '%" + param.key + "%' or c.accountnum  ILike '%" + param.key + "%')\n      order by c.accountnum  desc limit 15";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, data];
+                    case 2:
+                        error_1 = _a.sent();
+                        throw error_1;
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    LoadService.prototype.customer = function (param) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -113,8 +133,8 @@ var LoadService = /** @class */ (function () {
                         data = _a.sent();
                         return [2 /*return*/, data];
                     case 3:
-                        error_1 = _a.sent();
-                        throw error_1;
+                        error_2 = _a.sent();
+                        throw error_2;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -180,6 +200,16 @@ var LoadService = /** @class */ (function () {
                         param.transkind1 = "SALESORDER";
                         param.transkind2 = "RESERVED";
                         return [4 /*yield*/, this.search_salesTable(param)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    LoadService.prototype.searchHistoricalSalesOrder = function (param) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.search_salesTableForHistorical(param)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -338,7 +368,7 @@ var LoadService = /** @class */ (function () {
     };
     LoadService.prototype.search_salesTable = function (param) {
         return __awaiter(this, void 0, void 0, function () {
-            var query, data, error_2;
+            var query, data, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -371,27 +401,6 @@ var LoadService = /** @class */ (function () {
                         // console.log(data);
                         return [2 /*return*/, data];
                     case 2:
-                        error_2 = _a.sent();
-                        throw error_2;
-                    case 3: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    LoadService.prototype.search_custpaymmode = function (param) {
-        return __awaiter(this, void 0, void 0, function () {
-            var query, data, error_3;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        query = "select * from custpaymmodetable";
-                        return [4 /*yield*/, this.db.query(query)];
-                    case 1:
-                        data = _a.sent();
-                        // console.log(data);
-                        return [2 /*return*/, data];
-                    case 2:
                         error_3 = _a.sent();
                         throw error_3;
                     case 3: return [2 /*return*/];
@@ -399,14 +408,14 @@ var LoadService = /** @class */ (function () {
             });
         });
     };
-    LoadService.prototype.search_paymterm = function (param) {
+    LoadService.prototype.search_salesTableForHistorical = function (param) {
         return __awaiter(this, void 0, void 0, function () {
             var query, data, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        query = "select * from paymterm";
+                        query = "Select salestable.salesid as salesid, salestable.salesname as salesname,                         \n      c.name as name, c.namealias as namealias\n     from salestable \n       left join custtable as c on c.accountnum = salestable.custaccount                       \n     where salestable.dataareaid='ajp' and\n      (salestable.salesid ILike '%" + param.key + "%' or c.name ILike '%" + param.key + "%' or  c.namealias  ILike '%" + param.key + "%') and \n      (salestable.transkind='SALESORDER' or salestable.transkind='RETURNORDER')  \n      ORDER BY salestable.createddatetime  desc limit 15";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
@@ -420,14 +429,14 @@ var LoadService = /** @class */ (function () {
             });
         });
     };
-    LoadService.prototype.countries = function (param) {
+    LoadService.prototype.search_custpaymmode = function (param) {
         return __awaiter(this, void 0, void 0, function () {
             var query, data, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        query = "select id as code, name as namear, nameeng as nameen from country";
+                        query = "select * from custpaymmodetable";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
@@ -441,14 +450,14 @@ var LoadService = /** @class */ (function () {
             });
         });
     };
-    LoadService.prototype.cities = function (param) {
+    LoadService.prototype.search_paymterm = function (param) {
         return __awaiter(this, void 0, void 0, function () {
             var query, data, error_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        query = "select cityname as nameen, citynamearb as namear, citycode as citycode from citymast";
+                        query = "select * from paymterm";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
@@ -462,14 +471,14 @@ var LoadService = /** @class */ (function () {
             });
         });
     };
-    LoadService.prototype.districts = function (param) {
+    LoadService.prototype.countries = function (param) {
         return __awaiter(this, void 0, void 0, function () {
             var query, data, error_7;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        query = "select districtname as nameen, districtnamearb as namear, districtcode, citycode from districtmast";
+                        query = "select id as code, name as namear, nameeng as nameen from country";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
@@ -483,9 +492,51 @@ var LoadService = /** @class */ (function () {
             });
         });
     };
-    LoadService.prototype.salesman = function () {
+    LoadService.prototype.cities = function (param) {
         return __awaiter(this, void 0, void 0, function () {
             var query, data, error_8;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        query = "select cityname as nameen, citynamearb as namear, citycode as citycode from citymast";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        // console.log(data);
+                        return [2 /*return*/, data];
+                    case 2:
+                        error_8 = _a.sent();
+                        throw error_8;
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    LoadService.prototype.districts = function (param) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data, error_9;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        query = "select districtname as nameen, districtnamearb as namear, districtcode, citycode from districtmast";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        // console.log(data);
+                        return [2 /*return*/, data];
+                    case 2:
+                        error_9 = _a.sent();
+                        throw error_9;
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    LoadService.prototype.salesman = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data, error_10;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -496,8 +547,8 @@ var LoadService = /** @class */ (function () {
                         data = _a.sent();
                         return [2 /*return*/, data];
                     case 2:
-                        error_8 = _a.sent();
-                        throw error_8;
+                        error_10 = _a.sent();
+                        throw error_10;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -554,7 +605,7 @@ var LoadService = /** @class */ (function () {
     };
     LoadService.prototype.locationsalesman = function (param) {
         return __awaiter(this, void 0, void 0, function () {
-            var query, data, error_9;
+            var query, data, error_11;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -565,8 +616,8 @@ var LoadService = /** @class */ (function () {
                         data = _a.sent();
                         return [2 /*return*/, data];
                     case 2:
-                        error_9 = _a.sent();
-                        throw error_9;
+                        error_11 = _a.sent();
+                        throw error_11;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -574,7 +625,7 @@ var LoadService = /** @class */ (function () {
     };
     LoadService.prototype.currency = function (param) {
         return __awaiter(this, void 0, void 0, function () {
-            var query, data, error_10;
+            var query, data, error_12;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -586,8 +637,8 @@ var LoadService = /** @class */ (function () {
                         // console.log(data);
                         return [2 /*return*/, data];
                     case 2:
-                        error_10 = _a.sent();
-                        throw error_10;
+                        error_12 = _a.sent();
+                        throw error_12;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -1470,7 +1521,7 @@ var LoadService = /** @class */ (function () {
     };
     LoadService.prototype.checkIsBase = function (param) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, error_11;
+            var data, error_13;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -1493,8 +1544,8 @@ var LoadService = /** @class */ (function () {
                         }
                         return [3 /*break*/, 3];
                     case 2:
-                        error_11 = _a.sent();
-                        return [2 /*return*/, error_11];
+                        error_13 = _a.sent();
+                        return [2 /*return*/, error_13];
                     case 3: return [2 /*return*/];
                 }
             });
@@ -1502,7 +1553,7 @@ var LoadService = /** @class */ (function () {
     };
     LoadService.prototype.checkForColorantOption = function (param) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, product, isBase, error_12;
+            var data, product, isBase, error_14;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -1541,8 +1592,8 @@ var LoadService = /** @class */ (function () {
                         _a.label = 3;
                     case 3: return [2 /*return*/, data];
                     case 4:
-                        error_12 = _a.sent();
-                        return [2 /*return*/, error_12];
+                        error_14 = _a.sent();
+                        return [2 /*return*/, error_14];
                     case 5: return [2 /*return*/];
                 }
             });

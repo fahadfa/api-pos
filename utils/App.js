@@ -85,6 +85,7 @@ var App = /** @class */ (function () {
         return time.toString(36).toUpperCase();
     };
     App.convertUTCDateToLocalDate = function (date, timezoneoffset) {
+        var dateString = "";
         if (date.getTimezoneOffset() + "" !== timezoneoffset) {
             var diffseconds = timezoneoffset * 60;
             var hours = parseInt(diffseconds / 3600 + "");
@@ -100,8 +101,34 @@ var App = /** @class */ (function () {
             date.setHours(hoursOrg - hours);
             date.setMinutes(minutesOrg - minutes);
             date.setSeconds(secondsOrg - seconds);
+            dateString +=
+                date.getFullYear() +
+                    "/" +
+                    date.getMonth() +
+                    "/" +
+                    date.getDate() +
+                    " " +
+                    date.getHours() +
+                    ":" +
+                    date.getMinutes() +
+                    ":" +
+                    date.getSeconds();
         }
-        return date;
+        else {
+            dateString +=
+                date.getFullYear() +
+                    "/" +
+                    date.getMonth() +
+                    "/" +
+                    date.getDate() +
+                    " " +
+                    date.getHours() +
+                    ":" +
+                    date.getMinutes() +
+                    ":" +
+                    date.getSeconds();
+        }
+        return dateString;
     };
     App.uuidv4 = function () {
         return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
@@ -405,7 +432,7 @@ var App = /** @class */ (function () {
                     case 1:
                         itemNames_1 = _a.sent();
                         salesLines.forEach(function (line, index) {
-                            var name = itemNames_1.find((function (item) { return item.code == line.itemid; }));
+                            var name = itemNames_1.find(function (item) { return item.code == line.itemid; });
                             if (name) {
                                 delete name.code;
                                 salesLines[index] = __assign({}, salesLines[index], name);

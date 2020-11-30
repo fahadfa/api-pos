@@ -60,12 +60,11 @@ var SalesOrdersReport = /** @class */ (function () {
                             v.discount = v.discount ? v.discount : 0;
                             v.vatAmount = v.vatAmount ? v.vatAmount : 0;
                             v.netAmount = v.netAmount ? v.netAmount : 0;
-                            if (process.env.ENV_STORE_ID) {
-                                v.lastmodifieddate = v.lastmodifieddate ? new Date(v.lastmodifieddate).toLocaleString() : v.lastmodifieddate;
-                            }
-                            else {
-                                v.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(v.lastmodifieddate), parseInt(params.timeZoneOffSet)).toLocaleString();
-                            }
+                            // if (process.env.ENV_STORE_ID) {
+                            //   v.lastmodifieddate = v.lastmodifieddate ? new Date(v.lastmodifieddate).toLocaleString() : v.lastmodifieddate;
+                            // } else {
+                            v.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(v.lastmodifieddate), parseInt(params.timeZoneOffSet));
+                            // }
                             v.phone = v.phone && v.phone != "null" ? v.phone : null;
                         });
                         resData_1 = {
