@@ -60,8 +60,13 @@ var DesignerServiceBalancesReport = /** @class */ (function () {
                         return [4 /*yield*/, this.query_to_data(params)];
                     case 1:
                         data = _a.sent();
-                        data.map(function (item) {
-                            item.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(item.lastmodifieddate), parseInt(params.timeZoneOffSet)).toLocaleString();
+                        data.map(function (v) {
+                            if (process.env.ENV_STORE_ID) {
+                                v.lastmodifieddate = v.lastmodifieddate ? new Date(v.lastmodifieddate).toLocaleString() : v.lastmodifieddate;
+                            }
+                            else {
+                                v.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(v.lastmodifieddate), parseInt(params.timeZoneOffSet)).toLocaleString();
+                            }
                         });
                         console.log(data);
                         return [2 /*return*/, data];

@@ -81,7 +81,8 @@ var DiscountService = /** @class */ (function () {
                             .map(function (d) {
                             return d.linkId;
                         });
-                        // console.log("=====================", promotionalItems);
+                        console.log("=====================", promotionalItems_1);
+                        promotionalItems_1 = [];
                         reqData.selectedItems.map(function (v) {
                             v.lineNum = reqData.selectedItems.indexOf(v);
                             reqData.grossTotal += parseFloat(v.price) * parseFloat(v.quantity);

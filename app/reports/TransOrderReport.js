@@ -53,9 +53,28 @@ var TransOrderReport = /** @class */ (function () {
                         data = _a.sent();
                         data.map(function (item) {
                             item.statusVal = params.lang == "en" ? item.statusEn : item.statusAr;
-                            item.createddatetime = App_1.App.convertUTCDateToLocalDate(new Date(item.createddatetime), parseInt(params.timeZoneOffSet)).toLocaleString();
-                            item.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(item.lastmodifieddate), parseInt(params.timeZoneOffSet)).toLocaleString();
-                            item.deliverydate = App_1.App.convertUTCDateToLocalDate(new Date(item.deliverydate), parseInt(params.timeZoneOffSet)).toLocaleString();
+                            if (process.env.ENV_STORE_ID) {
+                                item.createddatetime = item.createddatetime
+                                    ? new Date(item.createddatetime).toLocaleString()
+                                    : item.createddatetime;
+                            }
+                            else {
+                                item.deliverydate = App_1.App.convertUTCDateToLocalDate(new Date(item.createddatetime), parseInt(params.timeZoneOffSet)).toLocaleString();
+                            }
+                            if (process.env.ENV_STORE_ID) {
+                                item.lastmodifieddate = item.lastmodifieddate
+                                    ? new Date(item.lastmodifieddate).toLocaleString()
+                                    : item.lastmodifieddate;
+                            }
+                            else {
+                                item.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(item.lastmodifieddate), parseInt(params.timeZoneOffSet)).toLocaleString();
+                            }
+                            if (process.env.ENV_STORE_ID) {
+                                item.deliverydate = item.deliverydate ? new Date(item.deliverydate).toLocaleString() : item.deliverydate;
+                            }
+                            else {
+                                item.deliverydate = App_1.App.convertUTCDateToLocalDate(new Date(item.deliverydate), parseInt(params.timeZoneOffSet)).toLocaleString();
+                            }
                         });
                         // console.log(data);
                         return [2 /*return*/, data];

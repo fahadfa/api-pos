@@ -210,23 +210,6 @@ var Props = /** @class */ (function () {
     // public static BRAND_NAME = "BRAND";
     // public static EMPLOYEE_NAME = "EMPLOYEE";
     Props.testStoreIds = [
-        "RMAW - 0010",
-        "DMKSST-0074",
-        "JMHY-0033",
-        "RYENKS-44",
-        "RYHDWM-19",
-        "RYWADS-29",
-        "JSRW-0024",
-        "JMAW-0021",
-        "DMRW-0078",
-        "DMAK-0081",
-        "JSTW-0023",
-        "JEDAAQ-0037",
-        "DKZW-0030",
-        "DMAW-0027",
-        "RTPW-0012",
-        "BQFN-53",
-        "JTMW-0022",
         "HYD-002",
         "STAW-0055",
         "STAW-0056",

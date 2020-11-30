@@ -64,7 +64,18 @@ var SalesOrderReport = /** @class */ (function () {
                         data_1.paymentMode = data_1.paymentType == "ONLINE" ? "Online" : data_1.paymentMode;
                         data_1.paymentModeAr = data_1.paymentType == "ONLINE" ? "عبر الانترنت" : data_1.paymentMode;
                         console.log(data_1);
-                        data_1.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(data_1.lastmodifieddate), parseInt(params.timeZoneOffSet)).toLocaleString();
+                        // data.lastmodifieddate = App.convertUTCDateToLocalDate(
+                        //   new Date(data.lastmodifieddate),
+                        //   parseInt(params.timeZoneOffSet)
+                        // ).toLocaleString();
+                        if (process.env.ENV_STORE_ID) {
+                            data_1.lastmodifieddate = data_1.lastmodifieddate
+                                ? new Date(data_1.lastmodifieddate).toLocaleString()
+                                : data_1.lastmodifieddate;
+                        }
+                        else {
+                            data_1.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(data_1.lastmodifieddate), parseInt(params.timeZoneOffSet)).toLocaleString();
+                        }
                         if (data_1.paymentMode != "CASH" && data_1.paymentMode != "ONLINE") {
                             if (data_1.iscash) {
                                 data_1.paymentMode = "Cash";
@@ -155,7 +166,7 @@ var SalesOrderReport = /** @class */ (function () {
                                     cardAmount: data_1.cardAmount,
                                     designServiceRedeemAmount: data_1.designServiceRedeemAmount,
                                     redeemAmount: data_1.redeemAmount,
-                                    lines: []
+                                    lines: [],
                                 };
                                 data_1.isbreak = val.length > 5 ? true : false;
                                 val.map(function (v) {
