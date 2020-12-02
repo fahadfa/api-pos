@@ -242,7 +242,7 @@
                 <td class="textboldtd">تاريخ الشحن</td>
                 <td>:</td>
                 <td>
-                  {{this.shippedDate}}
+                  {{this.shippingDate}}
                 </td>
               </tr>
             </table>
@@ -255,7 +255,7 @@
               </tr>
               {{/if}}
               <tr>
-                <td>فاتورة المبيعات</td>
+                <td>المعاملات التاريخية</td>
               </tr>
               <tr>
                 <td><span style="font-size: 14px; font-weight: bold;">{{salesId}}</span></td>
@@ -330,6 +330,7 @@
             <th class="th">سعر كولارانت</th>
             <th class="th">خصم</th>
             <th class="th">صافي المبلغ قبل ضريبة القيمة المضافة</th>
+            <th class="th">قيمة الضريبة</th>
             <th class="th">
               <table style="border-collapse: collapse !important; border: none !important; width: 100%;">
                 <tr class="td">
@@ -392,6 +393,7 @@
               {{this.lineTotalDisc}}
             </td>
             <td class="tdright">{{this.lineAmountBeforeVat}}</td>
+            <td class="tdright">{{this.vatAmount}}</td>
             <td class="tdcenter">
               <table id="disctable" width="100%">
                 <tr class="td inline-table">
@@ -436,7 +438,7 @@
 
           <td class="tdright borderLeftNone">رسوم الشحن</td>
           <td class="tdright">
-            {{this.shippingamount}}
+            {{this.shippingAmount}}
           </td>
         </tr>
         <tr class="tdright">
@@ -456,7 +458,7 @@
 
           <td class="tdright borderLeftNone">ضريبة القيمة المضافة ({{this.vat}}%)</td>
           <td>
-            {{this.vatGrand}}
+            {{this.vatamount}}
           </td>
         </tr>
         <tr class="tdright">

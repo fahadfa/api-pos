@@ -205,7 +205,7 @@ var OpeningBalanceService = /** @class */ (function () {
                         return [4 /*yield*/, this.pool.connect()];
                     case 1:
                         _a.sent();
-                        query = "SELECT\n        ITEMID as itemid, \n        ConfigId as configid, \n        InventSizeId as inventsizeid, \n        BatchNo as batchno, \n        SUM(qty) as qty\n        FROM INVENTTRANS i\n        inner join  inventtable  B ON i.itemid = B.itemid\n        where i.ITEMID NOT LIKE 'HSN%' and i.DATEPHYSICAL <= '" + reqData.date + "'\n        group by i.ITEMID, i.ConfigId, i.InventSizeId, i.BatchNo HAVING sum(QTY) >0 ";
+                        query = "SELECT\n        i.ITEMID as itemid, \n        i.ConfigId as configid, \n        i.InventSizeId as inventsizeid, \n        i.BatchNo as batchno, \n        SUM(i.qty) as qty\n        FROM INVENTTRANS i\n        inner join  inventtable  B ON i.itemid = B.itemid\n        where i.ITEMID NOT LIKE 'HSN%' and i.DATEPHYSICAL < '" + reqData.date + "'\n        group by i.ITEMID, i.ConfigId, i.InventSizeId, i.BatchNo HAVING sum(QTY) >0 ";
                         return [4 /*yield*/, this.pool.request().query(query)];
                     case 2:
                         rows = _a.sent();

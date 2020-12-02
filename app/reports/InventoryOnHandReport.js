@@ -43,7 +43,7 @@ var InventoryOnHandReport = /** @class */ (function () {
     }
     InventoryOnHandReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, i, sum, _i, data_1, item, result;
+            var data, i, sum, totalAvailability, _i, data_1, item, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.query_to_data(params)];
@@ -51,6 +51,7 @@ var InventoryOnHandReport = /** @class */ (function () {
                         data = _a.sent();
                         i = 1;
                         sum = 0;
+                        totalAvailability = 0;
                         data = data.filter(function (item) { return Number.parseFloat(item.totalAvailable) >= 0; });
                         for (_i = 0, data_1 = data; _i < data_1.length; _i++) {
                             item = data_1[_i];
@@ -61,11 +62,13 @@ var InventoryOnHandReport = /** @class */ (function () {
                             item.reservedQuantity = parseInt(item.reservedQuantity);
                             item.totalAvailable = parseInt(item.totalAvailable);
                             sum += Number.parseFloat(item.physicalAvailable);
+                            totalAvailability += Number.parseFloat(item.totalAvailable);
                         }
                         result = {
                             printDate: new Date().toLocaleString(),
                             data: data,
                             sum: sum,
+                            totalAvailability: totalAvailability,
                             batchCheck: params.batchCheck ? params.batchCheck : false,
                             user: params.user,
                         };
@@ -91,6 +94,7 @@ var InventoryOnHandReport = /** @class */ (function () {
                 else {
                     file = params.lang == "en" ? "onhandinventory-report" : "onhandinventory-report-ar";
                 }
+                // console.log(renderData)
                 try {
                     return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];
                 }

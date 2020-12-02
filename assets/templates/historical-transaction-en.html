@@ -250,7 +250,7 @@
                 <td class="textboldtd">Shipping Date</td>
                 <td>:</td>
                 <td>
-                  {{this.shippedDate}}
+                  {{this.shippingDate}}
                 </td>
               </tr>
             </table>
@@ -263,7 +263,8 @@
               </tr>
               {{/if}}
               <tr>
-                <td>Sales Invoice</td>
+                <td>Historical Transaction
+                </td>
               </tr>
               <tr>
                 <td><span style="font-size: 14px; font-weight: bold;">{{salesId}}</span></td>
@@ -338,6 +339,7 @@
             <th class="th">Colarant Price</th>
             <th class="th">Discount</th>
             <th class="th">Net Amnt Before VAT</th>
+            <th class="th">VatAmount</th>
             <th class="th">
               <table style="border-collapse: collapse !important; border: none !important; width: 100%;">
                 <tr class="td">
@@ -400,6 +402,7 @@
               {{this.lineTotalDisc}}
             </td>
             <td class="tdright">{{this.lineAmountBeforeVat}}</td>
+            <td class="tdright">{{this.vatAmount}}</td>
             <td class="tdcenter">
               <table id="disctable" width="100%">
                 <tr class="td inline-table">
@@ -444,7 +447,7 @@
 
           <td class="tdright borderLeftNone">Shipping Charges</td>
           <td class="tdright">
-            {{this.shippingamount}}
+            {{this.shippingAmount}}
           </td>
         </tr>
         <tr class="tdright">
@@ -464,7 +467,7 @@
 
           <td class="tdright borderLeftNone">VAT ({{this.vat}}%)</td>
           <td>
-            {{this.vatGrand}}
+            {{this.vatamount}}
           </td>
         </tr>
         <tr class="tdright">
@@ -570,7 +573,7 @@
                 <td class="textboldtd">Shipping Date</td>
                 <td>:</td>
                 <td>
-                  {{this.shippedDate}}
+                  {{this.shippingDate}}
                 </td>
               </tr>
             </table>
@@ -764,7 +767,7 @@
 
           <td class="tdright borderLeftNone">Shipping Charges</td>
           <td class="tdright">
-            {{this.shippingamount}}
+            {{this.shippingAmount}}
           </td>
         </tr>
         <tr class="tdright">

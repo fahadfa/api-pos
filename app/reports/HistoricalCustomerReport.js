@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var RawQuery_1 = require("../common/RawQuery");
 var typeorm_1 = require("typeorm");
+var App_1 = require("../../utils/App");
 var HistoricalCustomerReport = /** @class */ (function () {
     function HistoricalCustomerReport() {
         this.db = typeorm_1.getManager();
@@ -44,15 +45,101 @@ var HistoricalCustomerReport = /** @class */ (function () {
     }
     HistoricalCustomerReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
+            var custaccount, data, error_1;
             return __generator(this, function (_a) {
-                return [2 /*return*/];
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 4, , 5]);
+                        custaccount = params.custaccount;
+                        if (!custaccount) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.getHistoricalData(params)];
+                    case 1:
+                        data = _a.sent();
+                        console.log("=================final review=======================", data);
+                        return [2 /*return*/, data];
+                    case 2: throw { message: "Select custaccount ID" };
+                    case 3: return [3 /*break*/, 5];
+                    case 4:
+                        error_1 = _a.sent();
+                        throw error_1;
+                    case 5: return [2 /*return*/];
+                }
             });
         });
     };
     HistoricalCustomerReport.prototype.report = function (result, params) {
         return __awaiter(this, void 0, void 0, function () {
+            var renderData, file;
             return __generator(this, function (_a) {
+                renderData = result;
+                console.log("data:----------", renderData);
+                file = params.lang == "en" ? "historical-customer-en" : "historical-customer-ar";
+                try {
+                    return [2 /*return*/, App_1.App.HtmlRender(file, { data: renderData })];
+                }
+                catch (error) {
+                    throw error;
+                }
                 return [2 /*return*/];
+            });
+        });
+    };
+    HistoricalCustomerReport.prototype.getHistoricalData = function (params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "SELECT \n        st.salesid as \"salesId\",salesline.lines as salesLine,\n                       st.intercompanyoriginalsalesid as \"interCompanyOriginalSalesId\",\n                       st.custaccount as \"custAccount\",\n                       st.invoiceaccount as \"invoiceAccount\",\n                       st.status as status,\n                       st.transkind as transkind,\n                       als.en as \"statusEn\",\n                       als.ar as \"statusAr\",\n                       alt.en as \"transkindEn\",\n                       alt.ar as \"transkindAr\",\n                       st.salesname as customername,\n                       st.mobileno as custmobilenumber,\n                       to_char(st.vatamount, 'FM999999999990.00')  as vatamount,\n                       to_char(st.netamount, 'FM999999999990.00')  as \"netAmount\",\n                       to_char(st.disc, 'FM999999999990.00')  as disc,\n                       to_char(st.amount , 'FM999999999990.00') as amount,\n                       to_char(st.shipping_amount, 'FM999999999990.00') as \"shippingAmount\",\n                       st.salesname as cname,\n                       st.salesname as \"cnamealias\",\n                       st.voucherdiscchecked as \"voucherdiscchecked\",\n                       st.vouchernum as \"vouchernum\",\n                       st.payment_type as \"paymentType\",\n                       c.phone as \"cphone\",\n                       to_char(st.createddatetime, 'DD-MM-YYYY') as createddatetime,\n                       st.lastmodifieddate as lastmodifieddate,\n                       st.originalprinted as \"originalPrinted\",\n                       st.inventlocationid as \"inventLocationId\",\n                       w.namealias as wnamealias,\n                       w.name as wname,\n                       st.payment as \"paymentMode\",\n                       alu.en as \"paymentModeEn\",\n                       alu.ar as \"paymentModeAr\",\n                       st.iscash as iscash,\n                       st.createdby,\n                       st.description as notes,\n                       to_char(st.cash_amount, 'FM999999999990.00') as \"cashAmount\",\n                       to_char(st.card_amount, 'FM999999999990.00') as \"cardAmount\",\n                       st.shipping_amount as \"shippingAmount\",\n                       to_char(st.online_amount, 'FM999999999990.00') as \"onlineAmount\",\n                       to_char(st.design_service_redeem_amount, 'FM999999999990.00') as \"designServiceRedeemAmount\",\n                       to_char(st.redeemptsamt, 'FM999999999990.00') as \"redeemAmount\",\n                       coalesce(st.deliveryaddress, ' ') || (' ') || coalesce(st.citycode, ' ') || (' ') || coalesce(st.districtcode, ' ') || (' ') || coalesce(st.country_code, ' ') as deliveryaddress,\n                       concat(d.num,' - ', d.description) as salesman,\n                       to_char(st.deliverydate, 'DD-MM-YYYY') as \"deliveryDate\" \n       from salestable st \n                       left join dimensions d on st.dimension6_ = d.num\n                       left join inventlocation w on w.inventlocationid = st.inventlocationid\n                       left join custtable c on c.accountnum = st.custaccount\n                       left join paymterm p on p.paymtermid = st.payment\n                       left join app_lang als on als.id = st.status\n                       left join app_lang alt on alt.id = st.transkind \n                       left join app_lang alu on alu.id = st.payment   \n       LEFT   JOIN LATERAL (\n          SELECT json_agg(\n          json_build_object(\n              'salesid', s3.salesid,\n              'name', s3.itemid   ,\n              'salesid',s3.salesid,\n              'custaccount' ,s3.custaccount,\n              'itemid',s3.itemid,\n              'batchno',s3.batchno,\n              'configid',s3.configid,\n              'inventsizeid',s3.inventsizeid,\n              'saleslineqty',s3.salesqty,\n              'netAmount',to_char(s3.lineamount, 'FM999999999990.00'),\n              'lineAmount',to_char(s3.lineamount, 'FM999999999990.00'),\n              'batches',s3.batches,\n              'shippingDate',to_char(s3.lastmodifieddate, 'DD-MM-YYYY'),\n              'salesQty',to_char(s3.salesqty, 'FM999999999D'),\n              'salesprice',to_char(s3.salesprice, 'FM999999999990.00'),\n              'vatAmount',to_char((s3.vatamount/s3.salesqty)*s3.salesqty, 'FM999999999990.00'),\n              'colorantprice',to_char(s3.colorantprice, 'FM999999999990.00'),\n              'lineTotalDisc',to_char((s3.linetotaldisc/s3.salesqty)*s3.salesqty, 'FM999999999990.00'),\n              'vat',s3.vat,\n              'colorant',s3.colorantid,\n              'linenum',s3.linenum \n          )) AS lines\n          FROM   salesline s3 \n          WHERE  s3.salesid = st.salesid \n       ) salesline ON true\n          where st.custaccount ='" + params.custaccount + "'\n           and st.lastmodifieddate between '" + params.fromDate + "' and ('" + params.toDate + "'::date + '2 day'::interval)\n       ORDER  BY st.lastmodifieddate ; \n       ";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    HistoricalCustomerReport.prototype.query_to_data = function (custaccount) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "\n                select \n                st.salesid as \"salesId\",\n                st.intercompanyoriginalsalesid as \"interCompanyOriginalSalesId\",\n                st.custaccount as \"custAccount\",\n                st.invoiceaccount as \"invoiceAccount\",\n                st.status as status,\n                st.transkind as transkind,\n                st.salesname as customername,\n                st.mobileno as custmobilenumber,\n                to_char(st.vatamount, 'FM999999999990.00')  as vatamount,\n                to_char(st.netamount, 'FM999999999990.00')  as \"netAmount\",\n                to_char(st.disc, 'FM999999999990.00')  as disc,\n                to_char(st.amount , 'FM999999999990.00') as amount,\n                to_char(st.shipping_amount, 'FM999999999990.00') as \"shippingAmount\",\n                st.salesname as cname,\n                st.salesname as \"cnamealias\",\n                st.voucherdiscchecked as \"voucherdiscchecked\",\n                st.vouchernum as \"vouchernum\",\n                st.payment_type as \"paymentType\",\n                c.phone as \"cphone\",\n                to_char(st.createddatetime, 'DD-MM-YYYY') as createddatetime,\n                st.lastmodifieddate as lastmodifieddate,\n                st.originalprinted as \"originalPrinted\",\n                st.inventlocationid as \"inventLocationId\",\n                w.namealias as wnamealias,\n                w.name as wname,\n                st.payment as \"paymentMode\",\n                st.iscash as iscash,\n                st.createdby,\n                st.description as notes,\n                to_char(st.cash_amount, 'FM999999999990.00') as \"cashAmount\",\n                to_char(st.card_amount, 'FM999999999990.00') as \"cardAmount\",\n                st.shipping_amount as \"shippingAmount\",\n                to_char(st.online_amount, 'FM999999999990.00') as \"onlineAmount\",\n                to_char(st.design_service_redeem_amount, 'FM999999999990.00') as \"designServiceRedeemAmount\",\n                to_char(st.redeemptsamt, 'FM999999999990.00') as \"redeemAmount\",\n                coalesce(st.deliveryaddress, ' ') || (' ') || coalesce(st.citycode, ' ') || (' ') || coalesce(st.districtcode, ' ') || (' ') || coalesce(st.country_code, ' ') as deliveryaddress,\n                concat(d.num,' - ', d.description) as salesman,\n                to_char(st.deliverydate, 'DD-MM-YYYY') as \"deliveryDate\"\n                from salestable st \n                left join dimensions d on st.dimension6_ = d.num\n                left join inventlocation w on w.inventlocationid = st.inventlocationid\n                left join custtable c on c.accountnum = st.custaccount\n                left join paymterm p on p.paymtermid = st.payment\n                where custaccount='" + custaccount + "'\n                ";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    HistoricalCustomerReport.prototype.salesline_query_to_data = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var salesQuery;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        salesQuery = "\n                  select\n                  distinct\n                  ln.salesid,\n                  ln.custaccount,\n                  ln.itemid,\n                  ln.batchno,\n                  ln.configid,\n                  ln.inventsizeid,\n                  ln.saleslineqty,\n                  to_char(ln.lineamount, 'FM999999999990.00') as \"netAmount\",\n                  to_char(ln.lastmodifieddate, 'DD-MM-YYYY') as \"shippingDate\",\n                  to_char(ln.salesqty, 'FM999999999D') as \"salesQty\",\n                  to_char(ln.salesprice, 'FM999999999990.00') as salesprice,\n                  to_char((ln.vatamount/ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"vatAmount\",\n                  to_char((ln.linetotaldisc/ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"lineTotalDisc\",\n                  to_char(ln.colorantprice, 'FM999999999990.00') as colorantprice,\n                  to_char((ln.lineamount / ln.saleslineqty)*ln.salesqty + (ln.colorantprice*ln.salesqty) - (ln.linetotaldisc / ln.saleslineqty)*ln.salesqty + (ln.vatamount / ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"lineAmount\",\n                  ln.prodnamear as \"prodNameAr\",\n                  ln.prodnameen as \"prodNameEn\",\n                  ln.colNameAr as \"colNameAr\",\n                  ln.colNameEn as \"colNameEn\",\n                  ln.sizeNameEn as \"sizeNameEn\",\n                  ln.sizeNameAr as \"sizeNameAr\",\n                  to_char((ln.lineamount/ln.saleslineqty)*ln.salesqty + (ln.colorantprice*ln.salesqty) - (ln.linetotaldisc/ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"lineAmountBeforeVat\",\n                  ln.vat as vat,\n                  ln.colorantid as colorant,\n                  ln.linenum as linenum\n                  from\n                  (\n                    select distinct on (i.id, i.invoiceid, i.itemid, i.configid, i.inventsizeid, i.qty, i.batchno, i.sales_line_id)\n                    i.invoiceid as salesid,\n                    i.batchno,\n                    i.itemid,\n                    i.configid,\n                    i.inventsizeid,\n                    st.status as status,\n                    ABS(i.qty) as salesqty,\n                    b.itemname as prodnamear,\n                    b.namealias as prodnameen,\n                    coalesce(sl.salesprice, 0)  as salesprice,\n                    coalesce(sl.vatamount, 0)  as vatamount,\n                    coalesce(sl.linetotaldisc, 0) as linetotaldisc,\n                    coalesce(sl.colorantprice,0) as colorantprice,\n                    c.name as colNameAr,\n                    c.name as colNameEn,\n                    s.description as sizeNameEn,\n                    s.name as sizeNameAr,\n                    coalesce(sl.lineamount,0) as  lineamount,\n                    sl.colorantid as  colorantid,\n                    sl.salesqty as saleslineqty,\n                    sl.vat as vat,\n                    sl.linenum,\n                    sl.custaccount,\n                    sl.lastmodifieddate\n                    from inventtrans i\n                    left join salestable st on st.salesid = i.invoiceid\n                    left join salesline sl on sl.id = i.sales_line_id\n                    left join inventtable b on i.itemid=b.itemid\n                    left join inventsize s on s.itemid = i.itemid and i.inventsizeid = s.inventsizeid\n                    left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n                    \n                where st.custaccount='" + id + "'\n                ) as ln order by linenum ASC\n                ";
+                        return [4 /*yield*/, this.db.query(salesQuery)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    HistoricalCustomerReport.prototype.chunkArray = function (myArray, chunk_size) {
+        return __awaiter(this, void 0, void 0, function () {
+            var index, arrayLength, tempArray, myChunk;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        index = 0;
+                        arrayLength = myArray.length;
+                        tempArray = [];
+                        for (index = 0; index < arrayLength; index += chunk_size) {
+                            myChunk = myArray.slice(index, index + chunk_size);
+                            // Do something if you want with the group
+                            tempArray.push(myChunk);
+                        }
+                        return [4 /*yield*/, tempArray];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
             });
         });
     };

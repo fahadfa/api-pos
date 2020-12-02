@@ -86,7 +86,10 @@ var App = /** @class */ (function () {
     };
     App.convertUTCDateToLocalDate = function (date, timezoneoffset) {
         var dateString = "";
-        if (date.getTimezoneOffset() + "" !== timezoneoffset) {
+        // console.log(date.getTimezoneOffset(), timezoneoffset)
+        // console.log(date.getTimezoneOffset() + "" !== timezoneoffset)
+        // if (date.getTimezoneOffset() + "" !== timezoneoffset) {
+        if (timezoneoffset) {
             var diffseconds = timezoneoffset * 60;
             var hours = parseInt(diffseconds / 3600 + "");
             var minutes = (diffseconds / 60) % 60;
@@ -101,33 +104,30 @@ var App = /** @class */ (function () {
             date.setHours(hoursOrg - hours);
             date.setMinutes(minutesOrg - minutes);
             date.setSeconds(secondsOrg - seconds);
-            dateString +=
-                date.getFullYear() +
-                    "/" +
-                    date.getMonth() +
-                    "/" +
-                    date.getDate() +
-                    " " +
-                    date.getHours() +
-                    ":" +
-                    date.getMinutes() +
-                    ":" +
-                    date.getSeconds();
         }
-        else {
-            dateString +=
-                date.getFullYear() +
-                    "/" +
-                    date.getMonth() +
-                    "/" +
-                    date.getDate() +
-                    " " +
-                    date.getHours() +
-                    ":" +
-                    date.getMinutes() +
-                    ":" +
-                    date.getSeconds();
-        }
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var hr = date.getHours();
+        var min = date.getMinutes();
+        var sec = date.getSeconds();
+        month < 10 ? month = "0" + month : null;
+        day < 10 ? day = "0" + day : null;
+        hr < 10 ? hr = "0" + hr : null;
+        min < 10 ? min = "0" + min : null;
+        sec < 10 ? sec = "0" + sec : null;
+        dateString +=
+            date.getFullYear() +
+                "/" +
+                month +
+                "/" +
+                day +
+                " " +
+                hr +
+                ":" +
+                min +
+                ":" +
+                sec;
+        // console.log("dateString===========>", dateString)
         return dateString;
     };
     App.uuidv4 = function () {

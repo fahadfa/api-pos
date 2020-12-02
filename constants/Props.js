@@ -216,7 +216,6 @@ var Props = /** @class */ (function () {
         "SSHW-0050",
         "SMAW-0045",
         "SMYW-0063",
-        "SDNW-0061",
         "SMJW-0068",
         "SAEW-0070",
         "SMOHW-24",

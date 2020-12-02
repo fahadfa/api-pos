@@ -1193,6 +1193,19 @@ var RawQuery = /** @class */ (function () {
             });
         });
     };
+    RawQuery.prototype.getItemTaxGroupByItemIds = function (ids) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.db.query("select taxitemgroupid,itemid  from inventtablemodule where itemid in(" + ids.map(function (id) { return "'" + id + "'"; }).join(",") + ") and moduletype=2")];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, data.length > 0 ? data : []];
+                }
+            });
+        });
+    };
     RawQuery.prototype.getsizeid = function (code) {
         return __awaiter(this, void 0, void 0, function () {
             var data;

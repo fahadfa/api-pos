@@ -53,7 +53,7 @@ var LoadService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        query = "select distinct on (c.accountnum) \n      c.accountnum,c.phone,c.name as name, \n      c.namealias  from custtable c \n      where (c.phone ILike '%" + param.key + "%' or c.accountnum  ILike '%" + param.key + "%')\n      order by c.accountnum  desc limit 15";
+                        query = "select distinct on (c.accountnum) \n      c.accountnum,c.phone,c.name as name, \n      c.namealias  from custtable c \n      where (c.phone ILike '%" + param.key + "%' or c.accountnum  ILike '%" + param.key + "%')\n      and c.walkincustomer is true \n      order by c.accountnum  desc limit 15";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
@@ -415,11 +415,11 @@ var LoadService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        query = "Select salestable.salesid as salesid, salestable.salesname as salesname,                         \n      c.name as name, c.namealias as namealias\n     from salestable \n       left join custtable as c on c.accountnum = salestable.custaccount                       \n     where salestable.dataareaid='ajp' and\n      (salestable.salesid ILike '%" + param.key + "%' or c.name ILike '%" + param.key + "%' or  c.namealias  ILike '%" + param.key + "%') and \n      (salestable.transkind='SALESORDER' or salestable.transkind='RETURNORDER')  \n      ORDER BY salestable.createddatetime  desc limit 15";
+                        query = "Select salestable.salesid as salesid, salestable.salesname as salesname,                         \n      c.name as name, c.namealias as namealias\n     from salestable \n       left join custtable as c on c.accountnum = salestable.custaccount                       \n     where salestable.dataareaid='ajp' and\n      (LOWER(salestable.salesid) ILike '%" + param.key.toLowerCase() + "%' or LOWER(c.name) ILike '%" + param.key.toLowerCase() + "%' or  LOWER(c.namealias)  ILike '%" + param.key.toLowerCase() + "%') and \n      (salestable.transkind in('DESIGNERSERVICE','ORDERRECEIVE','ORDERSHIPMENT','RETURNORDER','SALESORDER','TRANSFERORDER') )\n      and salestable.status IN ('PRINTED','POSTED')\n      and  salestable.inventlocationid = '" + this.sessionInfo.inventlocationid + "'\n      ORDER BY salestable.createddatetime  desc limit 15";
+                        console.log(query);
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
-                        // console.log(data);
                         return [2 /*return*/, data];
                     case 2:
                         error_4 = _a.sent();
