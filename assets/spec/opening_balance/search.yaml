@@ -1,13 +1,29 @@
 /openingbalance:
-    get:
-        tags:
-            - OpeningBalance
-        description: search.
-        parameters:
-            - name: date
-              in: query
-              required: false
+  post:
+    tags:
+      - OpeningBalance
+    description: save.
+    parameters:
+      - name: body
+        in: body
+        schema:
+          type: object
+          properties:
+            server:
               type: string
-        responses:
-            200:
-                description: "status:1 is success; status: 0 is failure;"
+              example: ""
+            username:
+              type: string
+              example: ""
+            password:
+              type: string
+              example: ""
+            database:
+              type: string
+              example: ""
+            date:
+              type: string
+              example: "2020-01-01"
+    responses:
+      200:
+        description: "status:1 is success; status: 0 is failure;"

@@ -1198,7 +1198,9 @@ var RawQuery = /** @class */ (function () {
             var data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.db.query("select taxitemgroupid,itemid  from inventtablemodule where itemid in(" + ids.map(function (id) { return "'" + id + "'"; }).join(",") + ") and moduletype=2")];
+                    case 0: return [4 /*yield*/, this.db.query("select taxitemgroupid,itemid  from inventtablemodule where itemid in(" + ids
+                            .map(function (id) { return "'" + id + "'"; })
+                            .join(",") + ") and moduletype=2")];
                     case 1:
                         data = _a.sent();
                         return [2 /*return*/, data.length > 0 ? data : []];
@@ -1279,23 +1281,28 @@ var RawQuery = /** @class */ (function () {
             });
         });
     };
-    RawQuery.prototype.deleteBalances = function (inventlocationid) {
+    RawQuery.prototype.deleteBalances = function (inventlocationid, fromCsv) {
+        if (fromCsv === void 0) { fromCsv = false; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.db.query("delete from inventory_onhand where inventlocationid = '" + inventlocationid + "'")];
+                    case 0:
+                        if (!(fromCsv == true)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.db.query("delete from inventtrans where inventlocationid = '" + inventlocationid + "' and invoiceid in ('OPEN_BALANCE') ")];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, this.db.query("delete from inventtrans where inventlocationid = '" + inventlocationid + "'")];
-                    case 2:
-                        _a.sent();
-                        return [4 /*yield*/, this.db.query("delete from salesline where inventlocationid = '" + inventlocationid + "'")];
+                        return [3 /*break*/, 6];
+                    case 2: return [4 /*yield*/, this.db.query("delete from inventtrans where inventlocationid = '" + inventlocationid + "'")];
                     case 3:
                         _a.sent();
-                        return [4 /*yield*/, this.db.query("delete from salestable where inventlocationid = '" + inventlocationid + "'")];
+                        return [4 /*yield*/, this.db.query("delete from salesline where inventlocationid = '" + inventlocationid + "'")];
                     case 4:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [4 /*yield*/, this.db.query("delete from salestable where inventlocationid = '" + inventlocationid + "'")];
+                    case 5:
+                        _a.sent();
+                        _a.label = 6;
+                    case 6: return [2 /*return*/];
                 }
             });
         });

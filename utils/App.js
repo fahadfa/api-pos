@@ -110,23 +110,12 @@ var App = /** @class */ (function () {
         var hr = date.getHours();
         var min = date.getMinutes();
         var sec = date.getSeconds();
-        month < 10 ? month = "0" + month : null;
-        day < 10 ? day = "0" + day : null;
-        hr < 10 ? hr = "0" + hr : null;
-        min < 10 ? min = "0" + min : null;
-        sec < 10 ? sec = "0" + sec : null;
-        dateString +=
-            date.getFullYear() +
-                "/" +
-                month +
-                "/" +
-                day +
-                " " +
-                hr +
-                ":" +
-                min +
-                ":" +
-                sec;
+        month < "10" ? (month = "0" + month) : null;
+        day < "10" ? (day = "0" + day) : null;
+        hr < "10" ? (hr = "0" + hr) : null;
+        min < "10" ? (min = "0" + min) : null;
+        sec < "10" ? (sec = "0" + sec) : null;
+        dateString += date.getFullYear() + "/" + month + "/" + day + " " + hr + ":" + min + ":" + sec;
         // console.log("dateString===========>", dateString)
         return dateString;
     };

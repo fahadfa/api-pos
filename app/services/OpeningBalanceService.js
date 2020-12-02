@@ -117,24 +117,29 @@ var OpeningBalanceService = /** @class */ (function () {
             });
         });
     };
-    OpeningBalanceService.prototype.save = function (reqData) {
+    OpeningBalanceService.prototype.save = function (reqData, fromCsv) {
+        if (fromCsv === void 0) { fromCsv = false; }
         return __awaiter(this, void 0, void 0, function () {
-            var chunkData, _i, chunkData_1, item, inventtransData, child_process, syncFile, returnData, err_2;
+            var cond, chunkData, _i, chunkData_1, item, inventtransData, child_process, syncFile, returnData, err_2;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 7, , 8]);
-                        return [4 /*yield*/, this.rawQuery.deleteBalances(this.sessionInfo.inventlocationid)];
+                        _a.trys.push([0, 10, , 11]);
+                        return [4 /*yield*/, this.validate(reqData, fromCsv)];
                     case 1:
+                        cond = _a.sent();
+                        if (!(cond == true)) return [3 /*break*/, 8];
+                        return [4 /*yield*/, this.rawQuery.deleteBalances(this.sessionInfo.inventlocationid, fromCsv)];
+                    case 2:
                         _a.sent();
                         return [4 /*yield*/, this.chunkArray(reqData, 100)];
-                    case 2:
+                    case 3:
                         chunkData = _a.sent();
                         _i = 0, chunkData_1 = chunkData;
-                        _a.label = 3;
-                    case 3:
-                        if (!(_i < chunkData_1.length)) return [3 /*break*/, 6];
+                        _a.label = 4;
+                    case 4:
+                        if (!(_i < chunkData_1.length)) return [3 /*break*/, 7];
                         item = chunkData_1[_i];
                         item.map(function (v) {
                             v.id = uuid() + App_1.App.UniqueCode();
@@ -147,26 +152,73 @@ var OpeningBalanceService = /** @class */ (function () {
                             v.dataareaid = "ajp";
                         });
                         return [4 /*yield*/, this.inventtransDAO.savearr(item)];
-                    case 4:
-                        inventtransData = _a.sent();
-                        _a.label = 5;
                     case 5:
-                        _i++;
-                        return [3 /*break*/, 3];
+                        inventtransData = _a.sent();
+                        _a.label = 6;
                     case 6:
-                        child_process = require("child_process");
-                        syncFile = __dirname + "/SyncPrevTransactionsServices.ts";
-                        syncFile = fs.existsSync(syncFile)
-                            ? __dirname + "/SyncPrevTransactionsServices.ts"
-                            : __dirname + "/SyncPrevTransactionsServices.js";
-                        child_process.fork(syncFile);
+                        _i++;
+                        return [3 /*break*/, 4];
+                    case 7:
+                        if (fromCsv == false) {
+                            child_process = require("child_process");
+                            syncFile = __dirname + "/SyncPrevTransactionsServices.ts";
+                            syncFile = fs.existsSync(syncFile)
+                                ? __dirname + "/SyncPrevTransactionsServices.ts"
+                                : __dirname + "/SyncPrevTransactionsServices.js";
+                            child_process.fork(syncFile);
+                        }
                         returnData = { message: "SAVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
-                    case 7:
+                    case 8:
+                        if (cond == "INVENTORY_NOT_RELATED_TO_THIS_STORE") {
+                            throw { message: "INVENTORY NOT REATED TO THIS STORE" };
+                        }
+                        else if (cond == "INVALID_DATA") {
+                            throw {
+                                message: "some of the itemids, configids and inventsizeids are null or empty values please correct the data and upload again ",
+                            };
+                        }
+                        else {
+                            throw { message: "invalid data" };
+                        }
+                        _a.label = 9;
+                    case 9: return [3 /*break*/, 11];
+                    case 10:
                         err_2 = _a.sent();
                         Log_1.log.error(err_2);
                         throw err_2;
-                    case 8: return [2 /*return*/];
+                    case 11: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    OpeningBalanceService.prototype.validate = function (data, fromCsv) {
+        if (fromCsv === void 0) { fromCsv = false; }
+        return __awaiter(this, void 0, void 0, function () {
+            var filteredData, invalidData;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (fromCsv == true) {
+                            filteredData = data.filter(function (v) { return v.inventlocationid.trim() != process.env.ENV_STORE_ID; });
+                            if (filteredData.length > 0) {
+                                return [2 /*return*/, "INVENTORY_NOT_RELATED_TO_THIS_STORE"];
+                            }
+                        }
+                        return [4 /*yield*/, data.filter(function (v) {
+                                return v.itemid == null ||
+                                    v.itemid == "" ||
+                                    v.configid == null ||
+                                    v.configid == "" ||
+                                    v.inventsizeid == null ||
+                                    v.inventsizeid == "";
+                            })];
+                    case 1:
+                        invalidData = _a.sent();
+                        if (invalidData.length > 0) {
+                            return [2 /*return*/, "INVALID_DATA"];
+                        }
+                        return [2 /*return*/, true];
                 }
             });
         });
@@ -205,7 +257,7 @@ var OpeningBalanceService = /** @class */ (function () {
                         return [4 /*yield*/, this.pool.connect()];
                     case 1:
                         _a.sent();
-                        query = "SELECT\n        i.ITEMID as itemid, \n        i.ConfigId as configid, \n        i.InventSizeId as inventsizeid, \n        i.BatchNo as batchno, \n        SUM(i.qty) as qty\n        FROM INVENTTRANS i\n        inner join  inventtable  B ON i.itemid = B.itemid\n        where i.ITEMID NOT LIKE 'HSN%' and i.DATEPHYSICAL < '" + reqData.date + "'\n        group by i.ITEMID, i.ConfigId, i.InventSizeId, i.BatchNo HAVING sum(QTY) >0 ";
+                        query = "SELECT\n        i.ITEMID as itemid, \n        i.ConfigId as configid, \n        i.InventSizeId as inventsizeid, \n        i.BatchNo as batchno, \n        SUM(i.qty) as qty,\n        '" + this.sessionInfo.inventlocationid + "' as inventlocationid\n        FROM INVENTTRANS i\n        inner join  inventtable  B ON i.itemid = B.itemid\n        where i.ITEMID NOT LIKE 'HSN%' and i.DATEPHYSICAL < '" + reqData.date + "'\n        group by i.ITEMID, i.ConfigId, i.InventSizeId, i.BatchNo HAVING sum(QTY) >0 ";
                         return [4 /*yield*/, this.pool.request().query(query)];
                     case 2:
                         rows = _a.sent();
