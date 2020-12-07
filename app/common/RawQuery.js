@@ -67,8 +67,9 @@ var RawQuery = /** @class */ (function () {
             });
         });
     };
-    RawQuery.prototype.getCustomer = function (accountNum1, accountnum2) {
+    RawQuery.prototype.getCustomer = function (accountNum1, accountnum2, accountnum3) {
         if (accountnum2 === void 0) { accountnum2 = null; }
+        if (accountnum3 === void 0) { accountnum3 = null; }
         return __awaiter(this, void 0, void 0, function () {
             var query, data;
             return __generator(this, function (_a) {
@@ -77,6 +78,9 @@ var RawQuery = /** @class */ (function () {
                         query = "select \n        c.accountnum, \n        c.name, \n        c.namealias, \n        c.address, \n        c.phone, \n        c.rcusttype, \n        c.pricegroup,\n        c.inventlocation,\n        c.dataareaid,\n        c.walkincustomer,\n        c.custgroup,\n        c.districtcode,\n        c.citycode,\n        c.cashdisc,\n        c.paymtermid,\n        c.salesgroup,\n        c.creditmax,\n        c.currency,\n        c.vendaccount,\n        c.multilinedisc,\n        c.vatnum,\n        c.countryregionid,\n        c.inventlocation,\n        c.email,\n        c.url,\n        c.blocked,\n        c.taxgroup,\n        c.paymmode,\n        c.bankaccount,\n        c.namealias,\n        c.invoiceaddress,\n        c.incltax,\n        c.numbersequencegroup,\n        c.city,\n        c.custclassificationid,\n        c.identificationnumber,\n        c.modifieddatetime,\n        c.createddatetime,\n        c.dimension6_ as salesmanid,\n        c.dataareaid,\n        c.recversion,\n        c.recid,\n        c.custtype,\n        c.walkincustomer,\n        c.lastmodifiedby,\n        c.lastmodifieddate,\n        c.createdby,\n        c.zipcode,\n         (CASE \n              WHEN c.dimension6_!='' THEN concat(d.num,' - ', d.description)\n              ELSE '" + (this.sessionInfo.salesmanid.length > 0 ? this.sessionInfo.salesmanid[0].salesman : null) + "'\n          END\n           ) as salesman,\n           (CASE \n            WHEN c.dimension6_!='' THEN concat(d.num)\n            ELSE '" + (this.sessionInfo.salesmanid.length > 0 ? this.sessionInfo.salesmanid[0].salesmanid : null) + "'\n        END\n         ) as salesmanid\n       from custtable c\n       left join dimensions d on c.dimension6_ = d.num\n       where accountnum in ('" + accountNum1 + "' ";
                         if (accountnum2) {
                             query += ", '" + accountnum2 + "'";
+                        }
+                        if (accountnum3) {
+                            query += ", '" + accountnum3 + "'";
                         }
                         query += ") ";
                         return [4 /*yield*/, this.db.query(query)];

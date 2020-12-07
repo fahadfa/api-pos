@@ -108,6 +108,9 @@ var AuthService = /** @class */ (function () {
                             responseData.user.workflowcustomers = accountObj.userGroupConfig.workflowcustomers;
                             responseData.user.salesmanid = salesmanids;
                             responseData.user.ledgerAccount = accountObj.userGroupConfig.ledgeraccount;
+                            responseData.user.showroomCountryCode = accountObj.userGroupConfig.showroomCountryCode;
+                            responseData.user.showroomCityCode = accountObj.userGroupConfig.showroomCityCode;
+                            responseData.user.showroomDistrictCode = accountObj.userGroupConfig.showroomDistrictCode;
                             responseData.identity = {};
                             responseData.identity = responseData.user;
                             delete responseData.user;

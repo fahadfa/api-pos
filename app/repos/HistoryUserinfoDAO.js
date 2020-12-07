@@ -36,27 +36,31 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
-var Usergroupconfig_1 = require("../../entities/Usergroupconfig");
-var UsergroupconfigDAO = /** @class */ (function () {
-    function UsergroupconfigDAO() {
-        this.dao = typeorm_1.getRepository(Usergroupconfig_1.Usergroupconfig);
-        this.db = typeorm_1.getManager();
+var HistoryUserInfo_1 = require("../../entities/HistoryUserInfo");
+var HistoryUserinfoDAO = /** @class */ (function () {
+    function HistoryUserinfoDAO() {
+        this.dao = typeorm_1.getRepository(HistoryUserInfo_1.HistoryUserInfo);
     }
-    UsergroupconfigDAO.prototype.search = function (data) {
+    HistoryUserinfoDAO.prototype.search = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.dao
-                            .createQueryBuilder("Usergroupconfig")
+                            .createQueryBuilder("HistoryUserInfo")
+                            // .leftJoinAndSelect("HistoryUserInfo.userGroupConfig", "userGroupConfig")
+                            .leftJoin("HistoryUserInfo.userGroup", "userGroup")
+                            .addSelect("userGroup.groupid")
+                            .addSelect("userGroup.groupname")
                             .where(data)
-                            .andWhere("deleted=false or deleted IS NULL")
+                            .andWhere("HistoryUserInfo.deleted =false or HistoryUserInfo.deleted is NULL")
+                            .orderBy("HistoryUserInfo.lastmodifieddate", "DESC")
                             .getMany()];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
     };
-    UsergroupconfigDAO.prototype.save = function (data) {
+    HistoryUserinfoDAO.prototype.save = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -66,7 +70,7 @@ var UsergroupconfigDAO = /** @class */ (function () {
             });
         });
     };
-    UsergroupconfigDAO.prototype.entity = function (id) {
+    HistoryUserinfoDAO.prototype.entity = function (id) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -76,7 +80,7 @@ var UsergroupconfigDAO = /** @class */ (function () {
             });
         });
     };
-    UsergroupconfigDAO.prototype.delete = function (data) {
+    HistoryUserinfoDAO.prototype.delete = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -86,67 +90,47 @@ var UsergroupconfigDAO = /** @class */ (function () {
             });
         });
     };
-    UsergroupconfigDAO.prototype.findOne = function (data) {
+    HistoryUserinfoDAO.prototype.findOne = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         console.log(data);
-                        return [4 /*yield*/, this.dao.findOne(data)];
+                        return [4 /*yield*/, this.dao
+                                .createQueryBuilder("HistoryUserInfo")
+                                .leftJoinAndSelect("HistoryUserInfo.userGroupConfig", "userGroupConfig")
+                                .leftJoinAndSelect("HistoryUserInfo.userGroup", "userGroup")
+                                .where({})
+                                .andWhere("LOWER(trim(HistoryUserInfo.email)) = LOWER('" + data.userName.trim() + "') or LOWER(trim(HistoryUserInfo.userName)) = LOWER('" + data.userName.trim() + "')")
+                                .getOne()];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
     };
-    UsergroupconfigDAO.prototype.findOneEntity = function () {
+    HistoryUserinfoDAO.prototype.findAll = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.dao.findOne()];
+                    case 0: return [4 /*yield*/, this.dao
+                            .createQueryBuilder("HistoryUserInfo")
+                            .andWhere("LOWER(user_name) = LOWER(:username) and (HistoryUserInfo.deleted =false or HistoryUserInfo.deleted is NULL)", {
+                            username: data.userName,
+                        })
+                            .getMany()];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
     };
-    UsergroupconfigDAO.prototype.find = function (data) {
+    HistoryUserinfoDAO.prototype.pagination = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        console.log(data);
-                        return [4 /*yield*/, this.dao.find(data)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
+                return [2 /*return*/, data];
             });
         });
     };
-    UsergroupconfigDAO.prototype.findAll = function (data) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.dao.createQueryBuilder("Usergroupconfig").where(data).getMany()];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
-    UsergroupconfigDAO.prototype.saveAll = function (data) {
-        return __awaiter(this, void 0, void 0, function () {
-            var query;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        console.log(data);
-                        query = " update usergroupconfig set \n                        special_products_for_colorant_option = '" + data.specialproductsforcolorantoption + "', \n                        blocklistedbasecolor = '" + data.blocklistedbasecolor + "',\n                        sabic_customers = '" + data.sabiccustomers + "',\n                        nocolorantcheckgroup = '" + data.nocolorantcheckgroup + "',\n                        workflowcustomers = '" + data.workflowcustomers + "',\n                        lastmodifieddate = '" + new Date().toISOString() + "',\n                        lastmodifiedby = '" + data.lastmodifiedby + "'\n                        ";
-                        return [4 /*yield*/, this.db.query(query)];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    return UsergroupconfigDAO;
+    return HistoryUserinfoDAO;
 }());
-exports.UsergroupconfigDAO = UsergroupconfigDAO;
-Object.seal(UsergroupconfigDAO);
+exports.HistoryUserinfoDAO = HistoryUserinfoDAO;
+Object.seal(HistoryUserinfoDAO);

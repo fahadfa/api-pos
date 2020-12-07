@@ -36,23 +36,21 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var App_1 = require("../../utils/App");
-var UserInfo_1 = require("../../entities/UserInfo");
-var UsergroupconfigDAO_1 = require("../repos/UsergroupconfigDAO");
-var UsergroupDAO_1 = require("../repos/UsergroupDAO");
+var HistoryUserInfo_1 = require("../../entities/HistoryUserInfo");
+var HistoryUsergroupconfigDAO_1 = require("../repos/HistoryUsergroupconfigDAO");
+var HistoryUsergroupDAO_1 = require("../repos/HistoryUsergroupDAO");
 var typeorm_1 = require("typeorm");
 var RawQuery_1 = require("../common/RawQuery");
-var HistoryUsergroupConfigService_1 = require("./HistoryUsergroupConfigService");
 var uuid = require("uuid");
-var UsergroupConfigService = /** @class */ (function () {
-    function UsergroupConfigService() {
+var HistoryUsergroupConfigService = /** @class */ (function () {
+    function HistoryUsergroupConfigService() {
         this.db = typeorm_1.getManager();
-        this.usergroupconfigDAO = new UsergroupconfigDAO_1.UsergroupconfigDAO();
-        this.usergroupDAO = new UsergroupDAO_1.UsergroupDAO();
-        this.historyUserGroupConfigService = new HistoryUsergroupConfigService_1.HistoryUsergroupConfigService();
-        this.userInfo = new UserInfo_1.UserInfo();
+        this.usergroupconfigDAO = new HistoryUsergroupconfigDAO_1.HistoryUsergroupconfigDAO();
+        this.usergroupDAO = new HistoryUsergroupDAO_1.HistoryUsergroupDAO();
+        this.userInfo = new HistoryUserInfo_1.HistoryUserInfo();
         this.rawQuery = new RawQuery_1.RawQuery();
     }
-    UsergroupConfigService.prototype.entity = function (id) {
+    HistoryUsergroupConfigService.prototype.entity = function (id) {
         return __awaiter(this, void 0, void 0, function () {
             var data, error_1;
             return __generator(this, function (_a) {
@@ -86,7 +84,7 @@ var UsergroupConfigService = /** @class */ (function () {
             });
         });
     };
-    UsergroupConfigService.prototype.search = function (item) {
+    HistoryUsergroupConfigService.prototype.search = function (item) {
         return __awaiter(this, void 0, void 0, function () {
             var data, error_2;
             return __generator(this, function (_a) {
@@ -108,7 +106,7 @@ var UsergroupConfigService = /** @class */ (function () {
             });
         });
     };
-    UsergroupConfigService.prototype.findOne = function () {
+    HistoryUsergroupConfigService.prototype.findOne = function () {
         return __awaiter(this, void 0, void 0, function () {
             var data, error_3;
             return __generator(this, function (_a) {
@@ -127,14 +125,13 @@ var UsergroupConfigService = /** @class */ (function () {
             });
         });
     };
-    UsergroupConfigService.prototype.saveAll = function (data) {
+    HistoryUsergroupConfigService.prototype.saveAll = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             var returnData, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        data.lastmodifiedby = this.sessionInfo.userName;
                         return [4 /*yield*/, this.usergroupconfigDAO.saveAll(data)];
                     case 1:
                         _a.sent();
@@ -151,9 +148,9 @@ var UsergroupConfigService = /** @class */ (function () {
             });
         });
     };
-    UsergroupConfigService.prototype.save = function (reqData) {
+    HistoryUsergroupConfigService.prototype.save = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var cond, promiseList, returnData, error_5;
+            var cond, data, returnData, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -162,29 +159,14 @@ var UsergroupConfigService = /** @class */ (function () {
                     case 1:
                         cond = _a.sent();
                         console.log(cond);
-                        if (!(cond == true)) return [3 /*break*/, 4];
-                        reqData.lastmodifieddate = new Date(App_1.App.DateNow());
-                        promiseList = [];
-                        promiseList.push(this.usergroupconfigDAO.save(reqData));
-                        promiseList.push(this.update_user_group(reqData));
-                        promiseList.push(this.historyUserGroupConfigService.save(reqData));
-                        return [4 /*yield*/, Promise.all(promiseList)];
+                        if (!(cond == true)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.usergroupconfigDAO.save(reqData)];
                     case 2:
-                        _a.sent();
-                        console.log("======================================");
-                        return [4 /*yield*/, this.rawQuery.updateSynctable(reqData.inventlocationid)];
-                    case 3:
-                        _a.sent();
+                        data = _a.sent();
                         returnData = { id: reqData.id, message: "SAVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
-                    case 4:
-                        if (cond == "groupname") {
-                            throw { message: "RECORD_ALREADY_EXISTS" };
-                        }
-                        else {
-                            throw { message: "INVALID_DATA" };
-                        }
-                        return [3 /*break*/, 6];
+                    case 3: throw { message: "INVALID_DATA" };
+                    case 4: return [3 /*break*/, 6];
                     case 5:
                         error_5 = _a.sent();
                         throw error_5;
@@ -193,7 +175,7 @@ var UsergroupConfigService = /** @class */ (function () {
             });
         });
     };
-    UsergroupConfigService.prototype.update_user_group = function (data) {
+    HistoryUsergroupConfigService.prototype.update_user_group = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             var group;
             return __generator(this, function (_a) {
@@ -210,53 +192,15 @@ var UsergroupConfigService = /** @class */ (function () {
             });
         });
     };
-    UsergroupConfigService.prototype.validate = function (item) {
+    HistoryUsergroupConfigService.prototype.validate = function (item) {
         return __awaiter(this, void 0, void 0, function () {
-            var previousData, mdata;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        previousData = null;
-                        if (!(!item.groupid || item.groupid == "" || item.groupid == "0")) return [3 /*break*/, 1];
-                        item.groupid = null;
-                        return [3 /*break*/, 3];
-                    case 1:
-                        console.log(item.groupid);
-                        return [4 /*yield*/, this.usergroupconfigDAO.entity(item.id)];
-                    case 2:
-                        previousData = _a.sent();
-                        console.log(previousData);
-                        _a.label = 3;
-                    case 3:
-                        item.lastmodifiedby = this.sessionInfo ? this.sessionInfo.userName : item.lastmodifiedby;
-                        return [4 /*yield*/, this.usergroupconfigDAO.findAll({ groupid: item.groupid })];
-                    case 4:
-                        mdata = _a.sent();
-                        console.log(mdata);
-                        if (!item.id) {
-                            if (mdata.length > 0) {
-                                return [2 /*return*/, "groupid"];
-                            }
-                            else {
-                                item.id = uuid();
-                                item.deleted = false;
-                            }
-                        }
-                        else {
-                            // console.log(item.accountnum);
-                            if (item.id != previousData.id) {
-                                if (mdata.length > 0) {
-                                    return [2 /*return*/, "groupname"];
-                                }
-                            }
-                        }
-                        item.lastmodifieddate = new Date(App_1.App.DateNow());
-                        return [2 /*return*/, true];
-                }
+                item.historyId = uuid();
+                return [2 /*return*/, true];
             });
         });
     };
-    UsergroupConfigService.prototype.delete = function (id) {
+    HistoryUsergroupConfigService.prototype.delete = function (id) {
         return __awaiter(this, void 0, void 0, function () {
             var usergroupconfig, error_6;
             return __generator(this, function (_a) {
@@ -288,6 +232,6 @@ var UsergroupConfigService = /** @class */ (function () {
             });
         });
     };
-    return UsergroupConfigService;
+    return HistoryUsergroupConfigService;
 }());
-exports.UsergroupConfigService = UsergroupConfigService;
+exports.HistoryUsergroupConfigService = HistoryUsergroupConfigService;

@@ -120,7 +120,7 @@ var OpeningBalanceService = /** @class */ (function () {
     OpeningBalanceService.prototype.save = function (reqData, fromCsv) {
         if (fromCsv === void 0) { fromCsv = false; }
         return __awaiter(this, void 0, void 0, function () {
-            var cond, chunkData, _i, chunkData_1, item, inventtransData, child_process, syncFile, returnData, err_2;
+            var cond, chunkData, _i, chunkData_1, item, inventtransData, child_process, syncFile, fs_2, returnData, err_2;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -167,14 +167,19 @@ var OpeningBalanceService = /** @class */ (function () {
                                 : __dirname + "/SyncPrevTransactionsServices.js";
                             child_process.fork(syncFile);
                         }
-                        returnData = { message: "SAVED_SUCCESSFULLY" };
+                        else {
+                            fs_2 = require("fs");
+                            fs_2.unlinkSync(__dirname + "/data.json");
+                        }
+                        returnData = { status: 1, message: "SAVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
                     case 8:
                         if (cond == "INVENTORY_NOT_RELATED_TO_THIS_STORE") {
-                            throw { message: "INVENTORY NOT REATED TO THIS STORE" };
+                            throw { status: 0, message: "INVENTORY NOT REATED TO THIS STORE" };
                         }
                         else if (cond == "INVALID_DATA") {
                             throw {
+                                status: 0,
                                 message: "some of the itemids, configids and inventsizeids are null or empty values please correct the data and upload again ",
                             };
                         }
@@ -200,6 +205,7 @@ var OpeningBalanceService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         if (fromCsv == true) {
+                            data[0];
                             filteredData = data.filter(function (v) { return v.inventlocationid.trim() != process.env.ENV_STORE_ID; });
                             if (filteredData.length > 0) {
                                 return [2 /*return*/, "INVENTORY_NOT_RELATED_TO_THIS_STORE"];
@@ -246,6 +252,7 @@ var OpeningBalanceService = /** @class */ (function () {
     OpeningBalanceService.prototype.get_open_bal_data_for_onhand = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
             var mssqlClient, mssqlString, connectionString, query, rows, result, err_3;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -257,7 +264,10 @@ var OpeningBalanceService = /** @class */ (function () {
                         return [4 /*yield*/, this.pool.connect()];
                     case 1:
                         _a.sent();
-                        query = "SELECT\n        i.ITEMID as itemid, \n        i.ConfigId as configid, \n        i.InventSizeId as inventsizeid, \n        i.BatchNo as batchno, \n        SUM(i.qty) as qty,\n        '" + this.sessionInfo.inventlocationid + "' as inventlocationid\n        FROM INVENTTRANS i\n        inner join  inventtable  B ON i.itemid = B.itemid\n        where i.ITEMID NOT LIKE 'HSN%' and i.DATEPHYSICAL < '" + reqData.date + "'\n        group by i.ITEMID, i.ConfigId, i.InventSizeId, i.BatchNo HAVING sum(QTY) >0 ";
+                        Log_1.log.info("eonnection established");
+                        query = "SELECT\n        i.ITEMID as itemid, \n        i.ConfigId as configid, \n        i.InventSizeId as inventsizeid, \n        i.BatchNo as batchno, \n        SUM(i.qty) as qty\n        FROM INVENTTRANS i\n        inner join  inventtable  B ON i.itemid = B.itemid\n        where i.ITEMID NOT LIKE 'HSN%' and i.DATEPHYSICAL < '" + reqData.date + "'\n        group by i.ITEMID, i.ConfigId, i.InventSizeId, i.BatchNo HAVING sum(QTY) >0 ";
+                        //await sql.query(connectionString, query, (err:any, rows:any) => {
+                        Log_1.log.info(query);
                         return [4 /*yield*/, this.pool.request().query(query)];
                     case 2:
                         rows = _a.sent();
@@ -266,6 +276,7 @@ var OpeningBalanceService = /** @class */ (function () {
                         _a.sent();
                         result = rows.recordset;
                         result.map(function (v) {
+                            v.inventlocationid = _this.sessionInfo.inventlocationid;
                             if (v.qty > 0 && v.qty < 1) {
                                 v.qty = 1;
                             }
@@ -274,7 +285,7 @@ var OpeningBalanceService = /** @class */ (function () {
                     case 4:
                         err_3 = _a.sent();
                         Log_1.log.error(err_3);
-                        throw { message: "INVALID_CREDENTIALS" };
+                        throw { status: 0, message: "INVALID_CREDENTIALS" };
                     case 5: return [2 /*return*/];
                 }
             });

@@ -48,6 +48,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var App_1 = require("../../utils/App");
 var SalesTable_1 = require("../../entities/SalesTable");
+var Custtable_1 = require("../../entities/Custtable");
 var SalesTableDAO_1 = require("../repos/SalesTableDAO");
 var InventTransDAO_1 = require("../repos/InventTransDAO");
 var SalesLineDAO_1 = require("../repos/SalesLineDAO");
@@ -1914,6 +1915,34 @@ var SalesTableService = /** @class */ (function () {
             });
         });
     };
+    SalesTableService.prototype.saveCustomerData = function (reqData, defaultCustomer, queryRunner) {
+        return __awaiter(this, void 0, void 0, function () {
+            var customerData;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        customerData = new Custtable_1.Custtable();
+                        customerData.accountnum = reqData.mobileNo;
+                        customerData.name = reqData.salesName;
+                        customerData.namealias = reqData.salesName;
+                        customerData.phone = reqData.mobileNo;
+                        customerData.paymtermid = defaultCustomer.paymtermid;
+                        customerData.custgroup = defaultCustomer.custgroup;
+                        customerData.citycode = this.sessionInfo.showroomCityCode;
+                        customerData.districtcode = this.sessionInfo.showroomDistrictCode;
+                        customerData.countryCode = this.sessionInfo.showroomCountryCode;
+                        customerData.walkincustomer = true;
+                        customerData.lastmodifieddate = new Date(App_1.App.DateNow());
+                        customerData.lastmodifiedby = this.sessionInfo.userName;
+                        customerData.dataareaId = this.sessionInfo.dataareaid;
+                        return [4 /*yield*/, queryRunner.manager.getRepository(Custtable_1.Custtable).save(customerData)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     SalesTableService.prototype.saveSalesOrderOverDue = function (reqData, userName, salesTable, queryRunner) {
         return __awaiter(this, void 0, void 0, function () {
             var paymTerDays, days, now, dueDate, overDue, overDueSaved;
@@ -2141,7 +2170,7 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.saveSalesOrder = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, promiseList, customerRecord, salesLine_7, returnData, batchTobeSaved, salestatus, _a, saleslineArray, cond, customerRecords, customerRecord_1, defaultcustomer, salesTable_1, taxgroups, _loop_4, this_3, _i, salesLine_6, item, salesline, condData, customerDetails, pmobileno, userName, ptokenData, pmessage, pmail, imail, error_15;
+            var queryRunner, promiseList, customerRecord, salesLine_7, returnData, batchTobeSaved, salestatus, _a, saleslineArray, cond, customerRecords, customerRecord_1, defaultcustomer, mobileCustomer, salesTable_1, taxgroups, _loop_4, this_3, _i, salesLine_6, item, salesline, condData, customerDetails, pmobileno, userName, ptokenData, pmessage, pmail, imail, error_15;
             var _this = this;
             return __generator(this, function (_b) {
                 switch (_b.label) {
@@ -2228,11 +2257,12 @@ var SalesTableService = /** @class */ (function () {
                         reqData.invoiceAccount =
                             reqData.invoiceAccount || reqData.invoiceAccount != "" ? reqData.invoiceAccount : reqData.custAccount;
                         this.rawQuery.sessionInfo = this.sessionInfo;
-                        return [4 /*yield*/, this.rawQuery.getCustomer(reqData.invoiceAccount, this.sessionInfo.defaultcustomerid)];
+                        return [4 /*yield*/, this.rawQuery.getCustomer(reqData.invoiceAccount, this.sessionInfo.defaultcustomerid, reqData.mobileNo)];
                     case 11:
                         customerRecords = _b.sent();
                         customerRecord_1 = customerRecords.find(function (v) { return v.accountnum == reqData.invoiceAccount; });
                         defaultcustomer = customerRecords.find(function (v) { return v.accountnum == _this.sessionInfo.defaultcustomerid; });
+                        mobileCustomer = customerRecords.find(function (v) { return v.accountnum == reqData.mobileCustomer; });
                         customerRecord_1 = customerRecord_1 ? customerRecord_1 : {};
                         defaultcustomer = defaultcustomer ? defaultcustomer : {};
                         if (customerRecord_1.walkincustomer == true) {
@@ -2246,6 +2276,9 @@ var SalesTableService = /** @class */ (function () {
                         reqData.disc = reqData.disc ? reqData.disc : 0;
                         reqData.netAmount = parseFloat(reqData.amount) - parseFloat(reqData.disc) + parseFloat(reqData.vatamount);
                         reqData.linesCount = salesLine_7.length;
+                        if (!mobileCustomer) {
+                            reqData.invoiceAccount = reqData.mobileNo;
+                        }
                         return [4 /*yield*/, queryRunner.manager.getRepository(SalesTable_1.SalesTable).save(reqData)];
                     case 12:
                         salesTable_1 = _b.sent();
@@ -2335,6 +2368,9 @@ var SalesTableService = /** @class */ (function () {
                         //console.log(reqData);
                         if (customerDetails.walkincustomer) {
                             promiseList.push(this.saveSalesVisitorData(reqData, customerDetails, queryRunner));
+                        }
+                        if (!mobileCustomer && reqData.mobileNo) {
+                            promiseList.push(this.saveCustomerData(reqData, defaultcustomer, queryRunner));
                         }
                         userName = this.sessionInfo.userName;
                         if ((reqData.paymtermid != "CASH" || reqData.payment != "CASH") && reqData.isCash == false) {

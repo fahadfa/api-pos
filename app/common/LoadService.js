@@ -415,7 +415,7 @@ var LoadService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        query = "Select salestable.salesid as salesid, salestable.salesname as salesname,                         \n      c.name as name, c.namealias as namealias\n     from salestable \n       left join custtable as c on c.accountnum = salestable.custaccount                       \n     where salestable.dataareaid='ajp' and\n      (LOWER(salestable.salesid) ILike '%" + param.key.toLowerCase() + "%' or LOWER(c.name) ILike '%" + param.key.toLowerCase() + "%' or  LOWER(c.namealias)  ILike '%" + param.key.toLowerCase() + "%') and \n      (salestable.transkind in('DESIGNERSERVICE','ORDERRECEIVE','ORDERSHIPMENT','RETURNORDER','SALESORDER','TRANSFERORDER') )\n      and salestable.status IN ('PRINTED','POSTED')\n      and  salestable.inventlocationid = '" + this.sessionInfo.inventlocationid + "'\n      ORDER BY salestable.createddatetime  desc limit 15";
+                        query = "Select salestable.salesid as salesid, salestable.salesname as salesname,                         \n      c.name as name, c.namealias as namealias\n     from salestable \n       left join custtable as c on c.accountnum = salestable.custaccount                       \n     where salestable.dataareaid='ajp' and\n      (LOWER(salestable.salesid) ILike '%" + param.key.toLowerCase() + "%' or LOWER(c.name) ILike '%" + param.key.toLowerCase() + "%' or  LOWER(c.namealias)  ILike '%" + param.key.toLowerCase() + "%') and \n      (salestable.transkind in('DESIGNERSERVICE','ORDERRECEIVE','ORDERSHIPMENT','RETURNORDER','SALESORDER','TRANSFERORDER','INVENTORYMOVEMENT','DESIGNERSERVICERETURN') )\n      and salestable.status IN ('PRINTED','POSTED')\n      and  salestable.inventlocationid = '" + this.sessionInfo.inventlocationid + "'\n      ORDER BY salestable.createddatetime  desc limit 15";
                         console.log(query);
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
@@ -478,7 +478,7 @@ var LoadService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        query = "select id as code, name as namear, nameeng as nameen from country";
+                        query = "select concat(id, ':', nameeng) as countryen, concat(id, ':', name) as countryar,  id as code, name as namear, nameeng as nameen from country";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
@@ -499,7 +499,7 @@ var LoadService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        query = "select cityname as nameen, citynamearb as namear, citycode as citycode from citymast";
+                        query = "select concat(citycode, ':', cityname) as cityen, concat(citycode, ':', citynamearb) as cityar ,cityname as nameen, citynamearb as namear, citycode as citycode from citymast";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
@@ -520,7 +520,7 @@ var LoadService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        query = "select districtname as nameen, districtnamearb as namear, districtcode, citycode from districtmast";
+                        query = "select concat(districtcode, ':', districtname) as districten, concat(districtcode, ':', districtnamearb) as districtar, districtname as nameen, districtnamearb as namear, districtcode, citycode from districtmast";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();

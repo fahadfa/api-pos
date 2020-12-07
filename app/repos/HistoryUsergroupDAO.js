@@ -36,27 +36,27 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
-var Usergroupconfig_1 = require("../../entities/Usergroupconfig");
-var UsergroupconfigDAO = /** @class */ (function () {
-    function UsergroupconfigDAO() {
-        this.dao = typeorm_1.getRepository(Usergroupconfig_1.Usergroupconfig);
-        this.db = typeorm_1.getManager();
+var HistoryUsergroup_1 = require("../../entities/HistoryUsergroup");
+var HistoryUsergroupDAO = /** @class */ (function () {
+    function HistoryUsergroupDAO() {
+        this.dao = typeorm_1.getRepository(HistoryUsergroup_1.HistoryUsergroup);
     }
-    UsergroupconfigDAO.prototype.search = function (data) {
+    HistoryUsergroupDAO.prototype.search = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.dao
-                            .createQueryBuilder("Usergroupconfig")
+                            .createQueryBuilder("HistoryUsergroup")
                             .where(data)
                             .andWhere("deleted=false or deleted IS NULL")
+                            .orderBy("HistoryUsergroup.lastmodifieddate", "DESC")
                             .getMany()];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
     };
-    UsergroupconfigDAO.prototype.save = function (data) {
+    HistoryUsergroupDAO.prototype.save = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -66,7 +66,7 @@ var UsergroupconfigDAO = /** @class */ (function () {
             });
         });
     };
-    UsergroupconfigDAO.prototype.entity = function (id) {
+    HistoryUsergroupDAO.prototype.entity = function (id) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -76,7 +76,7 @@ var UsergroupconfigDAO = /** @class */ (function () {
             });
         });
     };
-    UsergroupconfigDAO.prototype.delete = function (data) {
+    HistoryUsergroupDAO.prototype.delete = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -86,67 +86,32 @@ var UsergroupconfigDAO = /** @class */ (function () {
             });
         });
     };
-    UsergroupconfigDAO.prototype.findOne = function (data) {
+    HistoryUsergroupDAO.prototype.findOne = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        console.log(data);
-                        return [4 /*yield*/, this.dao.findOne(data)];
+                    case 0: return [4 /*yield*/, this.dao.findOne(data)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
     };
-    UsergroupconfigDAO.prototype.findOneEntity = function () {
+    HistoryUsergroupDAO.prototype.findAll = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.dao.findOne()];
+                    case 0: return [4 /*yield*/, this.dao
+                            .createQueryBuilder("HistoryUsergroup")
+                            .andWhere("LOWER(groupname) = LOWER(:groupname) and (deleted=false or deleted IS NULL)", {
+                            groupname: data.groupname
+                        })
+                            .getMany()];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
     };
-    UsergroupconfigDAO.prototype.find = function (data) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        console.log(data);
-                        return [4 /*yield*/, this.dao.find(data)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
-    UsergroupconfigDAO.prototype.findAll = function (data) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.dao.createQueryBuilder("Usergroupconfig").where(data).getMany()];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
-    UsergroupconfigDAO.prototype.saveAll = function (data) {
-        return __awaiter(this, void 0, void 0, function () {
-            var query;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        console.log(data);
-                        query = " update usergroupconfig set \n                        special_products_for_colorant_option = '" + data.specialproductsforcolorantoption + "', \n                        blocklistedbasecolor = '" + data.blocklistedbasecolor + "',\n                        sabic_customers = '" + data.sabiccustomers + "',\n                        nocolorantcheckgroup = '" + data.nocolorantcheckgroup + "',\n                        workflowcustomers = '" + data.workflowcustomers + "',\n                        lastmodifieddate = '" + new Date().toISOString() + "',\n                        lastmodifiedby = '" + data.lastmodifiedby + "'\n                        ";
-                        return [4 /*yield*/, this.db.query(query)];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    return UsergroupconfigDAO;
+    return HistoryUsergroupDAO;
 }());
-exports.UsergroupconfigDAO = UsergroupconfigDAO;
-Object.seal(UsergroupconfigDAO);
+exports.HistoryUsergroupDAO = HistoryUsergroupDAO;
+Object.seal(HistoryUsergroupDAO);

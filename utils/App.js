@@ -423,7 +423,6 @@ var App = /** @class */ (function () {
                         salesLines.forEach(function (line, index) {
                             var name = itemNames_1.find(function (item) { return item.code == line.itemid; });
                             if (name) {
-                                delete name.code;
                                 salesLines[index] = __assign({}, salesLines[index], name);
                             }
                         });

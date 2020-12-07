@@ -35,23 +35,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var App_1 = require("../../utils/App");
-var UserInfo_1 = require("../../entities/UserInfo");
-var UserinfoDAO_1 = require("../repos/UserinfoDAO");
+var HistoryUserInfo_1 = require("../../entities/HistoryUserInfo");
 var Props_1 = require("../../constants/Props");
 var typeorm_1 = require("typeorm");
 var RawQuery_1 = require("../common/RawQuery");
-var HistoryUsesrInfoService_1 = require("../services/HistoryUsesrInfoService");
+var HistoryUserinfoDAO_1 = require("../repos/HistoryUserinfoDAO");
 var uuid = require("uuid");
-var UsesrInfoService = /** @class */ (function () {
-    function UsesrInfoService() {
+var HistoryUsesrInfoService = /** @class */ (function () {
+    function HistoryUsesrInfoService() {
         this.db = typeorm_1.getManager();
-        this.userinfoDAO = new UserinfoDAO_1.UserinfoDAO();
-        this.userInfo = new UserInfo_1.UserInfo();
+        this.userinfoDAO = new HistoryUserinfoDAO_1.HistoryUserinfoDAO();
+        this.userInfo = new HistoryUserInfo_1.HistoryUserInfo();
         this.rawQuery = new RawQuery_1.RawQuery();
-        this.historyUsesrInfoService = new HistoryUsesrInfoService_1.HistoryUsesrInfoService();
     }
-    UsesrInfoService.prototype.entity = function (id) {
+    HistoryUsesrInfoService.prototype.entity = function (id) {
         return __awaiter(this, void 0, void 0, function () {
             var data, error_1;
             return __generator(this, function (_a) {
@@ -85,7 +82,7 @@ var UsesrInfoService = /** @class */ (function () {
             });
         });
     };
-    UsesrInfoService.prototype.search = function (item) {
+    HistoryUsesrInfoService.prototype.search = function (item) {
         return __awaiter(this, void 0, void 0, function () {
             var data, groupid_1, attachedToGroup_1, notAttachedToGroup_1, error_2;
             return __generator(this, function (_a) {
@@ -131,135 +128,43 @@ var UsesrInfoService = /** @class */ (function () {
             });
         });
     };
-    UsesrInfoService.prototype.save = function (reqData) {
+    HistoryUsesrInfoService.prototype.save = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
             var cond, user, returnData, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
+                        _a.trys.push([0, 3, , 4]);
                         return [4 /*yield*/, this.validate(reqData)];
                     case 1:
                         cond = _a.sent();
-                        console.log(cond);
-                        if (!(cond == true)) return [3 /*break*/, 4];
-                        reqData.lastmodifieddate = new Date(App_1.App.DateNow());
-                        reqData.lastmodifiedby = this.sessionInfo.userName;
-                        reqData.userGroup = { groupid: reqData.groupid };
-                        this.historyUsesrInfoService.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.userinfoDAO.save(reqData)];
                     case 2:
                         user = _a.sent();
-                        return [4 /*yield*/, this.historyUsesrInfoService.save(reqData)];
-                    case 3:
-                        _a.sent();
-                        returnData = { id: reqData.id, password: reqData.normalPassword, message: Props_1.Props.SAVED_SUCCESSFULLY };
+                        returnData = { id: user.id, password: reqData.normalPassword, message: Props_1.Props.SAVED_SUCCESSFULLY };
                         return [2 /*return*/, returnData];
-                    case 4:
-                        if (cond == "userName") {
-                            throw { message: "RECORD_ALREADY_EXISTS" };
-                        }
-                        else {
-                            throw { message: "INVALID_DATA" };
-                        }
-                        return [3 /*break*/, 6];
-                    case 5:
+                    case 3:
                         error_3 = _a.sent();
                         throw error_3;
-                    case 6: return [2 /*return*/];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
     };
-    UsesrInfoService.prototype.validate = function (item) {
+    HistoryUsesrInfoService.prototype.validate = function (item) {
         return __awaiter(this, void 0, void 0, function () {
-            var previousData, mdata, prevData;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        console.log(item.accountnum);
-                        if (!(!item.id || item.id == "" || item.id == "0")) return [3 /*break*/, 1];
-                        item.id = null;
-                        return [3 /*break*/, 3];
-                    case 1:
-                        console.log(item.id);
-                        return [4 /*yield*/, this.userinfoDAO.entity(item.id)];
-                    case 2:
-                        previousData = _a.sent();
-                        console.log(previousData);
-                        _a.label = 3;
-                    case 3:
-                        item.lastmodifiedby = this.sessionInfo.userName;
-                        return [4 /*yield*/, this.userinfoDAO.findAll({ userName: item.userName })];
-                    case 4:
-                        mdata = _a.sent();
-                        if (!!item.id) return [3 /*break*/, 8];
-                        if (!(mdata.length > 0)) return [3 /*break*/, 5];
-                        return [2 /*return*/, "userName"];
-                    case 5:
-                        item.id = uuid();
-                        item.deleted = false;
-                        console.log(item.id);
-                        item.normalPassword = Math.random().toString(36).substring(7);
-                        item.password = App_1.App.HashSync(item.normalPassword);
-                        item.createddatetime = new Date(App_1.App.DateNow());
-                        item.createdby = this.sessionInfo.userName;
-                        return [4 /*yield*/, App_1.App.SendMail(item.email, "Jaz Sales account activation for '" + item.userName, "User", {
-                                name: item.userName,
-                                password: item.normalPassword,
-                            })];
-                    case 6:
-                        _a.sent();
-                        _a.label = 7;
-                    case 7: return [3 /*break*/, 9];
-                    case 8:
-                        if (previousData) {
-                            prevData = mdata.filter(function (v) { return v.id !== previousData.id; });
-                            if (prevData.length > 0) {
-                                return [2 /*return*/, "userName"];
-                            }
-                            else {
-                                return [2 /*return*/, true];
-                            }
-                        }
-                        _a.label = 9;
-                    case 9: return [2 /*return*/, true];
-                }
+                // item.lastmodifiedby = this.sessionInfo.userName;
+                // let mdata = await this.userinfoDAO.findAll({ userName: item.userName });
+                // console.log(mdata);
+                item.historyId = uuid();
+                return [2 /*return*/, true];
             });
         });
     };
-    UsesrInfoService.prototype.changePassword = function (reqData) {
+    HistoryUsesrInfoService.prototype.delete = function (id) {
         return __awaiter(this, void 0, void 0, function () {
             var user, error_4;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 5, , 6]);
-                        return [4 /*yield*/, this.userinfoDAO.entity(this.sessionInfo.id)];
-                    case 1:
-                        user = _a.sent();
-                        if (!(reqData.oldPassword && App_1.App.HashCompareSync(reqData.oldPassword, user.password))) return [3 /*break*/, 3];
-                        user.userGroupConfig = user.userGroupConfig == null ? {} : user.userGroupConfig;
-                        user.userGroup = user.userGroup == null ? {} : user.userGroup;
-                        user.password = App_1.App.HashSync(reqData.newPassword);
-                        user.lastmodifieddate = new Date(App_1.App.DateNow());
-                        return [4 /*yield*/, this.userinfoDAO.save(user)];
-                    case 2:
-                        _a.sent();
-                        return [3 /*break*/, 4];
-                    case 3: throw { message: "INVALID_PASSWORD" };
-                    case 4: return [2 /*return*/, { id: user.id, message: "PASSWORD_UPDATED", status: 1 }];
-                    case 5:
-                        error_4 = _a.sent();
-                        throw error_4;
-                    case 6: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    UsesrInfoService.prototype.delete = function (id) {
-        return __awaiter(this, void 0, void 0, function () {
-            var user, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -288,13 +193,13 @@ var UsesrInfoService = /** @class */ (function () {
                         _a.sent();
                         return [2 /*return*/, { id: user.id, message: Props_1.Props.REMOVED_SUCCESSFULLY }];
                     case 3:
-                        error_5 = _a.sent();
-                        throw error_5;
+                        error_4 = _a.sent();
+                        throw error_4;
                     case 4: return [2 /*return*/];
                 }
             });
         });
     };
-    return UsesrInfoService;
+    return HistoryUsesrInfoService;
 }());
-exports.UsesrInfoService = UsesrInfoService;
+exports.HistoryUsesrInfoService = HistoryUsesrInfoService;

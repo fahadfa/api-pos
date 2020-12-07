@@ -405,7 +405,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 11, , 12]);
+                        _a.trys.push([0, 10, , 11]);
                         inventoryOnHandQuery = [];
                         text = void 0;
                         _i = 0, inventTransData_1 = inventTransData;
@@ -432,14 +432,16 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         trans.TRANSREFID = trans.TRANSREFID == "Nothing" ? trans.INVOICEID : trans.TRANSREFID;
                         _a.label = 5;
                     case 5:
-                        saleslinequery = "select id from salesline where salesid = '" + trans.INVOICEID + "' AND itemid = '" + trans.ITEMID + "' AND configid = '" + trans.ConfigId + "' AND inventsizeid = '" + trans.InventSizeId + "' AND batchno = '" + trans.BATCHNO + "' AND salesqty = ABS(" + trans.QTY + ") limit 1";
+                        saleslinequery = "select id, colorantid   from salesline where salesid = '" + trans.INVOICEID + "' AND itemid = '" + trans.ITEMID + "' AND configid = '" + trans.ConfigId + "' AND inventsizeid = '" + trans.InventSizeId + "' AND batchno = '" + trans.BATCHNO + "' AND salesqty = ABS(" + trans.QTY + ") limit 1";
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(this.localDbConfig, saleslinequery)];
                     case 6:
                         salesLineData = _a.sent();
                         // log.info(salesLineData);
-                        trans.saleslineid = salesLineData.rows[0] ? salesLineData.rows[0].id : "";
-                        query = "INSERT INTO public.inventtrans\n        (id, itemid, qty, datephysical, transtype, transrefid, invoiceid, dataareaid, recversion, recid, inventsizeid, configid, batchno, inventlocationid, transactionclosed, reserve_status, sales_line_id, dateinvent)\n        VALUES('" + (uuid() + App_1.App.UniqueNumber()) + "', '" + trans.ITEMID + "', " + trans.QTY + ", '" + trans.DATEPHYSICAL + "'," + trans.TRANSTYPE + ", '" + trans.TRANSREFID + "', '" + trans.INVOICEID + "', '" + trans.DATAAREAID + "', " + trans.RECVERSION + ", " + trans.RECID + ", '" + trans.InventSizeId + "',\n         '" + trans.ConfigId + "', '" + trans.BATCHNO + "', '" + this.dateObj.inventlocationid + "', " + transactionclosed + ", 'OLD_POS_DATA', '" + trans.saleslineid + "', now());\n        ";
-                        // log.info(query);
+                        trans.saleslineid = salesLineData.rows.length > 0 ? salesLineData.rows[0].id : "";
+                        trans.reservationid = salesLineData.rows.length > 0 ? salesLineData.rows[0].colorantid : "";
+                        Log_1.log.info(salesLineData.rows);
+                        query = "INSERT INTO public.inventtrans\n        (id, itemid, qty, datephysical, transtype, transrefid, invoiceid, dataareaid, recversion, recid, inventsizeid, configid, batchno, inventlocationid, transactionclosed, reserve_status, sales_line_id, dateinvent, reservationid)\n        VALUES('" + (uuid() + App_1.App.UniqueNumber()) + "', '" + trans.ITEMID + "', " + trans.QTY + ", '" + trans.DATEPHYSICAL + "'," + trans.TRANSTYPE + ", '" + trans.TRANSREFID + "', '" + trans.INVOICEID + "', '" + trans.DATAAREAID + "', " + trans.RECVERSION + ", " + trans.RECID + ", '" + trans.InventSizeId + "',\n         '" + trans.ConfigId + "', '" + trans.BATCHNO + "', '" + this.dateObj.inventlocationid + "', " + transactionclosed + ", 'OLD_POS_DATA', '" + trans.saleslineid + "', now(), '" + trans.reservationid + "');\n        ";
+                        Log_1.log.info(query);
                         // if (transactionclosed == true && trans.ITEMID != "HSN-00001") {
                         //   text = `select * from inventory_onhand where itemid = '${trans.ITEMID}' AND configid = '${trans.ConfigId}' and inventsizeid = '${trans.InventSizeId}' and batchno = '${trans.BATCHNO}' and inventlocationid = '${this.dateObj.inventlocationid}'`;
                         //   let onhanddata = await SyncServiceHelper.ExecuteQuery(this.localDbConfig, text);
@@ -478,15 +480,12 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(this.localDbConfig, queryData)];
                     case 9:
                         _a.sent();
-                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(this.localDbConfig, inventoryOnHandQuery)];
+                        return [3 /*break*/, 11];
                     case 10:
-                        _a.sent();
-                        return [3 /*break*/, 12];
-                    case 11:
                         err_6 = _a.sent();
                         Log_1.log.error(err_6);
-                        return [3 /*break*/, 12];
-                    case 12: return [2 /*return*/];
+                        return [3 /*break*/, 11];
+                    case 11: return [2 /*return*/];
                 }
             });
         });
