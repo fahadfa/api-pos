@@ -118,7 +118,7 @@ var OrderShipmentReport = /** @class */ (function () {
                         if (date) {
                             inventtransQuery_1 += ",dateinvent = '" + date + "' ";
                         }
-                        inventtransQuery_1 += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "'";
+                        inventtransQuery_1 += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "' and itemid!='HSN-00001'";
                         return [4 /*yield*/, queryRunner.query(inventtransQuery_1)];
                     case 9:
                         _a.sent();
@@ -126,7 +126,7 @@ var OrderShipmentReport = /** @class */ (function () {
                     case 10: throw { message: "SOME_OF_THE_ITEMS_ARE_OUT_OF_STOCK" };
                     case 11:
                         inventtransQuery = "UPDATE inventtrans SET transactionclosed = " + true + " ";
-                        inventtransQuery += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "'";
+                        inventtransQuery += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "' and itemid!='HSN-00001'";
                         return [4 /*yield*/, queryRunner.query(inventtransQuery)];
                     case 12:
                         _a.sent();
@@ -425,13 +425,15 @@ var OrderShipmentReport = /** @class */ (function () {
                                     value.configid.toLowerCase() == v.configid.toLowerCase() &&
                                     value.inventsizeid.toLowerCase() == v.inventsizeid.toLowerCase();
                             });
-                            if (index >= 0) {
+                            if (index >= 0 && v.itemid != "HSN-00001") {
                                 if (parseInt(v.salesQty) > parseInt(itemsInStock[index].qty)) {
                                     canConvert = canConvert == true ? false : false;
                                 }
                             }
                             else {
-                                canConvert = canConvert == true ? false : false;
+                                if (v.itemid != "HSN-00001") {
+                                    canConvert = canConvert == true ? false : false;
+                                }
                             }
                         });
                         if (!canConvert) {

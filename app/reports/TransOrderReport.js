@@ -51,12 +51,13 @@ var TransOrderReport = /** @class */ (function () {
                         return [4 /*yield*/, this.query_to_data(params)];
                     case 1:
                         data = _a.sent();
-                        data.map(function (item) {
+                        data.map(function (item, index) {
                             item.statusVal = params.lang == "en" ? item.statusEn : item.statusAr;
+                            item.sNo = index + 1;
                             item.deliverydate = App_1.App.convertUTCDateToLocalDate(new Date(item.createddatetime), parseInt(params.timeZoneOffSet));
                             item.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(item.lastmodifieddate), parseInt(params.timeZoneOffSet));
                         });
-                        // console.log(data);
+                        console.log(data);
                         return [2 /*return*/, data];
                     case 2:
                         error_1 = _a.sent();

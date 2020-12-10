@@ -109,14 +109,14 @@ var OrderReceiveReport = /** @class */ (function () {
                         if (date) {
                             inventtransQuery_1 += ",dateinvent = '" + date + "' ";
                         }
-                        inventtransQuery_1 += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "'";
+                        inventtransQuery_1 += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "' and itemid !='HSN-00001' ";
                         return [4 /*yield*/, this.db.query(inventtransQuery_1)];
                     case 8:
                         _a.sent();
                         _a.label = 9;
                     case 9:
                         inventtransQuery = "UPDATE inventtrans SET transactionclosed = " + true + ", reserve_status = 'POSTED' ";
-                        inventtransQuery += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "'";
+                        inventtransQuery += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "' and itemid !='HSN-00001' ";
                         return [4 /*yield*/, queryRunner.query(inventtransQuery)];
                     case 10:
                         _a.sent();
