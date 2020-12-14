@@ -501,7 +501,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                     case 2:
                         salesOrderWithId = _c.sent();
                         console.log("Sales==============>", salesOrderWithId);
-                        salestable.lastModifiedDate = salesOrderWithId.lastModifiedDate;
+                        salestable.lastModifiedDate = salesOrderWithId ? salesOrderWithId.lastModifiedDate : new Date(App_1.App.DateNow());
                         _c.label = 3;
                     case 3:
                         scannedPages_1.push(parseInt(salestable.page));
