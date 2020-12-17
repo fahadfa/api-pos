@@ -190,7 +190,7 @@ var SalesOrdersReport = /** @class */ (function () {
                         regionalWarehouses[0].regionalwarehouse.split(",").map(function (item) {
                             inQueryStr_1 += "'" + item + "',";
                         });
-                        inQueryStr_1 += "'" + params.key + "',";
+                        inQueryStr_1 += "'" + params.inventlocationid + "',";
                         query += " and s.inventlocationid in (" + inQueryStr_1.substr(0, inQueryStr_1.length - 1) + ") ";
                         return [3 /*break*/, 3];
                     case 2:
@@ -229,6 +229,7 @@ var SalesOrdersReport = /** @class */ (function () {
                             query += " and (s.custaccount = '" + params.accountnum + "' or s.mobileno ='" + params.accountnum + "' or s.invoiceaccount='" + params.accountnum + "') ";
                         }
                         query += " order by s.createddatetime ASC";
+                        console.log(query);
                         return [4 /*yield*/, this.db.query(query)];
                     case 4: return [2 /*return*/, _a.sent()];
                 }

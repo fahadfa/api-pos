@@ -145,7 +145,7 @@ var itemSalesByCustomerReport = /** @class */ (function () {
                         regionalWarehouses[0].regionalwarehouse.split(",").map(function (item) {
                             inQueryStr_1 += "'" + item + "',";
                         });
-                        inQueryStr_1 += "'" + params.key + "',";
+                        inQueryStr_1 += "'" + params.inventlocationid + "',";
                         query += " and i.inventlocationid in (" + inQueryStr_1.substr(0, inQueryStr_1.length - 1) + ") ";
                         return [3 /*break*/, 3];
                     case 2:
@@ -161,8 +161,8 @@ var itemSalesByCustomerReport = /** @class */ (function () {
                         if (params.transType && params.transType != "ALL") {
                             query += " and  st.transkind = '" + params.transType + "' ";
                         }
-                        if (params.batchNo) {
-                            query += " and  i.batchno = '" + params.batchNo + "' ";
+                        if (params.batchno) {
+                            query += " and  i.batchno = '" + params.batchno + "' ";
                         }
                         if (params.accountnum) {
                             query += " and  ( s.mobileno ='" + params.accountnum + "' or s.invoiceaccount='" + params.accountnum + "' or s.custaccount='" + params.accountnum + "') ";
