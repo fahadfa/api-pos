@@ -38,6 +38,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var RawQuery_1 = require("../common/RawQuery");
 var App_1 = require("../../utils/App");
+var Props_1 = require("../../constants/Props");
+var axios = require("axios");
 var HistoricalTransactionReport = /** @class */ (function () {
     function HistoricalTransactionReport() {
         this.db = typeorm_1.getManager();
@@ -45,18 +47,19 @@ var HistoricalTransactionReport = /** @class */ (function () {
     }
     HistoricalTransactionReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, data_1, salesLine, _a, list, j, chunkArray, error_1;
+            var id, data_1, salesLine, _a, list, j, chunkArray, olddata, salesTableFromAxpta, salesLinesFromAxpta, workFlowOrder, items, sizes, frominvloc_1, toinvloc_1, query, wquery, names_1, invlocation, from, to, error_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _b.trys.push([0, 9, , 10]);
+                        _b.trys.push([0, 14, , 15]);
                         id = params.salesId;
-                        if (!id) return [3 /*break*/, 7];
+                        if (!id) return [3 /*break*/, 12];
                         return [4 /*yield*/, this.query_to_data(id)];
                     case 1:
                         data_1 = _b.sent();
+                        console.log("=========================>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", data_1);
+                        if (!(data_1 && data_1.length > 0)) return [3 /*break*/, 7];
                         data_1 = data_1 && data_1.length > 0 ? data_1[0] : {};
-                        console.log(data_1.lastmodifieddate);
                         data_1.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(data_1.lastmodifieddate), params.timeZoneOffSet);
                         if (!(data_1.transkind == 'DESIGNERSERVICE' || data_1.transkind == 'DESIGNERSERVICERETURN')) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.salesline_query_to_data_designer(id)];
@@ -84,15 +87,164 @@ var HistoricalTransactionReport = /** @class */ (function () {
                             var quan = data_1.transkind == "INVENTORYMOVEMENT" ? v.actualsalesqty = parseInt(v.actualsalesqty) : v.salesQty;
                             data_1.quantity += parseInt(quan);
                         });
+                        data_1.disc = data_1.disc ? data_1.disc : 0;
                         data_1.vat = data_1.salesLine.length > 0 ? parseInt(data_1.salesLine[0].vat) : "-";
+                        return [3 /*break*/, 11];
+                    case 7: return [4 /*yield*/, this.oldDataUrl(params)];
+                    case 8:
+                        olddata = _b.sent();
+                        data_1 = {};
+                        salesTableFromAxpta = olddata.OrderTable && olddata.OrderTable.length > 0 ? olddata.OrderTable[0] : {};
+                        salesLinesFromAxpta = olddata.OrderLine && olddata.OrderLine.length > 0 ? olddata.OrderLine : [];
+                        data_1.salesId = salesTableFromAxpta.SALESID;
+                        data_1.interCompanyOriginalSalesId = salesTableFromAxpta.INTERCOMPANYORIGINALSALESID;
+                        data_1.custAccount = salesTableFromAxpta.CUSTACCOUNT;
+                        data_1.invoiceAccount = salesTableFromAxpta.INVOICEACCOUNT;
+                        data_1.status = "Printed";
+                        workFlowOrder = Props_1.Props.WorkFlowNumsForOld[salesTableFromAxpta.SALESTYPE];
+                        data_1.transkind = workFlowOrder ? workFlowOrder.type : "";
+                        data_1.transkindEn = workFlowOrder ? workFlowOrder.en : "";
+                        data_1.transkindAr = workFlowOrder ? workFlowOrder.ar : "";
+                        // data.movementtype=salesTableFromAxpta.;
+                        // data.movementtypear=salesTableFromAxpta.;
+                        data_1.customername = salesTableFromAxpta.SALESNAME;
+                        // data.custmobilenumber=salesTableFromAxpta.;
+                        data_1.vatamount = salesTableFromAxpta.SumTax;
+                        data_1.netAmount = salesTableFromAxpta.NETAMOUNT;
+                        data_1.disc = salesTableFromAxpta.DISC;
+                        data_1.amount = salesTableFromAxpta.AMOUNT;
+                        // data.shippingAmount=salesTableFromAxpta.;
+                        data_1.shippingDate = salesTableFromAxpta.SHIPPINGDATECONFIRMED;
+                        // data.cname=salesTableFromAxpta.;
+                        // data.cnamealias=salesTableFromAxpta.;
+                        // data.voucherdiscchecked=salesTableFromAxpta.;
+                        data_1.vouchernum = salesTableFromAxpta.VOUCHERNUM;
+                        data_1.paymentType = salesTableFromAxpta.PAYMENT;
+                        // data.cphone=salesTableFromAxpta.
+                        data_1.createddatetime = salesTableFromAxpta.CREATEDDATETIME;
+                        // data.lastmodifieddate=salesTableFromAxpta.
+                        data_1.originalPrinted = true;
+                        data_1.inventLocationId = salesLinesFromAxpta && salesLinesFromAxpta.length > 0 ?
+                            salesLinesFromAxpta[0].INVENTLOCATIONID : "";
+                        // data.wnamealias=salesTableFromAxpta.
+                        // data.wname=salesTableFromAxpta.
+                        // data.twnamealias=salesTableFromAxpta.
+                        // data.twname=salesTableFromAxpta.
+                        data_1.paymentMode = salesTableFromAxpta.PAYMENT;
+                        // data.iscash=salesTableFromAxpta.
+                        data_1.createdby = salesTableFromAxpta.CREATEDBY;
+                        // data.notes=salesTableFromAxpta.
+                        // data.cashAmount=salesTableFromAxpta.
+                        // data.cardAmount=salesTableFromAxpta.
+                        // data.onlineAmount=salesTableFromAxpta.
+                        // data.designServiceRedeemAmount=salesTableFromAxpta.
+                        data_1.redeemAmount = salesTableFromAxpta.REDEEMAMT;
+                        data_1.deliveryaddress = salesTableFromAxpta.DELIVERYADDRESS;
+                        data_1.salesman = salesTableFromAxpta.SALESNAME;
+                        data_1.deliveryDate = salesTableFromAxpta.DELIVERYDATE;
+                        data_1.salesLine = [{}, {}];
+                        if (!(salesLinesFromAxpta && salesLinesFromAxpta.length > 0)) return [3 /*break*/, 11];
+                        items = salesLinesFromAxpta.map(function (d) { return "'" + d.ITEMID + "'"; }).join(",");
+                        sizes = salesLinesFromAxpta.map(function (d) { return "'" + d.CONFIGID + "'"; }).join(",");
+                        frominvloc_1 = salesLinesFromAxpta[0].INVENTLOCATIONID;
+                        toinvloc_1 = salesLinesFromAxpta[0].CUSTACCOUNT;
+                        query = "select distinct on (i.id, i.itemid, i.configid, i.inventsizeid, i.batchno)\n                        b.itemid,i.configid ,b.itemname as prodnamear,\n                        b.namealias as prodnameen,\n                        s.description as sizeNameEn,\n                        s.name as sizeNameAr\n                        from inventtrans i\n                        left join inventtable b on i.itemid=b.itemid\n                        left join inventsize s on s.itemid = i.itemid and i.inventsizeid = s.inventsizeid\n                        left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n                        where i.itemid in(" + items + ") and i.configid in(" + sizes + ")";
+                        wquery = "select i.inventlocationid,i.namealias as wnamealias,i.\"name\" as wname from inventlocation i where i.inventlocationid in('" + frominvloc_1 + "','" + toinvloc_1 + "');";
+                        console.log(wquery);
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 9:
+                        names_1 = _b.sent();
+                        return [4 /*yield*/, this.db.query(wquery)];
+                    case 10:
+                        invlocation = _b.sent();
+                        // console.log(items);
+                        // console.log(names);
+                        // console.log("===================names====================");
+                        salesLinesFromAxpta.sort(function (a, b) { return a.LINENUM - b.LINENUM; });
+                        data_1.salesLine = salesLinesFromAxpta.map(function (item, index) {
+                            var line = {};
+                            line.salesid = item.SALESID;
+                            line.actualsalesqty = parseInt(item.SALESQTY);
+                            line.itemid = item.ITEMID;
+                            line.batchno = item.BATCHNO;
+                            line.configid = item.CONFIGID;
+                            line.inventsizeid = item.INVENTSIZEID;
+                            line.saleslineqty = item.SALESQTY;
+                            line.netAmount = item.LINEAMOUNT;
+                            // line.shippingDate=item.
+                            line.salesQty = item.SALESQTY;
+                            line.salesprice = item.SALESPRICE;
+                            line.vatAmount = item.LineSalesTax;
+                            line.lineTotalDisc = item.LINEDISCAMT;
+                            line.colorantprice = 0;
+                            // line.lineAmount=line.LINEAMOUNT;
+                            line.lineAmount = item.NetAmtTax;
+                            line.linetotaldisc = item.LineTotalDisc;
+                            var product = names_1.find(function (prod) { return prod.itemid == line.itemid && prod.configid == line.configid; });
+                            console.table(product);
+                            line.prodNameAr = product.prodnamear;
+                            line.prodNameEn = product.prodnameen;
+                            // line.colNameAr=product.sizenameen
+                            // line.colNameEn=item.
+                            line.sizeNameEn = product.sizenameen;
+                            line.sizeNameAr = product.sizenamear;
+                            line.lineAmountBeforeVat = ((item.LINEAMOUNT / line.saleslineqty) * line.salesQty + (line.colorantprice * line.salesQty) - (line.linetotaldisc / line.saleslineqty) * line.salesQty);
+                            line.vat = parseInt(item.LineSalesTaxPercent);
+                            // line.colorant=item.
+                            line.linenum = item.LINENUM;
+                            line.sNo = index + 1;
+                            return line;
+                        });
+                        console.table(invlocation);
+                        from = invlocation.find(function (loc) { return loc.inventlocationid == frominvloc_1; });
+                        to = invlocation.find(function (loc) { return loc.inventlocationid == toinvloc_1; });
+                        if (from) {
+                            data_1.wnamealias = from.wnamealias;
+                            data_1.wname = from.wname;
+                        }
+                        if (to) {
+                            data_1.twnamealias = to.wnamealias;
+                            data_1.twname = to.wname;
+                        }
+                        _b.label = 11;
+                    case 11:
+                        data_1.disc = data_1.disc ? data_1.disc : '0.00';
+                        data_1.vat = data_1.salesLine[0].vat;
                         // console.log("=================final review=======================",data)
                         return [2 /*return*/, data_1];
-                    case 7: throw { message: "Select Invoice ID" };
-                    case 8: return [3 /*break*/, 10];
-                    case 9:
+                    case 12: throw { message: "Select Invoice ID" };
+                    case 13: return [3 /*break*/, 15];
+                    case 14:
                         error_1 = _b.sent();
                         throw error_1;
-                    case 10: return [2 /*return*/];
+                    case 15: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    HistoricalTransactionReport.prototype.oldDataUrl = function (params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var token, url, data, e_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, this.getToken()];
+                    case 1:
+                        token = _a.sent();
+                        console.log(token);
+                        url = "http://pos.al-jazeerapaints.com:200/API/HistoricalData?OrderId=" + params.salesId;
+                        axios.defaults.headers["Token"] = token;
+                        return [4 /*yield*/, axios.get(url)];
+                    case 2:
+                        data = _a.sent();
+                        // console.log(data);
+                        // this.otpStore.set(params.mobile, { token: data.data.otp_token, validate: false });
+                        return [2 /*return*/, data.data];
+                    case 3:
+                        e_1 = _a.sent();
+                        throw { message: Props_1.Props.DATA_NOT_FOUND };
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -102,7 +254,6 @@ var HistoricalTransactionReport = /** @class */ (function () {
             var renderData, FILES, file;
             return __generator(this, function (_a) {
                 renderData = result;
-                console.log("data:----------", renderData.lastmodifieddate);
                 FILES = {
                     "DESIGNERSERVICE": params.lang == "en" ? "historical-transaction-designer-service-en" : "historical-transaction-designer-service-ar",
                     "DESIGNERSERVICERETURN": params.lang == "en" ? "historical-transaction-designer-service-en" : "historical-transaction-designer-service-ar",
@@ -117,7 +268,7 @@ var HistoricalTransactionReport = /** @class */ (function () {
                 if (renderData.transkind == 'DESIGNERSERVICERETURN') {
                     renderData.isDesignerServiceReturn = true;
                 }
-                console.log("Report ======> ", file);
+                // console.log("Report ======> ", file);
                 console.log(renderData);
                 try {
                     return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];
@@ -188,6 +339,29 @@ var HistoricalTransactionReport = /** @class */ (function () {
                         }
                         return [4 /*yield*/, tempArray];
                     case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    HistoricalTransactionReport.prototype.getToken = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var token, url, data, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        token = void 0;
+                        url = Props_1.Props.REDEEM_URL + "?clientId=" + Props_1.Props.REDEEM_CLIENT_ID + "&clientSecret=" + Props_1.Props.REDEEM_CLIENT_SECRET;
+                        console.log(url);
+                        return [4 /*yield*/, axios.post(url)];
+                    case 1:
+                        data = _a.sent();
+                        token = data.headers.token;
+                        return [2 /*return*/, token];
+                    case 2:
+                        error_2 = _a.sent();
+                        throw error_2;
+                    case 3: return [2 /*return*/];
                 }
             });
         });

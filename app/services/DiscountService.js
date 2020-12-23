@@ -225,9 +225,9 @@ var DiscountService = /** @class */ (function () {
                             reqData.selectedItems.forEach(function (element) {
                                 var linePercentage = linePercentageData.find(function (v) { return v.itemrelation == element.itemid || v.itemrelation == discounts[0].linedisc; });
                                 linePercentage = linePercentage ? linePercentage.percent1 : 0;
-                                if (linePercentage > 0) {
-                                    reqData.instantDiscGrossTotal -= parseFloat(element.price) * parseFloat(element.quantity);
-                                }
+                                // if (linePercentage > 0) {
+                                //   reqData.instantDiscGrossTotal -= parseFloat(element.price) * parseFloat(element.quantity);
+                                // }
                             });
                         }
                         return [4 /*yield*/, this.rawQuery.getMultiDiscRanges(discounts[0].multilinedisc, reqData.currency, this.sessionInfo.dataareaid)];

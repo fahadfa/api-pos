@@ -308,7 +308,12 @@
                 <td class="textboldtd">عميل</td>
                 <td>:</td>
                 <td>
-                  {{this.invoiceAccount}} - {{this.customername}}
+                  {{#if this.invoiceAccount}}
+                  {{this.invoiceAccount}} 
+                  {{else}}
+                  {{this.custAccount}}
+                  {{/if}} 
+                  - {{this.customername}}
                 </td>
               </tr>
               <tr>

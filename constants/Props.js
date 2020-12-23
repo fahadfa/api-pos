@@ -133,6 +133,14 @@ var Props = /** @class */ (function () {
         9: [9, "DESIGNERSERVICERETURN", "designer Service Return Order"],
         10: [10, "DESIGNERSERVICE", "designer Service"],
     };
+    Props.WorkFlowNumsForOld = {
+        3: { type: "SALESORDER", en: "Sales Order", ar: "طلب المبيعات" },
+        4: { type: "RETURNORDER", en: "Return Order", ar: "أمر الإرجاع" },
+        5: { type: "TRANSFERORDER", en: "Transfer Order", ar: "طلب النقل" },
+        6: { type: "ORDERSHIPMENT", en: "Order Shipment", ar: "" },
+        7: { type: "ORDERRECEIVE", en: "Order Receive", ar: "طلب تلقي" },
+        10: { type: "INVENTORYMOVEMENT", en: "Movement", ar: "حركة" },
+    };
     Props.CUSTTYPE = {
         0: ["CHARITY", 0, "Charity", "Charity"],
         1: ["AGENT", 1, "Agent", "Agent"],

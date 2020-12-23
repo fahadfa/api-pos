@@ -76,7 +76,7 @@ var AppExpress = /** @class */ (function () {
                         router = express_1.default.Router();
                         router.get("/", function (req, res) {
                             res.json({
-                                message: "Hello World! Website Applications",
+                                message: "ok",
                             });
                         });
                         this.express.use("/", router);

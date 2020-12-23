@@ -169,12 +169,17 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "UPDATE salestable\n        SET originalprinted = 'true',\n        status = '" + status + "'";
+                        query = "UPDATE salestable\n        SET originalprinted = true,\n        status = '" + status + "' ";
                         if (date) {
-                            query += "\n      ,lastmodifieddate = '" + date + "' ";
+                            query += "\n      , lastmodifieddate = '" + date + "' ";
                         }
                         query += " WHERE salesid = '" + salesId + "' or salesgroup = '" + salesId + "' or deliverystreet = '" + salesId + "' ";
-                        saleslineQuery = "UPDATE salesline SET status = '" + status + "' ,lastmodifieddate = '" + date + "'  WHERE salesid = '" + salesId + "' ";
+                        saleslineQuery = "UPDATE salesline SET status = '" + status + "'  ";
+                        if (date) {
+                            saleslineQuery += "\n      ,lastmodifieddate = '" + date + "' ";
+                        }
+                        saleslineQuery += " WHERE salesid = '" + salesId + "' ";
+                        console.log(query);
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
