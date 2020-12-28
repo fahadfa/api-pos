@@ -242,10 +242,12 @@ var HistoricalCustomerReport = /** @class */ (function () {
     };
     HistoricalCustomerReport.prototype.oldDataUrl = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var token, url, data;
+            var token, url, data, e_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.getToken()];
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, this.getToken()];
                     case 1:
                         token = _a.sent();
                         console.log(token);
@@ -258,6 +260,10 @@ var HistoricalCustomerReport = /** @class */ (function () {
                         // console.log(data);
                         // this.otpStore.set(params.mobile, { token: data.data.otp_token, validate: false });
                         return [2 /*return*/, data.data];
+                    case 3:
+                        e_1 = _a.sent();
+                        throw { message: Props_1.Props.DATA_NOT_FOUND };
+                    case 4: return [2 /*return*/];
                 }
             });
         });

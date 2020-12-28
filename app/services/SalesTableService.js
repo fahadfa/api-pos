@@ -1566,7 +1566,6 @@ var SalesTableService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         if (!(reqData.status == "PAID")) return [3 /*break*/, 2];
-                        reqData.invoiceDate = new Date(App_1.App.DateNow());
                         canConvert_1 = true;
                         colors_2 = [];
                         items_2 = [];
@@ -2210,6 +2209,7 @@ var SalesTableService = /** @class */ (function () {
                         returnData = void 0;
                         delete reqData.salesLine;
                         batchTobeSaved = [];
+                        reqData.invoiceDate = new Date(App_1.App.DateNow());
                         if (!(reqData && reqData.salesId)) return [3 /*break*/, 5];
                         return [4 /*yield*/, this.rawQuery.checkSalesStatus(reqData.salesId)];
                     case 4:
@@ -3195,7 +3195,8 @@ var SalesTableService = /** @class */ (function () {
                     case 6:
                         if (!(_a < _b.length)) return [3 /*break*/, 9];
                         batches = _b[_a];
-                        if (!(parseInt(batches.quantity) != 0)) return [3 /*break*/, 8];
+                        batches.quantity = batches.quantity ? batches.quantity : 0;
+                        if (!(batches.quantity && parseInt(batches.quantity) != 0)) return [3 /*break*/, 8];
                         batches.itemid = item.itemid;
                         batches.transrefid = reqData.interCompanyOriginalSalesId
                             ? reqData.interCompanyOriginalSalesId

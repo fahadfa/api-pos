@@ -547,7 +547,8 @@
                 <td class="textboldtd" valign="top">Customer</td>
                 <td valign="top">:</td>
                 <td>
-                  {{this.invoiceAccount}} - {{this.customername}}
+                  {{#if this.invoiceAccount}} {{this.invoiceAccount}} {{else}} {{this.custAccount}} {{/if}}
+                  - {{this.customername}}
                 </td>
               </tr>
               <tr class="billing">
