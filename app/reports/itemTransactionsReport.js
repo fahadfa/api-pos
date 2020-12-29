@@ -163,7 +163,7 @@ var itemTransactionsReport = /** @class */ (function () {
                         }
                         _a.label = 2;
                     case 2:
-                        console.log(result);
+                        console.table(result);
                         try {
                             return [2 /*return*/, App_1.App.HtmlRender(file, result)];
                         }
