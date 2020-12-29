@@ -44,6 +44,7 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Props_1 = require("../constants/Props");
 var SyncServiceHelper_1 = require("../sync/SyncServiceHelper");
+var sysService_1 = require("../sysService");
 var SyncService_1 = require("./SyncService");
 var moment = require("moment");
 var STAGING_ID = "STAGING";
@@ -94,22 +95,25 @@ var SyncDDLService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         log.info(JSON.stringify(sync, null, 2));
-                        if (!(sync.is_reset == true)) return [3 /*break*/, 2];
-                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.UpdateCall("RESET")];
+                        if (!(sync.is_reset == true)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, sysService_1.SysService.UpdateVersion()];
                     case 1:
                         _a.sent();
-                        throw "RESET";
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.UpdateCall("RESET")];
                     case 2:
-                        if (!sync.sync_cmd) return [3 /*break*/, 4];
-                        return [4 /*yield*/, this.cmdExecute(sync)];
+                        _a.sent();
+                        throw "RESET";
                     case 3:
+                        if (!sync.sync_cmd) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.cmdExecute(sync)];
+                    case 4:
                         _a.sent();
-                        return [3 /*break*/, 6];
-                    case 4: return [4 /*yield*/, this.syncDDL(sync, currentTime)];
-                    case 5:
+                        return [3 /*break*/, 7];
+                    case 5: return [4 /*yield*/, this.syncDDL(sync, currentTime)];
+                    case 6:
                         _a.sent();
-                        _a.label = 6;
-                    case 6: return [2 /*return*/];
+                        _a.label = 7;
+                    case 7: return [2 /*return*/];
                 }
             });
         });

@@ -60,14 +60,14 @@ log4js_1.configure({
             base: __dirname + "/../../logs/jpos/",
             property: "type",
             extension: ".log",
-            maxLogSize: 100000,
+            maxLogSize: 1000000,
             backups: 5,
         },
         out: { type: "stdout", layout: { type: "dummy" } },
         emergencies: {
             type: "file",
             filename: __dirname + "/../../logs/jpos/error.log",
-            maxLogSize: 1000000,
+            maxLogSize: 10000000,
             backups: 10,
         },
         error: {

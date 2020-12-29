@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var Log_1 = require("./utils/Log");
 var Store_1 = require("./utils/Store");
-var SyncServiceHelper_1 = require("./sync/SyncServiceHelper");
 var sysService_1 = require("./sysService");
 var cron = require("node-cron");
 var healthCount = 0;
@@ -135,15 +134,7 @@ var main = function () {
     //     log.error(err);
     //   }
     // });
-    try {
-        var data = fs.readFileSync("./package.json", "utf8");
-        data = JSON.parse(data);
-        Log_1.ulog.info("Version: " + data.version);
-        SyncServiceHelper_1.SyncServiceHelper.UpdateCall("VERSION", data.version);
-    }
-    catch (err) {
-        Log_1.ulog.error(err);
-    }
+    sysService_1.SysService.UpdateVersion();
     Store_1.setItem("syncdate", new Date().toISOString(), "sync -> main");
     try {
         UpdateSyncService();

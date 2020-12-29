@@ -327,7 +327,9 @@ var DiscountService = /** @class */ (function () {
                             }
                         }
                         else {
-                            if (vouchers.custaccount == "" || !vouchers.custaccount) {
+                            if (vouchers.custaccount == "" ||
+                                !vouchers.custaccount ||
+                                (vouchers.allowed_numbers > 1 && vouchers.custaccount)) {
                                 isValidVoucher = true;
                             }
                             else {

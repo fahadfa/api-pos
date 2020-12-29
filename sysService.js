@@ -152,6 +152,31 @@ var SysService = /** @class */ (function () {
             });
         });
     };
+    SysService.UpdateVersion = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var fs, data, err_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        fs = require("fs");
+                        data = fs.readFileSync("./package.json", "utf8");
+                        data = JSON.parse(data);
+                        Log_1.ulog.info("Version: " + data.version);
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.UpdateCall("VERSION", data.version)];
+                    case 1:
+                        _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_3 = _a.sent();
+                        Log_1.ulog.error("Error on updating version");
+                        Log_1.ulog.error(err_3);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
     return SysService;
 }());
 exports.SysService = SysService;
