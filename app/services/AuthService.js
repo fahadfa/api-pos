@@ -120,7 +120,7 @@ var AuthService = /** @class */ (function () {
                         }
                         else {
                             return [2 /*return*/, Promise.reject({
-                                    message: "INVALID_USERNAME/PASSWORD",
+                                    message: "INVALID_USERNAME_PASSWORD",
                                 })];
                         }
                         if (!(process && process.env && process.env.ENV_STORE_ID && process.env.ENV_STORE_ID != "")) return [3 /*break*/, 7];
@@ -128,7 +128,7 @@ var AuthService = /** @class */ (function () {
                             responseData.identity &&
                             responseData.identity.inventlocationid != process.env.ENV_STORE_ID) {
                             return [2 /*return*/, Promise.reject({
-                                    message: "User not releated to this store.",
+                                    message: "USER_NOT_RELATED_TO_THIS_STORE",
                                 })];
                         }
                         return [3 /*break*/, 9];
@@ -138,9 +138,9 @@ var AuthService = /** @class */ (function () {
                         offlineSystems = offlineSystems.find(function (v) { return v.id == responseData.identity.inventlocationid; });
                         console.log(offlineSystems);
                         if (offlineSystems) {
-                            return [2 /*return*/, Promise.reject({
-                                    message: "This User Cannot Login From Online ",
-                                })];
+                            // return Promise.reject({
+                            //   message: "USER_CANNOT_LOGIN_FROM_WEBSITE",
+                            // });
                         }
                         _a.label = 9;
                     case 9: return [2 /*return*/, Promise.resolve(responseData)];
@@ -183,7 +183,7 @@ var AuthService = /** @class */ (function () {
                         profileObj = _a.sent();
                         console.log(profileObj);
                         if (profileObj == null) {
-                            return [2 /*return*/, Promise.reject({ message: "INVALID_USERNAME/PASSWORD" })];
+                            return [2 /*return*/, Promise.reject({ message: "INVALID_USERNAME_PASSWORD" })];
                         }
                         else {
                             auth = false;
@@ -192,7 +192,14 @@ var AuthService = /** @class */ (function () {
                             if (auth == true) {
                                 if (profileObj.status == "ACTIVE") {
                                     try {
-                                        return [2 /*return*/, this.reteriveUserDetails(profileObj)];
+                                        if (profileObj.userGroup.status == "Inactive") {
+                                            return [2 /*return*/, Promise.reject({
+                                                    message: "GROUP_DEACTIVATED_PLEASE_CONTACT_ADMIN",
+                                                })];
+                                        }
+                                        else {
+                                            return [2 /*return*/, this.reteriveUserDetails(profileObj)];
+                                        }
                                     }
                                     catch (err) {
                                         return [2 /*return*/, Promise.reject({ message: "NO_GROUP_FOR_THIS_USER" })];
@@ -206,7 +213,7 @@ var AuthService = /** @class */ (function () {
                             }
                             else {
                                 return [2 /*return*/, Promise.reject({
-                                        message: "INVALID_USERNAME/PASSWORD",
+                                        message: "INVALID_USERNAME_PASSWORD",
                                     })];
                             }
                         }

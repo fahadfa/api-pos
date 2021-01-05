@@ -37,9 +37,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var App_1 = require("../../utils/App");
+var RawQuery_1 = require("../common/RawQuery");
 var InventoryOnHandReport = /** @class */ (function () {
     function InventoryOnHandReport() {
         this.db = typeorm_1.getManager();
+        this.rawQuery = new RawQuery_1.RawQuery();
     }
     InventoryOnHandReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
@@ -79,29 +81,39 @@ var InventoryOnHandReport = /** @class */ (function () {
     };
     InventoryOnHandReport.prototype.report = function (result, params) {
         return __awaiter(this, void 0, void 0, function () {
-            var renderData, file;
+            var renderData, title, file;
             return __generator(this, function (_a) {
-                console.log(params);
-                renderData = result;
-                (renderData.printDate = new Date(params.printDate)
-                    .toISOString()
-                    .replace(/T/, " ") // replace T with a space
-                    .replace(/\..+/, "")),
-                    console.log(params.lang);
-                if (params.type == "excel") {
-                    file = params.lang == "en" ? "onhandinventory-excel" : "onhandinventory-excel-ar";
+                switch (_a.label) {
+                    case 0:
+                        console.log(params);
+                        renderData = result;
+                        (renderData.printDate = new Date(params.printDate)
+                            .toISOString()
+                            .replace(/T/, " ") // replace T with a space
+                            .replace(/\..+/, "")),
+                            console.log(params.lang);
+                        return [4 /*yield*/, this.rawQuery.getAppLangName("ONHAND_INVENTORY")];
+                    case 1:
+                        title = _a.sent();
+                        if (title) {
+                            renderData.title = title;
+                            console.table(title);
+                        }
+                        if (params.type == "excel") {
+                            file = params.lang == "en" ? "onhandinventory-excel" : "onhandinventory-excel-ar";
+                        }
+                        else {
+                            file = params.lang == "en" ? "onhandinventory-report" : "onhandinventory-report-ar";
+                        }
+                        // console.log(renderData)
+                        try {
+                            return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];
+                        }
+                        catch (error) {
+                            throw error;
+                        }
+                        return [2 /*return*/];
                 }
-                else {
-                    file = params.lang == "en" ? "onhandinventory-report" : "onhandinventory-report-ar";
-                }
-                // console.log(renderData)
-                try {
-                    return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];
-                }
-                catch (error) {
-                    throw error;
-                }
-                return [2 /*return*/];
             });
         });
     };
@@ -146,7 +158,7 @@ var InventoryOnHandReport = /** @class */ (function () {
                         if (params.batchno && params.batchCheck) {
                             query = query + (" and LOWER(i.batchno)=LOWER('" + params.batchno + "') ");
                         }
-                        query += " and transactionclosed  = true group by UPPER(i.itemid), UPPER(i.configid), UPPER(i.inventsizeid), i.inventlocationid,\n      bs.namealias, bs.itemname, w.name, w.namealias,  sz.description, sz.\"name\" " + (params.batchCheck ? ", UPPER(i.batchno), b.expdate" : "") + " ) as a where  ";
+                        query += " and transactionclosed  = true and i.itemid not like 'HSN-%' group by UPPER(i.itemid), UPPER(i.configid), UPPER(i.inventsizeid), i.inventlocationid,\n      bs.namealias, bs.itemname, w.name, w.namealias,  sz.description, sz.\"name\" " + (params.batchCheck ? ", UPPER(i.batchno), b.expdate" : "") + " ) as a where  ";
                         if (params.withZero) {
                             query += " (a.availabilty + a.reservedquantity) >= 0 ";
                         }

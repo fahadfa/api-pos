@@ -37,9 +37,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var App_1 = require("../../utils/App");
+var RawQuery_1 = require("../common/RawQuery");
 var SalesReturnReport = /** @class */ (function () {
     function SalesReturnReport() {
         this.db = typeorm_1.getManager();
+        this.rawQuery = new RawQuery_1.RawQuery();
     }
     SalesReturnReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
@@ -81,7 +83,7 @@ var SalesReturnReport = /** @class */ (function () {
     };
     SalesReturnReport.prototype.report = function (result, params) {
         return __awaiter(this, void 0, void 0, function () {
-            var renderData, warehouse, file;
+            var renderData, warehouse, title, file;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -115,6 +117,13 @@ var SalesReturnReport = /** @class */ (function () {
                         renderData.netAmount = renderData.netAmount.toFixed(2);
                         // console.log(result.salesLine[0].product.nameEnglish);
                         renderData.data = result;
+                        return [4 /*yield*/, this.rawQuery.getAppLangName("SALES_RETURN")];
+                    case 2:
+                        title = _a.sent();
+                        if (title) {
+                            renderData.title = title;
+                            console.table(title);
+                        }
                         if (params.type == "excel") {
                             file = params.lang == "en" ? "salesreturn-excel" : "salesreturn-excel-ar";
                         }

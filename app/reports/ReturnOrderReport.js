@@ -69,23 +69,23 @@ var ReturnOrderReport = /** @class */ (function () {
     }
     ReturnOrderReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, data_1, batchesList, result, new_data_1, i_1, date, statusQuery, salesLineQuery, inventtransQuery, designerServices, _i, designerServices_1, service, salesLine, sNo_1, error_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var queryRunner, data_1, batchesList, result, new_data_1, i_1, date, statusQuery, salesLineQuery, inventtransQuery, designerServices, _i, designerServices_1, service, salesLine, salesLineData, _loop_1, _a, salesLineData_1, item, sNo_1, error_1;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         queryRunner = typeorm_2.getConnection().createQueryRunner();
                         return [4 /*yield*/, queryRunner.connect()];
                     case 1:
-                        _a.sent();
+                        _b.sent();
                         return [4 /*yield*/, queryRunner.startTransaction()];
                     case 2:
-                        _a.sent();
-                        _a.label = 3;
+                        _b.sent();
+                        _b.label = 3;
                     case 3:
-                        _a.trys.push([3, 15, 17, 19]);
+                        _b.trys.push([3, 16, 18, 20]);
                         return [4 /*yield*/, this.query_to_data(params)];
                     case 4:
-                        data_1 = _a.sent();
+                        data_1 = _b.sent();
                         data_1 = data_1.length > 0 ? data_1[0] : {};
                         data_1.originalPrinted = data_1.originalPrinted == null ? false : data_1.originalPrinted;
                         data_1.vatAmount = Math.round(parseFloat((data_1.vatAmount * Math.pow(10, 2)).toFixed(2))) / Math.pow(10, 2);
@@ -98,7 +98,7 @@ var ReturnOrderReport = /** @class */ (function () {
                         }
                         return [4 /*yield*/, this.batches_data_to_query(params)];
                     case 5:
-                        batchesList = _a.sent();
+                        batchesList = _b.sent();
                         result = this.groupBy(batchesList, function (item) {
                             return [item.itemid, item.batchno, item.configid, item.inventsizeid];
                         });
@@ -134,7 +134,7 @@ var ReturnOrderReport = /** @class */ (function () {
                         inventtransQuery += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "'";
                         return [4 /*yield*/, queryRunner.query(inventtransQuery)];
                     case 6:
-                        _a.sent();
+                        _b.sent();
                         // let batches: any = await this.inventTransDAO.findAll({ invoiceid: params.salesId });
                         // for (let item of batches) {
                         // item.transactionClosed = true;
@@ -149,13 +149,13 @@ var ReturnOrderReport = /** @class */ (function () {
                         // this.inventTransDAO.save(item);
                         // await this.updateInventoryService.updateInventtransTable(item, false, true, queryRunner);
                         // }
-                        _a.sent();
+                        _b.sent();
                         return [4 /*yield*/, this.salesTableDAO.search({ deliveryStreet: params.salesId })];
                     case 8:
-                        designerServices = _a.sent();
+                        designerServices = _b.sent();
                         console.log(designerServices);
                         _i = 0, designerServices_1 = designerServices;
-                        _a.label = 9;
+                        _b.label = 9;
                     case 9:
                         if (!(_i < designerServices_1.length)) return [3 /*break*/, 12];
                         service = designerServices_1[_i];
@@ -174,14 +174,43 @@ var ReturnOrderReport = /** @class */ (function () {
                         this.salesTableService.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.salesTableService.saveQuotation(service, queryRunner)];
                     case 10:
-                        _a.sent();
-                        _a.label = 11;
+                        _b.sent();
+                        _b.label = 11;
                     case 11:
                         _i++;
                         return [3 /*break*/, 9];
                     case 12: return [4 /*yield*/, this.salesline_query_to_data(params)];
                     case 13:
-                        salesLine = _a.sent();
+                        salesLine = _b.sent();
+                        console.log(salesLine);
+                        return [4 /*yield*/, this.salesline_query(params)];
+                    case 14:
+                        salesLineData = _b.sent();
+                        _loop_1 = function (item) {
+                            console.log(item.link_id);
+                            var relatedItem = salesLine.find(function (v) {
+                                return v.linkId == item.link_id && parseFloat(v.lineAmount) * parseInt(v.salesQty) > parseFloat(item.linetotaldisc);
+                            });
+                            var relatedItemIndex = salesLine.findIndex(function (v) {
+                                return v.linkId == item.link_id && parseFloat(v.lineAmount) * parseInt(v.salesQty) > parseFloat(item.linetotaldisc);
+                            });
+                            if (relatedItem) {
+                                console.log(salesLine[relatedItemIndex].lineTotalDisc, salesLine[relatedItemIndex].vatAmount, item.linetotaldisc, item.vatamount);
+                                salesLine[relatedItemIndex].lineTotalDisc = salesLine[relatedItemIndex].lineTotalDisc
+                                    ? parseFloat(salesLine[relatedItemIndex].lineTotalDisc) + parseFloat(item.linetotaldisc)
+                                    : 0;
+                                salesLine[relatedItemIndex].vatAmount = salesLine[relatedItemIndex].vatAmount
+                                    ? parseFloat(salesLine[relatedItemIndex].vatAmount) + parseFloat(item.vatamount)
+                                    : 0;
+                                salesLine[relatedItemIndex].lineTotalDisc = salesLine[relatedItemIndex].lineTotalDisc.toFixed(2);
+                                salesLine[relatedItemIndex].vatAmount = salesLine[relatedItemIndex].vatAmount.toFixed(2);
+                            }
+                            salesLine[relatedItemIndex].lineTotalDisc;
+                        };
+                        for (_a = 0, salesLineData_1 = salesLineData; _a < salesLineData_1.length; _a++) {
+                            item = salesLineData_1[_a];
+                            _loop_1(item);
+                        }
                         sNo_1 = 1;
                         data_1.vat = salesLine.length > 0 ? salesLine[0].vat : "-";
                         salesLine.map(function (val) {
@@ -196,21 +225,21 @@ var ReturnOrderReport = /** @class */ (function () {
                         });
                         // console.log(data);
                         return [4 /*yield*/, queryRunner.commitTransaction()];
-                    case 14:
-                        // console.log(data);
-                        _a.sent();
-                        return [2 /*return*/, data_1];
                     case 15:
-                        error_1 = _a.sent();
-                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                        // console.log(data);
+                        _b.sent();
+                        return [2 /*return*/, data_1];
                     case 16:
-                        _a.sent();
+                        error_1 = _b.sent();
+                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                    case 17:
+                        _b.sent();
                         throw error_1;
-                    case 17: return [4 /*yield*/, queryRunner.release()];
-                    case 18:
-                        _a.sent();
+                    case 18: return [4 /*yield*/, queryRunner.release()];
+                    case 19:
+                        _b.sent();
                         return [7 /*endfinally*/];
-                    case 19: return [2 /*return*/];
+                    case 20: return [2 /*return*/];
                 }
             });
         });
@@ -345,8 +374,21 @@ var ReturnOrderReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        salesQuery = "\n    select\n    distinct\n    ln.salesid,\n    ln.itemid,\n    ln.batchno,\n    ln.configid,\n    ln.inventsizeid,\n    ln.saleslineqty,\n    to_char(ln.lastmodifieddate, 'DD-MM-YYYY') as \"shippingDate\",\n    to_char(ln.salesqty, 'FM999999999D') as \"salesQty\",\n    to_char(ln.salesprice, 'FM999999999990.00') as salesprice,\n    to_char((ln.vatamount/ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"vatAmount\",\n    to_char((ln.linetotaldisc/ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"lineTotalDisc\",\n    to_char(ln.colorantprice, 'FM999999999990.00') as colorantprice,\n    to_char((ln.lineamount / ln.saleslineqty)*ln.salesqty + (ln.colorantprice*ln.salesqty) - (ln.linetotaldisc / ln.saleslineqty)*ln.salesqty + (ln.vatamount / ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"lineAmount\",\n    ln.prodnamear as \"prodNameAr\",\n    ln.prodnameen as \"prodNameEn\",\n    ln.colNameAr as \"colNameAr\",\n    ln.colNameEn as \"colNameEn\",\n    ln.sizeNameEn as \"sizeNameEn\",\n    ln.sizeNameAr as \"sizeNameAr\",\n    to_char((ln.lineamount/ln.saleslineqty)*ln.salesqty + (ln.colorantprice*ln.salesqty) - (ln.linetotaldisc/ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"lineAmountBeforeVat\",\n    ln.vat as vat,\n    ln.colorantid as colorant,\n    ln.linenum as linenum\n    from\n    (\n      select distinct on (i.invoiceid, i.itemid, i.configid, i.inventsizeid, i.qty, i.batchno, i.sales_line_id)\n      i.invoiceid as salesid,\n      i.batchno,\n      i.itemid,\n      i.configid,\n      i.inventsizeid,\n      st.status as status,\n      ABS(i.qty) as salesqty,\n      b.itemname as prodnamear,\n      b.namealias as prodnameen,\n      coalesce(sl.salesprice, 0)  as salesprice,\n      coalesce(sl.vatamount, 0)  as vatamount,\n      coalesce(sl.linetotaldisc, 0) as linetotaldisc,\n      coalesce(sl.colorantprice,0) as colorantprice,\n      c.name as colNameAr,\n      c.name as colNameEn,\n      s.description as sizeNameEn,\n      s.name as sizeNameAr,\n      coalesce(sl.lineamount,0) as  lineamount,\n      sl.colorantid as  colorantid,\n      sl.salesqty as saleslineqty,\n      sl.vat as vat,\n      sl.linenum,\n      sl.lastmodifieddate\n      from inventtrans i\n      left join salestable st on st.salesid = i.invoiceid\n      left join salesline sl on sl.id = i.sales_line_id\n      left join inventtable b on i.itemid=b.itemid\n      left join inventsize s on s.itemid = i.itemid and i.inventsizeid = s.inventsizeid\n      left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n      \n  where invoiceid='" + params.salesId + "'\n  ) as ln order by linenum ASC\n    \n    ";
+                        salesQuery = "\n    select\n    distinct\n    ln.salesid,\n    ln.itemid,\n    ln.batchno,\n    ln.configid,\n    ln.inventsizeid,\n    ln.saleslineqty,\n    to_char(ln.lastmodifieddate, 'DD-MM-YYYY') as \"shippingDate\",\n    to_char(ln.salesqty, 'FM999999999D') as \"salesQty\",\n    to_char(ln.salesprice, 'FM999999999990.00') as salesprice,\n    to_char((ln.vatamount/ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"vatAmount\",\n    to_char((ln.linetotaldisc/ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"lineTotalDisc\",\n    to_char(ln.colorantprice, 'FM999999999990.00') as colorantprice,\n    to_char((ln.lineamount / ln.saleslineqty)*ln.salesqty + (ln.colorantprice*ln.salesqty) - (ln.linetotaldisc / ln.saleslineqty)*ln.salesqty + (ln.vatamount / ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"lineAmount\",\n    ln.prodnamear as \"prodNameAr\",\n    ln.prodnameen as \"prodNameEn\",\n    ln.colNameAr as \"colNameAr\",\n    ln.colNameEn as \"colNameEn\",\n    ln.sizeNameEn as \"sizeNameEn\",\n    ln.sizeNameAr as \"sizeNameAr\",\n    to_char((ln.lineamount/ln.saleslineqty)*ln.salesqty + (ln.colorantprice*ln.salesqty) - (ln.linetotaldisc/ln.saleslineqty)*ln.salesqty, 'FM999999999990.00') as \"lineAmountBeforeVat\",\n    ln.vat as vat,\n    ln.colorantid as colorant,\n    ln.linenum as linenum,\n    ln.link_id as \"linkId\"\n    from\n    (\n      select distinct on (i.invoiceid, i.itemid, i.configid, i.inventsizeid, i.qty, i.batchno, i.sales_line_id)\n      i.invoiceid as salesid,\n      i.batchno,\n      i.itemid,\n      i.configid,\n      i.inventsizeid,\n      st.status as status,\n      ABS(i.qty) as salesqty,\n      b.itemname as prodnamear,\n      b.namealias as prodnameen,\n      coalesce(sl.salesprice, 0)  as salesprice,\n      coalesce(sl.vatamount, 0)  as vatamount,\n      coalesce(sl.linetotaldisc, 0) as linetotaldisc,\n      coalesce(sl.colorantprice,0) as colorantprice,\n      c.name as colNameAr,\n      c.name as colNameEn,\n      s.description as sizeNameEn,\n      s.name as sizeNameAr,\n      coalesce(sl.lineamount,0) as  lineamount,\n      sl.colorantid as  colorantid,\n      sl.salesqty as saleslineqty,\n      sl.vat as vat,\n      sl.linenum,\n      sl.lastmodifieddate,\n      sl.link_id \n      from inventtrans i\n      left join salestable st on st.salesid = i.invoiceid\n      left join salesline sl on sl.id = i.sales_line_id\n      left join inventtable b on i.itemid=b.itemid\n      left join inventsize s on s.itemid = i.itemid and i.inventsizeid = s.inventsizeid\n      left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n      \n  where invoiceid='" + params.salesId + "'\n  ) as ln order by linenum ASC\n    \n    ";
                         return [4 /*yield*/, this.db.query(salesQuery)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    ReturnOrderReport.prototype.salesline_query = function (params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "\n          select \n         *\n          from salesline sl\n        where sl.salesid='" + params.salesId + "' and sl.salesqty=0 order by linenum ASC\n  ";
+                        return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });

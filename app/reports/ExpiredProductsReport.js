@@ -37,9 +37,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var App_1 = require("../../utils/App");
+var RawQuery_1 = require("../common/RawQuery");
 var ExpiredProductsReport = /** @class */ (function () {
     function ExpiredProductsReport() {
         this.db = typeorm_1.getManager();
+        this.rawQuery = new RawQuery_1.RawQuery();
     }
     ExpiredProductsReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
@@ -80,7 +82,7 @@ var ExpiredProductsReport = /** @class */ (function () {
     };
     ExpiredProductsReport.prototype.report = function (result, params) {
         return __awaiter(this, void 0, void 0, function () {
-            var warehouse, renderData, query, data, file;
+            var warehouse, renderData, query, data, title, file;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.warehouseName(params.inventlocationid)];
@@ -108,6 +110,14 @@ var ExpiredProductsReport = /** @class */ (function () {
                         renderData.warehouseNameAr = warehouse.name;
                         console.log(renderData);
                         renderData.data = result;
+                        return [4 /*yield*/, this.rawQuery.getAppLangName("EXPIRED_PRODUCTS")];
+                    case 4:
+                        title = _a.sent();
+                        if (title) {
+                            renderData.title = title;
+                            console.table(title);
+                        }
+                        ;
                         if (params.type == "excel") {
                             file = params.lang == "en" ? "expiredproducts-excel" : "expiredproducts-excel-ar";
                         }

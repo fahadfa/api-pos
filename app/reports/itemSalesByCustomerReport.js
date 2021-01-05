@@ -37,9 +37,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var App_1 = require("../../utils/App");
+var RawQuery_1 = require("../common/RawQuery");
 var itemSalesByCustomerReport = /** @class */ (function () {
     function itemSalesByCustomerReport() {
         this.db = typeorm_1.getManager();
+        this.rawQuery = new RawQuery_1.RawQuery();
     }
     itemSalesByCustomerReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
@@ -102,24 +104,35 @@ var itemSalesByCustomerReport = /** @class */ (function () {
     };
     itemSalesByCustomerReport.prototype.report = function (result, params) {
         return __awaiter(this, void 0, void 0, function () {
-            var file;
+            var title, file;
             return __generator(this, function (_a) {
-                result.printDate = new Date(params.printDate).toISOString().replace(/T/, " ").replace(/\..+/, "");
-                // console.log(result.salesLine[0].product.nameEnglish);
-                console.log(result);
-                if (params.type == "excel") {
-                    file = params.lang == "en" ? "itemsalesbycustomer-excel" : "itemsalesbycustomer-excel-ar";
+                switch (_a.label) {
+                    case 0:
+                        result.printDate = new Date(params.printDate).toISOString().replace(/T/, " ").replace(/\..+/, "");
+                        // console.log(result.salesLine[0].product.nameEnglish);
+                        console.log(result);
+                        return [4 /*yield*/, this.rawQuery.getAppLangName("CUSTOMER_ITEM_REPORT")];
+                    case 1:
+                        title = _a.sent();
+                        if (title) {
+                            result.title = title;
+                            console.table(title);
+                        }
+                        ;
+                        if (params.type == "excel") {
+                            file = params.lang == "en" ? "itemsalesbycustomer-excel" : "itemsalesbycustomer-excel-ar";
+                        }
+                        else {
+                            file = params.lang == "en" ? "itemsalesbycustomer-report" : "itemsalesbycustomer-report-ar";
+                        }
+                        try {
+                            return [2 /*return*/, App_1.App.HtmlRender(file, result)];
+                        }
+                        catch (error) {
+                            throw error;
+                        }
+                        return [2 /*return*/];
                 }
-                else {
-                    file = params.lang == "en" ? "itemsalesbycustomer-report" : "itemsalesbycustomer-report-ar";
-                }
-                try {
-                    return [2 /*return*/, App_1.App.HtmlRender(file, result)];
-                }
-                catch (error) {
-                    throw error;
-                }
-                return [2 /*return*/];
             });
         });
     };

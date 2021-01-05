@@ -71,7 +71,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         _b.trys.push([0, 20, , 21]);
-                        return [4 /*yield*/, this.salesTableDAO.entity(reqData.salesid.toUpperCase())];
+                        return [4 /*yield*/, this.salesTableDAO.transferorderEntity(reqData.salesid.toUpperCase())];
                     case 1:
                         salesOrderData = _b.sent();
                         salesOrderData.salesLine = salesOrderData.salesLine.filter(function (v) { return v.itemid != "HSN-00001"; });
@@ -1305,7 +1305,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 if (discount) {
                                                     promotionalDiscount.discountAmount -= parseFloat(discount.discountAmount);
                                                     if (parseFloat(discount.discountAmount) > 0) {
-                                                        line.appliedDiscounts.push(promotionalDiscount);
+                                                        if (promotionalDiscount) {
+                                                            line.appliedDiscounts.push(promotionalDiscount);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -1318,7 +1320,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 if (discount) {
                                                     buyOneGetOneDiscount.discountAmount -= parseFloat(discount.discountAmount);
                                                     if (parseFloat(discount.discountAmount) > 0) {
-                                                        line.appliedDiscounts.push(buyOneGetOneDiscount);
+                                                        if (buyOneGetOneDiscount) {
+                                                            line.appliedDiscounts.push(buyOneGetOneDiscount);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -1331,7 +1335,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 if (discount) {
                                                     totalDiscount.discountAmount -= parseFloat(discount.discountAmount);
                                                     if (parseFloat(discount.discountAmount) > 0) {
-                                                        line.appliedDiscounts.push(totalDiscount);
+                                                        if (totalDiscount) {
+                                                            line.appliedDiscounts.push(totalDiscount);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -1344,7 +1350,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 if (discount) {
                                                     lineDiscount.discountAmount -= parseFloat(discount.discountAmount);
                                                     if (parseFloat(discount.discountAmount) > 0) {
-                                                        line.appliedDiscounts.push(totalDiscount);
+                                                        if (totalDiscount) {
+                                                            line.appliedDiscounts.push(totalDiscount);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -1357,7 +1365,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 if (discount) {
                                                     multilineDiscount.discountAmount -= parseFloat(discount.discountAmount);
                                                     if (parseFloat(discount.discountAmount) > 0) {
-                                                        line.appliedDiscounts.push(multilineDiscount);
+                                                        if (multilineDiscount) {
+                                                            line.appliedDiscounts.push(multilineDiscount);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -1370,7 +1380,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 if (discount) {
                                                     voucherDiscount.discountAmount -= parseFloat(discount.discountAmount);
                                                     if (parseFloat(discount.discountAmount) > 0) {
-                                                        line.appliedDiscounts.push(voucherDiscount);
+                                                        if (voucherDiscount) {
+                                                            line.appliedDiscounts.push(voucherDiscount);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -1383,7 +1395,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 if (discount) {
                                                     sabicCustomerDiscount.discountAmount -= parseFloat(discount.discountAmount);
                                                     if (parseFloat(discount.discountAmount) > 0) {
-                                                        line.appliedDiscounts.push(sabicCustomerDiscount);
+                                                        if (sabicCustomerDiscount) {
+                                                            line.appliedDiscounts.push(sabicCustomerDiscount);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -1396,7 +1410,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 if (discount) {
                                                     InteriorAndExteriorDiscount.discountAmount -= parseFloat(discount.discountAmount);
                                                     if (parseFloat(discount.discountAmount) > 0) {
-                                                        line.appliedDiscounts.push(InteriorAndExteriorDiscount);
+                                                        if (InteriorAndExteriorDiscount) {
+                                                            line.appliedDiscounts.push(InteriorAndExteriorDiscount);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -1409,7 +1425,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 if (discount) {
                                                     instantDisocunt.discountAmount -= parseFloat(discount.discountAmount);
                                                     if (parseFloat(discount.discountAmount) > 0) {
-                                                        line.appliedDiscounts.push(instantDisocunt);
+                                                        if (instantDisocunt) {
+                                                            line.appliedDiscounts.push(instantDisocunt);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -1422,7 +1440,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 if (discount) {
                                                     salesDiscount.discountAmount -= parseFloat(discount.discountAmount);
                                                     if (parseFloat(discount.discountAmount) > 0) {
-                                                        line.appliedDiscounts.push(salesDiscount);
+                                                        if (salesDiscount) {
+                                                            line.appliedDiscounts.push(salesDiscount);
+                                                        }
                                                     }
                                                 }
                                             }

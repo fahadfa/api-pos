@@ -151,11 +151,19 @@
                 <table style="text-align:center">
                     {{#if originalPrinted}}
                     <tr>
-                        <td class="copy-text">نسخة</td>
+                        <td class="copy-text">
+                            نسخة</td>
                     </tr>
                     {{/if}}
                     <tr>
-                        <td><span style="font-size:15px !important">تسعير المبيعات</span></td>
+                        <td><span style="font-size:15px !important">
+                            {{# if isSales}} 
+                            تسعير المبيعات
+                  {{else}} 
+                  تسعير الشراء
+                  {{/if}}
+                
+                            </span></td>
                     </tr><br>
                     <tr>
                         <span style="font-weight:600">
@@ -166,13 +174,7 @@
             </td>
             <td style="text-align: right" width="40%">
                 <table style="text-align: right">
-                    <tr class="billing">
-                        <td>اسم المستخدم</td>
-                        <td>:</td>
-                        <td>
-                            {{cnamealias}}
-                        </td>
-                    </tr>
+                    
                     <tr class="billing">
                         <td>صفحة</td>
                         <td>:</td>
@@ -190,7 +192,13 @@
                         <td>:</td>
                         <td>300533832200003</td>
                     </tr>
-
+                    <tr class="billing">
+                        <td>ملاحظات</td>
+                        <td>:</td>
+                        <td>
+                            {{notes}}
+                        </td>
+                    </tr>
                     <tr class="billing">
                         <td>البائع</td>
                         <td>:</td>

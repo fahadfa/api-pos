@@ -275,8 +275,11 @@ var App = /** @class */ (function () {
                         if (isValid == true) {
                             return [2 /*return*/, true];
                         }
+                        else if (isValid == "INACTIVE") {
+                            throw { message: "ACCOUNT_DEACTIVATED_PLEASE_CONTACT_ADMIN" };
+                        }
                         else {
-                            throw { message: "User not releated to this store." };
+                            throw { message: "USER_NOT_RELATED_TO_THIS_STORE" };
                         }
                         _a.label = 6;
                     case 6: return [3 /*break*/, 8];
