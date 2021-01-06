@@ -54,10 +54,9 @@ var HistoricalTransactionReport = /** @class */ (function () {
                         _f.trys.push([0, 21, , 22]);
                         id = params.salesId;
                         if (!id) return [3 /*break*/, 19];
-                        return [4 /*yield*/, this.query_to_data(id, params.inventlocationid)];
+                        return [4 /*yield*/, this.query_to_data(id, params)];
                     case 1:
                         data_1 = _f.sent();
-                        console.log("=========================>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", data_1);
                         if (!(data_1 && data_1.length > 0)) return [3 /*break*/, 9];
                         data_1 = data_1 && data_1.length > 0 ? data_1[0] : {};
                         data_1.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(data_1.lastmodifieddate), params.timeZoneOffSet);
@@ -90,11 +89,19 @@ var HistoricalTransactionReport = /** @class */ (function () {
                             sNo_1 = 1;
                             data_1.salesLine.map(function (v, index) {
                                 data_1.salesLine[index].sNo = sNo_1++;
-                                data_1.quantity += parseInt(v.quantity);
-                                data_1.vat = data_1.salesLine.length > 0 ? parseInt(data_1.salesLine[0].vat) : "-";
+                                console.table(data_1.salesLine[index]);
+                                // console.log("salles quantity",v.salesQty)
+                                data_1.salesLine[index].actualsalesqty = parseInt(v.actualsalesqty);
+                                data_1.quantity += parseInt(v.salesQty);
+                                // data.salesLine[index].vatAmount=data.vatamount;
                             });
+                            data_1.vat = data_1.salesLine.length > 0 ? parseInt(data_1.salesLine[0].vat) : "-";
+                            // data.vatAmount=data.vatamount;
+                            // data.vatGrand= data.vatAmount;
+                            params.user ? data_1.user = params.user : null;
                         }
-                        // data.disc = data.disc ? data.disc : 0;
+                        // console.log(" data.quantity=================>", data.quantity)
+                        data_1.disc = data_1.disc ? data_1.disc : 0;
                         // console.log(data.salesLine);
                         data_1.vatGrand = data_1.salesLine.length > 0 ? parseInt(data_1.salesLine[0].vatGrand) : "-";
                         return [3 /*break*/, 18];
@@ -225,10 +232,97 @@ var HistoricalTransactionReport = /** @class */ (function () {
                             sNo_2 = 1;
                             data_1.salesLine.map(function (v, index) {
                                 data_1.salesLine[index].sNo = sNo_2++;
-                                data_1.quantity += parseInt(v.quantity);
+                                data_1.quantity += parseInt(v.salesQty);
                                 data_1.vat = data_1.salesLine.length > 0 ? parseInt(data_1.salesLine[0].vat) : "-";
                             });
+                            params.user ? data_1.user = params.user : null;
                         }
+                        // let list = []
+                        // let chunkArray: any[] = await this.chunkArray(salesLines, 10);
+                        // list = list.concat(chunkArray);
+                        // let newSalesline: any[] = [];
+                        // let sNo = 1;
+                        // let quantity = 0;
+                        // list.map((val: any) => {
+                        //     data.vat = val.length > 0 ? val[0].vat : "-";
+                        //     console.log("-----------vat--------------", data.vat)
+                        //     val.colorant = val.colorant ? val.colorant : "-";
+                        //     let lines: any = {
+                        //         amount: parseFloat(data.amount).toFixed(2),
+                        //         quantity: 0,
+                        //         netAmount: parseFloat(data.netAmount).toFixed(2),
+                        //         disc: parseFloat(data.disc).toFixed(2),
+                        //         vatamount: parseFloat(data.vatAmount).toFixed(2),
+                        //         shippingamount: parseFloat(data.shippingAmount).toFixed(2),
+                        //         page: 1,
+                        //         totalPages: list.length,
+                        //         voucherdiscchecked: data.voucherdiscchecked,
+                        //         vouchernum: data.vouchernum,
+                        //         salesId: data.salesId,
+                        //         custAccount: data.custAccount,
+                        //         interCompanyOriginalSalesId: data.interCompanyOriginalSalesId,
+                        //         status: data.status,
+                        //         transkind: data.transkind,
+                        //         customername: data.customername,
+                        //         custmobilenumber: data.custmobilenumber,
+                        //         cname: data.cname,
+                        //         cnamealias: data.cnamealias,
+                        //         invoiceAccount: data.invoiceAccount,
+                        //         cphone: data.cphone,
+                        //         createddatetime: data.createddatetime,
+                        //         lastmodifieddate: data.lastmodifieddate,
+                        //         originalPrinted: data.originalPrinted,
+                        //         inventLocationId: data.inventLocationId,
+                        //         wnamealias: data.wnamealias,
+                        //         wname: data.wname,
+                        //         createdby: data.createdby,
+                        //         deliveryaddress: data.deliveryaddress,
+                        //         salesman: data.salesman,
+                        //         notes: data.notes,
+                        //         deliveryDate: data.deliveryDate,
+                        //         isbreak: data.isbreak,
+                        //         vatGrand: data.vatamount,
+                        //         vat: data.vat,
+                        //         paymentType: data.paymentType,
+                        //         shippedDate: data.lastmodifieddate.split(",")[0],
+                        //         paymentMode: data.paymentType == "ONLINE" ? "Online" : data.paymentMode,
+                        //         paymentModeAr: data.paymentType == "ONLINE" ? "عبر الانترنت" : data.paymentMode,
+                        //         cashAmount: data.cashAmount,
+                        //         cardAmount: data.cardAmount,
+                        //         designServiceRedeemAmount: data.designServiceRedeemAmount,
+                        //         redeemAmount: data.redeemAmount,
+                        //         lines: [],
+                        //     };
+                        //     console.table(lines);
+                        //     data.isbreak = val.length > 5 ? true : false;
+                        //     val.map((v: any) => {
+                        //         lines.quantity += parseInt(v.salesQty);
+                        //         v.colorantid = val.colorant;
+                        //         v.sNo = sNo;
+                        //         lines.lines.push(v);
+                        //         sNo += 1;
+                        //     });
+                        //     lines.page = list.indexOf(val) + 1;
+                        //     lines.quantity = lines.quantity + quantity;
+                        //     quantity = lines.quantity;
+                        // if (from) {
+                        //     lines.wnamealias = from.wnamealias;
+                        //     lines.wname = from.wname;
+                        // }
+                        // if (to) {
+                        //     lines.twnamealias = to.wnamealias;
+                        //     lines.twname = to.wname;
+                        // }
+                        //     params.user ? lines.user = params.user : null;
+                        //     newSalesline.push(lines);
+                        // });
+                        // data.salesLine = newSalesline;
+                        // data.salesLine.shippedDate = data.lastmodifieddate.split(",")[0];
+                        // data.quantity = 0;
+                        // data.salesLine.map((v: any) => {
+                        //     data.quantity += parseInt(v.quantity);
+                        // });
+                        data_1.disc = data_1.disc ? data_1.disc : 0;
                         _f.label = 16;
                     case 16: return [3 /*break*/, 18];
                     case 17: throw { message: Props_1.Props.DATA_NOT_FOUND };
@@ -422,16 +516,20 @@ var HistoricalTransactionReport = /** @class */ (function () {
             });
         });
     };
-    HistoricalTransactionReport.prototype.query_to_data = function (id, inventlocationid) {
+    HistoricalTransactionReport.prototype.query_to_data = function (id, params) {
         return __awaiter(this, void 0, void 0, function () {
             var query;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "\n                select \n                st.salesid as \"salesId\",\n                st.intercompanyoriginalsalesid as \"interCompanyOriginalSalesId\",\n                st.custaccount as \"custAccount\",\n                st.invoiceaccount as \"invoiceAccount\",\n                st.status as status,\n                alt.en as \"transkindEn\",\n                alt.ar as \"transkindAr\",\n                st.transkind as transkind,\n                mt.movementtype as movementtype,\n                mt.movementarabic as movementtypear,\n                st.salesname as customername,\n                st.mobileno as custmobilenumber,\n                to_char(st.vatamount, 'FM999999999990.00')  as vatamount,\n                to_char(st.netamount, 'FM999999999990.00')  as \"netAmount\",\n                to_char(st.disc, 'FM999999999990.00')  as disc,\n                to_char(st.amount , 'FM999999999990.00') as amount,\n                to_char(st.shipping_amount, 'FM999999999990.00') as \"shippingAmount\",\n                to_char(st.lastmodifieddate, 'DD-MM-YYYY') as \"shippingDate\",\n                st.salesname as cname,\n                st.salesname as \"cnamealias\",\n                st.voucherdiscchecked as \"voucherdiscchecked\",\n                st.vouchernum as \"vouchernum\",\n                st.payment_type as \"paymentType\",\n                c.phone as \"cphone\",\n                to_char(st.createddatetime, 'DD-MM-YYYY') as createddatetime,\n                st.lastmodifieddate as lastmodifieddate,\n                st.originalprinted as \"originalPrinted\",\n                st.inventlocationid as \"inventLocationId\",\n                w.namealias as wnamealias,\n                w.name as wname,\n                tw.namealias as twnamealias,\n                tw.name as twname,\n                st.payment as \"paymentMode\",\n                st.iscash as iscash,\n                st.createdby,\n                st.description as notes,\n                to_char(st.cash_amount, 'FM999999999990.00') as \"cashAmount\",\n                to_char(st.card_amount, 'FM999999999990.00') as \"cardAmount\",\n                to_char(st.shipping_amount, 'FM999999999990.00') as \"shippingAmount\",\n                to_char(st.online_amount, 'FM999999999990.00') as \"onlineAmount\",\n                to_char(st.design_service_redeem_amount, 'FM999999999990.00') as \"designServiceRedeemAmount\",\n                to_char(st.redeemptsamt, 'FM999999999990.00') as \"redeemAmount\",\n                coalesce(st.deliveryaddress, ' ') || (' ') || coalesce(st.citycode, ' ') || (' ') || coalesce(st.districtcode, ' ') || (' ') || coalesce(st.country_code, ' ') as deliveryaddress,\n                concat(d.num,' - ', d.description) as salesman,\n                to_char(st.deliverydate, 'DD-MM-YYYY') as \"deliveryDate\"\n                from salestable st \n                left join dimensions d on st.dimension6_ = d.num\n                left join inventlocation w on w.inventlocationid = st.inventlocationid\n                left join inventlocation tw on tw.inventlocationid = st.custaccount\n                left join custtable c on c.accountnum = st.custaccount or c.accountnum =st.invoiceaccount \n                left join paymterm p on p.paymtermid = st.payment\n                left join app_lang alt on alt.id = st.transkind\n                left join movementtype mt on st.movement_type_id=mt.id\n                where salesid='" + id + "' and\n                CASE\n                when st.transkind= 'SALESORDER' THEN c.walkincustomer else true\n                     END\n                     and\n                (st.transkind in('DESIGNERSERVICE','ORDERRECEIVE','ORDERSHIPMENT','RETURNORDER','SALESORDER','INVENTORYMOVEMENT','DESIGNERSERVICERETURN') )\n                and st.status IN ('PRINTED','POSTED')\n                ";
-                        // if (inventlocationid) {
-                        //     query += `and st.inventlocationid='${inventlocationid}'`;
-                        // }
+                        query = "\n                select \n                st.salesid as \"salesId\",\n                st.intercompanyoriginalsalesid as \"interCompanyOriginalSalesId\",\n                st.custaccount as \"custAccount\",\n                st.invoiceaccount as \"invoiceAccount\",\n                st.status as status,\n                alt.en as \"transkindEn\",\n                alt.ar as \"transkindAr\",\n                st.transkind as transkind,\n                mt.movementtype as movementtype,\n                mt.movementarabic as movementtypear,\n                st.salesname as customername,\n                st.mobileno as custmobilenumber,\n                to_char(st.vatamount, 'FM999999999990.00')  as vatamount,\n                to_char(st.netamount, 'FM999999999990.00')  as \"netAmount\",\n                to_char(st.disc, 'FM999999999990.00')  as disc,\n                to_char(st.amount , 'FM999999999990.00') as amount,\n                to_char(st.shipping_amount, 'FM999999999990.00') as \"shippingAmount\",\n                to_char(st.lastmodifieddate, 'DD-MM-YYYY') as \"shippingDate\",\n                st.salesname as cname,\n                st.salesname as \"cnamealias\",\n                st.voucherdiscchecked as \"voucherdiscchecked\",\n                st.vouchernum as \"vouchernum\",\n                st.payment_type as \"paymentType\",\n                c.phone as \"cphone\",\n                to_char(st.createddatetime, 'DD-MM-YYYY') as createddatetime,\n                st.lastmodifieddate as lastmodifieddate,\n                st.originalprinted as \"originalPrinted\",\n                st.inventlocationid as \"inventLocationId\",\n                w.namealias as wnamealias,\n                w.name as wname,\n                tw.namealias as twnamealias,\n                tw.name as twname,\n                st.payment as \"paymentMode\",\n                st.iscash as iscash,\n                st.createdby,\n                st.description as notes,\n                to_char(st.cash_amount, 'FM999999999990.00') as \"cashAmount\",\n                to_char(st.card_amount, 'FM999999999990.00') as \"cardAmount\",\n                to_char(st.shipping_amount, 'FM999999999990.00') as \"shippingAmount\",\n                to_char(st.online_amount, 'FM999999999990.00') as \"onlineAmount\",\n                to_char(st.design_service_redeem_amount, 'FM999999999990.00') as \"designServiceRedeemAmount\",\n                to_char(st.redeemptsamt, 'FM999999999990.00') as \"redeemAmount\",\n                coalesce(st.deliveryaddress, ' ') || (' ') || coalesce(st.citycode, ' ') || (' ') || coalesce(st.districtcode, ' ') || (' ') || coalesce(st.country_code, ' ') as deliveryaddress,\n                concat(d.num,' - ', d.description) as salesman,\n                to_char(st.deliverydate, 'DD-MM-YYYY') as \"deliveryDate\"\n                from salestable st \n                left join dimensions d on st.dimension6_ = d.num\n                left join inventlocation w on w.inventlocationid = st.inventlocationid\n                left join inventlocation tw on tw.inventlocationid = st.custaccount\n                left join custtable c on c.accountnum = st.custaccount or c.accountnum =st.invoiceaccount \n                left join paymterm p on p.paymtermid = st.payment\n                left join app_lang alt on alt.id = st.transkind\n                left join movementtype mt on st.movement_type_id=mt.id\n                where salesid='" + id + "' and\n                CASE\n                when st.transkind= 'SALESORDER' THEN c.walkincustomer ";
+                        if (params && params.defaultcustomerid) {
+                            query += " or c.accountnum ='" + params.defaultcustomerid + "' ";
+                        }
+                        query += " else true\n                     END\n                     and\n                (st.transkind in('DESIGNERSERVICE','ORDERRECEIVE','ORDERSHIPMENT','RETURNORDER','SALESORDER','INVENTORYMOVEMENT','DESIGNERSERVICERETURN') )\n                and st.status IN ('PRINTED','POSTED')\n                ";
+                        if (params && params.inventlocationid) {
+                            query += "and st.inventlocationid='" + params.inventlocationid + "'";
+                        }
                         console.log(query);
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];

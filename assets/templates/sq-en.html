@@ -140,11 +140,19 @@
             {{/if}} 
             <tr>
               <td>
-                  {{# if isSales}} 
-                  Sales Quotation 
-                  {{else}} 
-                  Purchase Quotation 
+                  {{# if isSalesOrder}} 
+                  Sales Order                  
                   {{/if}}
+                  {{# if isSalesQuotation}} 
+                  Sales Quotation                  
+                  {{/if}}
+                  {{# if isPurchOrder}} 
+                  Purchase Order                  
+                  {{/if}}
+                  {{# if isPurchQuotation}} 
+                  Purchase Quotation                  
+                  {{/if}}                  
+
                 </td>
             </tr>
             <br />

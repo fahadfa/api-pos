@@ -61,7 +61,11 @@ var QuotationReport = /** @class */ (function () {
                     case 1:
                         data_1 = _a.sent();
                         data_1 = data_1.length >= 1 ? data_1[0] : {};
-                        data_1.isSales = data_1.transkind !== "PURCHASEORDER";
+                        console.log("==========transkind==========", data_1.transkind);
+                        data_1.isSalesOrder = data_1.transkind == "SALESORDER";
+                        data_1.isSalesQuotation = data_1.transkind == "SALESQUOTATION";
+                        data_1.isPurchOrder = data_1.transkind == "PURCHASEORDER";
+                        data_1.isPurchQuotation = data_1.transkind == "PURCHASEREQUEST";
                         data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
                         if (!(data_1.originalPrinted && data_1.status == "CONVERTED")) return [3 /*break*/, 3];
                         status_1 = "CONVERTED";

@@ -2888,7 +2888,12 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.getItemTaxGroup(item.itemid)];
                     case 17:
                         taxItemGroup = _c.sent();
-                        item.taxItemGroup = taxItemGroup.taxitemgroupid;
+                        if (item.taxGroup == "VAT_GRP_5%") {
+                            item.taxItemGroup = "VAT_ITEM_5%";
+                        }
+                        else {
+                            item.taxItemGroup = taxItemGroup.taxitemgroupid;
+                        }
                         item.status = reqData.status;
                         if (!(item.batches && item.batches.length > 0 && item.salesQty > 0)) return [3 /*break*/, 21];
                         _a = 0, _b = item.batches;
