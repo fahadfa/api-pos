@@ -174,6 +174,16 @@ var Props = /** @class */ (function () {
         RO_POSTED: ["POSTED", "Posted", "تم التأكيد"],
         PENDINGINGFORDESIGNERAPPROVAL: ["PENDINGINGFORDESIGNERAPPROVAL", "Pending For Designer Approval", "تم التأكيد"],
         APPROVEDBYDESIGNER: ["APPROVEDBYDESIGNER", "Approved By Designer", "تم التأكيد"],
+        PENDINGCOORDINATORAPPROVAL: [
+            "PENDINGCOORDINATORAPPROVAL",
+            "Pending for sales coordinator approval",
+            "بانتظار موافقة مدير التنسيق والمتابعه",
+        ],
+        APPROVEDBYCOORDINATORAPPROVAL: [
+            "APPROVEDBYCOORDINATORAPPROVAL",
+            "Approved by sales coordinator",
+            "تمت موافقة مدير التنسيق والمتابعه",
+        ],
     };
     Props.DIMENSION_CODE = {
         REGION: 0,

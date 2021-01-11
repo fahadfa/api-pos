@@ -75,12 +75,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                     case 1:
                         salesOrderData = _b.sent();
                         salesOrderData.salesLine = salesOrderData.salesLine.filter(function (v) { return v.itemid != "HSN-00001"; });
-                        return [4 /*yield*/, this.date_diff_indays(new Date(salesOrderData.lastModifiedDate).toISOString(), new Date().toISOString())];
+                        return [4 /*yield*/, this.date_diff_indays(new Date(salesOrderData.invoiceDate).toISOString(), new Date().toISOString())];
                     case 2:
                         date_dif = _b.sent();
-                        if (date_dif > 90) {
-                            throw "RETURN_OF_ITEMS_WILL_ACCEPT_ONLY_WITH_IN_90_DAYS";
-                        }
                         return [4 /*yield*/, this.salesTableDAO.search({
                                 interCompanyOriginalSalesId: reqData.salesid.toUpperCase(),
                             })];
@@ -92,7 +89,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.getCustomer(salesOrderData.custAccount)];
                     case 4:
                         customer = _b.sent();
-                        return [4 /*yield*/, this.rawQuery.workflowconditions(this.sessionInfo.usergroupconfigid)];
+                        return [4 /*yield*/, this.rawQuery.workflowconditions(this.sessionInfo.groupid, this.sessionInfo.inventlocationid)];
                     case 5:
                         condition = _b.sent();
                         salesLine_2 = salesOrderDataCopy.salesLine;
@@ -278,6 +275,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                             discount: parseFloat(returnOrderData.disc),
                             vatPrice: parseFloat(returnOrderData.vatamount),
                         };
+                        returnOrderData.reservation = date_dif;
                         returnData.returnOrderData = returnOrderData;
                         returnData.designServiceRedeemAmount = parseFloat(returnOrderData.designServiceRedeemAmount);
                         returnData.cashAmount = parseFloat(returnOrderData.cashAmount);
@@ -290,6 +288,9 @@ var ReturnOrderAmountService = /** @class */ (function () {
                         }
                         else {
                             sendForApproval = false;
+                        }
+                        if (returnOrderData.reservation > parseInt(condition.returnOrderDays)) {
+                            sendForApproval = true;
                         }
                         returnData.sendForApproval = sendForApproval;
                         return [2 /*return*/, returnData];

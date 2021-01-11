@@ -36,12 +36,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
-var Overdue_1 = require("../../entities/Overdue");
-var OverDueDAO = /** @class */ (function () {
-    function OverDueDAO() {
-        this.dao = typeorm_1.getRepository(Overdue_1.Overdue);
+var CustTransMaster_1 = require("../../entities/CustTransMaster");
+var CustTransMasterDAO = /** @class */ (function () {
+    function CustTransMasterDAO() {
+        this.dao = typeorm_1.getRepository(CustTransMaster_1.CustTransMaster);
     }
-    OverDueDAO.prototype.entity = function (salesId) {
+    CustTransMasterDAO.prototype.entity = function (salesId) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -51,7 +51,7 @@ var OverDueDAO = /** @class */ (function () {
             });
         });
     };
-    OverDueDAO.prototype.search = function (data) {
+    CustTransMasterDAO.prototype.search = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -61,26 +61,13 @@ var OverDueDAO = /** @class */ (function () {
             });
         });
     };
-    OverDueDAO.prototype.getCreditUsed = function (custAccNum, salesIds) {
-        return __awaiter(this, void 0, void 0, function () {
-            var ids;
-            return __generator(this, function (_a) {
-                ids = salesIds && salesIds.length > 0 ? salesIds.map(function (x) { return "'" + x + "'"; }).join(",") : "'" + "" + "'";
-                console.log("ids=============>", ids);
-                return [2 /*return*/, this.dao
-                        .createQueryBuilder("overdue")
-                        .where("overdue.accountnum = '" + custAccNum + "' and overdue.payment=0\n            and salesId not in(" + ids + ")")
-                        .getMany()];
-            });
-        });
-    };
-    OverDueDAO.prototype.getOverDueCredit = function (custAccNum) {
+    CustTransMasterDAO.prototype.getCreditUsed = function (custAccNum) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.dao
-                            .createQueryBuilder("overdue")
-                            .where("overdue.accountnum = '" + custAccNum + "' and overdue.payment=0 and overdue.duedate :: timestamp < now() and overdue.invoiceamount>=0")
+                            .createQueryBuilder("CustTransMaster")
+                            .where("CustTransMaster.accountnum = '" + custAccNum + "' and CustTransMaster.payment=0")
                             // .select(["overdue.invoiceamount"])
                             .getMany()];
                     case 1: return [2 /*return*/, _a.sent()];
@@ -88,7 +75,7 @@ var OverDueDAO = /** @class */ (function () {
             });
         });
     };
-    OverDueDAO.prototype.createOverDue = function (overdue) {
+    CustTransMasterDAO.prototype.createOverDue = function (overdue) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -98,7 +85,7 @@ var OverDueDAO = /** @class */ (function () {
             });
         });
     };
-    OverDueDAO.prototype.getCreditBalancesUsed = function (account) {
+    CustTransMasterDAO.prototype.getCreditBalancesUsed = function (account) {
         return __awaiter(this, void 0, void 0, function () {
             var query;
             return __generator(this, function (_a) {
@@ -111,7 +98,7 @@ var OverDueDAO = /** @class */ (function () {
             });
         });
     };
-    return OverDueDAO;
+    return CustTransMasterDAO;
 }());
-exports.OverDueDAO = OverDueDAO;
-Object.seal(OverDueDAO);
+exports.CustTransMasterDAO = CustTransMasterDAO;
+Object.seal(CustTransMasterDAO);

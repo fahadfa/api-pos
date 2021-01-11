@@ -87,14 +87,17 @@ var HistoricalTransactionReport = /** @class */ (function () {
                         data_1.quantity = 0;
                         if (data_1.transkind !== "SALESORDER" || data_1.transkind !== "RETURNORDER") {
                             sNo_1 = 1;
+                            console.log("===============Qty================");
                             data_1.salesLine.map(function (v, index) {
                                 data_1.salesLine[index].sNo = sNo_1++;
-                                console.table(data_1.salesLine[index]);
+                                // console.table(data.salesLine[index]);
                                 // console.log("salles quantity",v.salesQty)
                                 data_1.salesLine[index].actualsalesqty = parseInt(v.actualsalesqty);
-                                data_1.quantity += parseInt(v.salesQty);
+                                data_1.quantity += parseInt(v.actualsalesqty);
+                                console.log(v.actualsalesqty, v.salesQty, data_1.quantity);
                                 // data.salesLine[index].vatAmount=data.vatamount;
                             });
+                            console.log("===============Qty closed================");
                             data_1.vat = data_1.salesLine.length > 0 ? parseInt(data_1.salesLine[0].vat) : "-";
                             // data.vatAmount=data.vatamount;
                             // data.vatGrand= data.vatAmount;

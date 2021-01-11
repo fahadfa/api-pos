@@ -126,7 +126,7 @@ var WorkflowService = /** @class */ (function () {
     WorkflowService.prototype.save = function (item, type) {
         if (type === void 0) { type = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, status_1, promistList, condition, usergroupid, selectedLinesData, salesData, RM_AND_RA, canSendForApproval, transactions, date, inventtransQuery, _i, transactions_1, v, selectedLines, cond, salesSaveData, error_3;
+            var queryRunner, status_1, promistList, usergroupid, inventlocationid, selectedLinesData, condition, salesData, RM_AND_RA, canSendForApproval, transactions, date, inventtransQuery, selectedLines, cond, salesSaveData, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -142,21 +142,24 @@ var WorkflowService = /** @class */ (function () {
                         _a.trys.push([3, 36, 38, 40]);
                         status_1 = item.status;
                         promistList = [];
-                        return [4 /*yield*/, this.rawQuery.workflowconditions(this.sessionInfo.usergroupconfigid)];
-                    case 4:
-                        condition = _a.sent();
                         usergroupid = this.sessionInfo.groupid;
+                        inventlocationid = this.sessionInfo.inventlocationid;
                         selectedLinesData = null;
                         if (!(item.id || item.orderId)) return [3 /*break*/, 34];
-                        if (!item.id) return [3 /*break*/, 6];
+                        if (!item.id) return [3 /*break*/, 5];
                         return [4 /*yield*/, this.workflowDAO.entity(item.id)];
-                    case 5:
+                    case 4:
                         item = _a.sent();
+                        // console.log(item);
                         if (item) {
                             usergroupid = item.usergroupid;
+                            inventlocationid = item.inventLocationId;
                         }
-                        _a.label = 6;
-                    case 6: return [4 /*yield*/, this.salesTableDAO.transferorderEntity(item.orderId)];
+                        _a.label = 5;
+                    case 5: return [4 /*yield*/, this.rawQuery.workflowconditions(usergroupid, inventlocationid)];
+                    case 6:
+                        condition = _a.sent();
+                        return [4 /*yield*/, this.salesTableDAO.transferorderEntity(item.orderId)];
                     case 7:
                         salesData = _a.sent();
                         if (!salesData) {
@@ -170,22 +173,33 @@ var WorkflowService = /** @class */ (function () {
                     case 9:
                         _a.sent();
                         if (!(salesData.transkind == "RETURNORDER")) return [3 /*break*/, 10];
-                        if (condition.rmApprovalRequired) {
-                            item.statusId = Props_1.Props.WORKFLOW_STATUSID.PENDINGRMAPPROVAL[0];
-                            if (RM_AND_RA.rm && RM_AND_RA.rm != "") {
-                                item.pendingWith = RM_AND_RA.rm;
+                        if (salesData.reservation > parseInt(condition.returnOrderDays)) {
+                            item.statusId = "PENDINGCOORDINATORAPPROVAL";
+                            if (RM_AND_RA.salescoordinator && RM_AND_RA.salescoordinator != "") {
+                                item.pendingWith = RM_AND_RA.salescoordinator;
                             }
                             else {
-                                throw { message: "NO_RM_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
+                                throw { message: "NO_COORDINATOR_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
                             }
                         }
-                        else if (condition.raApprovalRequired) {
-                            item.statusId = Props_1.Props.WORKFLOW_STATUSID.PENDINGRAPPROVAL[0];
-                            if (RM_AND_RA.ra && RM_AND_RA.ra != "") {
-                                item.pendingWith = RM_AND_RA.ra;
+                        else {
+                            if (condition.rmApprovalRequired) {
+                                item.statusId = "PENDINGRMAPPROVAL";
+                                if (RM_AND_RA.rm && RM_AND_RA.rm != "") {
+                                    item.pendingWith = RM_AND_RA.rm;
+                                }
+                                else {
+                                    throw { message: "NO_RM_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
+                                }
                             }
-                            else {
-                                throw { message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
+                            else if (condition.raApprovalRequired) {
+                                item.statusId = "PENDINGRAPPROVAL";
+                                if (RM_AND_RA.ra && RM_AND_RA.ra != "") {
+                                    item.pendingWith = RM_AND_RA.ra;
+                                }
+                                else {
+                                    throw { message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
+                                }
                             }
                         }
                         return [3 /*break*/, 22];
@@ -194,10 +208,9 @@ var WorkflowService = /** @class */ (function () {
                         return [4 /*yield*/, this.stockOnHandCheck(salesData)];
                     case 11:
                         canSendForApproval = _a.sent();
-                        console.log(canSendForApproval);
                         if (!canSendForApproval) return [3 /*break*/, 19];
                         if (![5, 8, 9].includes(salesData.movementType.id)) return [3 /*break*/, 12];
-                        item.statusId = Props_1.Props.WORKFLOW_STATUSID.PENDINGRMAPPROVAL[0];
+                        item.statusId = "PENDINGRMAPPROVAL";
                         if (RM_AND_RA.rm && RM_AND_RA.rm != "") {
                             item.pendingWith = RM_AND_RA.rm;
                         }
@@ -207,7 +220,7 @@ var WorkflowService = /** @class */ (function () {
                         return [3 /*break*/, 16];
                     case 12:
                         if (![1, 2, 3, 4, 6, 7].includes(salesData.movementType.id)) return [3 /*break*/, 13];
-                        item.statusId = Props_1.Props.WORKFLOW_STATUSID.PENDINGRAAPPROVAL[0];
+                        item.statusId = "PENDINGRAAPPROVAL";
                         if (RM_AND_RA.ra && RM_AND_RA.ra != "") {
                             item.pendingWith = RM_AND_RA.ra;
                         }
@@ -233,17 +246,12 @@ var WorkflowService = /** @class */ (function () {
                         return [4 /*yield*/, queryRunner.query(inventtransQuery)];
                     case 18:
                         _a.sent();
-                        for (_i = 0, transactions_1 = transactions; _i < transactions_1.length; _i++) {
-                            v = transactions_1[_i];
-                            // await this.updateInventoryService.updateInventoryOnhandTable(v, true, queryRunner);
-                        }
-                        console.log(transactions);
                         return [3 /*break*/, 20];
-                    case 19: throw { message: "CANNOT_CREATE_MOVEMENT_ORDER" };
+                    case 19: throw { message: "SOME_OF_THE_ITEMS_ARE_OUT_OF_STOCK" };
                     case 20: return [3 /*break*/, 22];
                     case 21:
                         if (salesData.transkind == "DESIGNERSERVICERETURN") {
-                            item.statusId = Props_1.Props.WORKFLOW_STATUSID.PENDINGINGFORDESIGNERAPPROVAL[0];
+                            item.statusId = "PENDINGINGFORDESIGNERAPPROVAL";
                             if (RM_AND_RA.designer_signing_authority && RM_AND_RA.designer_signing_authority != "") {
                                 item.pendingWith = RM_AND_RA.designer_signing_authority;
                             }
@@ -252,7 +260,7 @@ var WorkflowService = /** @class */ (function () {
                             }
                         }
                         else {
-                            item.statusId = Props_1.Props.WORKFLOW_STATUSID.PENDINGRMAPPROVAL[0];
+                            item.statusId = "PENDINGRMAPPROVAL";
                             if (RM_AND_RA.rm && RM_AND_RA.rm != "") {
                                 item.pendingWith = RM_AND_RA.rm;
                             }
@@ -275,16 +283,14 @@ var WorkflowService = /** @class */ (function () {
                         selectedLinesData = {
                             lines: selectedLines,
                         };
-                        console.log("=======================================", selectedLinesData);
                         return [3 /*break*/, 25];
                     case 24:
                         // console.log(item.statusId);
                         if (status_1 == "accept" || status_1 == null) {
                             if (salesData.transkind == "RETURNORDER") {
                                 console.log("================11111");
-                                if (item.statusId == Props_1.Props.WORKFLOW_STATUSID.PENDINGRMAPPROVAL[0] ||
-                                    item.statusId == Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYDESIGNER[0]) {
-                                    item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRM[0];
+                                if (item.statusId == "PENDINGRMAPPROVAL" || item.statusId == "APPROVEDBYDESIGNER") {
+                                    item.statusId = "APPROVEDBYRM";
                                     if (RM_AND_RA.ra) {
                                         // console.log(RM_AND_RA);
                                         if (condition.raApprovalRequired) {
@@ -299,19 +305,38 @@ var WorkflowService = /** @class */ (function () {
                                         throw { message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
                                     }
                                 }
-                                else if (item.statusId == Props_1.Props.WORKFLOW_STATUSID.PENDINGRAAPPROVAL[0] ||
-                                    item.statusId == Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRM[0]) {
+                                else if (item.statusId == "PENDINGCOORDINATORAPPROVAL") {
+                                    console.log("PENDINGCOORDINATORAPPROVAL");
+                                    item.statusId = "PENDINGRAAPPROVAL";
+                                    // console.log(item.statusId);
+                                    if (RM_AND_RA.ra) {
+                                        // console.log(RM_AND_RA);
+                                        console.log("PENDINGCOORDINATORAPPROVAL", condition, RM_AND_RA.ra, usergroupid);
+                                        if (condition.raApprovalRequired) {
+                                            item.pendingWith = RM_AND_RA.ra;
+                                        }
+                                        else {
+                                            item.pendingWith = null;
+                                            item.statusId = "APPROVED";
+                                        }
+                                    }
+                                    else {
+                                        throw { message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
+                                    }
+                                    console.log(item.statusId);
+                                }
+                                else if (item.statusId == "PENDINGRAAPPROVAL" || item.statusId == "APPROVEDBYRM") {
                                     console.log("====================================");
-                                    item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRA[0];
+                                    item.statusId = "APPROVEDBYRA";
                                     item.pendingWith = null;
                                 }
-                                else if (item.statusId == Props_1.Props.WORKFLOW_STATUSID.PENDINGINGFORDESIGNERAPPROVAL[0]) {
+                                else if (item.statusId == "PENDINGINGFORDESIGNERAPPROVAL") {
                                     if (condition.rmApprovalRequired) {
-                                        item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYDESIGNER[0];
+                                        item.statusId = "APPROVEDBYDESIGNER";
                                         item.pendingWith = RM_AND_RA.rm;
                                     }
                                     else if (condition.rmApprovalRequired) {
-                                        item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRA[0];
+                                        item.statusId = "APPROVEDBYRA";
                                         item.pendingWith = RM_AND_RA.ra;
                                     }
                                     else {
@@ -321,9 +346,8 @@ var WorkflowService = /** @class */ (function () {
                                 }
                             }
                             else {
-                                if (item.statusId == Props_1.Props.WORKFLOW_STATUSID.PENDINGRMAPPROVAL[0] ||
-                                    item.statusId == Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYDESIGNER[0]) {
-                                    item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRM[0];
+                                if (item.statusId == "PENDINGRMAPPROVAL" || item.statusId == "APPROVEDBYDESIGNER") {
+                                    item.statusId = "APPROVEDBYRM";
                                     if (RM_AND_RA.ra) {
                                         item.pendingWith = RM_AND_RA.ra;
                                     }
@@ -332,18 +356,17 @@ var WorkflowService = /** @class */ (function () {
                                         item.statusId = "APPROVED";
                                     }
                                 }
-                                else if (item.statusId == Props_1.Props.WORKFLOW_STATUSID.PENDINGRAAPPROVAL[0] ||
-                                    item.statusId == Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRM[0]) {
-                                    item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRA[0];
+                                else if (item.statusId == "PENDINGRAAPPROVAL" || item.statusId == "APPROVEDBYRM") {
+                                    item.statusId = "APPROVEDBYRA";
                                     item.pendingWith = null;
                                 }
-                                else if (item.statusId == Props_1.Props.WORKFLOW_STATUSID.PENDINGINGFORDESIGNERAPPROVAL[0]) {
+                                else if (item.statusId == "PENDINGINGFORDESIGNERAPPROVAL") {
                                     if (RM_AND_RA.rm) {
-                                        item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYDESIGNER[0];
+                                        item.statusId = "APPROVEDBYDESIGNER";
                                         item.pendingWith = RM_AND_RA.rm;
                                     }
                                     else if (RM_AND_RA.ra) {
-                                        item.statusId = Props_1.Props.WORKFLOW_STATUSID.APPROVEDBYRA[0];
+                                        item.statusId = "APPROVEDBYRA";
                                         item.pendingWith = RM_AND_RA.ra;
                                     }
                                     else {
@@ -356,16 +379,18 @@ var WorkflowService = /** @class */ (function () {
                         else if (status_1 == "reject") {
                             console.log("==========================", status_1);
                             if (RM_AND_RA.rm == this.sessionInfo.groupid) {
-                                item.statusId = Props_1.Props.WORKFLOW_STATUSID.REJECTEDBYRM[0];
+                                item.statusId = "REJECTEDBYRM";
                             }
                             else if (RM_AND_RA.ra == this.sessionInfo.groupid) {
-                                item.statusId = Props_1.Props.WORKFLOW_STATUSID.REJECTEDBYRA[0];
+                                item.statusId = "REJECTEDBYRA";
                             }
                             item.pendingWith = null;
                             // await this.inventryTransUpdate(salesData);
                         }
                         _a.label = 25;
                     case 25:
+                        // console.log(item);
+                        // throw "error";
                         item.lastModifiedBy = this.sessionInfo.userName;
                         // console.log(new Date());
                         item.lastModifiedDate = new Date(App_1.App.DateNow());
@@ -528,6 +553,7 @@ var WorkflowService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.checkBatchAvailability(this.sessionInfo.inventlocationid, items_1, colors_1, sizes_1, batches_1)];
                     case 2:
                         itemsInStock_1 = _a.sent();
+                        console.log(itemsInStock_1);
                         lines.map(function (v) {
                             if (v.itemid != "HSN-00001") {
                                 var index = itemsInStock_1.findIndex(function (value) {
@@ -548,6 +574,7 @@ var WorkflowService = /** @class */ (function () {
                                 }
                             }
                         });
+                        console.log(itemString_1);
                         return [2 /*return*/, canConvert_1];
                     case 3: return [2 /*return*/, true];
                 }

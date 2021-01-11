@@ -131,11 +131,13 @@ var SalesTableService = /** @class */ (function () {
                         promiseList = _a.concat([
                             _b.sent()
                         ]);
-                        return [4 /*yield*/, this.rawQuery.workflowconditions(this.sessionInfo.usergroupconfigid)];
+                        return [4 /*yield*/, this.rawQuery.workflowconditions(this.sessionInfo.groupid, this.sessionInfo.inventlocationid)];
                     case 8:
                         condition = _b.sent();
+                        // console.log(condition, this.sessionInfo);
                         return [4 /*yield*/, Promise.all(promiseList)];
                     case 9:
+                        // console.log(condition, this.sessionInfo);
                         _b.sent();
                         data.custAccount = data.custAccount ? data.custAccount.trim() : null;
                         data.customer = data.customer ? data.customer : {};
@@ -159,6 +161,9 @@ var SalesTableService = /** @class */ (function () {
                                 }
                                 else if ([1, 2].includes(data.customer.custtype) &&
                                     (condition.rmApprovalRequired || condition.raApprovalRequired)) {
+                                    data.sendForApproval = true;
+                                }
+                                else if (data.reservation > parseInt(condition.returnOrderDays)) {
                                     data.sendForApproval = true;
                                 }
                                 else {
@@ -2008,7 +2013,7 @@ var SalesTableService = /** @class */ (function () {
                         overDue.salesId = salesTable.salesId;
                         overDue.invoiceId = salesTable.salesId;
                         overDue.lastmodifiedby = userName;
-                        overDue.lastModifiedDate = now;
+                        overDue.lastModifiedDate = new Date(App_1.App.DateNow());
                         this.overDueDAO = new OverDueDAO_1.OverDueDAO();
                         return [4 /*yield*/, queryRunner.manager.getRepository(Overdue_1.Overdue).save(overDue)];
                     case 2:

@@ -436,7 +436,7 @@ var CusttableDAO = /** @class */ (function () {
                         if (data.filter) {
                             query += " and (\n            c.accountnum ILike '%" + data.filter + "%' or \n            c.name ILike '%" + data.filter + "%' or \n            c.namealias ILike '%" + data.filter + "%' or\n            rct.namealias ILike '%" + data.filter + "%' or\n            rct.name ILike '%" + data.filter + "%' or\n            ct.namealias ILike '%" + data.filter + "%' or\n            ct.name ILike '%" + data.filter + "%'\n            )";
                         }
-                        query += " ORDER BY \n        c.createddatetime DESC offset " + (data.page - 1) * data.pageCount + " limit " + data.pageCount;
+                        query += " ORDER BY \n        c.accountnum ASC offset " + (data.page - 1) * data.pageCount + " limit " + data.pageCount;
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }

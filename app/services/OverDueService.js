@@ -38,10 +38,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var RawQuery_1 = require("../common/RawQuery");
 var OverDueDAO_1 = require("../repos/OverDueDAO");
+var CustTransMasterDAO_1 = require("../repos/CustTransMasterDAO");
 var OverDueService = /** @class */ (function () {
     function OverDueService() {
         this.db = typeorm_1.getManager();
         this.overDueDAO = new OverDueDAO_1.OverDueDAO();
+        this.custTransDAO = new CustTransMasterDAO_1.CustTransMasterDAO();
         this.rawQuery = new RawQuery_1.RawQuery();
     }
     OverDueService.prototype.entity = function (id) {
@@ -84,7 +86,7 @@ var OverDueService = /** @class */ (function () {
     };
     OverDueService.prototype.getCreditUsed = function (accountNum) {
         return __awaiter(this, void 0, void 0, function () {
-            var result, custDetails, data, overDue;
+            var result, custDetails, custTransData, salesIds, data, overDue;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -93,13 +95,23 @@ var OverDueService = /** @class */ (function () {
                     case 1:
                         custDetails = _a.sent();
                         result.creditLimit = custDetails.creditmax;
-                        return [4 /*yield*/, this.overDueDAO.getCreditUsed(accountNum)];
+                        return [4 /*yield*/, this.custTransDAO.getCreditUsed(accountNum)];
                     case 2:
-                        data = _a.sent();
-                        return [4 /*yield*/, this.overDueDAO.getOverDueCredit(accountNum)];
-                    case 3:
-                        overDue = _a.sent();
+                        custTransData = _a.sent();
                         result.usedCredit = 0;
+                        console.log(custTransData);
+                        salesIds = custTransData.map(function (item, index) {
+                            result.usedCredit += item.invoiceAmount;
+                            return item.invoiceid;
+                        });
+                        return [4 /*yield*/, this.overDueDAO.getCreditUsed(accountNum, salesIds)];
+                    case 3:
+                        data = _a.sent();
+                        console.log("data-====================>", data);
+                        return [4 /*yield*/, this.overDueDAO.getOverDueCredit(accountNum)];
+                    case 4:
+                        overDue = _a.sent();
+                        console.log("overdue-====================>", overDue);
                         data.map(function (item) {
                             item.invoiceAmount = parseFloat(item.invoiceAmount);
                             item.actualDueDate = new Date(item.actualDueDate).toISOString().substr(0, 10);
@@ -110,8 +122,42 @@ var OverDueService = /** @class */ (function () {
                             result.usedCredit += item.invoiceAmount;
                         });
                         result.availableCredit = result.creditLimit > 0 ? result.creditLimit - result.usedCredit : 0;
-                        result.invoices = overDue;
+                        result.invoices = custTransData.concat(overDue);
+                        console.log(result);
                         return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    OverDueService.prototype.getCreditBalancesUsedCalculation = function (accountNum) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result, data, e_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        result = {};
+                        return [4 /*yield*/, this.overDueDAO.getCreditBalancesUsed(accountNum)];
+                    case 1:
+                        data = _a.sent();
+                        console.log(data);
+                        if (data && data.length > 0) {
+                            data = data[0];
+                            result.accountnum = data.accountnum;
+                            result.creditLimit = data.creditmax;
+                            console.log(data.amountcusttrans);
+                            console.log(data.overdueamount);
+                            data.amountcusttrans = parseFloat(data.amountcusttrans);
+                            data.overdueamount = parseFloat(data.overdueamount);
+                            result.usedCredit = data.amountcusttrans + data.overdueamount;
+                            result.availableCredit = result.creditLimit > 0 ? result.creditLimit - result.usedCredit : 0;
+                        }
+                        console.table(result);
+                        return [2 /*return*/, result];
+                    case 2:
+                        e_1 = _a.sent();
+                        throw e_1;
+                    case 3: return [2 /*return*/];
                 }
             });
         });

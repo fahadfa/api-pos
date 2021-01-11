@@ -137,23 +137,12 @@
             <tr>
               <td class="copy-text">COPY</td>
             </tr>
-            {{/if}} 
+            {{/if}}
             <tr>
               <td>
-                  {{# if isSalesOrder}} 
-                  Sales Order                  
-                  {{/if}}
-                  {{# if isSalesQuotation}} 
-                  Sales Quotation                  
-                  {{/if}}
-                  {{# if isPurchOrder}} 
-                  Purchase Order                  
-                  {{/if}}
-                  {{# if isPurchQuotation}} 
-                  Purchase Quotation                  
-                  {{/if}}                  
-
-                </td>
+                {{# if isSalesOrder}} Sales Order {{/if}} {{# if isSalesQuotation}} Sales Quotation {{/if}} {{# if
+                isPurchOrder}} Purchase Order {{/if}} {{# if isPurchQuotation}} Purchase Quotation {{/if}}
+              </td>
             </tr>
             <br />
 

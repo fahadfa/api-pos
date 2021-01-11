@@ -874,7 +874,7 @@ var LoadService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select \n            returnorderapprovalrequired , \n            returnorderrmapprovalrequired,\n            returnorderraapprovalrequired, \n            projectcustomer, \n            agentcustomer from usergroupconfig\n            where id= '" + this.sessionInfo.usergroupconfigid + "' limit 1";
+                        query = "select \n            returnorderapprovalrequired , \n            returnorderrmapprovalrequired,\n            returnorderraapprovalrequired, \n            projectcustomer, return_order_days as \"returnOrderDays\",\n            agentcustomer from usergroupconfig\n            where id= '" + this.sessionInfo.usergroupconfigid + "' limit 1";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();

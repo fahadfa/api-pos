@@ -943,13 +943,13 @@ var RawQuery = /** @class */ (function () {
             });
         });
     };
-    RawQuery.prototype.workflowconditions = function (usergroupconfigid) {
+    RawQuery.prototype.workflowconditions = function (usergroupconfigid, inventlocationid) {
         return __awaiter(this, void 0, void 0, function () {
             var query, data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select \n            returnorderapprovalrequired  as \"approvalRequired\", \n            returnorderrmapprovalrequired as \"rmApprovalRequired\",\n            returnorderraapprovalrequired \"raApprovalRequired\", \n            projectcustomer, \n            agentcustomer from  usergroupconfig\n            where id= '" + usergroupconfigid + "' limit 1";
+                        query = "select \n            returnorderapprovalrequired  as \"approvalRequired\", \n            returnorderrmapprovalrequired as \"rmApprovalRequired\",\n            returnorderraapprovalrequired \"raApprovalRequired\", \n            projectcustomer, return_order_days as \"returnOrderDays\",\n            agentcustomer from  usergroupconfig\n            where usergroupid= '" + usergroupconfigid + "' and inventlocationid='" + inventlocationid + "' limit 1";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
@@ -964,7 +964,7 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select rmsigningauthority as rm, rasigningauthority as ra, designer_signing_authority as designer_signing_authority \n        from usergroupconfig where usergroupid = '" + usergroupid + "' limit 1";
+                        query = "select rmsigningauthority as rm, rasigningauthority as ra, designer_signing_authority as designer_signing_authority, sales_coordinator_signing_authority as salescoordinator\n        from usergroupconfig where usergroupid = '" + usergroupid + "' limit 1";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();
@@ -1395,11 +1395,12 @@ var RawQuery = /** @class */ (function () {
                         items = itemsList.map(function (d) { return "lower('" + d + "')"; }).join(",");
                         sizes = sizesList.map(function (d) { return "lower('" + d + "')"; }).join(",");
                         colors = colorsList.map(function (d) { return "lower('" + d + "')"; }).join(",");
-                        query = "select itemid, configid, inventsizeid,  sum(qty) as qty from inventtrans  \n    where lower(itemid) in (" + items + ")\n    and lower(configid) in (" + colors + ")\n    and lower(inventsizeid) in (" + sizes + ")\n    and inventlocationid = '" + inventlocationid + "' and transactionclosed = true ";
+                        query = "select itemid, lower(configid) as configid, lower(inventsizeid) as inventsizeid,  sum(qty) as qty from inventtrans  \n    where lower(itemid) in (" + items + ")\n    and lower(configid) in (" + colors + ")\n    and lower(inventsizeid) in (" + sizes + ")\n    and inventlocationid = '" + inventlocationid + "' and transactionclosed = true ";
                         if (salesId) {
                             query += " and invoiceid != '" + salesId + "' ";
                         }
-                        query += "group by itemid, configid, inventsizeid ";
+                        query += "group by itemid, lower(configid), lower(inventsizeid) ";
+                        console.log(query);
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
@@ -1417,6 +1418,7 @@ var RawQuery = /** @class */ (function () {
                         colors = colorsList.map(function (d) { return "lower('" + d + "')"; }).join(",");
                         batches = batchList.map(function (d) { return "lower('" + d + "')"; }).join(",");
                         query = "select itemid, configid, inventsizeid, batchno,  sum(qty) as qty from inventtrans  \n    where lower(itemid) in (" + items + ")\n    and lower(configid) in (" + colors + ")\n    and lower(inventsizeid) in (" + sizes + ")\n    and lower(batchno) in (" + batches + ")\n    and inventlocationid = '" + inventlocationid + "' and transactionclosed = true\n    group by itemid, configid, inventsizeid, batchno";
+                        console.log(query);
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
