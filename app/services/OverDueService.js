@@ -86,52 +86,52 @@ var OverDueService = /** @class */ (function () {
     };
     OverDueService.prototype.getCreditUsed = function (accountNum) {
         return __awaiter(this, void 0, void 0, function () {
-            var result, custDetails, custTransData, salesIds, data, overDue;
+            var e_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        result = {};
-                        return [4 /*yield*/, this.rawQuery.getCustomerCreditMax(accountNum)];
-                    case 1:
-                        custDetails = _a.sent();
-                        result.creditLimit = custDetails.creditmax;
-                        return [4 /*yield*/, this.custTransDAO.getCreditUsed(accountNum)];
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.custTransDAO.overdueData(accountNum)];
+                    case 1: return [2 /*return*/, _a.sent()];
                     case 2:
-                        custTransData = _a.sent();
-                        result.usedCredit = 0;
-                        console.log(custTransData);
-                        salesIds = custTransData.map(function (item, index) {
-                            result.usedCredit += item.invoiceAmount;
-                            return item.invoiceid;
-                        });
-                        return [4 /*yield*/, this.overDueDAO.getCreditUsed(accountNum, salesIds)];
-                    case 3:
-                        data = _a.sent();
-                        console.log("data-====================>", data);
-                        return [4 /*yield*/, this.overDueDAO.getOverDueCredit(accountNum)];
-                    case 4:
-                        overDue = _a.sent();
-                        console.log("overdue-====================>", overDue);
-                        data.map(function (item) {
-                            item.invoiceAmount = parseFloat(item.invoiceAmount);
-                            item.actualDueDate = new Date(item.actualDueDate).toISOString().substr(0, 10);
-                            item.duedate = new Date(item.duedate).toISOString().substr(0, 10);
-                            item.createddatetime = new Date(item.createddatetime).toISOString().substr(0, 10);
-                            item.lastModifiedDate = new Date(item.lastModifiedDate).toISOString().substr(0, 10);
-                            item.invoicedate = new Date(item.invoicedate).toISOString().substr(0, 10);
-                            result.usedCredit += item.invoiceAmount;
-                        });
-                        result.availableCredit = result.creditLimit > 0 ? result.creditLimit - result.usedCredit : 0;
-                        result.invoices = custTransData.concat(overDue);
-                        console.log(result);
-                        return [2 /*return*/, result];
+                        e_1 = _a.sent();
+                        throw { message: e_1 };
+                    case 3: return [2 /*return*/];
                 }
             });
         });
     };
+    // async getCreditUsed(accountNum: string) {
+    //   let result: any = {};
+    //   let custDetails = await this.rawQuery.getCustomerCreditMax(accountNum);
+    //   result.creditLimit = parseFloat(custDetails.creditmax);
+    //   let custTransData: any[] = await this.custTransDAO.getCreditUsed(accountNum);
+    //   result.usedCredit = custTransData.reduce((res: number, item: any) => res + parseInt(item.invoiceamount), 0);
+    //   console.log(custTransData, result.usedCredit);
+    //   let salesIds = custTransData.map((item: any) => {
+    //     return item.invoiceid;
+    //   });
+    //   let data: any = await this.overDueDAO.getCreditUsed(accountNum, salesIds);
+    //   console.log("data-====================>", data);
+    //   let overDue = await this.overDueDAO.getOverDueCredit(accountNum);
+    //   console.log("overdue-====================>", overDue);
+    //   data.map((item: any) => {
+    //     item.invoiceAmount = parseFloat(item.invoiceAmount);
+    //     item.actualDueDate = new Date(item.actualDueDate).toISOString().substr(0, 10);
+    //     item.duedate = new Date(item.duedate).toISOString().substr(0, 10);
+    //     item.createddatetime = new Date(item.createddatetime).toISOString().substr(0, 10);
+    //     item.lastModifiedDate = new Date(item.lastModifiedDate).toISOString().substr(0, 10);
+    //     item.invoicedate = new Date(item.invoicedate).toISOString().substr(0, 10);
+    //     result.usedCredit += item.invoiceAmount;
+    //   });
+    //   result.availableCredit = result.creditLimit > 0 ? result.creditLimit - result.usedCredit : 0;
+    //   result.invoices = custTransData.concat(overDue);
+    //   console.log(result);
+    //   return result;
+    // }
     OverDueService.prototype.getCreditBalancesUsedCalculation = function (accountNum) {
         return __awaiter(this, void 0, void 0, function () {
-            var result, data, e_1;
+            var result, data, e_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -155,8 +155,8 @@ var OverDueService = /** @class */ (function () {
                         console.table(result);
                         return [2 /*return*/, result];
                     case 2:
-                        e_1 = _a.sent();
-                        throw e_1;
+                        e_2 = _a.sent();
+                        throw e_2;
                     case 3: return [2 /*return*/];
                 }
             });

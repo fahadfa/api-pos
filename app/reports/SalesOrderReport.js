@@ -110,10 +110,10 @@ var SalesOrderReport = /** @class */ (function () {
                         salesLine = _a.sent();
                         list_1 = [];
                         j = 0;
-                        return [4 /*yield*/, this.chunkArray(salesLine, 12)];
+                        return [4 /*yield*/, this.chunkArray(salesLine, 10)];
                     case 5:
                         chunkArray = _a.sent();
-                        // console.log(chunkArray)
+                        console.log(chunkArray);
                         list_1 = list_1.concat(chunkArray);
                         newSalesline_1 = [];
                         sNo_1 = 1;

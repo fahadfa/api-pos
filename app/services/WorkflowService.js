@@ -173,33 +173,23 @@ var WorkflowService = /** @class */ (function () {
                     case 9:
                         _a.sent();
                         if (!(salesData.transkind == "RETURNORDER")) return [3 /*break*/, 10];
-                        if (salesData.reservation > parseInt(condition.returnOrderDays)) {
-                            item.statusId = "PENDINGCOORDINATORAPPROVAL";
-                            if (RM_AND_RA.salescoordinator && RM_AND_RA.salescoordinator != "") {
-                                item.pendingWith = RM_AND_RA.salescoordinator;
+                        //  else {
+                        if (condition.rmApprovalRequired) {
+                            item.statusId = "PENDINGRMAPPROVAL";
+                            if (RM_AND_RA.rm && RM_AND_RA.rm != "") {
+                                item.pendingWith = RM_AND_RA.rm;
                             }
                             else {
-                                throw { message: "NO_COORDINATOR_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
+                                throw { message: "NO_RM_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
                             }
                         }
-                        else {
-                            if (condition.rmApprovalRequired) {
-                                item.statusId = "PENDINGRMAPPROVAL";
-                                if (RM_AND_RA.rm && RM_AND_RA.rm != "") {
-                                    item.pendingWith = RM_AND_RA.rm;
-                                }
-                                else {
-                                    throw { message: "NO_RM_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
-                                }
+                        else if (condition.raApprovalRequired) {
+                            item.statusId = "PENDINGRAPPROVAL";
+                            if (RM_AND_RA.ra && RM_AND_RA.ra != "") {
+                                item.pendingWith = RM_AND_RA.ra;
                             }
-                            else if (condition.raApprovalRequired) {
-                                item.statusId = "PENDINGRAPPROVAL";
-                                if (RM_AND_RA.ra && RM_AND_RA.ra != "") {
-                                    item.pendingWith = RM_AND_RA.ra;
-                                }
-                                else {
-                                    throw { message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
-                                }
+                            else {
+                                throw { message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
                             }
                         }
                         return [3 /*break*/, 22];
@@ -289,7 +279,17 @@ var WorkflowService = /** @class */ (function () {
                         if (status_1 == "accept" || status_1 == null) {
                             if (salesData.transkind == "RETURNORDER") {
                                 console.log("================11111");
-                                if (item.statusId == "PENDINGRMAPPROVAL" || item.statusId == "APPROVEDBYDESIGNER") {
+                                if (salesData.reservation > parseInt(condition.returnOrderDays) &&
+                                    item.statusId != "PENDINGCOORDINATORAPPROVAL") {
+                                    item.statusId = "PENDINGCOORDINATORAPPROVAL";
+                                    if (RM_AND_RA.salescoordinator && RM_AND_RA.salescoordinator != "") {
+                                        item.pendingWith = RM_AND_RA.salescoordinator;
+                                    }
+                                    else {
+                                        throw { message: "NO_COORDINATOR_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
+                                    }
+                                }
+                                else if (item.statusId == "PENDINGRMAPPROVAL" || item.statusId == "APPROVEDBYDESIGNER") {
                                     item.statusId = "APPROVEDBYRM";
                                     if (RM_AND_RA.ra) {
                                         // console.log(RM_AND_RA);
@@ -638,10 +638,11 @@ var WorkflowService = /** @class */ (function () {
     };
     WorkflowService.prototype.workflowUpdate = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var salesData, reqData, date, inventtransQuery, salesSaveData, offlineSystems, salesData, reqData, date, inventtransQuery, salesSaveData, salesSaveData;
+            var transkind, salesData, reqData, date, inventtransQuery, salesSaveData, offlineSystems, salesData, reqData, date, inventtransQuery, salesSaveData, salesSaveData;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        transkind = ["SALESORDER", "INVENTORYMOVEMENT"];
                         if (!(data && data.statusid.includes("REJECTED"))) return [3 /*break*/, 13];
                         if (!(process.env.ENV_STORE_ID && data.inventlocationid == process.env.ENV_STORE_ID)) return [3 /*break*/, 5];
                         // console.log("TODO", data.orderid);
@@ -649,7 +650,7 @@ var WorkflowService = /** @class */ (function () {
                         return [4 /*yield*/, this.salesTableDAO.transferorderEntity(data.orderid)];
                     case 1:
                         salesData = _a.sent();
-                        if (!(salesData.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 4];
+                        if (!transkind.includes(salesData.transkind)) return [3 /*break*/, 4];
                         reqData = {
                             salesId: data.orderid,
                         };
@@ -683,7 +684,7 @@ var WorkflowService = /** @class */ (function () {
                         return [4 /*yield*/, this.salesTableDAO.transferorderEntity(data.orderid)];
                     case 7:
                         salesData = _a.sent();
-                        if (!(salesData.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 9];
+                        if (!transkind.includes(salesData.transkind)) return [3 /*break*/, 9];
                         reqData = {
                             salesId: data.orderid,
                         };

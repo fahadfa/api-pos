@@ -397,6 +397,8 @@ var SyncServiceHelper = /** @class */ (function () {
             user: Config.stageDbOptions.username,
             password: Config.stageDbOptions.password,
             database: Config.stageDbOptions.database,
+            max: 25,
+            idleTimeoutMillis: 0,
         };
     };
     // public static LocalDBOptions() {
@@ -415,6 +417,8 @@ var SyncServiceHelper = /** @class */ (function () {
             user: Config.dbOptions.username,
             password: Config.dbOptions.password,
             database: Config.dbOptions.database,
+            max: 25,
+            idleTimeoutMillis: 0,
         };
     };
     SyncServiceHelper.UpdateCall = function (type, data) {

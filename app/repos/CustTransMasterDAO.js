@@ -40,6 +40,7 @@ var CustTransMaster_1 = require("../../entities/CustTransMaster");
 var CustTransMasterDAO = /** @class */ (function () {
     function CustTransMasterDAO() {
         this.dao = typeorm_1.getRepository(CustTransMaster_1.CustTransMaster);
+        this.db = typeorm_1.getManager();
     }
     CustTransMasterDAO.prototype.entity = function (salesId) {
         return __awaiter(this, void 0, void 0, function () {
@@ -67,8 +68,7 @@ var CustTransMasterDAO = /** @class */ (function () {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.dao
                             .createQueryBuilder("CustTransMaster")
-                            .where("CustTransMaster.accountnum = '" + custAccNum + "' and CustTransMaster.payment=0")
-                            // .select(["overdue.invoiceamount"])
+                            .where("CustTransMaster.accountnum = '" + custAccNum + "'")
                             .getMany()];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
@@ -94,6 +94,58 @@ var CustTransMasterDAO = /** @class */ (function () {
                         query = "select c.creditmax,c.accountnum,(select sum(custtrans.invoiceamount) from (select ctm.accountnum,ctm.invoiceid,ctm.invoiceamount\n            from cust_trans_master ctm \n            where ctm.accountnum =c.accountnum ) as custtrans) as amountcusttrans,\n            (select coalesce(sum(coalesce (finaltable.amt,0)),0) as amount from (select o1.salesid ,o1.invoiceamount ,sum(coalesce (o1.invoiceamount,0) ) over (order by o1.lastmodifieddate asc ) as amt from overdue o1 \n            where o1.invoiceid in(select o.invoiceid from cust_trans_master ctm \n            inner join overdue o \n            on ctm.accountnum =o.accountnum \n            where \n            ctm.accountnum =c.accountnum and\n            ctm.invoiceid!=o.invoiceid \n            and o.duedate::timestamp <=current_date \n            and o.payment =0\n            )) as finaltable) as overdueamount\n            from custtable c \n            where c.accountnum ='" + account + "';";
                         return [4 /*yield*/, this.dao.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    CustTransMasterDAO.prototype.overdueData = function (account) {
+        return __awaiter(this, void 0, void 0, function () {
+            var creditLimit, custData, availableCredit, custTransOverDues, salesIds, query, overDues, usedAmount;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.db.query("select\n        c.accountnum,\n        c.creditmax as \"creditLimit\" \n        from custtable c\n        where c.accountnum in ('" + account + "')")];
+                    case 1:
+                        creditLimit = _a.sent();
+                        creditLimit = creditLimit.length > 0 ? creditLimit[0].creditLimit : null;
+                        return [4 /*yield*/, this.db.query("select\n            ct.accountnum,\n            sum(invoiceamount) as \"usedCredit\"\n            from cust_trans_master ct \n            where ct.accountnum in ('" + account + "')\n            group by ct.accountnum")];
+                    case 2:
+                        custData = _a.sent();
+                        custData = custData.length > 0 ? custData[0] : {};
+                        custData.creditLimit = creditLimit;
+                        custData.usedCredit = custData.usedCredit ? custData.usedCredit : 0;
+                        availableCredit = parseFloat(custData.creditLimit) - parseFloat(custData.usedCredit);
+                        return [4 /*yield*/, this.db.query("select \n        invoiceid as \"salesId\",\n        accountnum as \"accountNum\",\n        invoiceamount as \"invoiceAmount\",\n        balance as balance,\n        transactiondate as \"invoicedate\",\n        payment,\n        duedate as \"actualDueDate\",\n        duedate  as \"duedate\"\n      from  cust_trans_master ct where  ct.accountnum in ('" + account + "') and  payment=0 and invoiceamount >0;\n        ")];
+                    case 3:
+                        custTransOverDues = _a.sent();
+                        salesIds = custTransOverDues.map(function (item) {
+                            return item.salesId;
+                        });
+                        // console.log(salesIds, availableCredit);
+                        salesIds = salesIds.length > 0 ? salesIds.map(function (d) { return "'" + d + "'"; }).join(",") : null;
+                        query = "select \n    salesid as \"salesId\",\n    accountnum as \"accountNum\",\n    invoiceamount as \"invoiceAmount\",\n    invoiceamount as balance,\n    invoicedate,\n    payment,\n    actualduedate as \"actualDueDate\",\n    duedate as \"duedate\"\n    from  overdue ct \n        where  \n        ct.accountnum in ('" + account + "') and  \n        payment=0 and invoiceamount > 0 \n          ";
+                        if (salesIds) {
+                            query += "and salesid not in (" + salesIds + ")";
+                        }
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 4:
+                        overDues = _a.sent();
+                        usedAmount = overDues.reduce(function (res, item) { return res + parseInt(item.invoiceAmount); }, 0);
+                        // console.log("usedAmount", usedAmount);
+                        availableCredit -= usedAmount;
+                        custData.usedCredit = parseFloat(custData.usedCredit) + usedAmount;
+                        overDues = overDues.filter(function (item) { return new Date(item.duedate).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0); });
+                        custTransOverDues = custTransOverDues.filter(function (item) { return new Date(item.duedate).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0); });
+                        custTransOverDues = custTransOverDues.concat(overDues);
+                        custTransOverDues.map(function (v) {
+                            v.invoiceAmount = parseFloat(v.invoiceAmount);
+                            v.balance = parseFloat(v.balance);
+                        });
+                        return [2 /*return*/, {
+                                creditLimit: parseFloat(custData.creditLimit),
+                                usedCredit: parseFloat(custData.usedCredit),
+                                availableCredit: availableCredit,
+                                invoices: custTransOverDues,
+                            }];
                 }
             });
         });

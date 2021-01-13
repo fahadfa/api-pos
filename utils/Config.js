@@ -10,9 +10,16 @@ exports.dbOptions = {
     username: "postgres",
     password: "Mpos1234",
     database: "mpos_db",
-    logging: true,
+    logging: false,
     synchronize: false,
     entities: [__dirname + "/../entities/**/*{.ts,.js}"],
+    connectTimeoutMS: 0,
+    extra: {
+        max: 25,
+        min: 5,
+        idleTimeoutMillis: 0,
+        connectionTimeoutMillis: 0,
+    },
 };
 // =============== QA STAGING DATABASE ==================
 exports.stageDbOptions = {
@@ -23,6 +30,8 @@ exports.stageDbOptions = {
     username: "xxxx",
     password: "xxxx",
     database: "xxxx",
+    max: 25,
+    idleTimeoutMillis: 0,
 };
 exports.mailOptions = {
     host: "smtp.gmail.com",
@@ -41,6 +50,7 @@ exports.setEnvConfig = function () {
             exports.dbOptions.username = envData.dbUser;
             exports.dbOptions.password = envData.dbPassword;
             exports.dbOptions.database = envData.dbDatabase;
+            exports.dbOptions.logging = false;
         }
         if (envData.mailHost) {
             exports.mailOptions.host = envData.mailHost;
@@ -56,10 +66,11 @@ var CrpytoData_1 = require("./CrpytoData");
 var fs_1 = require("fs");
 exports.setStagingConfig = function () {
     try {
-        var data = fs_1.readFileSync(__dirname + "/../id_rsa", "utf-8");
+        var data = fs_1.readFileSync(__dirname + "/../../id_rsa", "utf-8");
         console.log("readFileSync Data:", data);
         var decodeData = CrpytoData_1.decrypt(JSON.parse(data));
         data = JSON.parse(decodeData);
+        console.log(decodeData);
         if (data) {
             exports.stageDbOptions.host = data.host;
             exports.stageDbOptions.port = data.port;
@@ -73,4 +84,3 @@ exports.setStagingConfig = function () {
         console.error(error);
     }
 };
-

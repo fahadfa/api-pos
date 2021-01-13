@@ -65,7 +65,7 @@ var OverDueDAO = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var ids;
             return __generator(this, function (_a) {
-                ids = salesIds && salesIds.length > 0 ? salesIds.map(function (x) { return "'" + x + "'"; }).join(",") : "'" + "" + "'";
+                ids = salesIds.map(function (d) { return "'" + d + "'"; }).join(",");
                 console.log("ids=============>", ids);
                 return [2 /*return*/, this.dao
                         .createQueryBuilder("overdue")
