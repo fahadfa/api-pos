@@ -427,6 +427,7 @@ var InventtransService = /** @class */ (function () {
                                         selectedQuantity: v.salesQty,
                                         availabilty: parseInt(itemsInStock_1[index].qty),
                                         product: v.product,
+                                        name: v.name,
                                     });
                                 }
                             }

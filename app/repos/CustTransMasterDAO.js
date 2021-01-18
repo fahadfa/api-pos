@@ -75,16 +75,6 @@ var CustTransMasterDAO = /** @class */ (function () {
             });
         });
     };
-    CustTransMasterDAO.prototype.createOverDue = function (overdue) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.dao.save(overdue)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
     CustTransMasterDAO.prototype.getCreditBalancesUsed = function (account) {
         return __awaiter(this, void 0, void 0, function () {
             var query;
@@ -114,7 +104,7 @@ var CustTransMasterDAO = /** @class */ (function () {
                         custData.creditLimit = creditLimit;
                         custData.usedCredit = custData.usedCredit ? custData.usedCredit : 0;
                         availableCredit = parseFloat(custData.creditLimit) - parseFloat(custData.usedCredit);
-                        return [4 /*yield*/, this.db.query("select \n        invoiceid as \"salesId\",\n        accountnum as \"accountNum\",\n        invoiceamount as \"invoiceAmount\",\n        balance as balance,\n        transactiondate as \"invoicedate\",\n        payment,\n        duedate as \"actualDueDate\",\n        duedate  as \"duedate\"\n      from  cust_trans_master ct where  ct.accountnum in ('" + account + "') and  payment=0 and invoiceamount >0;\n        ")];
+                        return [4 /*yield*/, this.db.query("select \n        invoice as \"salesId\",\n        accountnum as \"accountNum\",\n        amountmst as \"invoiceAmount\",\n        balance as balance,\n        transdate as \"invoicedate\",\n        payment,\n        duedate as \"actualDueDate\",\n        duedate  as \"duedate\"\n      from  cust_trans ct where  ct.accountnum in ('" + account + "') and  payment=0 and amountmst >0;\n        ")];
                     case 3:
                         custTransOverDues = _a.sent();
                         salesIds = custTransOverDues.map(function (item) {

@@ -110,7 +110,7 @@ var QuotationReport = /** @class */ (function () {
                     case 11: return [4 /*yield*/, this.salesline_query_to_data(id)];
                     case 12:
                         salesLine = _a.sent();
-                        // data.vat = salesLine.length > 0 ? salesLine[0].vat : "-";
+                        data_1.vat = salesLine && salesLine.length > 0 ? parseInt(salesLine[0].vat) : "-";
                         data_1.salesLine = salesLine;
                         data_1.quantity = 0;
                         i_1 = 1;

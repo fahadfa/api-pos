@@ -1470,6 +1470,7 @@ var SalesTableService = /** @class */ (function () {
                             reqData.taxGroup = customerRecord.taxgroup;
                         }
                         reqData.linesCount = salesLine.length;
+                        salesLine && salesLine.length > 0 ? reqData.sumTax = salesLine[0].vat : null;
                         return [4 /*yield*/, queryRunner.manager.getRepository(SalesTable_1.SalesTable).save(reqData)];
                     case 6:
                         salesTable = _a.sent();
@@ -2665,6 +2666,9 @@ var SalesTableService = /** @class */ (function () {
                         console.log(checkPrevData);
                         if (checkPrevData && checkPrevData.length > 0) {
                             throw { message: "ALREADY_SHIPPED" };
+                        }
+                        else if (checkToData.status == 'REJECTED') {
+                            throw { message: "ALREADY_REJECTED" };
                         }
                         _a.label = 6;
                     case 6:
