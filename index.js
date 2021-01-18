@@ -133,7 +133,7 @@ var run = function () { return __awaiter(_this, void 0, void 0, function () {
 }); };
 run();
 var sync = function () { return __awaiter(_this, void 0, void 0, function () {
-    var child_process, fs, syncFileUpdate, syncDFile, macAddress, _a, syncMFile, syncTFile, sync1File, sync2File, syncFFile, err_1;
+    var child_process, fs, syncFileUpdate, syncDFile, macAddress, _a, syncMFile, syncTFile, sync1File, sync2File, syncFFile, healthFile, err_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -179,6 +179,10 @@ var sync = function () { return __awaiter(_this, void 0, void 0, function () {
                 syncFFile = fs.existsSync(syncFFile) ? __dirname + "/syncF.ts" : __dirname + "/syncF.js";
                 child_process.fork(syncFFile);
                 Log_1.log.warn("syncFile:", syncFFile);
+                healthFile = __dirname + "/health.ts";
+                healthFile = fs.existsSync(healthFile) ? __dirname + "/health.ts" : __dirname + "/health.js";
+                child_process.fork(healthFile);
+                Log_1.log.warn("healthFile:", healthFile);
                 return [3 /*break*/, 6];
             case 3:
                 _b.trys.push([3, 5, , 6]);

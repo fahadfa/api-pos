@@ -96,7 +96,8 @@ var AppExpress = /** @class */ (function () {
     AppExpress.prototype.chunkDataHandle = function () {
         var _this = this;
         this.express.all("*", function (req, res, next) {
-            Log_1.log.info("----------------> req.url: " + req.url);
+            if (req.url != "/")
+                Log_1.log.info("----------------> req.url: " + req.url);
             res.setHeader("Access-Control-Allow-Origin", "*");
             res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
             res.setHeader("Access-Control-Allow-Headers", "accept, Content-Type, Authorization");

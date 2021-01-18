@@ -61,7 +61,7 @@ log4js_1.configure({
             property: "type",
             extension: ".log",
             maxLogSize: 1000000,
-            backups: 5,
+            backups: 1,
         },
         out: { type: "stdout", layout: { type: "dummy" } },
         emergencies: {
@@ -96,6 +96,8 @@ exports.sflog = log4js_1.getLogger("sync");
 exports.sflog.addContext("type", "syncf");
 exports.ulog = log4js_1.getLogger("update");
 exports.ulog.addContext("type", "update");
+exports.hlog = log4js_1.getLogger("health");
+exports.hlog.addContext("type", "health");
 // export const log = getLogger();
 // export const slog = getLogger();
 // export const ulog = getLogger();

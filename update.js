@@ -80,7 +80,6 @@ var UpdateSyncService = function () {
     cron.schedule("* * * * *", function () {
         try {
             Store_1.setItem("syncdate", new Date().toISOString(), "sync -> cron");
-            healthCheck();
             autoupdater.fire("check");
         }
         catch (error) {
@@ -142,32 +141,5 @@ var main = function () {
     catch (err) {
         Log_1.ulog.error("Update Sync Service error ");
     }
-};
-var healthCheck = function () {
-    var https = require("http");
-    var options = {
-        hostname: "localhost",
-        port: 5000,
-        path: "/",
-        method: "GET",
-    };
-    var req = https.request(options, function (res) {
-        console.log("statusCode: " + res.statusCode);
-        res.on("data", function (d) {
-            Log_1.ulog.error("health check data");
-            Log_1.ulog.debug(d);
-            process.stdout.write(d);
-        });
-    });
-    req.on("error", function (error) {
-        Log_1.ulog.error("health check error");
-        Log_1.ulog.error(error);
-        if (healthCount > 2) {
-            Log_1.ulog.error("system restarting ");
-            sysService_1.SysService.ResetService();
-        }
-    });
-    req.end();
-    healthCount = healthCount + 1;
 };
 main();
