@@ -95,7 +95,7 @@ var OverDueService = /** @class */ (function () {
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2:
                         e_1 = _a.sent();
-                        throw { message: e_1 };
+                        throw e_1;
                     case 3: return [2 /*return*/];
                 }
             });

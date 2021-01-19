@@ -110,7 +110,7 @@ var SalesTableService = /** @class */ (function () {
                     case 2:
                         data = _b.sent();
                         if (!data) {
-                            throw { message: "ORDER_NOT_FOUND" };
+                            throw { status: 0, message: "ORDER_NOT_FOUND" };
                         }
                         _b.label = 3;
                     case 3: return [4 /*yield*/, this.calData(data)];
@@ -339,7 +339,7 @@ var SalesTableService = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         if (!data) {
-                            throw { message: "ORDER_NOT_FOUND" };
+                            throw { status: 0, message: "ORDER_NOT_FOUND" };
                         }
                         return [4 /*yield*/, this.calData(data)];
                     case 2:
@@ -442,7 +442,7 @@ var SalesTableService = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         if (!data) {
-                            throw { message: "ORDER_NOT_FOUND" };
+                            throw { status: 0, message: "ORDER_NOT_FOUND" };
                         }
                         return [4 /*yield*/, this.calData(data)];
                     case 2:
@@ -795,13 +795,13 @@ var SalesTableService = /** @class */ (function () {
                         if (!(reqData.interCompanyOriginalSalesId && reqData.interCompanyOriginalSalesId != "")) return [3 /*break*/, 17];
                         return [4 /*yield*/, this.saveOrderShipment(reqData)];
                     case 16: return [2 /*return*/, _b.sent()];
-                    case 17: throw { message: "INVOICE_ID_REQUIRED" };
+                    case 17: throw { status: 0, message: "INVOICE_ID_REQUIRED" };
                     case 18: return [3 /*break*/, 36];
                     case 19:
                         if (!(reqData.interCompanyOriginalSalesId && reqData.interCompanyOriginalSalesId != "")) return [3 /*break*/, 21];
                         return [4 /*yield*/, this.saveOrderReceive(reqData)];
                     case 20: return [2 /*return*/, _b.sent()];
-                    case 21: throw { message: "INVOICE_ID_REQUIRED" };
+                    case 21: throw { status: 0, message: "INVOICE_ID_REQUIRED" };
                     case 22: return [3 /*break*/, 36];
                     case 23: return [4 /*yield*/, this.saveQuotation(reqData)];
                     case 24: return [2 /*return*/, _b.sent()];
@@ -818,13 +818,13 @@ var SalesTableService = /** @class */ (function () {
                         if (!(reqData.mobileNo && reqData.mobileNo != "" && reqData.mobileNo.length > 8)) return [3 /*break*/, 31];
                         return [4 /*yield*/, this.saveQuotation(reqData)];
                     case 30: return [2 /*return*/, _b.sent()];
-                    case 31: throw { message: "PLEASE_ENTER_MOBILE_NUMBER" };
+                    case 31: throw { status: 0, message: "PLEASE_ENTER_MOBILE_NUMBER" };
                     case 32: return [3 /*break*/, 35];
                     case 33: return [4 /*yield*/, this.saveQuotation(reqData)];
                     case 34: return [2 /*return*/, _b.sent()];
-                    case 35: throw { message: "TRANSKIND_REQUIRED" };
+                    case 35: throw { status: 0, message: "TRANSKIND_REQUIRED" };
                     case 36: return [3 /*break*/, 38];
-                    case 37: throw { message: "INVALID_DATA" };
+                    case 37: throw { status: 0, message: "INVALID_DATA" };
                     case 38: return [3 /*break*/, 40];
                     case 39:
                         error_5 = _b.sent();
@@ -906,13 +906,13 @@ var SalesTableService = /** @class */ (function () {
                                 console.log(element.itemid, element.configId, element.inventsizeid, element.salesQty);
                                 if (!element.itemid || !element.configId || !element.inventsizeid) {
                                     console.log(element.itemid, element.configId, element.inventsizeid, element.salesQty);
-                                    throw { message: "INVALID_DATA" };
+                                    throw { status: 0, message: "INVALID_DATA" };
                                 }
                             });
                         }
                         else {
                             console.log("=======================================");
-                            throw { message: "INVALID_DATA" };
+                            throw { status: 0, message: "INVALID_DATA" };
                         }
                         console.log(item.lastModifiedDate.toISOString());
                         return [2 /*return*/, true];
@@ -997,7 +997,7 @@ var SalesTableService = /** @class */ (function () {
                     case 26:
                         data = _b.sent();
                         return [3 /*break*/, 28];
-                    case 27: throw { message: "TRANSKIND_REQUIRED" };
+                    case 27: throw { status: 0, message: "TRANSKIND_REQUIRED" };
                     case 28:
                         if (!(data && data.format)) return [3 /*break*/, 30];
                         hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);
@@ -1019,12 +1019,12 @@ var SalesTableService = /** @class */ (function () {
                     case 29:
                         _b.sent();
                         return [2 /*return*/, salesId];
-                    case 30: throw { message: "CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE" };
+                    case 30: throw { status: 0, message: "CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE" };
                     case 31: return [3 /*break*/, 33];
                     case 32:
                         error_6 = _b.sent();
                         if (error_6 == {}) {
-                            error_6 = { message: "SERVER_SIDE_ERROR" };
+                            error_6 = { status: 0, message: "SERVER_SIDE_ERROR" };
                         }
                         throw error_6;
                     case 33: return [2 /*return*/];
@@ -1052,7 +1052,7 @@ var SalesTableService = /** @class */ (function () {
                     case 4:
                         statusData = _d.sent();
                         if (statusData.status == "PAID" || statusData.status == "POSTED" || statusData.status == "PRINTED") {
-                            throw "ALREADY_PAID";
+                            throw { status: 0, message: "ALREADY_PAID" };
                         }
                         return [4 /*yield*/, this.salestableDAO.transferorderEntity(data.orderId)];
                     case 5:
@@ -1079,7 +1079,7 @@ var SalesTableService = /** @class */ (function () {
                         return [2 /*return*/, returnData];
                     case 6:
                         error_7 = _d.sent();
-                        throw { message: error_7 };
+                        throw error_7;
                     case 7: return [2 /*return*/];
                 }
             });
@@ -1146,9 +1146,7 @@ var SalesTableService = /** @class */ (function () {
                         data = _a.sent();
                         data.status = "CONVERTED";
                         return [2 /*return*/, data];
-                    case 6: throw {
-                        message: "CANNOT_CONVERT_TO_SALESORDER",
-                    };
+                    case 6: throw { status: 0, message: "CANNOT_CONVERT_TO_SALESORDER" };
                 }
             });
         });
@@ -1203,7 +1201,7 @@ var SalesTableService = /** @class */ (function () {
                     case 2:
                         convertedData = _a.sent();
                         if (!(convertedData.length > 0)) return [3 /*break*/, 3];
-                        throw { message: "ALREADY_CONVERTED", salesId: convertedData[0].salesid };
+                        throw { status: 0, message: "ALREADY_CONVERTED", salesId: convertedData[0].salesid };
                     case 3:
                         canConvert = true;
                         colors_1 = [];
@@ -1262,11 +1260,11 @@ var SalesTableService = /** @class */ (function () {
                         console.log(reqData);
                         data.message = "CONVERTED";
                         return [2 /*return*/, data];
-                    case 7: throw { message: "NO_VENDOR_FOR_CUSTOMER" };
+                    case 7: throw { status: 0, message: "NO_VENDOR_FOR_CUSTOMER" };
                     case 8: return [3 /*break*/, 10];
                     case 9:
                         error_8 = _a.sent();
-                        throw { message: error_8 };
+                        throw error_8;
                     case 10: return [2 /*return*/];
                 }
             });
@@ -1293,7 +1291,7 @@ var SalesTableService = /** @class */ (function () {
                         //console.log(purchaseOrderData);
                         purchaseOrderData = purchaseOrderData.length > 0 ? purchaseOrderData[0] : {};
                         if (!(purchaseOrderData == {})) return [3 /*break*/, 4];
-                        throw { message: "TECHNICAL_ISSUE,_PLEASE_CONTACT_YOUR_TECHNICAL_TEAM" };
+                        throw { status: 0, message: "TECHNICAL_ISSUE,_PLEASE_CONTACT_YOUR_TECHNICAL_TEAM" };
                     case 4: return [4 /*yield*/, this.rawQuery.salesTableInterCompanyOriginalData(purchaseOrderData.salesid, "SALESORDER")];
                     case 5:
                         salesOrderData = _b.sent();
@@ -1340,7 +1338,7 @@ var SalesTableService = /** @class */ (function () {
                     case 8: return [3 /*break*/, 10];
                     case 9:
                         error_9 = _b.sent();
-                        throw { message: error_9 };
+                        throw error_9;
                     case 10: return [2 /*return*/];
                 }
             });
@@ -1470,7 +1468,7 @@ var SalesTableService = /** @class */ (function () {
                             reqData.taxGroup = customerRecord.taxgroup;
                         }
                         reqData.linesCount = salesLine.length;
-                        salesLine && salesLine.length > 0 ? reqData.sumTax = salesLine[0].vat : null;
+                        salesLine && salesLine.length > 0 ? (reqData.sumTax = salesLine[0].vat) : null;
                         return [4 /*yield*/, queryRunner.manager.getRepository(SalesTable_1.SalesTable).save(reqData)];
                     case 6:
                         salesTable = _a.sent();
@@ -1611,7 +1609,7 @@ var SalesTableService = /** @class */ (function () {
                                 items_2.push(v.itemid), colors_2.push(v.configId), sizes_2.push(v.inventsizeid);
                             }
                             else {
-                                throw { message: "CANNOT_CREATE_SALESORDER" };
+                                throw { status: 0, message: "CANNOT_CREATE_SALESORDER" };
                             }
                         });
                         return [4 /*yield*/, this.rawQuery.checkItems(this.sessionInfo.inventlocationid, items_2, colors_2, sizes_2, reqData.salesId)];
@@ -1635,7 +1633,7 @@ var SalesTableService = /** @class */ (function () {
                             }
                         });
                         if (!canConvert_1) {
-                            throw { message: "SOME_OF_THE_ITEMS_ARE_OUT_OF_STOCK" };
+                            throw { status: 0, message: "SOME_OF_THE_ITEMS_ARE_OUT_OF_STOCK" };
                         }
                         _a.label = 2;
                     case 2: return [2 /*return*/];
@@ -1683,26 +1681,12 @@ var SalesTableService = /** @class */ (function () {
             });
         });
     };
-    SalesTableService.prototype.getTaxGroupforSaleslines = function (reqData, queryRunner, salesLines) {
+    SalesTableService.prototype.getTaxGroupforSaleslines = function (taxGroup) {
         return __awaiter(this, void 0, void 0, function () {
-            var filterItemsWithTaxGroups, itemIds, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        filterItemsWithTaxGroups = salesLines.filter(function (line) {
-                            return line.taxGroup != "VAT_GRP_5%";
-                        });
-                        console.log(filterItemsWithTaxGroups);
-                        itemIds = filterItemsWithTaxGroups.map(function (line) { return line.itemid; });
-                        if (!(itemIds.length > 0)) return [3 /*break*/, 2];
-                        return [4 /*yield*/, this.rawQuery.getItemTaxGroupByItemIds(itemIds)];
-                    case 1:
-                        _a = _b.sent();
-                        return [3 /*break*/, 3];
-                    case 2:
-                        _a = [];
-                        _b.label = 3;
-                    case 3: return [2 /*return*/, _a];
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.rawQuery.getItemTaxGroupByItemIds(taxGroup)];
+                    case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
@@ -1835,6 +1819,7 @@ var SalesTableService = /** @class */ (function () {
                         if (reqData.status == "PAID" || reqData.status == "RESERVED") {
                             if (parseInt(item.salesQty) != qty) {
                                 throw {
+                                    status: 0,
                                     id: reqData.salesId,
                                     message: "inventory not available - " + item.itemid + " - " + item.configId + " - " + item.inventsizeid + " - please edit and try again",
                                 };
@@ -2021,7 +2006,7 @@ var SalesTableService = /** @class */ (function () {
                         overDueSaved = _a.sent();
                         _a.label = 3;
                     case 3: return [3 /*break*/, 5];
-                    case 4: throw "paytermid not found";
+                    case 4: throw { status: 0, message: "paytermid not found" };
                     case 5: return [2 /*return*/];
                 }
             });
@@ -2213,7 +2198,7 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.saveSalesOrder = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, promiseList, customerRecord, salesLine_7, returnData, batchTobeSaved, salestatus, _a, saleslineArray, cond, customerRecords, customerRecord_1, defaultcustomer, mobileCustomer, salesTable_1, taxgroups, _loop_4, this_3, _i, salesLine_6, item, salesline, condData, customerDetails, pmobileno, userName, ptokenData, pmessage, pmail, imail, error_15;
+            var queryRunner, promiseList, customerRecord, salesLine_7, returnData, batchTobeSaved, salestatus, _a, saleslineArray, cond, customerRecords, customerRecord_1, defaultcustomer, mobileCustomer, salesTable_1, taxItemGroup, _i, salesLine_6, item, salesline, condData, customerDetails, pmobileno, userName, ptokenData, pmessage, pmail, imail, error_15;
             var _this = this;
             return __generator(this, function (_b) {
                 switch (_b.label) {
@@ -2256,15 +2241,11 @@ var SalesTableService = /** @class */ (function () {
                                     var qty = v.batches.reduce(function (res, item) { return res + parseInt(item.quantity); }, 0);
                                     console.log("qty", qty, v.salesQty);
                                     if (v.salesQty != qty) {
-                                        throw {
-                                            message: "selected line quantities and selected batches quantities are not matching",
-                                        };
+                                        throw { status: 0, message: "selected line quantities and selected batches quantities are not matching" };
                                     }
                                 }
                                 else {
-                                    throw {
-                                        message: "selected line quantities and selected batches quantities are not matching",
-                                    };
+                                    throw { status: 0, message: "selected line quantities and selected batches quantities are not matching" };
                                 }
                             });
                         }
@@ -2280,13 +2261,7 @@ var SalesTableService = /** @class */ (function () {
                     case 9:
                         cond = _b.sent();
                         if (!(cond == "ALREADY_PAID")) return [3 /*break*/, 10];
-                        returnData = {
-                            id: reqData.salesId,
-                            message: "ALREADY_PAID",
-                            status: reqData.status,
-                            url: reqData.url,
-                        };
-                        return [2 /*return*/, returnData];
+                        throw { status: 0, message: "ALREADY_PAID" };
                     case 10:
                         if (!(cond == true)) return [3 /*break*/, 24];
                         !reqData.warehouse ? (reqData.warehouse = {}) : (reqData.warehouse = reqData.warehouse);
@@ -2340,42 +2315,26 @@ var SalesTableService = /** @class */ (function () {
                         salesLine_7.forEach(function (element, index) {
                             salesLine_7[index].taxGroup = reqData.taxGroup;
                         });
-                        return [4 /*yield*/, this.getTaxGroupforSaleslines(reqData, queryRunner, salesLine_7)];
+                        return [4 /*yield*/, this.getTaxGroupforSaleslines(reqData.taxGroup)];
                     case 14:
-                        taxgroups = _b.sent();
+                        taxItemGroup = _b.sent();
                         console.log("*********************************************");
-                        console.log(taxgroups);
+                        console.log(taxItemGroup);
                         console.log("*******************************************************");
-                        _loop_4 = function (item) {
-                            var taxItemGroup;
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0:
-                                        item.linesCount = reqData.linesCount;
-                                        item.id = reqData.paymentType == "ONLINE" ? item.id : uuid();
-                                        item.taxGroup = reqData.taxGroup;
-                                        item.lineAmount = parseFloat(item.salesprice) * parseFloat(item.salesQty);
-                                        if (item.taxGroup == "VAT_GRP_5%") {
-                                            item.taxItemGroup = "VAT_ITEM_5%";
-                                        }
-                                        else {
-                                            taxItemGroup = taxgroups.find(function (taItem) { return taItem.itemid == item.itemid; });
-                                            item.taxItemGroup = taxItemGroup.taxitemgroupid;
-                                        }
-                                        return [4 /*yield*/, this_3.salesLineItemOrder(item, reqData, queryRunner, salesLine_7)];
-                                    case 1:
-                                        _a.sent();
-                                        return [2 /*return*/];
-                                }
-                            });
-                        };
-                        this_3 = this;
+                        if (!taxItemGroup || taxItemGroup == null) {
+                            throw { status: 0, message: "NO_TAX_GROUP_FOR_ITEM" };
+                        }
                         _i = 0, salesLine_6 = salesLine_7;
                         _b.label = 15;
                     case 15:
                         if (!(_i < salesLine_6.length)) return [3 /*break*/, 18];
                         item = salesLine_6[_i];
-                        return [5 /*yield**/, _loop_4(item)];
+                        item.linesCount = reqData.linesCount;
+                        item.id = reqData.paymentType == "ONLINE" ? item.id : uuid();
+                        item.taxGroup = reqData.taxGroup;
+                        item.lineAmount = parseFloat(item.salesprice) * parseFloat(item.salesQty);
+                        item.taxItemGroup = taxItemGroup;
+                        return [4 /*yield*/, this.salesLineItemOrder(item, reqData, queryRunner, salesLine_7)];
                     case 16:
                         _b.sent();
                         _b.label = 17;
@@ -2579,7 +2538,7 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.validateReturnOrder = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var prevReturnLines, returnLines, _loop_5, _i, returnLines_1, val, state_1;
+            var prevReturnLines, returnLines, _loop_4, _i, returnLines_1, val, state_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.rawQuery.getReturnLines(reqData.interCompanyOriginalSalesId)];
@@ -2587,10 +2546,10 @@ var SalesTableService = /** @class */ (function () {
                         prevReturnLines = _a.sent();
                         console.log(prevReturnLines);
                         returnLines = reqData.salesLine;
-                        _loop_5 = function (val) {
+                        _loop_4 = function (val) {
                             if (val.salesQty > 0) {
                                 console.log(val.batches);
-                                var _loop_6 = function (v) {
+                                var _loop_5 = function (v) {
                                     var lineData = prevReturnLines.find(function (d) {
                                         return d.itemid == val.itemid &&
                                             d.configId == val.configId &&
@@ -2613,7 +2572,7 @@ var SalesTableService = /** @class */ (function () {
                                 };
                                 for (var _i = 0, _a = val.batches; _i < _a.length; _i++) {
                                     var v = _a[_i];
-                                    var state_2 = _loop_6(v);
+                                    var state_2 = _loop_5(v);
                                     if (typeof state_2 === "object")
                                         return state_2;
                                 }
@@ -2621,7 +2580,7 @@ var SalesTableService = /** @class */ (function () {
                         };
                         for (_i = 0, returnLines_1 = returnLines; _i < returnLines_1.length; _i++) {
                             val = returnLines_1[_i];
-                            state_1 = _loop_5(val);
+                            state_1 = _loop_4(val);
                             if (typeof state_1 === "object")
                                 return [2 /*return*/, state_1.value];
                         }
@@ -2665,15 +2624,15 @@ var SalesTableService = /** @class */ (function () {
                         checkPrevData = _a.sent();
                         console.log(checkPrevData);
                         if (checkPrevData && checkPrevData.length > 0) {
-                            throw { message: "ALREADY_SHIPPED" };
+                            throw { status: 0, message: "ALREADY_SHIPPED" };
                         }
-                        else if (checkToData.status == 'REJECTED') {
-                            throw { message: "ALREADY_REJECTED" };
+                        else if (checkToData.status == "REJECTED") {
+                            throw { status: 0, message: "ALREADY_REJECTED" };
                         }
                         _a.label = 6;
                     case 6:
                         if (prevData && prevData.status == "POSTED") {
-                            throw { message: "ALREADY_SHIPPED" };
+                            throw { status: 0, message: "ALREADY_SHIPPED" };
                         }
                         return [4 /*yield*/, this.salestableDAO.findOne({
                                 salesId: reqData.interCompanyOriginalSalesId,
@@ -2784,7 +2743,7 @@ var SalesTableService = /** @class */ (function () {
     SalesTableService.prototype.saveReturnOrder = function (reqData, queryRunner) {
         if (queryRunner === void 0) { queryRunner = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var canCommitTransaction, condition, salesLine, cond, customerRecord, defaultcustomer, desinerService, amount, designerServiceData, promiseList, _i, salesLine_10, item, taxItemGroup, _a, _b, batches, returnData, error_19;
+            var canCommitTransaction, condition, salesLine, cond, customerRecord, defaultcustomer, desinerService, amount, designerServiceData, promiseList, taxItemGroup, _i, salesLine_10, item, _a, _b, batches, returnData, error_19;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
@@ -2878,9 +2837,15 @@ var SalesTableService = /** @class */ (function () {
                         // );
                         promiseList.push(queryRunner.manager.getRepository(SalesTable_1.SalesTable).save(reqData));
                         promiseList.push(this.salesLineDelete(reqData, queryRunner));
-                        _i = 0, salesLine_10 = salesLine;
-                        _c.label = 16;
+                        return [4 /*yield*/, this.getTaxGroupforSaleslines(reqData.taxGroup)];
                     case 16:
+                        taxItemGroup = _c.sent();
+                        if (!taxItemGroup || taxItemGroup == null) {
+                            throw { status: 0, message: "NO_TAX_GROUP_FOR_ITEM" };
+                        }
+                        _i = 0, salesLine_10 = salesLine;
+                        _c.label = 17;
+                    case 17:
                         if (!(_i < salesLine_10.length)) return [3 /*break*/, 23];
                         item = salesLine_10[_i];
                         item.batch = [];
@@ -2889,20 +2854,12 @@ var SalesTableService = /** @class */ (function () {
                         item.id = uuid();
                         item.salesId = reqData.salesId;
                         console.log("======================================================================================", item.salesId, reqData.salesId);
+                        item.taxItemGroup = taxItemGroup;
                         item.createddatetime = new Date(App_1.App.DateNow());
                         item.createdBy = this.sessionInfo.userName;
                         item.numberSequenceGroupId = this.seqNum;
                         item.lastModifiedDate = new Date(App_1.App.DateNow());
                         item.jazeeraWarehouse = reqData.jazeeraWarehouse;
-                        return [4 /*yield*/, this.rawQuery.getItemTaxGroup(item.itemid)];
-                    case 17:
-                        taxItemGroup = _c.sent();
-                        if (item.taxGroup == "VAT_GRP_5%") {
-                            item.taxItemGroup = "VAT_ITEM_5%";
-                        }
-                        else {
-                            item.taxItemGroup = taxItemGroup.taxitemgroupid;
-                        }
                         item.status = reqData.status;
                         if (!(item.batches && item.batches.length > 0 && item.salesQty > 0)) return [3 /*break*/, 21];
                         _a = 0, _b = item.batches;
@@ -2945,7 +2902,7 @@ var SalesTableService = /** @class */ (function () {
                         _c.label = 22;
                     case 22:
                         _i++;
-                        return [3 /*break*/, 16];
+                        return [3 /*break*/, 17];
                     case 23: return [4 /*yield*/, Promise.all(promiseList)];
                     case 24:
                         _c.sent();
@@ -3028,7 +2985,7 @@ var SalesTableService = /** @class */ (function () {
                         checkPrevData = _c.sent();
                         console.log(checkPrevData);
                         if (checkPrevData && checkPrevData.length > 0) {
-                            throw { message: "ALREADY_RECEIVED" };
+                            throw { status: 0, message: "ALREADY_RECEIVED" };
                         }
                         return [4 /*yield*/, this.salestableDAO.findOne({
                                 salesId: reqData.interCompanyOriginalSalesId,
@@ -3437,7 +3394,7 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.dofifo = function (item, qty, reqData, salesLine) {
         return __awaiter(this, void 0, void 0, function () {
-            var batches, inventory, similarLines, val_1, batchList, _loop_7, _i, inventory_1, batch, state_3, _a, batchList_1, batch;
+            var batches, inventory, similarLines, val_1, batchList, _loop_6, _i, inventory_1, batch, state_3, _a, batchList_1, batch;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -3458,7 +3415,7 @@ var SalesTableService = /** @class */ (function () {
                         });
                         val_1 = parseInt(qty);
                         batchList = [];
-                        _loop_7 = function (batch) {
+                        _loop_6 = function (batch) {
                             batch.availabilty = parseInt(batch.availabilty);
                             if (similarLines && similarLines.length > 0) {
                                 // batchNo: batch.batchno,
@@ -3491,7 +3448,7 @@ var SalesTableService = /** @class */ (function () {
                         };
                         for (_i = 0, inventory_1 = inventory; _i < inventory_1.length; _i++) {
                             batch = inventory_1[_i];
-                            state_3 = _loop_7(batch);
+                            state_3 = _loop_6(batch);
                             if (state_3 === "break")
                                 break;
                         }
@@ -3802,7 +3759,7 @@ var SalesTableService = /** @class */ (function () {
                             }
                         });
                         return [2 /*return*/, data_1];
-                    case 3: throw { message: Props_1.Props.INVALID_DATA };
+                    case 3: throw { status: 0, message: Props_1.Props.INVALID_DATA };
                     case 4: return [3 /*break*/, 6];
                     case 5:
                         error_25 = _a.sent();

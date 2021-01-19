@@ -298,7 +298,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                     case 19: return [3 /*break*/, 21];
                     case 20:
                         err_1 = _b.sent();
-                        throw { message: err_1 };
+                        throw err_1;
                     case 21: return [2 /*return*/];
                 }
             });

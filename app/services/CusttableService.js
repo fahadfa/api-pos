@@ -259,10 +259,10 @@ var CusttableService = /** @class */ (function () {
                         return [2 /*return*/, returnData];
                     case 7:
                         if (cond == "phone") {
-                            throw { message: "RECORD_ALREADY_EXISTS" };
+                            throw { status: 0, message: "RECORD_ALREADY_EXISTS" };
                         }
                         else {
-                            throw { message: "INVALID_DATA" };
+                            throw { status: 0, message: "INVALID_DATA" };
                         }
                         _a.label = 8;
                     case 8: return [3 /*break*/, 13];

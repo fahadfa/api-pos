@@ -55,8 +55,8 @@ var ReqItemTableService = /** @class */ (function () {
                                 relations: [],
                                 join: {
                                     alias: "reqItemTable",
-                                    innerJoinAndSelect: {}
-                                }
+                                    innerJoinAndSelect: {},
+                                },
                             })];
                     case 1:
                         data = _a.sent();
@@ -89,7 +89,7 @@ var ReqItemTableService = /** @class */ (function () {
                         console.log(query);
                         return [4 /*yield*/, this.reqItemTableRepository.find({
                                 relations: [],
-                                where: query
+                                where: query,
                             })];
                     case 1:
                         data = _a.sent();
@@ -118,7 +118,7 @@ var ReqItemTableService = /** @class */ (function () {
                         reqItemTableData = _a.sent();
                         returnData = { id: item.recid, message: Props_1.Props.SAVED_SUCCESSFULLY };
                         return [2 /*return*/, returnData];
-                    case 3: throw { message: Props_1.Props.INVALID_DATA };
+                    case 3: throw { status: 0, message: "INVALID_DATA" };
                     case 4: return [3 /*break*/, 6];
                     case 5:
                         error_3 = _a.sent();
@@ -146,7 +146,7 @@ var ReqItemTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.reqItemTableRepository.save(data)];
                     case 2:
                         result = _a.sent();
-                        returnData = { id: id, message: Props_1.Props.REMOVED_SUCCESSFULLY };
+                        returnData = { id: id, message: "REMOVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
                     case 3:
                         error_4 = _a.sent();
@@ -169,7 +169,7 @@ var ReqItemTableService = /** @class */ (function () {
                 // // let condData = await this.reqItemTableRepository.find( { where : { id: item.id } });
                 // if (!item.id) {
                 //         let uid = App.UniqueID("ReqItemTable"+"_"+App.UniqueCode(), item.compcode);
-                //         item.id = uid; 
+                //         item.id = uid;
                 // } else {
                 //     if (item.updatedOn && previousItem.updatedOn.toISOString() != new Date(item.updatedOn).toISOString()) {
                 //         return "updated";

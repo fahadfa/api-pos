@@ -86,7 +86,7 @@ var InventsizeService = /** @class */ (function () {
                         reqData.sizes = data;
                         return [4 /*yield*/, this.getPrices(reqData)];
                     case 5: return [2 /*return*/, _a.sent()];
-                    case 6: throw { message: "itemid and configid Required" };
+                    case 6: throw { status: 0, message: "itemid and configid Required" };
                     case 7: return [3 /*break*/, 9];
                     case 8:
                         error_2 = _a.sent();
@@ -118,7 +118,7 @@ var InventsizeService = /** @class */ (function () {
                     case 3: return [2 /*return*/, _a.sent()];
                     case 4: return [2 /*return*/, []];
                     case 5: return [3 /*break*/, 7];
-                    case 6: throw { message: "itemid and configid Required" };
+                    case 6: throw { status: 0, message: "itemid and configid Required" };
                     case 7: return [3 /*break*/, 9];
                     case 8:
                         error_3 = _a.sent();
@@ -159,7 +159,7 @@ var InventsizeService = /** @class */ (function () {
                             v.price = 0;
                         });
                         return [2 /*return*/, data];
-                    case 5: throw { message: "itemid and configid Required" };
+                    case 5: throw { status: 0, message: "itemid and configid Required" };
                     case 6: return [3 /*break*/, 8];
                     case 7:
                         error_4 = _a.sent();

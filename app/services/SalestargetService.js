@@ -75,7 +75,7 @@ var SalestargetService = /** @class */ (function () {
                         pricediscgroupData = _a.sent();
                         returnData = { message: "SAVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
-                    case 3: throw { message: "INVALID_DATA" };
+                    case 3: throw { status: 0, message: "INVALID_DATA" };
                     case 4: return [3 /*break*/, 6];
                     case 5:
                         error_1 = _a.sent();
@@ -224,8 +224,8 @@ var SalestargetService = /** @class */ (function () {
                         });
                         console.log(result);
                         return [2 /*return*/, result];
-                    case 8: throw { message: "INVALID_DATA" };
-                    case 9: throw { message: "INVALID_DATA" };
+                    case 8: throw { status: 0, message: "INVALID_DATA" };
+                    case 9: throw { status: 0, message: "INVALID_DATA" };
                     case 10:
                         error_3 = _c.sent();
                         throw error_3;
@@ -571,7 +571,7 @@ var SalestargetService = /** @class */ (function () {
                             .select("SUM(salestable.netamount :: float)", "sum")
                             // .andWhere("salestable.transkind IN (:...transkind)", { transkind: ["SALESORDER"] })
                             .andWhere("salestable.transkind IN (:...transkind)", { transkind: ["SALESORDER", "DESIGNERSERVICE"] })
-                            .andWhere("salestable.status IN (:...status)", { status: ["PAID", "POSTED", 'PRINTED'] })
+                            .andWhere("salestable.status IN (:...status)", { status: ["PAID", "POSTED", "PRINTED"] })
                             .andWhere("salestable.lastmodifieddate ::date = :lastmodifieddate", date)
                             .andWhere("salestable.inventlocationid = :inventlocationid", data)
                             .getRawOne()];

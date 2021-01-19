@@ -115,12 +115,12 @@ var DiscountService = /** @class */ (function () {
                                 : reqData.custaccount;
                         reqData.walkincustomer = checkCustomer.walkincustomer;
                         if (!checkCustomer) {
-                            throw { message: "INVALID_CUSTOMER_CODE" };
+                            throw { status: 0, message: "INVALID_CUSTOMER_CODE" };
                         }
                         _b.label = 6;
                     case 6:
                         if (!checkCustomer) {
-                            throw { message: "INVALID_CUSTOMER_CODE" };
+                            throw { status: 0, message: "INVALID_CUSTOMER_CODE" };
                         }
                         reqData.cashdisc = checkCustomer.cashdisc;
                         reqData.paymtermid = checkCustomer.paymtermid;

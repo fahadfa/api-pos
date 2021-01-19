@@ -133,7 +133,7 @@ var CustTransMasterDAO = /** @class */ (function () {
                         return [2 /*return*/, {
                                 creditLimit: parseFloat(custData.creditLimit),
                                 usedCredit: parseFloat(custData.usedCredit),
-                                availableCredit: availableCredit,
+                                availableCredit: creditLimit > 0 ? availableCredit : 0,
                                 invoices: custTransOverDues,
                             }];
                 }

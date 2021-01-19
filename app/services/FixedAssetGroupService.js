@@ -112,7 +112,7 @@ var FixedAssetGroupService = /** @class */ (function () {
                         fixedassetgroupData = _a.sent();
                         returnData = { id: fixedassetgroupData.groupid, message: "SAVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
-                    case 3: throw { message: "INVALID_DATA" };
+                    case 3: throw { status: 0, message: "INVALID_DATA" };
                     case 4: return [3 /*break*/, 6];
                     case 5:
                         error_3 = _a.sent();
@@ -136,7 +136,7 @@ var FixedAssetGroupService = /** @class */ (function () {
                             entity.deleted = true;
                         }
                         else {
-                            throw { message: "DATA_NOT_FOUND" };
+                            throw { status: 0, message: "DATA_NOT_FOUND" };
                         }
                         entity.deletedby = this.sessionInfo.userName;
                         return [4 /*yield*/, this.fixedassetgroupRepository.save(entity)];
@@ -227,12 +227,12 @@ var FixedAssetGroupService = /** @class */ (function () {
                         _a.sent();
                         return [4 /*yield*/, salesId];
                     case 4: return [2 /*return*/, _a.sent()];
-                    case 5: throw { message: "CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE" };
+                    case 5: throw { status: 0, message: "CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE" };
                     case 6: return [3 /*break*/, 8];
                     case 7:
                         error_5 = _a.sent();
                         if (error_5 == {}) {
-                            error_5 = { message: "SERVER_SIDE_ERROR" };
+                            error_5 = { status: 0, message: "SERVER_SIDE_ERROR" };
                         }
                         throw error_5;
                     case 8: return [2 /*return*/];

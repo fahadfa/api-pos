@@ -384,7 +384,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                     case 26:
                         data = _b.sent();
                         return [3 /*break*/, 28];
-                    case 27: throw { message: "TRANSKIND_REQUIRED" };
+                    case 27: throw { status: 0, message: "TRANSKIND_REQUIRED" };
                     case 28:
                         if (!(data && data.format)) return [3 /*break*/, 30];
                         hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);
@@ -509,7 +509,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                             salesId = salestable.salesId;
                         }
                         else if (salesId != salestable.salesId) {
-                            throw { message: "PLEASE_SCAN_ALL_PAGES_WITH_SAME_ORDER_ID" };
+                            throw { status: 0, message: "PLEASE_SCAN_ALL_PAGES_WITH_SAME_ORDER_ID" };
                         }
                         salesLines = [];
                         for (_a = 0, _b = list[1].split("*"); _a < _b.length; _a++) {
@@ -609,13 +609,13 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                                 }
                             });
                             console.log(totalPages, scannedPages_1);
-                            throw { message: "PLEASE_SCAN_ALL_PAGES", missingPages: missingPages_1 };
+                            throw { status: 0, message: "PLEASE_SCAN_ALL_PAGES", missingPages: missingPages_1 };
                         }
                         return [3 /*break*/, 8];
                     case 7:
                         err_1 = _c.sent();
                         Log_1.log.error(err_1);
-                        throw { message: err_1 };
+                        throw err_1;
                     case 8: return [2 /*return*/];
                 }
             });
@@ -639,7 +639,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                     case 2:
                         error_6 = _a.sent();
                         Log_1.log.error(error_6);
-                        throw { status: 0, message: error_6 };
+                        throw error_6;
                     case 3: return [2 /*return*/];
                 }
             });

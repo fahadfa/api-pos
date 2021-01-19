@@ -157,10 +157,10 @@ var UsesrInfoService = /** @class */ (function () {
                         return [2 /*return*/, returnData];
                     case 4:
                         if (cond == "userName") {
-                            throw { message: "RECORD_ALREADY_EXISTS" };
+                            throw { status: 0, message: "RECORD_ALREADY_EXISTS" };
                         }
                         else {
-                            throw { message: "INVALID_DATA" };
+                            throw { status: 0, message: "INVALID_DATA" };
                         }
                         return [3 /*break*/, 6];
                     case 5:
@@ -247,7 +247,7 @@ var UsesrInfoService = /** @class */ (function () {
                     case 2:
                         _a.sent();
                         return [3 /*break*/, 4];
-                    case 3: throw { message: "INVALID_PASSWORD" };
+                    case 3: throw { status: 0, message: "INVALID_PASSWORD" };
                     case 4: return [2 /*return*/, { id: user.id, message: "PASSWORD_UPDATED", status: 1 }];
                     case 5:
                         error_4 = _a.sent();

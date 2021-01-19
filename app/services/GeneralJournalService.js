@@ -79,7 +79,7 @@ var GeneralJournalService = /** @class */ (function () {
                             return [2 /*return*/, data];
                         }
                         else {
-                            throw { message: "RECORD_NOT_FOUND" };
+                            throw { status: 0, message: "RECORD_NOT_FOUND" };
                         }
                         return [3 /*break*/, 3];
                     case 2:
@@ -236,7 +236,7 @@ var GeneralJournalService = /** @class */ (function () {
                     case 3:
                         _a.sent();
                         return [2 /*return*/, salesId];
-                    case 4: throw { message: "CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE" };
+                    case 4: throw { status: 0, message: "CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE" };
                     case 5: return [3 /*break*/, 7];
                     case 6:
                         error_3 = _a.sent();
@@ -244,7 +244,7 @@ var GeneralJournalService = /** @class */ (function () {
                             error_3 = { message: "TECHNICAL_ISSUE_PLEASE_CONTACT_YOUR_TECHNICAL_TEAM" };
                         }
                         else {
-                            throw { message: "SERVER_SIDE_ERROR" };
+                            throw { status: 0, message: "SERVER_SIDE_ERROR" };
                         }
                         return [3 /*break*/, 7];
                     case 7: return [2 /*return*/];
@@ -326,7 +326,7 @@ var GeneralJournalService = /** @class */ (function () {
                             entity.deleted = true;
                         }
                         else {
-                            throw { message: "RECORD_NOT_FOUND" };
+                            throw { status: 0, message: "RECORD_NOT_FOUND" };
                         }
                         entity.deletedby = this.sessionInfo.userName;
                         return [4 /*yield*/, this.generalJournalDAO.save(entity)];

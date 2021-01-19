@@ -179,10 +179,10 @@ var UsergroupConfigService = /** @class */ (function () {
                         return [2 /*return*/, returnData];
                     case 4:
                         if (cond == "groupname") {
-                            throw { message: "RECORD_ALREADY_EXISTS" };
+                            throw { status: 0, message: "RECORD_ALREADY_EXISTS" };
                         }
                         else {
-                            throw { message: "INVALID_DATA" };
+                            throw { status: 0, message: "INVALID_DATA" };
                         }
                         return [3 /*break*/, 6];
                     case 5:

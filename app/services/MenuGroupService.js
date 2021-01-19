@@ -188,8 +188,9 @@ var MenuGroupService = /** @class */ (function () {
                         return [4 /*yield*/, this.menuGroupRepository.entity(id)];
                     case 1:
                         data = _a.sent();
-                        if (!data)
-                            throw { message: "RECORD_NOT_FOUND" };
+                        if (!data) {
+                            throw { status: 0, message: "RECORD_NOT_FOUND" };
+                        }
                         data.updatedBy = this.sessionInfo.id;
                         return [4 /*yield*/, this.menuGroupRepository.delete(data)];
                     case 2:

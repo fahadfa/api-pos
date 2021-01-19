@@ -184,7 +184,7 @@ var OpeningBalanceService = /** @class */ (function () {
                             };
                         }
                         else {
-                            throw { message: "invalid data" };
+                            throw { status: 0, message: "invalid data" };
                         }
                         _a.label = 9;
                     case 9: return [3 /*break*/, 11];

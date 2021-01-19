@@ -165,7 +165,7 @@ var HistoryUsergroupConfigService = /** @class */ (function () {
                         data = _a.sent();
                         returnData = { id: reqData.id, message: "SAVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
-                    case 3: throw { message: "INVALID_DATA" };
+                    case 3: throw { status: 0, message: "INVALID_DATA" };
                     case 4: return [3 /*break*/, 6];
                     case 5:
                         error_5 = _a.sent();

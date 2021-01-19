@@ -96,9 +96,9 @@ var MenuService = /** @class */ (function () {
                         return [4 /*yield*/, this.menuRepository.save(item)];
                     case 2:
                         menuData = _a.sent();
-                        returnData = { id: item.id, message: 'SAVED_SUCCESSFULLY' };
+                        returnData = { id: item.id, message: "SAVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
-                    case 3: throw { message: 'INVALID_DATA' };
+                    case 3: throw { status: 0, message: "INVALID_DATA" };
                     case 4: return [3 /*break*/, 6];
                     case 5:
                         error_3 = _a.sent();
@@ -118,13 +118,14 @@ var MenuService = /** @class */ (function () {
                         return [4 /*yield*/, this.menuRepository.entity(id)];
                     case 1:
                         data = _a.sent();
-                        if (!data)
-                            throw { message: "RECORD_NOT_FOUND" };
+                        if (!data) {
+                            throw { status: 0, message: "RECORD_NOT_FOUND" };
+                        }
                         data.updatedBy = this.sessionInfo.id;
                         return [4 /*yield*/, this.menuRepository.delete(data)];
                     case 2:
                         result = _a.sent();
-                        returnData = { id: id, message: 'REMOVED' };
+                        returnData = { id: id, message: "REMOVED" };
                         return [2 /*return*/, returnData];
                     case 3:
                         error_4 = _a.sent();

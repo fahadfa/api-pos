@@ -163,7 +163,7 @@ var WorkflowService = /** @class */ (function () {
                     case 7:
                         salesData = _a.sent();
                         if (!salesData) {
-                            throw Props_1.Props.ORDER_NOT_FOUND;
+                            throw { status: 0, message: "ORDER_NOT_FOUND" };
                         }
                         return [4 /*yield*/, this.rawQuery.getRmAndRa(usergroupid)];
                     case 8:
@@ -180,7 +180,7 @@ var WorkflowService = /** @class */ (function () {
                                 item.pendingWith = RM_AND_RA.rm;
                             }
                             else {
-                                throw { message: "NO_RM_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
+                                throw { status: 0, message: "NO_RM_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
                             }
                         }
                         else if (condition.raApprovalRequired) {
@@ -189,7 +189,7 @@ var WorkflowService = /** @class */ (function () {
                                 item.pendingWith = RM_AND_RA.ra;
                             }
                             else {
-                                throw { message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
+                                throw { status: 0, message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
                             }
                         }
                         return [3 /*break*/, 22];
@@ -205,7 +205,7 @@ var WorkflowService = /** @class */ (function () {
                             item.pendingWith = RM_AND_RA.rm;
                         }
                         else {
-                            throw { message: "NO_RM_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
+                            throw { status: 0, message: "NO_RM_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
                         }
                         return [3 /*break*/, 16];
                     case 12:
@@ -215,7 +215,7 @@ var WorkflowService = /** @class */ (function () {
                             item.pendingWith = RM_AND_RA.ra;
                         }
                         else {
-                            throw { message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
+                            throw { status: 0, message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
                         }
                         return [3 /*break*/, 16];
                     case 13: return [4 /*yield*/, this.rawQuery.updateSalesTableWorkFlowStatus(salesData.salesId, "NOWORKFLOW")];
@@ -237,7 +237,7 @@ var WorkflowService = /** @class */ (function () {
                     case 18:
                         _a.sent();
                         return [3 /*break*/, 20];
-                    case 19: throw { message: "SOME_OF_THE_ITEMS_ARE_OUT_OF_STOCK" };
+                    case 19: throw { status: 0, message: "SOME_OF_THE_ITEMS_ARE_OUT_OF_STOCK" };
                     case 20: return [3 /*break*/, 22];
                     case 21:
                         if (salesData.transkind == "DESIGNERSERVICERETURN") {
@@ -246,7 +246,7 @@ var WorkflowService = /** @class */ (function () {
                                 item.pendingWith = RM_AND_RA.designer_signing_authority;
                             }
                             else {
-                                throw { message: "NO_DESIGNER_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT" };
+                                throw { status: 0, message: "NO_DESIGNER_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT" };
                             }
                         }
                         else {
@@ -255,7 +255,7 @@ var WorkflowService = /** @class */ (function () {
                                 item.pendingWith = RM_AND_RA.rm;
                             }
                             else {
-                                throw { message: "NO_RM_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
+                                throw { status: 0, message: "NO_RM_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
                             }
                         }
                         _a.label = 22;
@@ -286,7 +286,7 @@ var WorkflowService = /** @class */ (function () {
                                         item.pendingWith = RM_AND_RA.salescoordinator;
                                     }
                                     else {
-                                        throw { message: "NO_COORDINATOR_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
+                                        throw { status: 0, message: "NO_COORDINATOR_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
                                     }
                                 }
                                 else if (item.statusId == "PENDINGRMAPPROVAL" || item.statusId == "APPROVEDBYDESIGNER") {
@@ -302,7 +302,7 @@ var WorkflowService = /** @class */ (function () {
                                         }
                                     }
                                     else {
-                                        throw { message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
+                                        throw { status: 0, message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
                                     }
                                 }
                                 else if (item.statusId == "PENDINGCOORDINATORAPPROVAL") {
@@ -321,7 +321,7 @@ var WorkflowService = /** @class */ (function () {
                                         }
                                     }
                                     else {
-                                        throw { message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
+                                        throw { status: 0, message: "NO_RA_ADDED_TO_YOUR_GROUP_PLEASE_CONTACT_SYSTEM_ADMIN" };
                                     }
                                     console.log(item.statusId);
                                 }
@@ -394,9 +394,10 @@ var WorkflowService = /** @class */ (function () {
                         item.lastModifiedBy = this.sessionInfo.userName;
                         // console.log(new Date());
                         item.lastModifiedDate = new Date(App_1.App.DateNow());
-                        return [4 /*yield*/, this.validate(item)];
+                        return [4 /*yield*/, this.validate(item, type)];
                     case 26:
                         cond = _a.sent();
+                        console.log(cond);
                         if (!(cond == true)) return [3 /*break*/, 32];
                         salesSaveData = {};
                         salesSaveData.salesId = item.orderId;
@@ -427,14 +428,17 @@ var WorkflowService = /** @class */ (function () {
                         return [2 /*return*/, { id: item.id, status: item.statusId, message: "SAVED_SUCCESSFULLY" }];
                     case 32:
                         if (cond == "ALREADY_MODIFIED") {
-                            throw { message: "ALREADY_MODIFIED" };
+                            throw { status: 0, message: "ALREADY_MODIFIED" };
+                        }
+                        else if (cond == "ALREADY_SENT_FOR_APPROVAL") {
+                            throw { status: 0, message: "ALREADY_SENT_FOR_APPROVAL" };
                         }
                         else {
-                            throw { message: "INVALID_DATA" };
+                            throw { status: 0, message: "INVALID_DATA" };
                         }
                         _a.label = 33;
                     case 33: return [3 /*break*/, 35];
-                    case 34: throw { message: "INVALID_DATA" };
+                    case 34: throw { status: 0, message: "INVALID_DATA" };
                     case 35: return [3 /*break*/, 40];
                     case 36:
                         error_3 = _a.sent();
@@ -451,41 +455,46 @@ var WorkflowService = /** @class */ (function () {
             });
         });
     };
-    WorkflowService.prototype.validate = function (item) {
+    WorkflowService.prototype.validate = function (item, type) {
+        if (type === void 0) { type = null; }
         return __awaiter(this, void 0, void 0, function () {
             var oldItem, uid;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         oldItem = null;
-                        if (!(!item.id || item.id == "" || item.id == "0")) return [3 /*break*/, 1];
-                        item.id = null;
-                        return [3 /*break*/, 3];
-                    case 1: return [4 /*yield*/, this.workflowDAO.findOne({ orderId: item.orderId })];
-                    case 2:
+                        return [4 /*yield*/, this.workflowDAO.findOne({ orderId: item.orderId })];
+                    case 1:
                         oldItem = _a.sent();
+                        if (!item.id || item.id == "" || item.id == "0") {
+                            item.id = null;
+                        }
+                        console.log(oldItem);
                         if (oldItem) {
-                            console.log("=====================", oldItem.pendingWith, this.sessionInfo.groupid);
-                            if (oldItem.pendingWith == this.sessionInfo.groupid) {
-                                item = oldItem;
-                                return [2 /*return*/, true];
+                            if (type == "sendforapproval") {
+                                return [2 /*return*/, "ALREADY_SENT_FOR_APPROVAL"];
                             }
                             else {
-                                return [2 /*return*/, "ALREADY_MODIFIED"];
+                                console.log("=====================", oldItem.pendingWith, this.sessionInfo.groupid);
+                                if (oldItem.pendingWith == this.sessionInfo.groupid) {
+                                    item = oldItem;
+                                    return [2 /*return*/, true];
+                                }
+                                else {
+                                    return [2 /*return*/, "ALREADY_MODIFIED"];
+                                }
                             }
                         }
-                        _a.label = 3;
-                    case 3:
-                        if (!!item.id) return [3 /*break*/, 6];
-                        if (!oldItem) return [3 /*break*/, 4];
+                        if (!!item.id) return [3 /*break*/, 4];
+                        if (!oldItem) return [3 /*break*/, 2];
                         item = oldItem;
                         return [2 /*return*/, true];
-                    case 4: return [4 /*yield*/, this.getWorkflowId()];
-                    case 5:
+                    case 2: return [4 /*yield*/, this.getWorkflowId()];
+                    case 3:
                         uid = _a.sent();
                         item.id = uid;
-                        _a.label = 6;
-                    case 6: return [2 /*return*/, true];
+                        _a.label = 4;
+                    case 4: return [2 /*return*/, true];
                 }
             });
         });
@@ -515,7 +524,7 @@ var WorkflowService = /** @class */ (function () {
                     case 3:
                         _a.sent();
                         return [2 /*return*/, id];
-                    case 4: throw { message: "CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE" };
+                    case 4: throw { status: 0, message: "CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE" };
                 }
             });
         });

@@ -124,9 +124,9 @@ var HistoryUserGroupService = /** @class */ (function () {
                         return [4 /*yield*/, this.usergroupDAO.save(reqData)];
                     case 2:
                         user = _a.sent();
-                        returnData = { id: reqData.groupid, message: 'SAVED_SUCCESSFULLY' };
+                        returnData = { id: reqData.groupid, message: "SAVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
-                    case 3: throw { message: 'INVALID_DATA' };
+                    case 3: throw { status: 0, message: "INVALID_DATA" };
                     case 4: return [3 /*break*/, 6];
                     case 5:
                         error_3 = _a.sent();
@@ -167,7 +167,7 @@ var HistoryUserGroupService = /** @class */ (function () {
                         return [4 /*yield*/, this.usergroupDAO.save(userGroup)];
                     case 5:
                         _a.sent();
-                        return [2 /*return*/, { id: userGroup.groupid, message: 'REMOVED' }];
+                        return [2 /*return*/, { id: userGroup.groupid, message: "REMOVED" }];
                     case 6:
                         error_4 = _a.sent();
                         throw error_4;

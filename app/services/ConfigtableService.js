@@ -82,7 +82,7 @@ var ConfigtableService = /** @class */ (function () {
                         data = [];
                         _a.label = 4;
                     case 4: return [3 /*break*/, 6];
-                    case 5: throw "itemid Required";
+                    case 5: throw { status: 0, mmessage: "itemid Required" };
                     case 6: return [2 /*return*/, data];
                     case 7:
                         error_2 = _a.sent();
@@ -125,7 +125,7 @@ var ConfigtableService = /** @class */ (function () {
                     // var t1 = new Date().getTime();
                     // console.log("took " + (t1 - t0) / 1000 + " milliseconds.");
                     return [2 /*return*/, data];
-                    case 7: throw "itemid Required";
+                    case 7: throw { status: 0, message: "itemid Required" };
                     case 8: return [3 /*break*/, 10];
                     case 9:
                         error_3 = _a.sent();

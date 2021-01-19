@@ -168,7 +168,7 @@ var VisitCustomerService = /** @class */ (function () {
                     case 6: return [2 /*return*/, { id: reqData.visitorSequenceNumber, message: Props_1.Props.SAVED_SUCCESSFULLY }];
                     case 7:
                         if (cond == "VisitSeqNumber") {
-                            throw { message: "RECORD_ALREADY_EXISTS" };
+                            throw { status: 0, message: "RECORD_ALREADY_EXISTS" };
                         }
                         return [3 /*break*/, 9];
                     case 8:

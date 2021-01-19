@@ -102,7 +102,7 @@ var PhoneVerificationService = /** @class */ (function () {
                         data = _a.sent();
                         returnData = { id: data.id, message: "SAVED_SUCCESSFULLY" };
                         return [2 /*return*/, returnData];
-                    case 3: throw { message: "INVALID_DATA" };
+                    case 3: throw { status: 0, message: "INVALID_DATA" };
                     case 4: return [3 /*break*/, 6];
                     case 5:
                         error_3 = _a.sent();
@@ -122,8 +122,9 @@ var PhoneVerificationService = /** @class */ (function () {
                         return [4 /*yield*/, this.phoneVerificationDAO.entity(id)];
                     case 1:
                         data = _a.sent();
-                        if (!data)
-                            throw { message: "RECORD_NOT_FOUND" };
+                        if (!data) {
+                            throw { status: 0, message: "RECORD_NOT_FOUND" };
+                        }
                         data.lastmodifiedBy = this.sessionInfo.id;
                         return [4 /*yield*/, this.phoneVerificationDAO.delete(data)];
                     case 2:
@@ -205,7 +206,7 @@ var PhoneVerificationService = /** @class */ (function () {
                         return [2 /*return*/, { id: data.id, message: "OTP Sent" }];
                     case 3:
                         error_5 = _a.sent();
-                        throw { message: error_5 };
+                        throw error_5;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -220,7 +221,7 @@ var PhoneVerificationService = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 4, , 5]);
                         if (!item.groupid) {
-                            throw { message: "Provide GroupId" };
+                            throw { status: 0, message: "Provide GroupId" };
                         }
                         query = "select ui.phone from user_info ui where ui.groupid ='" + item.groupid + "';";
                         return [4 /*yield*/, this.phoneVerificationDAO.executeQuery(query)];
@@ -253,7 +254,7 @@ var PhoneVerificationService = /** @class */ (function () {
                         return [2 /*return*/, { id: ids, message: "OTP Sent" }];
                     case 4:
                         error_6 = _a.sent();
-                        throw { message: error_6 };
+                        throw error_6;
                     case 5: return [2 /*return*/];
                 }
             });
@@ -284,9 +285,9 @@ var PhoneVerificationService = /** @class */ (function () {
                         return [2 /*return*/, { message: "VERIFIED", status: true }];
                     case 3: throw Props_1.Props.OTP_EXPIRED;
                     case 4: return [3 /*break*/, 6];
-                    case 5: throw { message: "INVALID_OTP" };
+                    case 5: throw { status: 0, message: "INVALID_OTP" };
                     case 6: return [3 /*break*/, 8];
-                    case 7: throw { message: "INVALID_MOBILE_NUMBER" };
+                    case 7: throw { status: 0, message: "INVALID_MOBILE_NUMBER" };
                     case 8: return [3 /*break*/, 10];
                     case 9:
                         error_7 = _a.sent();

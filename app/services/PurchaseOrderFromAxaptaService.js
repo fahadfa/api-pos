@@ -156,9 +156,9 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                         _a.sent();
                         salesData.status = 1;
                         return [2 /*return*/, salesData];
-                    case 4: throw { status: 1, message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
+                    case 4: throw { status: 0, message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
                     case 5: return [3 /*break*/, 7];
-                    case 6: throw { status: 1, message: "DATA_NOT_FOUND" };
+                    case 6: throw { status: 0, message: "DATA_NOT_FOUND" };
                     case 7: return [3 /*break*/, 9];
                     case 8:
                         error_2 = _a.sent();
@@ -189,7 +189,7 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                     case 4:
                         salesData = _a.sent();
                         if (!salesData) return [3 /*break*/, 5];
-                        throw { message: "ALREADY_RECEIVED" };
+                        throw { status: 0, message: "ALREADY_RECEIVED" };
                     case 5: return [4 /*yield*/, this.usergroupconfigDAO.findOne({
                             groupid: this.sessionInfo.groupid,
                         })];
@@ -436,7 +436,7 @@ var PurchaseOrderFromAxaptaService = /** @class */ (function () {
                     case 1:
                         salesData = _a.sent();
                         if (!salesData) return [3 /*break*/, 2];
-                        throw { message: "ALREADY_RECEIVED" };
+                        throw { status: 0, message: "ALREADY_RECEIVED" };
                     case 2:
                         salesData = data;
                         salesData.interCompanyOriginalSalesId = data.salesId;
