@@ -2274,7 +2274,7 @@ var SalesTableService = /** @class */ (function () {
                         reqData.status = reqData.status == "CREATED" || reqData.status == "UNRESERVED" ? "SAVED" : reqData.status;
                         // console.log(reqData.lastModifiedDate.toISOString());
                         reqData.invoiceAccount =
-                            reqData.invoiceAccount || reqData.invoiceAccount != "" ? reqData.invoiceAccount : reqData.custAccount;
+                            reqData.invoiceAccount && reqData.invoiceAccount != "" ? reqData.invoiceAccount : reqData.custAccount;
                         this.rawQuery.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.rawQuery.getCustomer(reqData.invoiceAccount, this.sessionInfo.defaultcustomerid, reqData.mobileNo)];
                     case 11:

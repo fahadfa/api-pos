@@ -112,7 +112,7 @@ var WorkflowService = /** @class */ (function () {
                             item.inventoryType = item.SalesTable ? item.SalesTable.movementType : null;
                             item.inventoryTypeAr = item.SalesTable ? item.SalesTable.movementType : null;
                             item.selectedLines = item.selectedLines ? item.selectedLines.lines : null;
-                            item.invoiceDate = item.SalesTable.invoiceDate;
+                            item.invoiceDate = new Date(item.SalesTable.invoiceDate).toLocaleDateString();
                             item.invoiceId = item.SalesTable.interCompanyOriginalSalesId;
                             item.info = item.SalesTable.info;
                             delete item.SalesTable;
@@ -129,7 +129,7 @@ var WorkflowService = /** @class */ (function () {
     WorkflowService.prototype.save = function (item, type) {
         if (type === void 0) { type = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, status_1, promistList, usergroupid, inventlocationid, selectedLinesData, condition, salesData, RM_AND_RA, canSendForApproval, date, inventtransQuery, selectedLines, cond, salesSaveData, error_3;
+            var queryRunner, status_1, info, promistList, usergroupid, inventlocationid, selectedLinesData, condition, salesData, RM_AND_RA, canSendForApproval, date, inventtransQuery, selectedLines, cond, salesSaveData, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -144,6 +144,7 @@ var WorkflowService = /** @class */ (function () {
                     case 3:
                         _a.trys.push([3, 35, 37, 39]);
                         status_1 = item.status;
+                        info = item.info;
                         promistList = [];
                         usergroupid = this.sessionInfo.groupid;
                         inventlocationid = this.sessionInfo.inventlocationid;
@@ -405,7 +406,7 @@ var WorkflowService = /** @class */ (function () {
                         salesSaveData = {};
                         salesSaveData.salesId = item.orderId;
                         salesSaveData.status = item.statusId;
-                        salesSaveData.info = item.info;
+                        salesSaveData.info = info;
                         salesSaveData.lastModifiedDate = new Date(App_1.App.DateNow());
                         console.log("lastModifiedDate", salesSaveData.lastModifiedDate, salesSaveData.status);
                         // promistList.push(this.workflowDAO.save(item), this.salesTableDAO.save(salesSaveData));
