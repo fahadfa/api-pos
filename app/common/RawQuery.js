@@ -372,7 +372,7 @@ var RawQuery = /** @class */ (function () {
                                     query += "where (i.invoiceid = '" + reqData.salesid + "' or i.transrefid = '" + reqData.salesid + "') and transactionclosed=" + transactionclosed + " ";
                                 }
                                 else if (reqData.type == "SALESORDER") {
-                                    query += "where  i.transrefid = '" + reqData.salesid + "' ";
+                                    query += "where  i.transrefid = '" + reqData.salesid + "'  and reserve_status != 'REJECTED'";
                                 }
                                 else {
                                     query += "where  i.transrefid = '" + reqData.salesid + "' and transactionclosed=" + transactionclosed + " ";

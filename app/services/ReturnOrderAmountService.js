@@ -1560,6 +1560,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
             mobileNo: salesOrderData.mobileNo,
             isCash: salesOrderData.isCash,
             payment: salesOrderData.payment,
+            invoiceDate: salesOrderData.invoiceDate,
             sumTax: parseFloat(salesOrderData.sumTax),
             inventLocationId: salesOrderData.inventLocationId,
             region: salesOrderData.region,
