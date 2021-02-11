@@ -86,7 +86,6 @@ var BasesService = /** @class */ (function () {
                         _a.label = 4;
                     case 4:
                         t1 = new Date().getTime();
-                        console.log("took " + (t1 - t0) / 1000 + " milliseconds.");
                         return [2 /*return*/, data];
                     case 5:
                         error_2 = _a.sent();
@@ -110,9 +109,7 @@ var BasesService = /** @class */ (function () {
                         return [4 /*yield*/, this.basesDAO.search(params.dataareaid, Items)];
                     case 2:
                         data = _a.sent();
-                        console.log(data.length);
                         t1 = new Date().getTime();
-                        console.log("took " + (t1 - t0) / 1000 + " milliseconds.");
                         return [2 /*return*/, data];
                     case 3:
                         error_3 = _a.sent();

@@ -158,23 +158,14 @@ var SyncTableService = /** @class */ (function () {
                         previousItem = _a.sent();
                         _a.label = 3;
                     case 3:
-                        // let condData = await this.syncTableRepository.search({ name: item.name });
                         if (!item.id) {
                             uid = App_1.App.UniqueNumber();
                             item.id = uid;
-                            // item.createdBy = this.sessionInfo.id;
-                            // item.createdOn = new Date(App.DateNow());
-                            // }
                         }
                         else {
                             if (item.updatedOn && previousItem.updatedOn.toISOString() != new Date(item.updatedOn).toISOString()) {
                                 return [2 /*return*/, "updated"];
                             }
-                            // if(oldItem.name != item.name) {
-                            //    if (condData.length > 0) {
-                            //        return "name";
-                            //    }
-                            // }
                         }
                         item.updatedBy = this.sessionInfo.id;
                         item.updatedOn = new Date(App_1.App.DateNow());

@@ -115,7 +115,7 @@ var CashBankReceiptsReport = /** @class */ (function () {
                             .replace(/\..+/, "")),
                             console.log(params.lang);
                         console.log(result);
-                        return [4 /*yield*/, this.rawQuery.getAppLangName("SALES_REPORT")];
+                        return [4 /*yield*/, this.rawQuery.getAppLangName("CASH_RECEIPT")];
                     case 1:
                         title = _a.sent();
                         if (title) {

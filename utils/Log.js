@@ -98,6 +98,8 @@ exports.ulog = log4js_1.getLogger("update");
 exports.ulog.addContext("type", "update");
 exports.hlog = log4js_1.getLogger("health");
 exports.hlog.addContext("type", "health");
+exports.saleslog = log4js_1.getLogger("sales");
+exports.saleslog.addContext("type", "sales");
 // export const log = getLogger();
 // export const slog = getLogger();
 // export const ulog = getLogger();

@@ -195,7 +195,7 @@ var SyncDMLService = /** @class */ (function () {
                         rowsAvalible_1 = null;
                         rowsNotAvalible = null;
                         batchSql = [];
-                        sql = this.buildDMLSelectQuery(sync, offset);
+                        sql = this.buildDMLSelectQuery(sync, offset, currentTime);
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(sourceDb, sql)];
                     case 3:
                         soruceRes = _a.sent();
@@ -369,8 +369,8 @@ var SyncDMLService = /** @class */ (function () {
             });
         });
     };
-    SyncDMLService.prototype.buildDMLSelectQuery = function (sync, offset) {
-        var sql = "select * from " + sync.map_table + " where " + sync.cond + "  \n    and " + sync.sync_column + " > '" + sync.last_update + "' \n    offset " + offset + " limit " + this.limitData;
+    SyncDMLService.prototype.buildDMLSelectQuery = function (sync, offset, currentTime) {
+        var sql = "select * from " + sync.map_table + " where " + sync.cond + "  \n    and " + sync.sync_column + " >= '" + sync.last_update + "' \n    order by " + sync.sync_column + "  \n    offset " + offset + " limit " + this.limitData;
         return sql;
     };
     SyncDMLService.prototype.buildDMLSyncDeleteQuery = function (deleteData) {

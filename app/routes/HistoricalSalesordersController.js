@@ -35,51 +35,53 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var SalesLineDAO_1 = require("../repos/SalesLineDAO");
-var BasesDAO_1 = require("../repos/BasesDAO");
-var SalesLineService = /** @class */ (function () {
-    function SalesLineService() {
-        this.salesLineDAO = new SalesLineDAO_1.SalesLineDAO();
-        this.basesDAO = new BasesDAO_1.BasesDAO();
+var express_1 = require("express");
+var App_1 = require("../../utils/App");
+var Props_1 = require("../../constants/Props");
+var HistoricalSalesordersService_1 = require("../services/HistoricalSalesordersService");
+var HistoricalSalesordersController = /** @class */ (function () {
+    function HistoricalSalesordersController() {
+        this.router = express_1.Router();
+        this.service = new HistoricalSalesordersService_1.HistoricalSalesordersService();
     }
-    SalesLineService.prototype.entity = function (id) {
-        return __awaiter(this, void 0, void 0, function () {
-            var data, error_1;
+    HistoricalSalesordersController.prototype.moduleName = function () {
+        return this.constructor.name;
+    };
+    HistoricalSalesordersController.prototype.getRouter = function () {
+        var _this = this;
+        this.router.put("/", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
+            var reqData, result, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.salesLineDAO.entity(id)];
+                        _a.trys.push([0, 5, , 6]);
+                        reqData = void 0;
+                        result = null;
+                        this.service.sessionInfo = request.body.sessionInfo;
+                        App_1.App.PrintLog(this.moduleName(), "Save", this.service.sessionInfo);
+                        reqData = request.body ? request.body.data : {};
+                        return [4 /*yield*/, App_1.App.ValildateUserAccess(this.service.sessionInfo, this.moduleName(), Props_1.Props.ACCESS_WRITE)];
                     case 1:
-                        data = _a.sent();
-                        return [2 /*return*/, data];
+                        if (!_a.sent()) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.service.get(reqData)];
                     case 2:
+                        result = _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3: throw this.service.sessionInfo ? this.service.sessionInfo : { message: Props_1.Props.TOKEN_MESSAGE };
+                    case 4:
+                        response.send({ status: 1, data: result });
+                        return [3 /*break*/, 6];
+                    case 5:
                         error_1 = _a.sent();
-                        throw error_1;
-                    case 3: return [2 /*return*/];
+                        console.log(error_1);
+                        response.send({ status: 0, error: error_1 });
+                        return [3 /*break*/, 6];
+                    case 6: return [2 /*return*/];
                 }
             });
-        });
+        }); });
+        return this.router;
     };
-    SalesLineService.prototype.search = function (item) {
-        return __awaiter(this, void 0, void 0, function () {
-            var data, error_2;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.salesLineDAO.mobilesearch(item)];
-                    case 1:
-                        data = _a.sent();
-                        return [2 /*return*/, data];
-                    case 2:
-                        error_2 = _a.sent();
-                        throw error_2;
-                    case 3: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    return SalesLineService;
+    return HistoricalSalesordersController;
 }());
-exports.SalesLineService = SalesLineService;
+exports.HistoricalSalesordersController = HistoricalSalesordersController;

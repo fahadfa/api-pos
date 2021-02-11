@@ -97,7 +97,7 @@ var CustTransMasterDAO = /** @class */ (function () {
                     case 1:
                         creditLimit = _a.sent();
                         creditLimit = creditLimit.length > 0 ? creditLimit[0].creditLimit : null;
-                        return [4 /*yield*/, this.db.query("select\n            ct.accountnum,\n            sum(invoiceamount) as \"usedCredit\"\n            from cust_trans_master ct \n            where ct.accountnum in ('" + account + "')\n            group by ct.accountnum")];
+                        return [4 /*yield*/, this.db.query("select\n            ct.accountnum,\n            sum(amountmst) as \"usedCredit\"\n            from cust_trans ct \n            where ct.accountnum in ('" + account + "')\n            group by ct.accountnum")];
                     case 2:
                         custData = _a.sent();
                         custData = custData.length > 0 ? custData[0] : {};

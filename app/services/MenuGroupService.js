@@ -220,29 +220,11 @@ var MenuGroupService = /** @class */ (function () {
                         previousItem = _a.sent();
                         _a.label = 3;
                     case 3:
-                        // let condData = await this.menuGroupRepository.search({ name: item.name });
                         if (!item.id) {
-                            // if (condData.length > 0) {
-                            //     return "name";
-                            // } else {
-                            //let uid = App.UniqueNumber();
-                            //item.id = uid;
-                            // item.createdBy = this.sessionInfo.id;
-                            // item.createdOn = new Date(App.DateNow());
-                            // }
                         }
                         else {
-                            // if (item.updatedOn && previousItem.updatedOn.toISOString() != new Date(item.updatedOn).toISOString()) {
-                            //     return "updated";
-                            // }
-                            // if(oldItem.name != item.name) {
-                            //    if (condData.length > 0) {
-                            //        return "name";
-                            //    }
-                            // }
                         }
                         item.updatedBy = this.sessionInfo.id;
-                        //item.updatedOn = new Date(App.DateNow());
                         return [2 /*return*/, true];
                 }
             });

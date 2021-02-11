@@ -50,6 +50,7 @@ var InventtransService_1 = require("../services/InventtransService");
 var InventTransDAO_1 = require("../repos/InventTransDAO");
 var Watcher_1 = require("../../utils/Watcher");
 var typeorm_2 = require("typeorm");
+var Log_1 = require("../../utils/Log");
 var ENV_STORE_ID = process.env ? process.env.ENV_STORE_ID : null;
 var WorkflowService = /** @class */ (function () {
     function WorkflowService() {
@@ -279,7 +280,6 @@ var WorkflowService = /** @class */ (function () {
                         // console.log(item.statusId);
                         if (status_1 == "accept" || status_1 == null) {
                             if (salesData.transkind == "RETURNORDER") {
-                                console.log("================11111");
                                 if (salesData.reservation > parseInt(condition.returnOrderDays) &&
                                     item.statusId != "PENDINGCOORDINATORAPPROVAL") {
                                     item.statusId = "PENDINGCOORDINATORAPPROVAL";
@@ -295,6 +295,7 @@ var WorkflowService = /** @class */ (function () {
                                     if (RM_AND_RA.ra) {
                                         // console.log(RM_AND_RA);
                                         if (condition.raApprovalRequired) {
+                                            item.statusId = "PENDINGRAAPPROVAL";
                                             item.pendingWith = RM_AND_RA.ra;
                                         }
                                         else {
@@ -327,17 +328,17 @@ var WorkflowService = /** @class */ (function () {
                                     console.log(item.statusId);
                                 }
                                 else if (item.statusId == "PENDINGRAAPPROVAL" || item.statusId == "APPROVEDBYRM") {
-                                    console.log("====================================");
-                                    item.statusId = "APPROVEDBYRA";
+                                    console.log("================PENDINGRAAPPROVAL====================");
+                                    item.statusId = "APPROVED";
                                     item.pendingWith = null;
                                 }
                                 else if (item.statusId == "PENDINGINGFORDESIGNERAPPROVAL") {
                                     if (condition.rmApprovalRequired) {
-                                        item.statusId = "APPROVEDBYDESIGNER";
+                                        item.statusId = "PENDINGRMAPPROVAL";
                                         item.pendingWith = RM_AND_RA.rm;
                                     }
-                                    else if (condition.rmApprovalRequired) {
-                                        item.statusId = "APPROVEDBYRA";
+                                    else if (condition.raApprovalRequired) {
+                                        item.statusId = "PENDINGRAAPPROVAL";
                                         item.pendingWith = RM_AND_RA.ra;
                                     }
                                     else {
@@ -350,24 +351,26 @@ var WorkflowService = /** @class */ (function () {
                                 if (item.statusId == "PENDINGRMAPPROVAL" || item.statusId == "APPROVEDBYDESIGNER") {
                                     item.statusId = "APPROVEDBYRM";
                                     if (RM_AND_RA.ra) {
+                                        item.statusId = "PENDINGRAAPPROVAL";
                                         item.pendingWith = RM_AND_RA.ra;
                                     }
                                     else {
                                         item.pendingWith = null;
                                         item.statusId = "APPROVED";
                                     }
+                                    console.log("============11111111111111=========================", item);
                                 }
                                 else if (item.statusId == "PENDINGRAAPPROVAL" || item.statusId == "APPROVEDBYRM") {
-                                    item.statusId = "APPROVEDBYRA";
+                                    item.statusId = "APPROVED";
                                     item.pendingWith = null;
                                 }
                                 else if (item.statusId == "PENDINGINGFORDESIGNERAPPROVAL") {
                                     if (RM_AND_RA.rm) {
-                                        item.statusId = "APPROVEDBYDESIGNER";
+                                        item.statusId = "PENDINGRMAPPROVAL";
                                         item.pendingWith = RM_AND_RA.rm;
                                     }
                                     else if (RM_AND_RA.ra) {
-                                        item.statusId = "APPROVEDBYRA";
+                                        item.statusId = "PENDINGRAAPPROVAL";
                                         item.pendingWith = RM_AND_RA.ra;
                                     }
                                     else {
@@ -375,6 +378,7 @@ var WorkflowService = /** @class */ (function () {
                                         item.pendingWith = null;
                                     }
                                 }
+                                // console.log("============accept last=========================", item)
                             }
                         }
                         else if (status_1 == "reject") {
@@ -430,6 +434,7 @@ var WorkflowService = /** @class */ (function () {
                     case 30:
                         // let salesTableData: any = await this.salesTableDAO.save(salesData);
                         _a.sent();
+                        console.log("INVENTLOCATION================>", item.inventLocationId);
                         return [2 /*return*/, { id: item.id, status: item.statusId, message: "SAVED_SUCCESSFULLY" }];
                     case 31:
                         if (cond == "ALREADY_MODIFIED") {
@@ -499,7 +504,9 @@ var WorkflowService = /** @class */ (function () {
                         uid = _a.sent();
                         item.id = uid;
                         _a.label = 4;
-                    case 4: return [2 /*return*/, true];
+                    case 4:
+                        console.log("====================valid================", item);
+                        return [2 /*return*/, true];
                 }
             });
         });
@@ -652,10 +659,11 @@ var WorkflowService = /** @class */ (function () {
     };
     WorkflowService.prototype.workflowUpdate = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var transkind, salesData, reqData, date, inventtransQuery, salesSaveData, offlineSystems, salesData, reqData, date, inventtransQuery, salesSaveData, salesSaveData;
+            var transkind, salesData, reqData, date, inventtransQuery, salesSaveData, offlineSystems, salesData, reqData, date, inventtransQuery, salesSaveData, salesSaveData, e_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        _a.trys.push([0, 18, , 19]);
                         transkind = ["SALESORDER", "INVENTORYMOVEMENT", "RETURNORDER"];
                         if (!(data && data.statusid.includes("REJECTED"))) return [3 /*break*/, 13];
                         if (!(process.env.ENV_STORE_ID && data.inventlocationid == process.env.ENV_STORE_ID)) return [3 /*break*/, 5];
@@ -741,7 +749,91 @@ var WorkflowService = /** @class */ (function () {
                     case 14:
                         _a.sent();
                         _a.label = 15;
-                    case 15: return [2 /*return*/];
+                    case 15:
+                        if (!!process.env.ENV_STORE_ID) return [3 /*break*/, 17];
+                        console.log("--------workflow at mail caliing------------>");
+                        return [4 /*yield*/, this.sendEmailsToGroup(data)];
+                    case 16:
+                        _a.sent();
+                        _a.label = 17;
+                    case 17: return [3 /*break*/, 19];
+                    case 18:
+                        e_1 = _a.sent();
+                        Log_1.log.error(e_1);
+                        return [3 /*break*/, 19];
+                    case 19: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    WorkflowService.prototype.sendEmailsToGroup = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var emails, status_2, nextstatus, _a, promises_1, emails, status_3, nextstatus, _b, promises_2, e_2;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        _c.trys.push([0, 15, , 16]);
+                        if (!data.pendingwith) return [3 /*break*/, 7];
+                        return [4 /*yield*/, this.rawQuery.getUserswithGroupid(data.pendingwith)];
+                    case 1:
+                        emails = _c.sent();
+                        console.log(data.statusid, data.statusid);
+                        return [4 /*yield*/, this.rawQuery.getAppLangName(data.statusid)];
+                    case 2:
+                        status_2 = _c.sent();
+                        if (!data.statusid) return [3 /*break*/, 4];
+                        return [4 /*yield*/, this.rawQuery.getAppLangName(data.statusid)];
+                    case 3:
+                        _a = _c.sent();
+                        return [3 /*break*/, 5];
+                    case 4:
+                        _a = null;
+                        _c.label = 5;
+                    case 5:
+                        nextstatus = _a;
+                        console.log(status_2, nextstatus);
+                        data.status = nextstatus ? status_2.en : status_2.en;
+                        console.log(data.status);
+                        promises_1 = [];
+                        emails.forEach(function (mailobj) {
+                            promises_1.push(App_1.App.SendMail(mailobj.email, data.status + " : " + data.id, "workflowstatusemail", data));
+                        });
+                        console.log("promises", promises_1);
+                        return [4 /*yield*/, Promise.all(promises_1)];
+                    case 6: return [2 /*return*/, _c.sent()];
+                    case 7: return [4 /*yield*/, this.rawQuery.getUserswithInventLocation(data.inventlocationid)];
+                    case 8:
+                        emails = _c.sent();
+                        console.log(data.statusid, data.statusid);
+                        return [4 /*yield*/, this.rawQuery.getAppLangName(data.statusid)];
+                    case 9:
+                        status_3 = _c.sent();
+                        if (!data.statusid) return [3 /*break*/, 11];
+                        return [4 /*yield*/, this.rawQuery.getAppLangName(data.statusid)];
+                    case 10:
+                        _b = _c.sent();
+                        return [3 /*break*/, 12];
+                    case 11:
+                        _b = null;
+                        _c.label = 12;
+                    case 12:
+                        nextstatus = _b;
+                        console.log(status_3, nextstatus);
+                        data.status = nextstatus ? status_3.en : status_3.en;
+                        console.log(data.status);
+                        promises_2 = [];
+                        emails.forEach(function (mailobj) {
+                            promises_2.push(App_1.App.SendMail(mailobj.email, data.status + " : " + data.id, "workflowstatusemail", data));
+                        });
+                        console.log("promises", promises_2);
+                        return [4 /*yield*/, Promise.all(promises_2)];
+                    case 13: return [2 /*return*/, _c.sent()];
+                    case 14: return [3 /*break*/, 16];
+                    case 15:
+                        e_2 = _c.sent();
+                        Log_1.log.error(e_2);
+                        return [3 /*break*/, 16];
+                    case 16: return [2 /*return*/];
                 }
             });
         });

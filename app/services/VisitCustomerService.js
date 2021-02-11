@@ -197,7 +197,6 @@ var VisitCustomerService = /** @class */ (function () {
                         year = new Date().getFullYear().toString().substr(2, 2);
                         data.nextrec = prevYear == year ? data.nextrec : 1;
                         visitCustNum = data.format.replace(hashString, item.regionNumber + "-" + this.visitCustomer.showroomId + "-" + year + "-" + data.nextrec);
-                        // let visitCustNum: string = data.format.substr(0, 3) + item.regionNumber + "-" + this.visitCustomer.showroomId + "-" + year + "-" + data.nextrec;
                         console.log(visitCustNum);
                         return [4 /*yield*/, this.rawQuery.updateNumberSequence("VST_NUMBER", data.nextrec)];
                     case 3:
@@ -245,9 +244,6 @@ var VisitCustomerService = /** @class */ (function () {
                         _b.label = 7;
                     case 7:
                         item.lastModifiedDate = new Date(App_1.App.DateNow());
-                        // console.log("iso", App.dateNow());
-                        // console.log("normal", new Date());
-                        // console.log("iso converted", new Date(App.DateNow()));
                         return [2 /*return*/, true];
                 }
             });

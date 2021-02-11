@@ -110,7 +110,7 @@ var SalesOrderReport = /** @class */ (function () {
                         salesLine = _a.sent();
                         list_1 = [];
                         j = 0;
-                        return [4 /*yield*/, this.chunkArray(salesLine, 10)];
+                        return [4 /*yield*/, this.chunkArray(salesLine, 8)];
                     case 5:
                         chunkArray = _a.sent();
                         console.log(chunkArray);
@@ -161,7 +161,7 @@ var SalesOrderReport = /** @class */ (function () {
                                     paymentType: data_1.paymentType,
                                     shippedDate: data_1.lastmodifieddate.split(",")[0],
                                     paymentMode: data_1.paymentType == "ONLINE" ? "Online" : data_1.paymentMode,
-                                    paymentModeAr: data_1.paymentType == "ONLINE" ? "عبر الانترنت" : data_1.paymentMode,
+                                    paymentModeAr: data_1.paymentType == "ONLINE" ? "عبر الانترنت" : data_1.paymentModeAr,
                                     cashAmount: data_1.cashAmount,
                                     cardAmount: data_1.cardAmount,
                                     designServiceRedeemAmount: data_1.designServiceRedeemAmount,
@@ -213,7 +213,7 @@ var SalesOrderReport = /** @class */ (function () {
             var renderData, file;
             return __generator(this, function (_a) {
                 renderData = result;
-                console.log("data:----------", renderData);
+                console.log("data:----------", renderData.salesLine);
                 file = params.lang == "en" ? "test-so-en" : "test-so-ar";
                 try {
                     return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];

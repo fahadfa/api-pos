@@ -154,17 +154,8 @@ var PhoneVerificationService = /** @class */ (function () {
                         previousItem = _a.sent();
                         _a.label = 3;
                     case 3:
-                        // let condData = await this.menuRepository.search({ name: item.name });
                         if (!item.id) {
                             item.createdDateTime = new Date(App_1.App.DateNow());
-                            // if (condData.length > 0) {
-                            //     return "name";
-                            // } else {
-                            // let uid = App.UniqueCode();
-                            // item.id = uid;
-                            // item.createdBy = this.sessionInfo.id;
-                            // item.createdOn = new Date(App.DateNow());
-                            // }
                         }
                         else {
                             if (item.lastModifiedDate &&

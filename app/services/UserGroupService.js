@@ -74,7 +74,6 @@ var UserGroupService = /** @class */ (function () {
                         data.Custgroup = {};
                         _a.label = 3;
                     case 3:
-                        // let count = this.rawQuery.customers_count();
                         console.log(data);
                         if (data) {
                             data.permissiondata = JSON.parse(data.permissiondata);
@@ -190,7 +189,6 @@ var UserGroupService = /** @class */ (function () {
                         return [2 /*return*/, "groupname"];
                     case 6:
                         item.groupid = uuid();
-                        // item.permissiondata = item.role == "ROLE_ADMIN" ? Props.GROUP_ADMIN_PERMISSIONS : Props.GROUP_NORMAL_PERMISSIONS;
                         item.deleted = false;
                         item.createddatetime = new Date(App_1.App.DateNow());
                         item.createdby = this.sessionInfo.userName;

@@ -258,8 +258,8 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                                         }
                                         else {
                                             line.COLORANTPRICE = 0;
+                                            line.INVENTTRANSID = "";
                                         }
-                                        line.INVENTTRANSID = line.INVENTTRANSID ? line.INVENTTRANSID : "";
                                         line.link_id = line.RECID;
                                         line.applied_discounts = [];
                                         line.is_parent = false;
@@ -274,7 +274,7 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                                             line.applied_discounts.push({
                                                 discountType: "VOUCHER_DISCOUNT",
                                                 percentage: (parseFloat(line.VoucherDisc) * 100) / parseFloat(line.LINEAMOUNT),
-                                                discountAmount: parseFloat(line.InteriorExteriorAmount),
+                                                discountAmount: parseFloat(line.VoucherDisc),
                                             });
                                         }
                                         if (line.CUSTOMDISCAMT && line.CUSTOMDISCAMT > 0) {

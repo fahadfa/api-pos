@@ -127,9 +127,6 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         salesData.lastModifiedDate = new Date(App_1.App.DateNow());
                         salesData.createddatetime = new Date(App_1.App.DateNow());
                         salesData.salesType = 4;
-                        // await this.salesTableDAO.save(salesData);
-                        // let salesLines = await this.salesLineDAO.findAll({ salesId: salesData.salesId });
-                        // await this.salesLineDAO.delete(salesLines);
                         salesData.salesLines = [];
                         i = 1;
                         for (_i = 0, _a = data.orderLines; _i < _a.length; _i++) {
@@ -146,8 +143,6 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                             salesLine.inventLocationId = data.invent_location_id_to;
                             salesLine.batchNo = v.batch_no;
                             salesLine.custAccount = data.invent_location_id_from;
-                            // salesLine.colors = await this.colorsDAO.findOne({ code: v.config_id });
-                            // salesLine.baseSizes = await this.baseSizeDAO.findOneforaxaptadata({ base: { code: v.item_id }, sizes: { code: v.invent_size_id } });
                             salesLine.lastModifiedDate = new Date(App_1.App.DateNow());
                             salesLine.createddatetime = new Date(App_1.App.DateNow());
                             batches = {};
@@ -164,7 +159,6 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                             batches.transactionClosed = false;
                             batches.dateinvent = new Date(App_1.App.DateNow());
                             salesLine.batches = batches;
-                            // await this.updateInventoryService.updateInventtransTable(batches);
                             salesData.salesLines.push(salesLine);
                             i += 1;
                             // }
@@ -173,9 +167,8 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                     case 2:
                         _b.sent();
                         salesData.status = 1;
-                        // return { message: Props.SAVED_SUCCESSFULLY };
                         return [2 /*return*/, salesData];
-                    case 3: throw { status: 1, message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
+                    case 3: throw { status: 0, message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
                     case 4: return [3 /*break*/, 6];
                     case 5:
                         error_2 = _b.sent();
@@ -244,7 +237,6 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         data.nextrec = salesData.nextrec;
                         salesLines = data.salesLines;
                         delete salesData.salesLines;
-                        // await this.salesTableDAO.save(salesData);
                         salesData.linesCount = salesLines.length;
                         return [4 /*yield*/, queryRunner.manager.getRepository(SalesTable_1.SalesTable).save(salesData)];
                     case 11:
@@ -263,14 +255,11 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                             },
                         ];
                         batches = item.batches;
-                        console.log("==========================================================", batches);
                         batches.invoiceid = salesData.salesId;
                         batches.salesLineId = item.id;
                         batches.transactionClosed = false;
-                        // await this.salesLineDAO.save(item);
                         return [4 /*yield*/, queryRunner.manager.getRepository(SalesLine_1.SalesLine).save(item)];
                     case 13:
-                        // await this.salesLineDAO.save(item);
                         _a.sent();
                         return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batches, false, false, queryRunner)];
                     case 14:
@@ -389,8 +378,6 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         if (!(data && data.format)) return [3 /*break*/, 30];
                         hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);
                         date = new Date(data.lastmodifieddate).toLocaleString();
-                        console.log(date);
-                        console.log(data);
                         prevYear = new Date(data.lastmodifieddate).getFullYear().toString().substr(2, 2);
                         year = new Date(App_1.App.DateNow()).getFullYear().toString().substr(2, 2);
                         data.nextrec = prevYear == year ? data.nextrec : "000001";
@@ -398,7 +385,6 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                             data.nextrec = "000001";
                         }
                         salesId = data.format.replace(hashString, year) + "-" + data.nextrec;
-                        //console.log(salesId);
                         item.numberSequenceGroup = data.numbersequence;
                         item.isInsert = true;
                         return [4 /*yield*/, this.rawQuery.updateNumberSequence(data.numbersequence, data.nextrec)];
@@ -571,9 +557,9 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                                 return 0;
                             });
                             salesData = __assign({}, dataList[0]);
-                            console.log("====================Get Qr code console=======================");
-                            console.log(salesData);
-                            console.log("----------------------------------------------------------");
+                            // log.info("====================Get Qr code console=======================");
+                            // log.info(salesData);
+                            // log.info("----------------------------------------------------------");
                             delete salesData.salesLine;
                             salesLine_1 = [];
                             dataList.map(function (v) {

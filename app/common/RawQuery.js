@@ -41,6 +41,25 @@ var RawQuery = /** @class */ (function () {
     function RawQuery() {
         this.db = typeorm_1.getManager();
     }
+    RawQuery.ConstData = function (code) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, typeorm_1.getManager().query("select data from app_const_data where code='" + code + "' ")];
+                    case 1:
+                        data = _a.sent();
+                        if (data && data[0] && data[0].data) {
+                            return [2 /*return*/, data[0].data];
+                        }
+                        else {
+                            return [2 /*return*/, data];
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     RawQuery.prototype.getCustomerOverDue = function (accountNum) {
         return __awaiter(this, void 0, void 0, function () {
             var query;
@@ -407,7 +426,7 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "\n    select transrefid, itemid, sum(qty) as quantity, configid as \"configId\", inventsizeid, batchno from inventtrans \n    where transrefid = '" + data + "'\n    group by itemid, configid, inventsizeid, batchno, transrefid\n    ";
+                        query = "\n    select transrefid, itemid, sum(qty) as quantity, configid as \"configId\", inventsizeid, batchno from inventtrans \n    where transrefid = '" + data + "' and reserve_status !='REJECTED'\n    group by itemid, configid, inventsizeid, batchno, transrefid\n    ";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
@@ -652,7 +671,7 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "\n            select amount as price, tinventsizeid as inventsizeid, configid, itemrelation as itemid, accountrelation as accountrelation\n            from pricedisctable \n            where relation = 4 and (itemcode = 0) and (accountcode = 1 or accountcode = 0) \n            and currency = '" + data.currency + "' and \n            lower(itemrelation) = lower('" + data.itemid + "') and (lower(configid)=lower('" + data.configid + "')) and \n            (lower(accountrelation) = lower('" + data.pricegroup + "') or lower(accountrelation) = lower('" + data.custaccount + "') \n            ) and lower(tinventsizeid) in (" + data.inventsizeids + ")\n            ";
+                        query = "\n            select amount as price, tinventsizeid as inventsizeid, configid, itemrelation as itemid, accountrelation as accountrelation\n            from pricedisctable \n            where relation = 4 and (itemcode = 0) and accountcode in (1,0) \n            and currency = '" + data.currency + "' and \n            lower(itemrelation) = lower('" + data.itemid + "') and (lower(configid)=lower('" + data.configid + "')) and \n            lower(accountrelation) IN (lower('" + data.pricegroup + "'), lower('" + data.custaccount + "') \n            ) and lower(tinventsizeid) in (" + data.inventsizeids + ")\n            ";
                         console.log(query);
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
@@ -1320,10 +1339,11 @@ var RawQuery = /** @class */ (function () {
     };
     RawQuery.CheckUserInfo = function (userInfo) {
         return __awaiter(this, void 0, void 0, function () {
-            var data;
+            var data, e_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        _a.trys.push([0, 3, , 4]);
                         if (!userInfo) return [3 /*break*/, 2];
                         return [4 /*yield*/, typeorm_1.getManager().query("select groupid, status from user_info where user_name='" + userInfo.userName + "'")];
                     case 1:
@@ -1353,6 +1373,11 @@ var RawQuery = /** @class */ (function () {
                         }
                         _a.label = 2;
                     case 2: return [2 /*return*/, true];
+                    case 3:
+                        e_2 = _a.sent();
+                        console.log(e_2);
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -1611,6 +1636,46 @@ var RawQuery = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         return [2 /*return*/, data.length > 0 ? data[0] : null];
+                }
+            });
+        });
+    };
+    RawQuery.prototype.getUserswithGroupid = function (groupid) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data, err_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        query = "select distinct ui.email from usergroupconfig ugc \n      left join user_info ui on ui.groupid = ugc.usergroupid\n      where \n      ugc.usergroupid ='" + groupid + "' and\n      ui.status ILIKE '%active%'\n      group by ui.email;";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, data];
+                    case 2:
+                        err_2 = _a.sent();
+                        return [2 /*return*/, Promise.resolve([])];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    RawQuery.prototype.getUserswithInventLocation = function (inventlocation) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, data, err_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        query = "select distinct ui.email from usergroupconfig ugc \n      left join user_info ui on ui.groupid = ugc.usergroupid\n      where \n      ugc.inventlocationid ='" + inventlocation + "' and\n      ui.status ILIKE '%active%'\n      group by ui.email;";
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, data];
+                    case 2:
+                        err_3 = _a.sent();
+                        return [2 /*return*/, Promise.resolve([])];
+                    case 3: return [2 /*return*/];
                 }
             });
         });

@@ -16,12 +16,12 @@
     }
 
     table {
-      page-break-inside: auto;
+      /* page-break-inside: auto; */
     }
 
     tr {
       page-break-inside: avoid;
-      page-break-after: always;
+      /* page-break-after: always; */
       border-bottom: 1px dotted #8a8989;
       padding: 1px;
     }
@@ -69,10 +69,15 @@
     }
 
     #headertbl {
-      width: 100%;
+      /* width: 100%;
       margin-top: 80px;
       margin-bottom: 20px;
-      /* padding-top: 100px; */
+      padding-top: 100px; */
+      width: 100%;
+      margin-bottom: 40px;
+      padding-top: 40px;
+      position: relative;
+      top: 40px;
     }
 
     .tdleft {
@@ -93,7 +98,7 @@
     }
 
     table.dash {
-      border: 1px dashed #cccccc;
+      /* border: 1px dashed #cccccc; */
       border-collapse: collapse;
     }
 
@@ -152,9 +157,9 @@
     @media print {
       #headertbl {
         width: 100%;
-        margin-top: 0px;
+        /* margin-top: 0px;
         margin-bottom: 20px;
-        padding-top: 100px;
+        padding-top: 100px; */
       }
 
       /* table.dash {
@@ -178,7 +183,7 @@
   </style>
 
   <body>
-    <section style="page-break-before: always">
+    <section>
       <div id="bg__watermark">
         <p id="bg__text__watermark">فقط للاختبار</p>
       </div>
@@ -402,7 +407,7 @@
         </tr>
       </table>
 
-      <table class="dash" width="100%" cellpadding="0" cellspacing="0">
+      <table class="dash" width="100%" cellpadding="0" cellspacing="0" style="position: relative; top: 2px">
         <thead>
           <tr>
             <th class="th">الرقم</th>
@@ -478,7 +483,15 @@
           {{/each}}
         </tbody>
       </table>
-      <table id="gtotal" class="textbold" align="left" width="100%" cellpadding="0" cellspacing="0">
+      <table
+        id="gtotal"
+        class="textbold"
+        align="left"
+        width="100%"
+        cellpadding="0"
+        cellspacing="0"
+        style="position: relative; top: 0px; font-size: 13px !important"
+      >
         <tr class="tdright">
           <td class="tdcenter" colspan="2">طلب المبيعات</td>
           <td class="tdleft" colspan="1">المجموع الكلي</td>
@@ -487,7 +500,7 @@
         </tr>
         <tr class="tdright">
           <!-- <td rowspan="4">&nbsp;</td> -->
-          <td class="tdright">مبلغ نقدي</td>
+          <td class="tdright">{{this.paymentModeAr}} نقدي</td>
           <td class="tdright">{{ this.cashAmount}}</td>
           <td class="tdcenter borderNone"></td>
           <td class="tdleft borderLeftNone">رسوم الشحن</td>
@@ -522,7 +535,7 @@
         {{/if}}
       </table>
 
-      <table width="100%" style="background: #fff">
+      <table width="100%" style="background: #fff; padding-top: 30px; position: fixed; bottom: 120px">
         <tr>
           <td style="width: 33%; font-size: 15px; text-align: right">المستلم</td>
           <td style="width: 33%; font-size: 15px; text-align: center">البائع</td>
@@ -832,7 +845,7 @@
         </tr>
         <tr class="tdright">
           <!-- <td rowspan="4">&nbsp;</td> -->
-          <td class="tdright">مبلغ نقدي</td>
+          <td class="tdright">{{this.paymentModeAr}} نقدي</td>
           <td class="tdright">{{ this.cashAmount}}</td>
           <td class="tdcenter borderNone"></td>
           <td class="tdleft borderLeftNone">رسوم الشحن</td>
@@ -867,7 +880,7 @@
         {{/if}}
       </table>
 
-      <table width="100%" style="background: #fff">
+      <table width="100%" style="background: #fff; padding-top: 30px; position: fixed; bottom: 120px">
         <tr>
           <td style="width: 33%; font-size: 15px; text-align: right">المستلم</td>
           <td style="width: 33%; font-size: 15px; text-align: center">البائع</td>

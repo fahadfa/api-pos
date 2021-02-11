@@ -80,10 +80,12 @@ var SalesOrdersReport = /** @class */ (function () {
                             redeemAmount: 0,
                         };
                         data.map(function (v) {
-                            resData_1.grossAmount += parseFloat(v.grossAmount);
-                            resData_1.discount += parseFloat(v.discount);
-                            resData_1.vatAmount += parseFloat(v.vatAmount);
-                            resData_1.netAmount += parseFloat(v.netAmount);
+                            if (["POSTED", "PAID", "PRINTED"].includes(v.status)) {
+                                resData_1.grossAmount += parseFloat(v.grossAmount);
+                                resData_1.discount += parseFloat(v.discount);
+                                resData_1.vatAmount += parseFloat(v.vatAmount);
+                                resData_1.netAmount += parseFloat(v.netAmount);
+                            }
                         });
                         resData_1.grossAmount = resData_1.grossAmount.toFixed(2);
                         resData_1.discount = resData_1.discount.toFixed(2);

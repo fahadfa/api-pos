@@ -68,7 +68,6 @@ var UsesrInfoService = /** @class */ (function () {
                         data.Custgroup = {};
                         _a.label = 3;
                     case 3:
-                        // let count = this.rawQuery.customers_count();
                         console.log(data);
                         if (data) {
                             return [2 /*return*/, data];
@@ -267,24 +266,8 @@ var UsesrInfoService = /** @class */ (function () {
                         return [4 /*yield*/, this.userinfoDAO.entity(id)];
                     case 1:
                         user = _a.sent();
-                        // if (user) {
-                        //     user.deleted = true;
-                        // } else {
-                        //     user = await this.userinfoDAO.findOne({ id: id });
-                        //     user.deleted = true;
-                        // }
-                        // user.deletedby = this.sessionInfo.userName;
-                        // user.deleteddatetime = new Date();
                         return [4 /*yield*/, this.userinfoDAO.delete(user)];
                     case 2:
-                        // if (user) {
-                        //     user.deleted = true;
-                        // } else {
-                        //     user = await this.userinfoDAO.findOne({ id: id });
-                        //     user.deleted = true;
-                        // }
-                        // user.deletedby = this.sessionInfo.userName;
-                        // user.deleteddatetime = new Date();
                         _a.sent();
                         return [2 /*return*/, { id: user.id, message: Props_1.Props.REMOVED_SUCCESSFULLY }];
                     case 3:

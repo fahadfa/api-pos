@@ -69,8 +69,6 @@ var UsergroupConfigService = /** @class */ (function () {
                         data ? (data.Custgroup = {}) : (data = {});
                         _a.label = 3;
                     case 3:
-                        // let count = this.rawQuery.customers_count();
-                        console.log(data);
                         if (data) {
                             return [2 /*return*/, data];
                         }
@@ -171,7 +169,6 @@ var UsergroupConfigService = /** @class */ (function () {
                         return [4 /*yield*/, Promise.all(promiseList)];
                     case 2:
                         _a.sent();
-                        console.log("======================================");
                         return [4 /*yield*/, this.rawQuery.updateSynctable(reqData.inventlocationid)];
                     case 3:
                         _a.sent();
@@ -243,7 +240,6 @@ var UsergroupConfigService = /** @class */ (function () {
                             }
                         }
                         else {
-                            // console.log(item.accountnum);
                             if (item.id != previousData.id) {
                                 if (mdata.length > 0) {
                                     return [2 /*return*/, "groupname"];

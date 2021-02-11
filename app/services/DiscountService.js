@@ -225,9 +225,6 @@ var DiscountService = /** @class */ (function () {
                             reqData.selectedItems.forEach(function (element) {
                                 var linePercentage = linePercentageData.find(function (v) { return v.itemrelation == element.itemid || v.itemrelation == discounts[0].linedisc; });
                                 linePercentage = linePercentage ? linePercentage.percent1 : 0;
-                                // if (linePercentage > 0) {
-                                //   reqData.instantDiscGrossTotal -= parseFloat(element.price) * parseFloat(element.quantity);
-                                // }
                             });
                         }
                         return [4 /*yield*/, this.rawQuery.getMultiDiscRanges(discounts[0].multilinedisc, reqData.currency, this.sessionInfo.dataareaid)];
@@ -289,7 +286,6 @@ var DiscountService = /** @class */ (function () {
                         vouchers = _b.sent();
                         if (!vouchers) return [3 /*break*/, 11];
                         if (vouchers.voucherRules) {
-                            // console.log("========", vouchers.voucherRules);
                             voucherType = vouchers.voucherRules.discountType;
                             voucherAmount = parseFloat(vouchers.voucherRules.discountAmount);
                         }
@@ -364,7 +360,12 @@ var DiscountService = /** @class */ (function () {
                                     case 0:
                                         isLineDiscount = discounts[0].linedisc && discounts[0].linedisc != "" ? true : false;
                                         linedisc = checkDiscounts.find(function (v) { return v.itemid == item.itemid; });
-                                        linePercentage = linePercentageData.find(function (v) { return v.itemrelation == item.itemid || v.itemrelation == linedisc.linedisc; });
+                                        if (linedisc) {
+                                        }
+                                        linePercentage = void 0;
+                                        if (linedisc) {
+                                            linePercentage = linePercentageData.find(function (v) { return v.itemrelation == item.itemid || v.itemrelation == linedisc.linedisc; });
+                                        }
                                         linePercentage = linePercentage ? linePercentage.percent1 : 0;
                                         if (isLineDiscount && linePercentage <= 0) {
                                             isLineDiscount = false;
@@ -405,7 +406,12 @@ var DiscountService = /** @class */ (function () {
                                         }
                                         condition = "!item.isItemFree";
                                         condition = eval(condition);
-                                        item.lineTotalDisc = item.lineTotalDisc ? item.lineTotalDisc : 0;
+                                        if (item.isDiscApplied) {
+                                            item.lineTotalDisc = item.lineTotalDisc ? item.lineTotalDisc : 0;
+                                        }
+                                        else {
+                                            item.lineTotalDisc = 0;
+                                        }
                                         if (!condition) return [3 /*break*/, 41];
                                         appliedDiscounts = [];
                                         freeQty = 0;
@@ -416,7 +422,6 @@ var DiscountService = /** @class */ (function () {
                                         isPromotionDiscount = false;
                                         isBuyOneGetOneDiscount = false;
                                         buyOneGetOneDiscountDetails = void 0;
-                                        // if ((!reqData.voucherDiscountChecked || isValidVoucherItem == false) && !reqData.instantDiscountChecked) {
                                         promotionalDiscountDetails = promotionalDiscountDetails.length > 0 ? promotionalDiscountDetails[0] : null;
                                         console.log(promotionalDiscountDetails);
                                         if (promotionalDiscountDetails &&
@@ -571,6 +576,7 @@ var DiscountService = /** @class */ (function () {
                                                 },
                                             ],
                                         });
+                                        reqData.selectedItems[i].isDiscApplied = true;
                                         reqData.selectedItems[i].lineamountafterdiscount = parseFloat(reqData.selectedItems[i].priceAfterdiscount);
                                         reqData.selectedItems[i].vat = reqData.vat;
                                         reqData.selectedItems[i].vatamount =
@@ -596,15 +602,6 @@ var DiscountService = /** @class */ (function () {
                                         _g.label = 19;
                                     case 19:
                                         if (!!isNoDiscount) return [3 /*break*/, 40];
-                                        // if (isValidVoucher) {
-                                        //   if (vouchers) {
-                                        //     if (vouchers.voucher_type == "ALL_ITEMS") {
-                                        //       isValidVoucher = true;
-                                        //     } else {
-                                        //       isValidVoucher = voucherDiscountedItems.includes(item.itemid);
-                                        //     }
-                                        //   }
-                                        // }
                                         if (isInstantDiscount && !isNoDiscount && !isPromotionDiscount && !isBuyOneGetOneDiscount) {
                                             if (instantDiscountExcludeItems.includes(item.itemid) ||
                                                 instantDiscountExcludeItems.includes(item.product.itemGroupId || item.product.intExt != 4)) {
@@ -616,11 +613,9 @@ var DiscountService = /** @class */ (function () {
                                         }
                                         if (!isValidVoucherItem) return [3 /*break*/, 21];
                                         isVoucherApplied = true;
-                                        //parseFloat(item.price) * item.quantity * (parseFloat(voucher.discount_percent) / 100)
                                         if (voucherType == "amount") {
                                             vouchers.voucherAmount = voucherAmount;
                                             vouchers.voucherType = voucherType;
-                                            // console.log(vouchers);
                                         }
                                         return [4 /*yield*/, this_1.calVoucherDiscount(item, reqData, vouchers)];
                                     case 20:
@@ -794,7 +789,6 @@ var DiscountService = /** @class */ (function () {
                                             v.percentage = v.percentage ? parseFloat(v.percentage) : v.percentage;
                                         });
                                         item.appliedDiscounts = appliedDiscounts;
-                                        console.log("===========================", item.itemid, ":", item.vat, item.vatamount, item.priceAfterdiscount);
                                         _g.label = 41;
                                     case 41: return [2 /*return*/];
                                 }
@@ -881,19 +875,6 @@ var DiscountService = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 console.log("lineDiscount");
-                // console.log(linedisc);
-                // let dummyData: any = {};
-                // dummyData.linedisc = "";
-                // linedisc = linedisc ? linedisc : dummyData;
-                // console.log(linePercentage);
-                // // if (linedisc && linedisc.linedisc && linedisc.linedisc != "") {
-                // linePercentage = linePercentage.find(
-                //   (v: any) => v.itemrelation == item.itemid || v.itemrelation == linedisc.linedisc
-                // );
-                // linePercentage = linePercentage ? linePercentage.percent1 : 0;
-                // } else {
-                //   linePercentage = 0;
-                // }
                 console.log(linePercentage);
                 item.linediscpercent = parseFloat(linePercentage);
                 item.linediscamt = parseFloat(item.price) * parseInt(item.quantity) * (parseFloat(linePercentage) / 100);
@@ -1223,15 +1204,7 @@ var DiscountService = /** @class */ (function () {
                                 buyOneGetOneDiscountItems: buyOneGetOneDiscountItems,
                                 salesDiscountItems: [],
                             }];
-                    case 5: 
-                    // let salesDiscountItems: any = await this.rawQuery.getSalesDisocuntItems(
-                    //   inQueryStr.substr(0, inQueryStr.length - 1),
-                    //   reqData.inventLocationId,
-                    //   reqData.custaccount,
-                    //   reqData.custtype
-                    // );
-                    // console.log(salesDiscountItems);
-                    return [2 /*return*/, _a.sent()];
+                    case 5: return [2 /*return*/, _a.sent()];
                 }
             });
         });

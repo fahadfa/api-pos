@@ -60,7 +60,7 @@ pg_1.types.setTypeParser(1114, function (stringValue) {
     return stringValue.replace(" ", "T");
 });
 var log = Log_1.log;
-Config.setStagingConfig();
+Config.setEnvConfig();
 var SyncServiceHelper = /** @class */ (function () {
     function SyncServiceHelper() {
     }

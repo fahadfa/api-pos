@@ -57,7 +57,6 @@ var PriceService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.getCustomer(this.sessionInfo.defaultcustomerid)];
                     case 1:
                         defaultcustomer = _c.sent();
-                        // console.log(defaultcustomer);
                         reqData.pricegroup = defaultcustomer.pricegroup;
                         reqData.currency = defaultcustomer.currency;
                         _c.label = 2;
@@ -70,12 +69,11 @@ var PriceService = /** @class */ (function () {
                             configid: reqData.configid,
                             currency: "SAR",
                             dataareaid: reqData.dataareaid,
-                            warehouseid: reqData.warehouseid
+                            warehouseid: reqData.warehouseid,
                         };
                         amount = [];
                         return [4 /*yield*/, this.rawQuery.getCustomerSpecificPrice(queryData)];
                     case 3:
-                        // if (amount.length == 0) {
                         amount = _c.sent();
                         if (!(amount.length == 0)) return [3 /*break*/, 5];
                         return [4 /*yield*/, this.rawQuery.getNormalPrice(queryData)];
@@ -97,14 +95,11 @@ var PriceService = /** @class */ (function () {
                         _c.label = 9;
                     case 9:
                         defaultcustomer = _a;
-                        // console.log(defaultcustomer);
                         queryData.pricegroup = defaultcustomer.pricegroup;
                         queryData.currency = defaultcustomer.currency;
                         amount_1 = [];
                         return [4 /*yield*/, this.rawQuery.getCustomerSpecificPrice(queryData)];
                     case 10:
-                        // amount: any = await this.rawQuery.getHighPrice(queryData);
-                        // if (amount.length == 0) {
                         amount_1 = _c.sent();
                         if (!(amount_1.length == 0)) return [3 /*break*/, 12];
                         return [4 /*yield*/, this.rawQuery.getNormalPrice(queryData)];
@@ -116,7 +111,6 @@ var PriceService = /** @class */ (function () {
                             return [2 /*return*/, { amount: 0 }];
                         }
                         else {
-                            // console.log(amount);
                             amount_1[0].amount = Math.ceil(amount_1[0].amount);
                             return [2 /*return*/, amount_1[0]];
                         }
@@ -126,7 +120,6 @@ var PriceService = /** @class */ (function () {
                         return [2 /*return*/, { amount: 0 }];
                     case 14: return [3 /*break*/, 16];
                     case 15:
-                        // console.log(amount);
                         amount[0].amount = Math.ceil(amount[0].amount);
                         return [2 /*return*/, amount[0]];
                     case 16: return [3 /*break*/, 18];
@@ -166,7 +159,7 @@ var PriceService = /** @class */ (function () {
                             configid: reqData.configid,
                             currency: "SAR",
                             dataareaid: reqData.dataareaid,
-                            warehouseid: reqData.warehouseid
+                            warehouseid: reqData.warehouseid,
                         };
                         inQueryStr_1 = "";
                         if (reqData.inventsizeids.length > 0) {
@@ -190,7 +183,6 @@ var PriceService = /** @class */ (function () {
                         if (!(amount.length <= 0)) return [3 /*break*/, 7];
                         return [4 /*yield*/, this.rawQuery.sizePrices(queryData)];
                     case 6:
-                        // console.log(amount)
                         amount = _b.sent();
                         _b.label = 7;
                     case 7:

@@ -154,7 +154,6 @@ var InventsizeService = /** @class */ (function () {
                     case 4:
                         console.log(data.length);
                         t1 = new Date().getTime();
-                        console.log("took " + (t1 - t0) / 1000 + " milliseconds.");
                         data.map(function (v) {
                             v.price = 0;
                         });

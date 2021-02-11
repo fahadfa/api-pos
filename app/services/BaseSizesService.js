@@ -132,7 +132,6 @@ var BaseSizesService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.getCustomer(this.sessionInfo.defaultcustomerid)];
                     case 1:
                         defaultcustomer = _c.sent();
-                        // console.log(defaultcustomer);
                         reqData.pricegroup = defaultcustomer.pricegroup;
                         reqData.currency = defaultcustomer.currency;
                         _c.label = 2;
@@ -167,7 +166,6 @@ var BaseSizesService = /** @class */ (function () {
                         _c.label = 11;
                     case 11:
                         defaultcustomer = _a;
-                        // console.log(defaultcustomer);
                         reqData.pricegroup = defaultcustomer.pricegroup;
                         reqData.currency = defaultcustomer.currency;
                         amount_1 = [];
@@ -199,7 +197,6 @@ var BaseSizesService = /** @class */ (function () {
                         return [2 /*return*/, { amount: 0 }];
                     case 17: return [3 /*break*/, 19];
                     case 18:
-                        // console.log(amount);
                         amount[0].amount = Math.ceil(amount[0].amount);
                         return [2 /*return*/, amount[0]];
                     case 19: return [3 /*break*/, 21];

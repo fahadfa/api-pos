@@ -45,12 +45,25 @@ var InventoryOnHandReport = /** @class */ (function () {
     }
     InventoryOnHandReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, i, sum, totalAvailability, _i, data_1, item, result;
+            var selfStore, data, ecomdata, i, sum, totalAvailability, _i, data_1, item, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.query_to_data(params)];
+                    case 0:
+                        selfStore = params.inventlocationid == this.sessionInfo.inventlocationid;
+                        data = [];
+                        if (!(selfStore || (params.inventlocationid == "ALL"))) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.query_to_data(params, this.sessionInfo.inventlocationid)];
                     case 1:
                         data = _a.sent();
+                        _a.label = 2;
+                    case 2:
+                        if (!(!selfStore || (params.inventlocationid == "ALL"))) return [3 /*break*/, 4];
+                        return [4 /*yield*/, this.query_to_ecom_data(params)];
+                    case 3:
+                        ecomdata = _a.sent();
+                        data = data.concat(ecomdata);
+                        _a.label = 4;
+                    case 4:
                         i = 1;
                         sum = 0;
                         totalAvailability = 0;
@@ -117,9 +130,9 @@ var InventoryOnHandReport = /** @class */ (function () {
             });
         });
     };
-    InventoryOnHandReport.prototype.query_to_data = function (params) {
+    InventoryOnHandReport.prototype.query_to_data = function (params, inventlocationid) {
         return __awaiter(this, void 0, void 0, function () {
-            var query, warehouseQuery, regionalWarehouses, inQueryStr_1;
+            var query;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -129,23 +142,19 @@ var InventoryOnHandReport = /** @class */ (function () {
                             : "") + "\n    a.availabilty as \"physicalAvailable\",\n    a.reservedquantity as \"reservedQuantity\",\n    (a.availabilty + a.reservedquantity) as \"totalAvailable\",\n    a.nameen as nameEn,\n    a.namear as nameAr,\n    a.sizenameen as \"sizeNameEn\",\n    a.sizenamear as \"sizeNameAr\",\n    a.warehouseNameEn,\n    a.WareHouseNameAr \n    from\n    (select \n    UPPER(i.itemid) as itemid,\n    bs.namealias as nameen,\n    bs.itemname as namear,\n    UPPER(i.configid) as configid,\n    UPPER(i.inventsizeid) as inventsizeid,\n    " + (params.batchCheck
                             ? "UPPER(i.batchno) as batchno,\n    to_char(b.expdate, 'yyyy-MM-dd') as batchexpdate,"
                             : "") + "\n    sz.description as \"sizenameen\",\n    sz.\"name\" as \"sizenamear\",\n    sum(qty) as availabilty,\n    abs(sum(case\n      when reserve_status ='RESERVED' then qty\n      else 0\n      end\n      )) as reservedquantity,\n    w.name as warehousenamear, \n    w.namealias as warehousenameen\n    from inventtrans i\n    left join inventbatch b on i.batchno = b.inventbatchid and i.itemid = b.itemid\n    inner join inventtable bs on i.itemid = bs.itemid\n    left join inventsize sz on lower(sz.inventsizeid) = lower(i.inventsizeid) and sz.itemid = i.itemid\n    inner join configtable c on c.itemid = i.itemid and lower(c.configid) = lower(i.configid)\n    inner join inventlocation w on w.inventlocationid=i.inventlocationid\n    ";
-                        if (!(params.key == "ALL")) return [3 /*break*/, 2];
-                        warehouseQuery = "select regionalwarehouse from usergroupconfig where id= '" + this.sessionInfo.usergroupconfigid + "' limit 1";
-                        return [4 /*yield*/, this.db.query(warehouseQuery)];
-                    case 1:
-                        regionalWarehouses = _a.sent();
-                        console.log(regionalWarehouses);
-                        inQueryStr_1 = "";
-                        regionalWarehouses[0].regionalwarehouse.split(",").map(function (item) {
-                            inQueryStr_1 += "'" + item + "',";
-                        });
-                        inQueryStr_1 += "'" + params.inventlocationid + "',";
-                        query += " where i.inventlocationid in (" + inQueryStr_1.substr(0, inQueryStr_1.length - 1) + ") ";
-                        return [3 /*break*/, 3];
-                    case 2:
-                        query += " where i.inventlocationid='" + params.inventlocationid + "'  ";
-                        _a.label = 3;
-                    case 3:
+                        // if (params.key == "ALL") {
+                        //   const warehouseQuery = `select regionalwarehouse from usergroupconfig where id= '${this.sessionInfo.usergroupconfigid}' limit 1`;
+                        //   let regionalWarehouses = await this.db.query(warehouseQuery);
+                        //   console.log(regionalWarehouses);
+                        //   let inQueryStr = "";
+                        //   regionalWarehouses[0].regionalwarehouse.split(",").map((item: string) => {
+                        //     inQueryStr += "'" + item + "',";
+                        //   });
+                        //   inQueryStr += "'" + params.inventlocationid + "',";
+                        //   query += ` where i.inventlocationid in (${inQueryStr.substr(0, inQueryStr.length - 1)}) `;
+                        // } else {
+                        query += " where i.inventlocationid='" + inventlocationid + "'  ";
+                        // }
                         if (params.itemId) {
                             query = query + (" and LOWER(i.itemid) = LOWER('" + params.itemId + "')");
                         }
@@ -166,6 +175,52 @@ var InventoryOnHandReport = /** @class */ (function () {
                             query += " (a.availabilty + a.reservedquantity) > 0 ";
                         }
                         query += " order by a.itemid ";
+                        console.log(query);
+                        return [4 /*yield*/, this.db.query(query)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    InventoryOnHandReport.prototype.query_to_ecom_data = function (params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, warehouseQuery, reportWarehouses, warehouses;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        query = "select \n    oi.product_code as itemid , oi.color_code as configid,oi.size_code as inventsizeid,oi.erp_code,\n    oi.quantity as \"physicalAvailable\",\n    0 as \"reservedQuantity\",\n    oi.quantity as \"totalAvailable\",\n    it.namealias as nameen,it.itemname as namear,\n    sz.description as \"sizenameen\",\n    sz.\"name\" as \"sizenamear\",\n    w.name as warehousenamear, \n    w.namealias as warehousenameen\n    from onhand_inventory oi \n    left join inventtable it on it.itemid =oi.product_code \n    left join configtable c on c.itemid = oi.product_code and lower(c.configid) = lower(oi.color_code)\n    left join inventsize sz on lower(sz.inventsizeid) = lower(oi.size_code ) \n    and sz.itemid = oi.product_code \n    left join inventlocation w on w.inventlocationid=oi.erp_code  \n    ";
+                        if (!(params.inventlocationid == "ALL")) return [3 /*break*/, 2];
+                        warehouseQuery = "select report_warehouses as reportwarehouse from usergroupconfig where id= '" + this.sessionInfo.usergroupconfigid + "' limit 1";
+                        return [4 /*yield*/, this.db.query(warehouseQuery)];
+                    case 1:
+                        reportWarehouses = _a.sent();
+                        warehouses = reportWarehouses[0].reportwarehouse.split(",").filter(function (item) {
+                            return item !== _this.sessionInfo.inventlocationid;
+                        });
+                        ;
+                        query += " where oi.erp_code in (" + warehouses.map(function (item) { return "'" + item + "'"; }).join(",") + ") ";
+                        return [3 /*break*/, 3];
+                    case 2:
+                        query += " where oi.erp_code='" + params.inventlocationid + "'  ";
+                        _a.label = 3;
+                    case 3:
+                        if (params.itemId) {
+                            query = query + (" and LOWER(oi.product_code) = LOWER('" + params.itemId + "')");
+                        }
+                        if (params.configId) {
+                            query = query + (" and LOWER(oi.color_code)=LOWER('" + params.configId + "')");
+                        }
+                        if (params.inventsizeid) {
+                            query = query + (" and LOWER(oi.size_code)=LOWER('" + params.inventsizeid + "')");
+                        }
+                        if (params.withZero) {
+                            query += " and oi.quantity >= 0 ";
+                        }
+                        else {
+                            query += " and oi.quantity > 0 ";
+                        }
+                        console.log(query);
                         return [4 /*yield*/, this.db.query(query)];
                     case 4: return [2 /*return*/, _a.sent()];
                 }

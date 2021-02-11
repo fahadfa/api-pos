@@ -379,7 +379,7 @@ var LoadService = /** @class */ (function () {
                             ? " vendortable.name as name, vendortable.namealias as namealias"
                             : " custtable.name as name, custtable.namealias as namealias") + "\n                        from salestable \n                        " + (param.transkind == "PURCHASEORDER" || param.transkind == "PURCHASERETURN"
                             ? "  left join vendortable on vendortable.accountnum = salestable.custaccount"
-                            : "  left join custtable on custtable.accountnum = salestable.custaccount") + "\n                       \n                        where salestable.dataareaid='" + this.sessionInfo.dataareaid + "' and (salestable.inventlocationid='" + this.sessionInfo.inventlocationid + "' or\n                        salestable.custaccount='" + this.sessionInfo.inventlocationid + "' " + (!param.cond == true ? "or salestable.jazeerawarehouse='" + this.sessionInfo.inventlocationid + "'" : "") + ")\n                        and (salestable.salesid  ILike '%" + param.key + "%' or salestable.salesname  ILike '%" + param.key + "%' or\n                         " + (param.transkind == "PURCHASEORDER" || param.transkind == "PURCHASERETURN"
+                            : "  left join custtable on custtable.accountnum = salestable.custaccount") + "\n                       \n                        where (salestable.inventlocationid='" + this.sessionInfo.inventlocationid + "' or\n                        salestable.custaccount='" + this.sessionInfo.inventlocationid + "' " + (!param.cond == true ? "or salestable.jazeerawarehouse='" + this.sessionInfo.inventlocationid + "'" : "") + ")\n                        and (salestable.salesid  ILike '%" + param.key + "%' or salestable.salesname  ILike '%" + param.key + "%' or\n                         " + (param.transkind == "PURCHASEORDER" || param.transkind == "PURCHASERETURN"
                             ? "vendortable.name"
                             : "custtable.name") + " ILike '%" + param.key + "%' or  " + (param.transkind == "PURCHASEORDER" || param.transkind == "PURCHASERETURN"
                             ? "vendortable.namealias"
@@ -397,6 +397,7 @@ var LoadService = /** @class */ (function () {
                             query += " and salestable.salestype is NULL ";
                         }
                         query += "ORDER BY salestable.createddatetime DESC LIMIT 15";
+                        console.log(query);
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();

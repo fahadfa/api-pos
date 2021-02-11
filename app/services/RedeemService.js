@@ -109,23 +109,12 @@ var RedeemService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        // let token = await this.getToken();
-                        // console.log(token);
-                        // let url = `https://api.jazeerapaints.com/api/gen_otp?phone=${params.mobile}`;
-                        // let url = `${this.url}/gen_otp`;
-                        // console.log(url);
-                        // this.axios.defaults.headers["Token"] = token;
-                        // console.log(this.axios.defaults.headers);
-                        // let data = await this.axios.get(url + `?phone=${params.mobile}`);
-                        // console.log(data);
-                        // this.otpStore.set(params.mobile, { token: data.data.otp_token, validate: false });
-                        // return data.data;
                         this.phoneVerificationService.sessionInfo = this.sessionInfo;
                         reqData = { phoneNumber: params.mobile, customerId: "REDEEM_SERVICE" };
                         return [4 /*yield*/, this.phoneVerificationService.sendOtp(reqData)];
                     case 1:
                         data = _a.sent();
-                        return [2 /*return*/, { otp_token: "WTRNVnBLa3Q5UE5tTy9MczVtRWY0QT09", status: 1, message: data.message }];
+                        return [2 /*return*/, { status: 1, message: data.message }];
                     case 2:
                         error_3 = _a.sent();
                         throw error_3;
@@ -141,18 +130,6 @@ var RedeemService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        // let token = await this.getToken();
-                        // console.log(this.otpStore.get(reqdata.mobile));
-                        // let otp_token: any = this.otpStore.get(reqdata.mobile).token;
-                        // let otp: any = reqdata.otp;
-                        // console.log(reqdata);
-                        // let url = `${this.url}/check_otp`;
-                        // console.log(url);
-                        // this.axios.defaults.headers["Token"] = token;
-                        // // console.log(this.axios.defaults.headers);
-                        // let data = await this.axios.post(url, { phone: reqdata.mobile, otp: otp, otp_token: otp_token });
-                        // console.log(data.data);
-                        // return data.data;
                         this.phoneVerificationService.sessionInfo = this.sessionInfo;
                         reqData = { customerId: "REDEEM_SERVICE", phoneNumber: reqdata.mobile, otp: reqdata.otp };
                         console.log(reqData);

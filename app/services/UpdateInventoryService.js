@@ -50,13 +50,8 @@ var UpdateInventoryService = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        console.log("==========updateInventtransTable=================");
-                        console.log(reqData);
-                        // await this.inventTransDAO.save(reqData);
-                        return [4 /*yield*/, queryRunner.manager.getRepository(InventTrans_1.Inventorytrans).save(reqData)];
+                    case 0: return [4 /*yield*/, queryRunner.manager.getRepository(InventTrans_1.Inventorytrans).save(reqData)];
                     case 1:
-                        // await this.inventTransDAO.save(reqData);
                         _a.sent();
                         return [2 /*return*/];
                 }
@@ -83,7 +78,6 @@ var UpdateInventoryService = /** @class */ (function () {
                             })];
                     case 1:
                         inventoryOnHandData = _a.sent();
-                        console.log("==========updateInventoryOnhandData=================2", inventoryOnHandData);
                         if (!inventoryOnHandData) return [3 /*break*/, 14];
                         if (!(reqData.reserveStatus == "RESERVED")) return [3 /*break*/, 4];
                         if (!update) return [3 /*break*/, 3];

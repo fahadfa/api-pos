@@ -67,10 +67,8 @@ var CusttableService = /** @class */ (function () {
                         data = _a.sent();
                         _a.label = 3;
                     case 3:
-                        // let count = this.rawQuery.customers_count();
                         console.log(data);
                         if (data) {
-                            // data.Custgroup = {};
                             return [2 /*return*/, data];
                         }
                         else {
@@ -205,13 +203,6 @@ var CusttableService = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         data.forEach(function (element) {
-                            // if (element.rcusttype && Props.RCUSTTYPE[element.rcusttype]) {
-                            //   element.rcusttypeen = Props.RCUSTTYPE[element.rcusttype][1];
-                            //   element.rcusttypear = Props.RCUSTTYPE[element.rcusttype][2];
-                            // } else {
-                            //   element.rcusttypeen = "Individual";
-                            //   element.rcusttypear = "أفراد";
-                            // }
                             element.phone = !element.phone || element.phone.length <= 1 ? "N/A" : element.phone;
                         });
                         return [2 /*return*/, data];
@@ -247,10 +238,8 @@ var CusttableService = /** @class */ (function () {
                         console.log(cond);
                         if (!(cond == true)) return [3 /*break*/, 7];
                         reqData.walkincustomer = true;
-                        //let customer = await this.custtableDAO.save(reqData);
                         return [4 /*yield*/, queryRunner.manager.getRepository(Custtable_1.Custtable).save(reqData)];
                     case 5:
-                        //let customer = await this.custtableDAO.save(reqData);
                         _a.sent();
                         returnData = { id: reqData.accountnum, message: "SAVED_SUCCESSFULLY" };
                         return [4 /*yield*/, queryRunner.commitTransaction()];
@@ -307,7 +296,6 @@ var CusttableService = /** @class */ (function () {
                         mdata = _a.sent();
                         _a.label = 5;
                     case 5:
-                        // console.log(mdata);
                         if (!item.accountnum) {
                             if (mdata.length > 0) {
                                 return [2 /*return*/, "phone"];
@@ -331,7 +319,6 @@ var CusttableService = /** @class */ (function () {
                                     item.paymtermid = "CASH";
                                     item.dataareaId = this.sessionInfo.dataareaid;
                                 }
-                                // item.accountnum = await this.getAccountNum();
                             }
                         }
                         item.lastmodifieddate = new Date(App_1.App.DateNow());

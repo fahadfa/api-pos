@@ -69,7 +69,6 @@ var HistoryUserGroupService = /** @class */ (function () {
                         data.Custgroup = {};
                         _a.label = 3;
                     case 3:
-                        // let count = this.rawQuery.customers_count();
                         console.log(data);
                         if (data) {
                             data.permissiondata = JSON.parse(data.permissiondata);
