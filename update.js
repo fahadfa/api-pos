@@ -128,7 +128,7 @@ var main = function () {
     // cmd.get("npm run env | grep npm_package_version | cut -d '=' -f 2", (err: any, data: any) => {
     //   log.info("Version: " + data);
     //   if (!err) {
-    //     SyncServiceHelper.UpdateCall("VERSION", data);
+    //     SyncServiceHelper.UpdateCall("VERSION", log,  data);
     //   } else {
     //     log.error(err);
     //   }

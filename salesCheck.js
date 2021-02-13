@@ -77,7 +77,7 @@ var main = function () { return __awaiter(_this, void 0, void 0, function () {
                 lastUpdate = new Date().toISOString();
                 lastUpdateSalesLine = new Date().toISOString();
                 lastUpdateSQL = "select * from sync_table where map_table='salestable' and source_id ='" + STORE_ID + "'";
-                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), lastUpdateSQL)];
+                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), lastUpdateSQL, Log_1.saleslog)];
             case 2:
                 syncResults = _a.sent();
                 syncResults = syncResults ? syncResults.rows : [];
@@ -90,7 +90,7 @@ var main = function () { return __awaiter(_this, void 0, void 0, function () {
                 postedQuery = Config.SALES_CHECK.POSTED.replace("XXXX-XXXX", STORE_ID).replace("YYYY-MM-DDTHH:mm:SS", lastUpdate);
                 notPostedQuery = Config.SALES_CHECK.NOT_POSTED.replace("XXXX-XXXX", STORE_ID).replace("YYYY-MM-DDTHH:mm:SS", lastUpdate);
                 lastUpdateSalesLineSQL = "select * from sync_table where map_table='salesline' and source_id ='" + STORE_ID + "'";
-                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), lastUpdateSalesLineSQL)];
+                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), lastUpdateSalesLineSQL, Log_1.saleslog)];
             case 3:
                 syncResults = _a.sent();
                 syncResults = syncResults ? syncResults.rows : [];
@@ -100,7 +100,7 @@ var main = function () { return __awaiter(_this, void 0, void 0, function () {
                     lastUpdateSalesLine = syncResults.last_update;
                 }
                 salesLineQuery = Config.SALES_CHECK.SALES_LINES.replace("XXXX-XXXX", STORE_ID).replace("YYYY-MM-DDTHH:mm:SS", syncResults.last_update);
-                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), sqlQuery)];
+                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), sqlQuery, Log_1.saleslog)];
             case 4:
                 data = _a.sent();
                 if (!(data && data.rows.length > 0)) return [3 /*break*/, 16];
@@ -120,7 +120,7 @@ var main = function () { return __awaiter(_this, void 0, void 0, function () {
                     updated_by: STORE_ID,
                     updated_on: lastUpdate,
                 };
-                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions(), postedQuery)];
+                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions(), postedQuery, Log_1.saleslog)];
             case 5:
                 syncResults = _a.sent();
                 Log_1.saleslog.info(syncResults);
@@ -128,21 +128,21 @@ var main = function () { return __awaiter(_this, void 0, void 0, function () {
                 syncResults = syncResults.length > 0 ? syncResults : null;
                 Log_1.saleslog.info("posted store syncResults: " + JSON.stringify(syncResults));
                 entity.posted_store = dataListToEntity(syncResults);
-                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), postedQuery)];
+                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), postedQuery, Log_1.saleslog)];
             case 6:
                 syncResults = _a.sent();
                 syncResults = syncResults ? syncResults.rows : [];
                 syncResults = syncResults.length > 0 ? syncResults : null;
                 Log_1.saleslog.info("posted stage syncResults: " + JSON.stringify(syncResults));
                 entity.posted_stage = dataListToEntity(syncResults);
-                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions(), notPostedQuery)];
+                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions(), notPostedQuery, Log_1.saleslog)];
             case 7:
                 syncResults = _a.sent();
                 syncResults = syncResults ? syncResults.rows : [];
                 syncResults = syncResults.length > 0 ? syncResults : null;
                 Log_1.saleslog.info("notPosted store syncResults: " + JSON.stringify(syncResults));
                 entity.not_posted_store = dataListToEntity(syncResults);
-                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), notPostedQuery)];
+                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), notPostedQuery, Log_1.saleslog)];
             case 8:
                 syncResults = _a.sent();
                 syncResults = syncResults ? syncResults.rows : [];
@@ -150,7 +150,7 @@ var main = function () { return __awaiter(_this, void 0, void 0, function () {
                 Log_1.saleslog.info("notPosted stage syncResults: " + JSON.stringify(syncResults));
                 entity.not_posted_stage = dataListToEntity(syncResults);
                 Log_1.saleslog.info("SALE_LINE_QUERY : " + salesLineQuery);
-                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions(), salesLineQuery)];
+                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions(), salesLineQuery, Log_1.saleslog)];
             case 9:
                 syncResults = _a.sent();
                 syncResults = syncResults ? syncResults.rows : [];
@@ -159,7 +159,7 @@ var main = function () { return __awaiter(_this, void 0, void 0, function () {
                 if (syncResults) {
                     entity.sales_line_store = syncResults.count;
                 }
-                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), salesLineQuery)];
+                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), salesLineQuery, Log_1.saleslog)];
             case 10:
                 syncResults = _a.sent();
                 syncResults = syncResults ? syncResults.rows : [];
@@ -182,7 +182,7 @@ var main = function () { return __awaiter(_this, void 0, void 0, function () {
                 sqlList.push(update_query);
                 Log_1.saleslog.info(sqlList);
                 if (!(sqlList && sqlList.length > 0)) return [3 /*break*/, 15];
-                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), sqlList)];
+                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), sqlList, Log_1.saleslog)];
             case 14:
                 _a.sent();
                 _a.label = 15;
@@ -239,12 +239,12 @@ var salesLineValidate = function (entity, lastUpdate, sqlList) { return __awaite
                 storeData = [];
                 data = [];
                 sql = "select  * from salesline  where  inventlocationid = '" + STORE_ID + "' and status in ('POSTED', 'PRINTED')  and lastmodifieddate < '" + lastUpdate + "' and lastmodifieddate >= '" + backDate + "'";
-                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), sql)];
+                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), sql, Log_1.saleslog)];
             case 1:
                 syncResults = _a.sent();
                 syncResults = syncResults ? syncResults.rows : [];
                 stageData = syncResults.map(function (ele) { return ele["id"]; });
-                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions(), sql)];
+                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions(), sql, Log_1.saleslog)];
             case 2:
                 syncResultsLocal = _a.sent();
                 syncResultsLocal = syncResultsLocal ? syncResultsLocal.rows : [];
@@ -259,7 +259,7 @@ var salesLineValidate = function (entity, lastUpdate, sqlList) { return __awaite
                             case 0:
                                 item = syncResultsLocal.find(function (ele) { return ele.id == val; });
                                 sql = SyncServiceHelper_1.SyncServiceHelper.SyncReUpdateSQL("SELECT", syncReUpdate);
-                                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), sql)];
+                                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), sql, Log_1.saleslog)];
                             case 1:
                                 syncResults = _a.sent();
                                 syncResults = syncResults ? syncResults.rows : [];
@@ -323,12 +323,12 @@ var salesValidate = function (keys, entity, lastUpdate, sqlList) { return __awai
                     " / " +
                     entity.posted_stage[ele]);
                 sql = "select * from salestable  where syncstatus in (0,2) and inventlocationid = '" + STORE_ID + "' and status in ('POSTED', 'PRINTED') and transkind in ( '" + ele + "') and lastmodifieddate < '" + lastUpdate + "' and lastmodifieddate >= '" + backDate + "' ";
-                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), sql)];
+                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), sql, Log_1.saleslog)];
             case 2:
                 syncResults = _b.sent();
                 syncResults = syncResults ? syncResults.rows : [];
                 stageData = syncResults.map(function (ele) { return ele["salesid"]; });
-                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions(), sql)];
+                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions(), sql, Log_1.saleslog)];
             case 3:
                 syncResultsLocal = _b.sent();
                 syncResultsLocal = syncResultsLocal ? syncResultsLocal.rows : [];
@@ -343,7 +343,7 @@ var salesValidate = function (keys, entity, lastUpdate, sqlList) { return __awai
                             case 0:
                                 item = syncResultsLocal.find(function (ele) { return ele.salesid == val; });
                                 sql = SyncServiceHelper_1.SyncServiceHelper.SyncReUpdateSQL("SELECT", syncReUpdate);
-                                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), sql)];
+                                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), sql, Log_1.saleslog)];
                             case 1:
                                 syncResults = _a.sent();
                                 syncResults = syncResults ? syncResults.rows : [];
@@ -378,12 +378,12 @@ var salesValidate = function (keys, entity, lastUpdate, sqlList) { return __awai
                     " / " +
                     entity.posted_stage[ele]);
                 sql = "select  * from salestable  where syncstatus in (0,2) and inventlocationid = '" + STORE_ID + "' and status NOT in ('POSTED', 'PRINTED') and transkind in ( '" + ele + "') and lastmodifieddate < '" + lastUpdate + "' and lastmodifieddate >= '" + backDate + "' ";
-                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), sql)];
+                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), sql, Log_1.saleslog)];
             case 8:
                 syncResults = _b.sent();
                 syncResults = syncResults ? syncResults.rows : [];
                 stageData = syncResults.map(function (ele) { return ele["salesid"]; });
-                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions(), sql)];
+                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions(), sql, Log_1.saleslog)];
             case 9:
                 syncResults = _b.sent();
                 syncResults = syncResults ? syncResults.rows : [];
@@ -432,7 +432,7 @@ var syncRun = function () { return __awaiter(_this, void 0, void 0, function () 
                 return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.SyncReUpdateSQL("SELECT", syncReUpdateConst)];
             case 2:
                 sql = _a.sent();
-                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), sql)];
+                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), sql, Log_1.saleslog)];
             case 3:
                 syncResults = _a.sent();
                 syncResults = syncResults ? syncResults.rows : [];
@@ -465,11 +465,11 @@ var syncRun = function () { return __awaiter(_this, void 0, void 0, function () 
                 Log_1.saleslog.info("syncReUpdate.type :" + syncReUpdate.type);
                 Log_1.saleslog.info(sqlList);
                 if (!(syncReUpdate.type === "T")) return [3 /*break*/, 10];
-                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), sqlList)];
+                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), sqlList, Log_1.saleslog)];
             case 9:
                 _a.sent();
                 return [3 /*break*/, 12];
-            case 10: return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions(), sqlList)];
+            case 10: return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions(), sqlList, Log_1.saleslog)];
             case 11:
                 _a.sent();
                 _a.label = 12;
@@ -495,12 +495,12 @@ var buildQuery = function (syncReUpdate, dbSyncReUpdate, batchSql) { return __aw
                 return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BuildDMLSelectPkQuery(syncReUpdate.table_name, syncReUpdate.table_pk, dbSyncReUpdate["table_pk_value"])];
             case 1:
                 sql = _a.sent();
-                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), sql)];
+                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.StageDBOptions(), sql, Log_1.saleslog)];
             case 2:
                 syncResultsStage = _a.sent();
                 stageData = syncResultsStage ? syncResultsStage.rows : [];
                 stageData = stageData.length > 0 ? stageData[0] : null;
-                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions(), sql)];
+                return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions(), sql, Log_1.saleslog)];
             case 3:
                 syncResultsLocal = _a.sent();
                 storeData = syncResultsLocal ? syncResultsLocal.rows : [];

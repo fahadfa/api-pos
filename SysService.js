@@ -123,7 +123,7 @@ var SysService = /** @class */ (function () {
                         _b.label = 1;
                     case 1:
                         _b.trys.push([1, 8, 9, 10]);
-                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.StoreSource(storeid)];
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.StoreSource(storeid, log)];
                     case 2:
                         data = _b.sent();
                         if (!data) return [3 /*break*/, 6];
@@ -132,7 +132,7 @@ var SysService = /** @class */ (function () {
                         return [4 /*yield*/, App_1.App.getMacAddress()];
                     case 3:
                         _a.mac_address = _b.sent();
-                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.UpdateCall("MAC", data.mac_address)];
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.UpdateCall("MAC", log, data.mac_address)];
                     case 4:
                         _b.sent();
                         _b.label = 5;
@@ -162,7 +162,7 @@ var SysService = /** @class */ (function () {
                         data = fs.readFileSync("./package.json", "utf8");
                         data = JSON.parse(data);
                         log.info("Version: " + data.version);
-                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.UpdateCall("VERSION", data.version)];
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.UpdateCall("VERSION", log, data.version)];
                     case 1:
                         _a.sent();
                         return [3 /*break*/, 3];

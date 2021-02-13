@@ -67,7 +67,6 @@ var SyncService = /** @class */ (function () {
             default:
                 break;
         }
-        SyncServiceHelper_1.SyncServiceHelper.SetLog(this.log);
         this.syncDMLService = new SyncDMLService_1.SyncDMLService(this.log);
         this.init(type);
         // this.log.log("debug", `&&&&&&&&&&&&&&&&&&&&&& ENV_STORE_ID : ${process.env.ENV_STORE_ID} &&&&&&&&&&&&&&&&&&&&&&`);
@@ -113,7 +112,7 @@ var SyncService = /** @class */ (function () {
                 cron.schedule("0 0 0 * * *", function () { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0: return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.UpdateCall("RESET")];
+                            case 0: return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.UpdateCall("RESET", this.log)];
                             case 1:
                                 _a.sent();
                                 this.log.warn("MID NIGHT RESET SERVER");
@@ -445,7 +444,7 @@ var SyncService = /** @class */ (function () {
                     case 1:
                         _a.sent();
                         log.warn("cmd: " + cmdData);
-                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.UpdateCall("JSON")];
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.UpdateCall("JSON", log)];
                     case 2:
                         _a.sent();
                         return [4 /*yield*/, SysService_1.SysService.ResetService(log)];
@@ -469,7 +468,7 @@ var SyncService = /** @class */ (function () {
                     case 8:
                         _i++;
                         return [3 /*break*/, 6];
-                    case 9: return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.UpdateCall("JSON")];
+                    case 9: return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.UpdateCall("JSON", log)];
                     case 10:
                         _a.sent();
                         return [4 /*yield*/, SysService_1.SysService.ResetService(log)];

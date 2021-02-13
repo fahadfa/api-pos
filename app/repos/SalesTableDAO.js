@@ -89,7 +89,6 @@ var SalesTableDAO = /** @class */ (function () {
                                 .addSelect("movementType.movementType")
                                 .addSelect("movementType.movementArabic")
                                 .where(data)
-                                .andWhere("SalesTable.transkind != 'SALESORDER'")
                                 .orderBy("SalesTable.createddatetime", "DESC")
                                 .getOne()];
                     case 1: return [2 /*return*/, _a.sent()];

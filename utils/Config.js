@@ -196,3 +196,4 @@ exports.SALES_CHECK = {
     NOT_POSTED: "select  transkind, count(1),  inventlocationid from salestable  where syncstatus in (0,2) and inventlocationid = 'XXXX-XXXX' and status NOT in ( 'POSTED', 'PRINTED') and transkind in ( 'SALESORDER', 'INVENTORYMOVEMENT', 'RETURNORDER', 'ORDERRECEIVE', 'ORDERSHIPMENT', 'DESIGNERSERVICE', 'DESIGNERSERVICERETURN') and lastmodifieddate <= 'YYYY-MM-DDTHH:mm:SS' group by  transkind, inventlocationid order by  inventlocationid, transkind",
     SALES_LINES: "select  'LINES', count(1),  inventlocationid from salesline  where  inventlocationid = 'XXXX-XXXX' and status in ('POSTED', 'PRINTED') and lastmodifieddate <= 'YYYY-MM-DDTHH:mm:SS' group by  inventlocationid order by  inventlocationid",
 };
+
