@@ -74,7 +74,6 @@ var UserGroupService = /** @class */ (function () {
                         data.Custgroup = {};
                         _a.label = 3;
                     case 3:
-                        console.log(data);
                         if (data) {
                             data.permissiondata = JSON.parse(data.permissiondata);
                             return [2 /*return*/, data];
@@ -124,7 +123,6 @@ var UserGroupService = /** @class */ (function () {
                         return [4 /*yield*/, this.validate(reqData)];
                     case 1:
                         cond = _a.sent();
-                        console.log(cond);
                         reqData.permissiondata = JSON.stringify(reqData.permissiondata);
                         if (!(cond == true)) return [3 /*break*/, 4];
                         reqData.lastmodifieddate = new Date(App_1.App.DateNow());
@@ -158,15 +156,12 @@ var UserGroupService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log(item.groupid);
                         userGroupData = {};
                         previousData = null;
                         if (!(!item.groupid || item.groupid == "" || item.groupid == "0")) return [3 /*break*/, 1];
                         item.groupid = null;
                         return [3 /*break*/, 4];
-                    case 1:
-                        console.log(item.groupid);
-                        return [4 /*yield*/, this.usergroupDAO.entity(item.groupid)];
+                    case 1: return [4 /*yield*/, this.usergroupDAO.entity(item.groupid)];
                     case 2:
                         previousData = _a.sent();
                         userGroupPreviousData = this.userGroupConfigDAO.findAll({ groupid: item.groupid });
@@ -203,8 +198,6 @@ var UserGroupService = /** @class */ (function () {
                         _a.label = 9;
                     case 9: return [3 /*break*/, 11];
                     case 10:
-                        console.log(item.groupname);
-                        console.log(previousData.groupname);
                         if (item.groupname != previousData.groupname) {
                             if (mdata.length > 0) {
                                 return [2 /*return*/, "groupname"];

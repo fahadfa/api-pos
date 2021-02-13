@@ -75,6 +75,7 @@ var Sms_1 = require("../../utils/Sms");
 var SalesLine_1 = require("../../entities/SalesLine");
 var Designerservice_1 = require("../../entities/Designerservice");
 var InventTrans_1 = require("../../entities/InventTrans");
+var UnSyncedTransactions_1 = require("../../entities/UnSyncedTransactions");
 var SalesTableService = /** @class */ (function () {
     function SalesTableService() {
         this.salesOrderTokensDAO = new SalesOrderTokensDAO_1.SalesOrderTokensDAO();
@@ -226,7 +227,6 @@ var SalesTableService = /** @class */ (function () {
                     case 14: return [4 /*yield*/, this.rawQuery.getBaseSizeBatchesList(id)];
                     case 15:
                         baseSizeBatchesList_1 = _b.sent();
-                        console.log(baseSizeBatchesList_1);
                         if (data.transkind == "SALESORDER" ||
                             data.transkind == "TRANSFERORDER" ||
                             data.transkind == "ORDERSHIPMENT" ||
@@ -317,6 +317,7 @@ var SalesTableService = /** @class */ (function () {
                     case 1:
                         workFlowStatus = _a.sent();
                         data.status = workFlowStatus ? workFlowStatus.status : data.status;
+                        data.info = workFlowStatus && workFlowStatus.salesTable ? workFlowStatus.salesTable.info : data.info;
                         _a.label = 2;
                     case 2: return [2 /*return*/];
                 }
@@ -486,10 +487,7 @@ var SalesTableService = /** @class */ (function () {
                         inventory.forEach(function (element) {
                             availabilty += parseInt(element.availabilty);
                         });
-                        //console.log("--------------------------------------------", availabilty);
                         if (availabilty > 0) {
-                            // item.batches = inventory;
-                            //console.log("--------------------------------------------", transkind, item.status);
                             if (parseInt(item.salesQty) > availabilty && transkind == "SALESORDER") {
                                 item.availableQuantity = availabilty;
                                 item.adjustedquantity = item.salesQty - availabilty;
@@ -534,7 +532,6 @@ var SalesTableService = /** @class */ (function () {
                                 if (item.status == "REQUESTED" || item.status == null) {
                                     item.requestedQuantity = item.salesQty;
                                     item.availableQuantity = availabilty;
-                                    //console.log("--------------------------------------------", availabilty);
                                 }
                                 else if (item.status == "APPROVED") {
                                     item.requestedQuantity = item.salesQty;
@@ -798,11 +795,7 @@ var SalesTableService = /** @class */ (function () {
                     case 23: return [4 /*yield*/, this.saveQuotation(reqData)];
                     case 24: return [2 /*return*/, _b.sent()];
                     case 25: return [4 /*yield*/, this.saveQuotation(reqData)];
-                    case 26: 
-                    // let custAccount = await this.rawQuery.get_vedor_related_custaccount(reqData.custAccount);
-                    //console.log(custAccount);
-                    // if (custAccount) {
-                    return [2 /*return*/, _b.sent()];
+                    case 26: return [2 /*return*/, _b.sent()];
                     case 27: return [4 /*yield*/, this.saveReturnOrder(reqData)];
                     case 28: return [2 /*return*/, _b.sent()];
                     case 29:
@@ -841,7 +834,6 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.checkSalesStatus(item.salesId)];
                     case 2:
                         statusData = _a.sent();
-                        console.log(statusData);
                         if (statusData.status == "PAID" || statusData.status == "POSTED" || statusData.status == "PRINTED") {
                             return [2 /*return*/, "ALREADY_PAID"];
                         }
@@ -866,7 +858,6 @@ var SalesTableService = /** @class */ (function () {
                     case 6:
                         oldItem = _a.sent();
                         if (oldItem) {
-                            console.log(oldItem.salesId);
                         }
                         else {
                             item.salesId = uid;
@@ -994,8 +985,6 @@ var SalesTableService = /** @class */ (function () {
                         if (!(data && data.format)) return [3 /*break*/, 30];
                         hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);
                         date = new Date(data.lastmodifieddate).toLocaleString();
-                        console.log(date);
-                        console.log(data);
                         prevYear = new Date(data.lastmodifieddate).getFullYear().toString().substr(2, 2);
                         year = new Date(App_1.App.DateNow()).getFullYear().toString().substr(2, 2);
                         data.nextrec = prevYear == year ? data.nextrec : "000001";
@@ -1184,7 +1173,6 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.salestableDAO.transferorderEntity(data.salesId)];
                     case 1:
                         salesData = _a.sent();
-                        console.log(salesData);
                         salesData.status = "CONVERTED";
                         return [4 /*yield*/, this.rawQuery.salesTableInterCompanyOriginalData(data.salesId)];
                     case 2:
@@ -1200,7 +1188,6 @@ var SalesTableService = /** @class */ (function () {
                         salesData.salesLine.map(function (v) {
                             items_1.push(v.itemid), colors_1.push(v.configId), sizes_1.push(v.inventsizeid);
                         });
-                        console.log(canConvert);
                         salesData.originalPrinted = false;
                         return [4 /*yield*/, this.salestableDAO.save(salesData)];
                     case 4:
@@ -1226,7 +1213,6 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.save(reqData)];
                     case 6:
                         data = _a.sent();
-                        console.log(reqData);
                         data.message = "CONVERTED";
                         return [2 /*return*/, data];
                     case 7: throw { status: 0, message: "NO_VENDOR_FOR_CUSTOMER" };
@@ -1360,7 +1346,6 @@ var SalesTableService = /** @class */ (function () {
                         return [2 /*return*/, returnData];
                     case 11:
                         error_10 = _a.sent();
-                        console.log(error_10);
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
                     case 12:
                         _a.sent();
@@ -1377,7 +1362,7 @@ var SalesTableService = /** @class */ (function () {
     SalesTableService.prototype.saveQuotation = function (reqData, queryRunner) {
         if (queryRunner === void 0) { queryRunner = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var canCommitTransaction, salesLine, cond, customerRecords, customerRecord, defaultcustomer, salesTable, promiseList, _i, salesLine_5, item, taxItemGroup, batch, designerServiceData, returnData, error_11;
+            var canCommitTransaction, unSyncedData, salesLine, cond, customerRecords, customerRecord, defaultcustomer, salesTable, promiseList, _i, salesLine_5, item, taxItemGroup, batch, designerServiceData, returnData, error_11;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -1394,13 +1379,14 @@ var SalesTableService = /** @class */ (function () {
                         canCommitTransaction = true;
                         _a.label = 3;
                     case 3:
-                        _a.trys.push([3, 15, 20, 23]);
+                        _a.trys.push([3, 16, 21, 24]);
+                        unSyncedData = [];
                         salesLine = reqData.salesLine;
                         delete reqData.salesLine;
                         return [4 /*yield*/, this.validate(reqData, salesLine)];
                     case 4:
                         cond = _a.sent();
-                        if (!(cond == true)) return [3 /*break*/, 14];
+                        if (!(cond == true)) return [3 /*break*/, 15];
                         reqData.payment = reqData.transkind == "DESIGNERSERVICE" ? "CASH" : false;
                         reqData.lastModifiedDate = new Date(App_1.App.DateNow());
                         reqData.status =
@@ -1429,6 +1415,14 @@ var SalesTableService = /** @class */ (function () {
                         }
                         reqData.linesCount = salesLine.length;
                         salesLine && salesLine.length > 0 ? (reqData.sumTax = salesLine[0].vat) : null;
+                        if (reqData.status == "PAID") {
+                            unSyncedData.push({
+                                id: uuid(),
+                                transactionId: reqData.salesId,
+                                transactionTable: "salestable",
+                                updatedOn: new Date(),
+                            });
+                        }
                         return [4 /*yield*/, queryRunner.manager.getRepository(SalesTable_1.SalesTable).save(reqData)];
                     case 6:
                         salesTable = _a.sent();
@@ -1440,6 +1434,14 @@ var SalesTableService = /** @class */ (function () {
                         if (!(_i < salesLine_5.length)) return [3 /*break*/, 11];
                         item = salesLine_5[_i];
                         item.id = uuid();
+                        if (reqData.status == "PAID") {
+                            unSyncedData.push({
+                                id: uuid(),
+                                transactionId: item.id,
+                                transactionTable: "salesline",
+                                updatedOn: new Date(),
+                            });
+                        }
                         item.salesId = reqData.salesId;
                         item.createddatetime = new Date(App_1.App.DateNow());
                         item.createdBy = this.sessionInfo.userName;
@@ -1456,6 +1458,7 @@ var SalesTableService = /** @class */ (function () {
                         item.lineAmount = parseFloat(item.salesprice) * parseFloat(item.salesQty);
                         if (!(reqData.transkind == "DESIGNERSERVICE" && reqData.status == "PAID")) return [3 /*break*/, 10];
                         batch = {
+                            id: uuid(),
                             itemid: "HSN-00004",
                             configid: "--",
                             inventsizeid: "--",
@@ -1469,6 +1472,14 @@ var SalesTableService = /** @class */ (function () {
                             batchno: "-",
                             dateinvent: new Date(App_1.App.DateNow()),
                         };
+                        if (reqData.status == "PAID") {
+                            unSyncedData.push({
+                                id: uuid(),
+                                transactionId: batch.id,
+                                transactionTable: "inventtrans",
+                                updatedOn: new Date(),
+                            });
+                        }
                         return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batch, true, true, queryRunner)];
                     case 9:
                         _a.sent();
@@ -1500,12 +1511,15 @@ var SalesTableService = /** @class */ (function () {
                                 promiseList.push(queryRunner.manager.getRepository(Designerservice_1.Designerservice).save(designerServiceData));
                             }
                         }
-                        return [4 /*yield*/, Promise.all(promiseList)];
+                        return [4 /*yield*/, queryRunner.manager.getRepository(UnSyncedTransactions_1.UnSyncedTransactions).save(unSyncedData)];
                     case 12:
                         _a.sent();
-                        if (!canCommitTransaction) return [3 /*break*/, 14];
-                        return [4 /*yield*/, queryRunner.commitTransaction()];
+                        return [4 /*yield*/, Promise.all(promiseList)];
                     case 13:
+                        _a.sent();
+                        if (!canCommitTransaction) return [3 /*break*/, 15];
+                        return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 14:
                         _a.sent();
                         returnData = {
                             id: salesTable.salesId,
@@ -1513,29 +1527,29 @@ var SalesTableService = /** @class */ (function () {
                             status: reqData.status,
                         };
                         return [2 /*return*/, returnData];
-                    case 14: return [3 /*break*/, 23];
-                    case 15:
-                        error_11 = _a.sent();
-                        if (!reqData.isInsert) return [3 /*break*/, 17];
-                        return [4 /*yield*/, this.rawQuery.updateNumberSequence(reqData.numberSequenceGroup, parseInt(reqData.nextrec) - 1)];
+                    case 15: return [3 /*break*/, 24];
                     case 16:
-                        _a.sent();
-                        _a.label = 17;
+                        error_11 = _a.sent();
+                        if (!reqData.isInsert) return [3 /*break*/, 18];
+                        return [4 /*yield*/, this.rawQuery.updateNumberSequence(reqData.numberSequenceGroup, parseInt(reqData.nextrec) - 1)];
                     case 17:
-                        if (!canCommitTransaction) return [3 /*break*/, 19];
-                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                        _a.sent();
+                        _a.label = 18;
                     case 18:
+                        if (!canCommitTransaction) return [3 /*break*/, 20];
+                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                    case 19:
                         _a.sent();
-                        _a.label = 19;
-                    case 19: throw error_11;
-                    case 20:
-                        if (!canCommitTransaction) return [3 /*break*/, 22];
-                        return [4 /*yield*/, queryRunner.release()];
+                        _a.label = 20;
+                    case 20: throw error_11;
                     case 21:
+                        if (!canCommitTransaction) return [3 /*break*/, 23];
+                        return [4 /*yield*/, queryRunner.release()];
+                    case 22:
                         _a.sent();
-                        _a.label = 22;
-                    case 22: return [7 /*endfinally*/];
-                    case 23: return [2 /*return*/];
+                        _a.label = 23;
+                    case 23: return [7 /*endfinally*/];
+                    case 24: return [2 /*return*/];
                 }
             });
         });
@@ -1611,7 +1625,6 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, queryRunner.manager.getRepository(SalesLine_1.SalesLine).remove(lineData)];
                     case 2:
                         _a.sent();
-                        console.log("================Deleteing all from remove=====================");
                         return [2 /*return*/];
                 }
             });
@@ -1632,7 +1645,6 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, queryRunner.manager.getRepository(InventTrans_1.Inventorytrans).remove(batches)];
                     case 2:
                         _a.sent();
-                        console.log("================Deleteing all from remove=====================");
                         return [2 /*return*/];
                 }
             });
@@ -1650,10 +1662,11 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.salesLineItemOrder = function (item, reqData, queryRunner, salesLine) {
         return __awaiter(this, void 0, void 0, function () {
-            var batches, _loop_2, this_1, _i, _a, batch, fiofoBatches, uniqueList, groupBatchesList, qty, _b, batches_3, batch;
+            var unSyncedData, batches, _loop_2, this_1, _i, _a, batch, fiofoBatches, uniqueList, groupBatchesList, qty, _b, batches_3, batch;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
+                        unSyncedData = [];
                         batches = [];
                         item.batch = [];
                         if (!(item.salesQty > 0)) return [3 /*break*/, 7];
@@ -1671,16 +1684,14 @@ var SalesTableService = /** @class */ (function () {
                             var availability, similarLines, fiofoBatches;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
-                                    case 0:
-                                        console.log(batch);
-                                        return [4 /*yield*/, this_1.rawQuery.getbatchavailability({
-                                                inventlocationid: this_1.sessionInfo.inventlocationid,
-                                                itemid: item.itemid,
-                                                configid: item.configId,
-                                                inventsizeid: item.inventsizeid,
-                                                batchno: batch.batchNo,
-                                                invoiceid: reqData.salesId,
-                                            })];
+                                    case 0: return [4 /*yield*/, this_1.rawQuery.getbatchavailability({
+                                            inventlocationid: this_1.sessionInfo.inventlocationid,
+                                            itemid: item.itemid,
+                                            configid: item.configId,
+                                            inventsizeid: item.inventsizeid,
+                                            batchno: batch.batchNo,
+                                            invoiceid: reqData.salesId,
+                                        })];
                                     case 1:
                                         availability = _a.sent();
                                         return [4 /*yield*/, salesLine.filter(function (d) {
@@ -1692,13 +1703,9 @@ var SalesTableService = /** @class */ (function () {
                                     case 2:
                                         similarLines = _a.sent();
                                         availability = parseInt(availability);
-                                        console.log(availability);
                                         similarLines.map(function (d) {
-                                            console.log(d.batches);
                                             d.batches.map(function (b) {
-                                                console.log(b.batchNo, batch.batchNo);
                                                 if (b.batchNo == batch.batchNo) {
-                                                    console.log(b.quantity);
                                                     availability -= parseInt(b.quantity);
                                                 }
                                             });
@@ -1764,7 +1771,6 @@ var SalesTableService = /** @class */ (function () {
                             uniqueList.push(v[0]);
                         });
                         qty = uniqueList.reduce(function (res, i) { return res + parseInt(i.quantity); }, 0);
-                        console.log("qty", qty, item.salesQty);
                         if (reqData.status == "PAID" || reqData.status == "RESERVED") {
                             if (parseInt(item.salesQty) != qty) {
                                 throw {
@@ -1783,8 +1789,17 @@ var SalesTableService = /** @class */ (function () {
                             batchNo: batch.batchno,
                             quantity: batch.quantity,
                         });
+                        batch.id = uuid();
                         batch.salesLineId = item.id;
                         this.updateInventoryService.sessionInfo = this.sessionInfo;
+                        if (reqData.status == "PAID") {
+                            unSyncedData.push({
+                                id: uuid(),
+                                transactionId: batch.id,
+                                transactionTable: "inventtrans",
+                                updatedOn: new Date(),
+                            });
+                        }
                         return [4 /*yield*/, this.updateInventoryService.updateInventtransTable(batch, true, true, queryRunner)];
                     case 9:
                         _c.sent();
@@ -1792,7 +1807,10 @@ var SalesTableService = /** @class */ (function () {
                     case 10:
                         _b++;
                         return [3 /*break*/, 8];
-                    case 11: return [2 /*return*/];
+                    case 11: return [4 /*yield*/, queryRunner.manager.getRepository(UnSyncedTransactions_1.UnSyncedTransactions).save(unSyncedData)];
+                    case 12:
+                        _c.sent();
+                        return [2 /*return*/];
                 }
             });
         });
@@ -2039,18 +2057,14 @@ var SalesTableService = /** @class */ (function () {
                                         return [4 /*yield*/, this_2.rawQuery.getReturnedDesignerServiceList(reqData.interCompanyOriginalSalesId)];
                                     case 1:
                                         desinerServiceDetails = _a.sent();
-                                        console.log(desinerServiceDetails);
                                         desinerServiceDetails = desinerServiceDetails.filter(function (v) {
                                             return v.recordtype == 0 &&
                                                 v.salesorderid != item.salesId &&
                                                 v.invoiceid == item.interCompanyOriginalSalesId &&
                                                 parseFloat(v.amount) > 0;
                                         });
-                                        console.log(desinerServiceDetails);
                                         amount = desinerServiceDetails.reduce(function (res, item) { return res + Math.abs(item.amount); }, 0);
-                                        console.log("=========================netAmount===================", amount, item.netAmount);
                                         leftReturnAmount = parseFloat(item.netAmount) - amount;
-                                        console.log(leftReturnAmount);
                                         if (!(leftReturnAmount > 0)) return [3 /*break*/, 3];
                                         if (designerServiceAmount >= leftReturnAmount) {
                                             item.netAmount = leftReturnAmount;
@@ -2080,7 +2094,6 @@ var SalesTableService = /** @class */ (function () {
                                         delete item.salesId;
                                         delete item.salesLine.id;
                                         delete item.salesLine.salesId;
-                                        console.log("=========================amount===================", designerServiceAmount, item.netAmount);
                                         if (!(parseFloat(item.netAmount) > 0)) return [3 /*break*/, 3];
                                         return [4 /*yield*/, this_2.saveQuotation(item, queryRunner)];
                                     case 2:
@@ -2129,16 +2142,14 @@ var SalesTableService = /** @class */ (function () {
                         LoyaltyStatus: 0,
                     };
                 }
-                catch (error) {
-                    console.error(error);
-                }
+                catch (error) { }
                 return [2 /*return*/];
             });
         });
     };
     SalesTableService.prototype.saveSalesOrder = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, promiseList, customerRecord, salesLine_7, returnData, batchTobeSaved, salestatus, _a, saleslineArray, cond, customerRecords, customerRecord_1, defaultcustomer, mobileCustomer, salesTable_1, taxItemGroup, _i, salesLine_6, item, salesline, condData, customerDetails, pmobileno, userName, ptokenData, pmessage, pmail, imail, error_14;
+            var queryRunner, unSyncedData, promiseList, customerRecord, salesLine_7, returnData, batchTobeSaved, salestatus, _a, saleslineArray, cond, customerRecords, customerRecord_1, defaultcustomer, mobileCustomer, salesTable_1, taxItemGroup, _i, salesLine_6, item, salesline, condData, customerDetails, pmobileno, userName, ptokenData, pmessage, pmail, imail, error_14;
             var _this = this;
             return __generator(this, function (_b) {
                 switch (_b.label) {
@@ -2154,6 +2165,7 @@ var SalesTableService = /** @class */ (function () {
                         _b.label = 3;
                     case 3:
                         _b.trys.push([3, 25, 29, 31]);
+                        unSyncedData = [];
                         promiseList = [];
                         customerRecord = void 0;
                         salesLine_7 = reqData.salesLine;
@@ -2179,7 +2191,6 @@ var SalesTableService = /** @class */ (function () {
                             salesLine_7.map(function (v) {
                                 if (v.batches && v.batches.length > 0) {
                                     var qty = v.batches.reduce(function (res, item) { return res + parseInt(item.quantity); }, 0);
-                                    console.log("qty", qty, v.salesQty);
                                     if (v.salesQty != qty) {
                                         throw { status: 0, message: "selected line quantities and selected batches quantities are not matching" };
                                     }
@@ -2239,6 +2250,12 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, queryRunner.manager.getRepository(SalesTable_1.SalesTable).save(reqData)];
                     case 12:
                         salesTable_1 = _b.sent();
+                        unSyncedData.push({
+                            id: uuid(),
+                            transactionId: reqData.salesId,
+                            transactionTable: "salestable",
+                            updatedOn: new Date(),
+                        });
                         Log_1.log.info("3----------------------------");
                         promiseList = [];
                         promiseList.push(this.salesLineDelete(reqData, queryRunner));
@@ -2269,6 +2286,14 @@ var SalesTableService = /** @class */ (function () {
                         item.taxGroup = reqData.taxGroup;
                         item.lineAmount = parseFloat(item.salesprice) * parseFloat(item.salesQty);
                         item.taxItemGroup = taxItemGroup;
+                        if (reqData.status == "PAID") {
+                            unSyncedData.push({
+                                id: uuid(),
+                                transactionId: item.id,
+                                transactionTable: "salesline",
+                                updatedOn: new Date(),
+                            });
+                        }
                         return [4 /*yield*/, this.salesLineItemOrder(item, reqData, queryRunner, salesLine_7)];
                     case 16:
                         _b.sent();
@@ -2279,13 +2304,13 @@ var SalesTableService = /** @class */ (function () {
                     case 18: return [4 /*yield*/, queryRunner.manager.getRepository(SalesLine_1.SalesLine).save(salesLine_7)];
                     case 19:
                         salesline = _b.sent();
+                        queryRunner.manager.getRepository(UnSyncedTransactions_1.UnSyncedTransactions).save(unSyncedData);
                         promiseList = [];
                         if (!(reqData.status == "PAID")) return [3 /*break*/, 21];
                         return [4 /*yield*/, this.rawQuery.salesTableData(reqData.interCompanyOriginalSalesId)];
                     case 20:
                         condData = _b.sent();
                         condData = condData.length >= 0 ? condData[0] : {};
-                        //console.log(condData);
                         promiseList.push(this.saveSalesOrderUpdateVocharDiscount(reqData, queryRunner));
                         condData = condData ? condData : {};
                         if (condData.transkind == "PURCHASEORDER") {
@@ -2303,7 +2328,6 @@ var SalesTableService = /** @class */ (function () {
                             }); };
                             promiseList.push(pmobileno());
                         }
-                        //console.log(reqData);
                         if (customerDetails.walkincustomer) {
                             promiseList.push(this.saveSalesVisitorData(reqData, customerDetails, queryRunner));
                         }
@@ -2418,7 +2442,6 @@ var SalesTableService = /** @class */ (function () {
                                             _a.label = 2;
                                         case 2:
                                             _a.trys.push([2, 4, , 5]);
-                                            console.log(reportData);
                                             return [4 /*yield*/, App_1.App.SendMail(reqData.custEmail, "Invoice", template, reportData)];
                                         case 3: return [2 /*return*/, _a.sent()];
                                         case 4:
@@ -2478,11 +2501,9 @@ var SalesTableService = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.rawQuery.getReturnLines(reqData.interCompanyOriginalSalesId)];
                     case 1:
                         prevReturnLines = _a.sent();
-                        console.log(prevReturnLines);
                         returnLines = reqData.salesLine;
                         _loop_4 = function (val) {
                             if (val.salesQty > 0) {
-                                console.log(val.batches);
                                 var _loop_5 = function (v) {
                                     var lineData = prevReturnLines.find(function (d) {
                                         return d.itemid == val.itemid &&
@@ -2490,11 +2511,8 @@ var SalesTableService = /** @class */ (function () {
                                             d.inventsizeid == val.inventsizeid &&
                                             d.batchno == v.batchno;
                                     });
-                                    console.log(lineData);
                                     if (lineData && parseInt(lineData.quantity) < 0) {
-                                        console.log(Math.abs(lineData.quantity), v.returnQuantity);
                                         if (Math.abs(lineData.quantity) >= v.returnQuantity) {
-                                            console.log(Math.abs(lineData.quantity), v.returnQuantity);
                                         }
                                         else {
                                             return { value: false };
@@ -2555,7 +2573,6 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.db.query("select * from salestable where intercompanyoriginalsalesid  = '" + reqData.interCompanyOriginalSalesId + "' and salesid!= '" + reqData.salesId + "' ")];
                     case 5:
                         checkPrevData = _a.sent();
-                        console.log(checkPrevData);
                         if (checkPrevData && checkPrevData.length > 0) {
                             throw { status: 0, message: "ALREADY_SHIPPED" };
                         }
@@ -2572,7 +2589,6 @@ var SalesTableService = /** @class */ (function () {
                             })];
                     case 7:
                         salesData = _a.sent();
-                        //console.log(salesData);
                         if (salesData) {
                             salesData.status = reqData.status;
                             salesData.salesType = 2;
@@ -2597,7 +2613,6 @@ var SalesTableService = /** @class */ (function () {
                         reqData.linesCount = salesLine.length;
                         promiseList.push(queryRunner.manager.getRepository(SalesTable_1.SalesTable).save(reqData));
                         salesLine = salesLine.filter(function (v) { return v.status == "SHIPPED"; });
-                        console.log(salesLine);
                         _i = 0, salesLine_9 = salesLine;
                         _a.label = 10;
                     case 10:
@@ -2693,21 +2708,18 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.validateReturnOrder(reqData)];
                     case 4:
                         condition = _c.sent();
-                        console.log(condition);
                         return [3 /*break*/, 6];
                     case 5:
                         condition = true;
                         _c.label = 6;
                     case 6:
                         if (!condition) return [3 /*break*/, 29];
-                        console.log(reqData);
                         salesLine = reqData.salesLine;
                         delete reqData.salesLine;
                         return [4 /*yield*/, this.validate(reqData, salesLine)];
                     case 7:
                         cond = _c.sent();
                         if (!(cond == true)) return [3 /*break*/, 28];
-                        console.log("======================================================================================", reqData.salesId);
                         reqData.linesCount = salesLine.length;
                         if (!(reqData.transkind == "DESIGNERSERVICERETURN")) return [3 /*break*/, 15];
                         this.rawQuery.sessionInfo = this.sessionInfo;
@@ -2736,7 +2748,6 @@ var SalesTableService = /** @class */ (function () {
                             })];
                     case 12:
                         desinerService = _c.sent();
-                        console.log(desinerService, reqData.interCompanyOriginalSalesId);
                         amount = desinerService.reduce(function (res, item) { return res + parseFloat(item.amount); }, 0);
                         if (!(parseFloat(amount.toFixed(2)) >= parseFloat(reqData.netAmount.toFixed(2)))) return [3 /*break*/, 14];
                         return [4 /*yield*/, this.designerServiceDAO.findOne({
@@ -2775,7 +2786,6 @@ var SalesTableService = /** @class */ (function () {
                         delete item.id;
                         item.id = uuid();
                         item.salesId = reqData.salesId;
-                        console.log("======================================================================================", item.salesId, reqData.salesId);
                         item.taxItemGroup = taxItemGroup;
                         item.createddatetime = new Date(App_1.App.DateNow());
                         item.createdBy = this.sessionInfo.userName;
@@ -2842,7 +2852,6 @@ var SalesTableService = /** @class */ (function () {
                             message: "SAVED_SUCCESSFULLY",
                             status: reqData.status,
                         };
-                        console.log(reqData);
                         return [2 /*return*/, returnData];
                     case 28: return [3 /*break*/, 30];
                     case 29: throw { status: 0, message: "CAN_NOT_CREATE_RETURN_ORDER" };
@@ -2899,7 +2908,6 @@ var SalesTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.db.query("select * from salestable where intercompanyoriginalsalesid  = '" + reqData.interCompanyOriginalSalesId + "' and salesid!= '" + reqData.salesId + "' ")];
                     case 4:
                         checkPrevData = _c.sent();
-                        console.log(checkPrevData);
                         if (checkPrevData && checkPrevData.length > 0) {
                             throw { status: 0, message: "ALREADY_RECEIVED" };
                         }
@@ -3215,31 +3223,71 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.sendForTransferOrderRequest = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var transferorder, error_21;
+            var queryRunner, unSyncedData_1, transferorder, lineids, error_21;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 4, , 5]);
-                        return [4 /*yield*/, this.salestableDAO.transferorderEntity(reqData.salesId)];
+                        queryRunner = typeorm_2.getConnection().createQueryRunner();
+                        return [4 /*yield*/, queryRunner.connect()];
                     case 1:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.startTransaction()];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        _a.trys.push([3, 10, 12, 14]);
+                        unSyncedData_1 = [];
+                        return [4 /*yield*/, this.salestableDAO.transferorderEntity(reqData.salesId)];
+                    case 4:
                         transferorder = _a.sent();
                         transferorder.lastModifiedDate = new Date(App_1.App.DateNow());
                         transferorder.status = reqData.status ? reqData.status : "REQUESTED";
                         return [4 /*yield*/, this.salestableDAO.save(transferorder)];
-                    case 2:
+                    case 5:
                         transferorder = _a.sent();
+                        unSyncedData_1.push({
+                            id: uuid(),
+                            transactionId: reqData.salesId,
+                            transactionTable: "salestable",
+                            updatedOn: new Date(),
+                        });
                         return [4 /*yield*/, this.rawQuery.updateSalesLine(reqData.salesId, "REQUESTED")];
-                    case 3:
+                    case 6:
+                        _a.sent();
+                        return [4 /*yield*/, this.db.query("select id from salesline where salesid = '" + reqData.salesId + "'")];
+                    case 7:
+                        lineids = _a.sent();
+                        lineids.map(function (v) {
+                            unSyncedData_1.push({
+                                id: uuid(),
+                                transactionId: v.id,
+                                transactionTable: "salesline",
+                                updatedOn: new Date(),
+                            });
+                        });
+                        return [4 /*yield*/, queryRunner.manager.getRepository(UnSyncedTransactions_1.UnSyncedTransactions).save(unSyncedData_1)];
+                    case 8:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 9:
                         _a.sent();
                         return [2 /*return*/, {
                                 id: transferorder.salesId,
                                 message: "REQUESTED",
                                 status: transferorder.status,
                             }];
-                    case 4:
+                    case 10:
                         error_21 = _a.sent();
+                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                    case 11:
+                        _a.sent();
                         throw error_21;
-                    case 5: return [2 /*return*/];
+                    case 12: return [4 /*yield*/, queryRunner.release()];
+                    case 13:
+                        _a.sent();
+                        return [7 /*endfinally*/];
+                    case 14: return [2 /*return*/];
                 }
             });
         });
@@ -3320,7 +3368,6 @@ var SalesTableService = /** @class */ (function () {
                         _loop_6 = function (batch) {
                             batch.availabilty = parseInt(batch.availabilty);
                             if (similarLines && similarLines.length > 0) {
-                                console.log(batch);
                                 similarLines.map(function (v) {
                                     if (v.batches) {
                                         v.batches.map(function (b) {
@@ -3418,7 +3465,6 @@ var SalesTableService = /** @class */ (function () {
                         promiseList.push(this.inventryTransUpdate(reqData, queryRunner));
                         for (_i = 0, salesLine_13 = salesLine; _i < salesLine_13.length; _i++) {
                             item = salesLine_13[_i];
-                            console.log(item);
                             promiseList.push(this.salesLineItemOrder(item, reqData, queryRunner, salesLine));
                         }
                         promiseList.push(this.saveSalesOrderUpdateVocharDiscount(reqData, queryRunner));
@@ -3450,7 +3496,6 @@ var SalesTableService = /** @class */ (function () {
                             return __generator(this, function (_a) {
                                 template = reqData.lang == "en" ? "email-invoice-en" : "email-invoice-ar";
                                 try {
-                                    console.log(reportData_1);
                                     return [2 /*return*/, App_1.App.SendMail(reqData.custEmail, "Invoice", template, reportData_1)];
                                 }
                                 catch (error) {
@@ -3470,7 +3515,6 @@ var SalesTableService = /** @class */ (function () {
                             status: reqData.status,
                             url: reqData.url,
                         };
-                        console.log("7----------------------------");
                         queryRunner.commitTransaction();
                         return [2 /*return*/, returnData];
                     case 5:
@@ -3621,7 +3665,6 @@ var SalesTableService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 5, , 6]);
-                        console.log(item);
                         if (!item.inventlocationid) return [3 /*break*/, 3];
                         query = " select st.salesid ,st.salesname,st.painter,\n        ct.namealias as \"customerNameEn\",ct.name as \"customerNameAr\",\n        st.netamount as amount,st.lastmodifieddate\n        from salestable  st \n        inner join custtable ct on\n        ct.accountnum =st.invoiceaccount \n        where st.transkind ='SALESORDER'\n        and st.status  in ('PAID','PRINTED')\n                       and st.inventlocationid ='" + item.inventlocationid + "'\n                       and  COALESCE(st.painter, '') != '' \n                       order by st.lastmodifieddate desc;;\n        ";
                         return [4 /*yield*/, this.salestableDAO.getDAO().query(query)];

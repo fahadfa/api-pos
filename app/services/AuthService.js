@@ -46,7 +46,6 @@ var AuthService = /** @class */ (function () {
         this.menuGroupRepository = new MenuGroupDAO_1.MenuGroupDAO();
     }
     AuthService.prototype.signin = function (reqData) {
-        console.log(reqData);
         return this.Response(reqData);
     };
     AuthService.prototype.refreshToken = function (reqData) {
@@ -56,7 +55,6 @@ var AuthService = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         _b.trys.push([0, 5, , 6]);
-                        console.log(reqData);
                         if (!reqData) {
                             throw { status: 0, message: "Invalid Data" };
                         }
@@ -171,7 +169,6 @@ var AuthService = /** @class */ (function () {
                     case 11:
                         offlineSystems = _b.sent();
                         offlineSystems = offlineSystems.find(function (v) { return v.id == responseData.identity.inventlocationid; });
-                        console.log(offlineSystems);
                         if (offlineSystems) {
                         }
                         _b.label = 12;
@@ -208,18 +205,15 @@ var AuthService = /** @class */ (function () {
                         isVid = true;
                         responseData = {};
                         query = { userName: reqData.userName.trim(), email: reqData.userName };
-                        console.log(query);
                         return [4 /*yield*/, this.userinfoDAO.findOne(query)];
                     case 1:
                         profileObj = _a.sent();
-                        console.log(profileObj);
                         if (profileObj == null) {
                             return [2 /*return*/, Promise.reject({ status: 0, message: "INVALID_USERNAME_PASSWORD" })];
                         }
                         else {
                             auth = false;
                             auth = App_1.App.HashCompareSync(reqData.password, profileObj.password);
-                            console.log("Auth: " + auth);
                             if (auth == true) {
                                 if (profileObj.status == "ACTIVE") {
                                     try {
@@ -283,7 +277,6 @@ var AuthService = /** @class */ (function () {
                         return [3 /*break*/, 8];
                     case 7:
                         error_3 = _a.sent();
-                        console.log(error_3);
                         throw { message: "RESET_TOKEN_NOT_SENT", status: 0 };
                     case 8: return [3 /*break*/, 10];
                     case 9: throw { message: "INVALID_USERNAME", status: 0 };
@@ -303,7 +296,6 @@ var AuthService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 7, , 8]);
-                        console.log(reqData);
                         profileObj = null;
                         return [4 /*yield*/, this.userinfoDAO.findOne({ userName: reqData.userName, email: reqData.userName })];
                     case 1:

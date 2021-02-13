@@ -173,21 +173,18 @@ var BaseSizesService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.getCustomerSpecificPrice(reqData)];
                     case 12:
                         amount_1 = _c.sent();
-                        console.log(amount_1);
                         _c.label = 13;
                     case 13:
                         if (!(amount_1.length == 0)) return [3 /*break*/, 15];
                         return [4 /*yield*/, this.rawQuery.getNormalPrice(reqData)];
                     case 14:
                         amount_1 = _c.sent();
-                        console.log(amount_1);
                         _c.label = 15;
                     case 15:
                         if (amount_1.length == 0) {
                             return [2 /*return*/, { amount: 0 }];
                         }
                         else {
-                            console.log(amount_1);
                             amount_1[0].amount = Math.ceil(amount_1[0].amount);
                             return [2 /*return*/, amount_1[0]];
                         }

@@ -480,6 +480,70 @@ var SyncServiceHelper = /** @class */ (function () {
             });
         });
     };
+    /**
+     *
+     * @param type  "INSERT", "UPDATE", "SELECT"
+     * @param entity
+     */
+    SyncServiceHelper.SyncReUpdateSQL = function (type, entity) {
+        switch (type) {
+            case "INSERT":
+                return "insert into sync_reupdate (id, store_id, table_name, table_pk, table_pk_value, type, sync_date, add_on ) values ('" + entity.id + "','" + entity.store_id + "','" + entity.table_name + "','" + entity.table_pk + "','" + entity.table_pk_value + "','" + entity.type + "','" + entity.sync_date + "', '" + JSON.stringify(entity.add_on) + "')";
+            case "UPDATE":
+                return "update sync_reupdate set is_update = true, updated_on = now() where is_update = false and store_id = '" + entity.store_id + "' and table_name='" + entity.table_name + "' and table_pk_value = '" + entity.table_pk_value + "'";
+            case "SELECT":
+                return "select distinct store_id, table_name, table_pk, table_pk_value, is_resync, type from sync_reupdate where store_id = '" + entity.store_id + "' and table_name in ('" + entity.table_name + "') and is_update = false ;";
+            default:
+                return null;
+        }
+    };
+    SyncServiceHelper.BuildDMLSelectPkQuery = function (tableName, pk, value) {
+        var sql = "select * from " + tableName + " where " + pk + "= '" + value + "' ";
+        return sql;
+    };
+    SyncServiceHelper.BuildBatchQuery = function (soruceRes, sync, log, targetDb, batchSql) {
+        return __awaiter(this, void 0, void 0, function () {
+            var rowsAvalible, rowsNotAvalible, sql, rowsLength, primaryKeys, res, metaDataTable;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        rowsAvalible = null;
+                        rowsNotAvalible = null;
+                        sql = null;
+                        if (!(soruceRes && soruceRes.rows.length != 0)) return [3 /*break*/, 7];
+                        rowsLength = soruceRes.rows.length;
+                        primaryKeys = soruceRes.rows.map(function (ele) { return ele[sync.map_pk]; });
+                        return [4 /*yield*/, SyncServiceHelper.ChackAvalibleQuery(sync.map_table, soruceRes.metaData, primaryKeys, sync.map_pk)];
+                    case 1:
+                        sql = _a.sent();
+                        return [4 /*yield*/, SyncServiceHelper.ExecuteQuery(targetDb, sql)];
+                    case 2:
+                        res = _a.sent();
+                        rowsAvalible = res.rows.map(function (ele) { return ele[sync.map_pk]; });
+                        rowsNotAvalible = primaryKeys.filter(function (ele) { return rowsAvalible.indexOf(ele) < 0; });
+                        log.debug("\t\tUpdate Records: " + sync.map_table + " --> " + rowsAvalible.length);
+                        log.debug("\t\tInsert Records: " + sync.map_table + " --> " + rowsNotAvalible.length);
+                        return [4 /*yield*/, SyncServiceHelper.MetadataTable(targetDb, sync.map_table)];
+                    case 3:
+                        metaDataTable = _a.sent();
+                        if (!(rowsAvalible && rowsAvalible.length > 0)) return [3 /*break*/, 5];
+                        return [4 /*yield*/, SyncServiceHelper.PrepareQuery(sync.map_table, metaDataTable, soruceRes.rows, rowsAvalible, "UPDATE", sync.map_pk)];
+                    case 4:
+                        sql = _a.sent();
+                        batchSql.push(sql);
+                        _a.label = 5;
+                    case 5:
+                        if (!(rowsNotAvalible && rowsNotAvalible.length > 0)) return [3 /*break*/, 7];
+                        return [4 /*yield*/, SyncServiceHelper.PrepareQuery(sync.map_table, metaDataTable, soruceRes.rows, rowsNotAvalible, "INSERT", sync.map_pk)];
+                    case 6:
+                        sql = _a.sent();
+                        batchSql.push(sql);
+                        _a.label = 7;
+                    case 7: return [2 /*return*/];
+                }
+            });
+        });
+    };
     SyncServiceHelper.synTableColumns = "*";
     SyncServiceHelper.synTableName = "sync_table";
     SyncServiceHelper.syncSourceTableName = "sync_source";

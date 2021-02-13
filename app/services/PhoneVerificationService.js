@@ -266,8 +266,6 @@ var PhoneVerificationService = /** @class */ (function () {
                         phoneVerification = _a.sent();
                         if (!phoneVerification) return [3 /*break*/, 7];
                         if (!(phoneVerification.otpSent == item.otp)) return [3 /*break*/, 5];
-                        console.log(phoneVerification.otpExpiryTime, new Date(App_1.App.DateNow()));
-                        console.log(phoneVerification.otpExpiryTime < new Date(App_1.App.DateNow()));
                         if (!(phoneVerification.otpExpiryTime.getTime() > new Date(App_1.App.DateNow()).getTime())) return [3 /*break*/, 3];
                         phoneVerification.verificationStatus = "Verified";
                         return [4 /*yield*/, this.save(phoneVerification)];

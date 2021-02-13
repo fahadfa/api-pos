@@ -83,7 +83,6 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         return [4 /*yield*/, this.getTransferOrder(transferID)];
                     case 1:
                         axaptaData = _a.sent();
-                        console.log("data-----------------", axaptaData);
                         return [4 /*yield*/, this.checkTransferOrder(axaptaData)];
                     case 2:
                         if (!_a.sent()) return [3 /*break*/, 6];
@@ -113,7 +112,6 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         return [4 /*yield*/, this.salesTableDAO.findOne({ salesId: data.transfer_id })];
                     case 1:
                         salesData = _b.sent();
-                        console.log(data.invent_location_id_to, this.sessionInfo.inventlocationid);
                         if (!(data.invent_location_id_to == this.sessionInfo.inventlocationid)) return [3 /*break*/, 3];
                         salesData = new SalesTable_1.SalesTable();
                         salesData.salesId = data.transfer_id;
@@ -195,7 +193,6 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         _a.label = 3;
                     case 3:
                         _a.trys.push([3, 21, 25, 27]);
-                        console.log(data);
                         if (!(data.inventLocationId == this.sessionInfo.inventlocationid)) return [3 /*break*/, 19];
                         salesData = void 0;
                         return [4 /*yield*/, this.salesTableDAO.findOne({ interCompanyOriginalSalesId: data.salesId })];
@@ -224,7 +221,6 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                     case 9:
                         oldItem = _a.sent();
                         if (oldItem) {
-                            console.log(oldItem.salesId);
                         }
                         else {
                             salesData.salesId = uid;
@@ -412,9 +408,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
                         url = Props_1.Props._URL + "transferorder";
-                        console.log("axpta url :  ", url);
                         this.axios.defaults.headers["Authorization"] = Props_1.Props._TOKEN;
-                        console.log(this.axios.defaults.headers);
                         reqData = {
                             data: {
                                 transferID: transferID,
@@ -423,7 +417,6 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         return [4 /*yield*/, this.axios.post(url, reqData)];
                     case 1:
                         data = _a.sent();
-                        console.log(Object.keys(data));
                         data = data.data;
                         if (data.error) {
                             throw data.error.message;
@@ -435,8 +428,6 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                     case 2:
                         error_5 = _a.sent();
                         Log_1.log.error(error_5);
-                        // console.log(Object.keys(error));
-                        // console.log(error.response.data.Message);
                         throw { status: 0, message: error_5 };
                     case 3: return [2 /*return*/];
                 }
@@ -486,7 +477,6 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                             })];
                     case 2:
                         salesOrderWithId = _c.sent();
-                        console.log("Sales==============>", salesOrderWithId);
                         salestable.lastModifiedDate = salesOrderWithId ? salesOrderWithId.lastModifiedDate : new Date(App_1.App.DateNow());
                         _c.label = 3;
                     case 3:
@@ -557,9 +547,6 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                                 return 0;
                             });
                             salesData = __assign({}, dataList[0]);
-                            // log.info("====================Get Qr code console=======================");
-                            // log.info(salesData);
-                            // log.info("----------------------------------------------------------");
                             delete salesData.salesLine;
                             salesLine_1 = [];
                             dataList.map(function (v) {
@@ -579,11 +566,9 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                             salesData.dataareaid = this.sessionInfo.dataareaid;
                             salesData.salesType = 4;
                             salesData.salesLines = salesLine_1;
-                            console.log(scannedPages_1);
                             return [2 /*return*/, salesData];
                         }
                         else {
-                            console.log(scannedPages_1);
                             totalPages = [];
                             missingPages_1 = [];
                             for (i = 1; i <= pageCount; i++) {
@@ -594,7 +579,6 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                                     missingPages_1.push(v);
                                 }
                             });
-                            console.log(totalPages, scannedPages_1);
                             throw { status: 0, message: "PLEASE_SCAN_ALL_PAGES", missingPages: missingPages_1 };
                         }
                         return [3 /*break*/, 8];
@@ -616,7 +600,6 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         _a.trys.push([0, 2, , 3]);
                         token = void 0;
                         url = Props_1.Props.REDEEM_URL + "?clientId=" + Props_1.Props.REDEEM_CLIENT_ID + "&clientSecret=" + Props_1.Props.REDEEM_CLIENT_SECRET;
-                        console.log(url);
                         return [4 /*yield*/, this.axios.post(url)];
                     case 1:
                         data = _a.sent();
@@ -635,8 +618,6 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 if (process.env.ENV_STORE_ID && process.env.ENV_STORE_ID != "") {
-                    console.log(Props_1.Props.testStoreIds);
-                    console.log(Props_1.Props.testStoreIds.includes(data.invent_location_id_from));
                     if (Props_1.Props.testStoreIds.includes(data.invent_location_id_from)) {
                         return [2 /*return*/, false];
                     }

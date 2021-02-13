@@ -137,20 +137,17 @@ var PriceService = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        console.log(reqData);
-                        _b.label = 1;
-                    case 1:
-                        _b.trys.push([1, 10, , 11]);
+                        _b.trys.push([0, 9, , 10]);
                         defaultcustomer = void 0;
-                        if (!!reqData.pricegroup) return [3 /*break*/, 3];
+                        if (!!reqData.pricegroup) return [3 /*break*/, 2];
                         this.rawQuery.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.rawQuery.getCustomer(this.sessionInfo.defaultcustomerid)];
-                    case 2:
+                    case 1:
                         defaultcustomer = _b.sent();
                         reqData.pricegroup = defaultcustomer.pricegroup;
                         reqData.currency = defaultcustomer.currency;
-                        _b.label = 3;
-                    case 3:
+                        _b.label = 2;
+                    case 2:
                         queryData = {
                             custaccount: reqData.custaccount,
                             itemid: reqData.itemid,
@@ -171,38 +168,38 @@ var PriceService = /** @class */ (function () {
                         queryData.inventsizeids = inQueryStr_1;
                         amounts = [];
                         _i = 0, _a = reqData.inventsizeids;
-                        _b.label = 4;
-                    case 4:
-                        if (!(_i < _a.length)) return [3 /*break*/, 9];
+                        _b.label = 3;
+                    case 3:
+                        if (!(_i < _a.length)) return [3 /*break*/, 8];
                         sizeid = _a[_i];
                         amount = [];
                         queryData.inventsizeid = sizeid;
                         return [4 /*yield*/, this.rawQuery.getCustomerSpecificPrice(queryData)];
+                    case 4:
+                        amount = _b.sent();
+                        if (!(amount.length <= 0)) return [3 /*break*/, 6];
+                        return [4 /*yield*/, this.rawQuery.sizePrices(queryData)];
                     case 5:
                         amount = _b.sent();
-                        if (!(amount.length <= 0)) return [3 /*break*/, 7];
-                        return [4 /*yield*/, this.rawQuery.sizePrices(queryData)];
+                        _b.label = 6;
                     case 6:
-                        amount = _b.sent();
-                        _b.label = 7;
-                    case 7:
                         if (amount.length > 0) {
                             amounts.push(amount[0]);
                         }
-                        _b.label = 8;
-                    case 8:
+                        _b.label = 7;
+                    case 7:
                         _i++;
-                        return [3 /*break*/, 4];
-                    case 9:
+                        return [3 /*break*/, 3];
+                    case 8:
                         amounts.map(function (v) {
                             v.configid = reqData.configid;
                             v.price = Math.ceil(v.price);
                         });
                         return [2 /*return*/, amounts];
-                    case 10:
+                    case 9:
                         error_2 = _b.sent();
                         throw error_2;
-                    case 11: return [2 /*return*/];
+                    case 10: return [2 /*return*/];
                 }
             });
         });

@@ -159,7 +159,6 @@ var UsergroupConfigService = /** @class */ (function () {
                         return [4 /*yield*/, this.validate(reqData)];
                     case 1:
                         cond = _a.sent();
-                        console.log(cond);
                         if (!(cond == true)) return [3 /*break*/, 4];
                         reqData.lastmodifieddate = new Date(App_1.App.DateNow());
                         promiseList = [];
@@ -217,19 +216,15 @@ var UsergroupConfigService = /** @class */ (function () {
                         if (!(!item.groupid || item.groupid == "" || item.groupid == "0")) return [3 /*break*/, 1];
                         item.groupid = null;
                         return [3 /*break*/, 3];
-                    case 1:
-                        console.log(item.groupid);
-                        return [4 /*yield*/, this.usergroupconfigDAO.entity(item.id)];
+                    case 1: return [4 /*yield*/, this.usergroupconfigDAO.entity(item.id)];
                     case 2:
                         previousData = _a.sent();
-                        console.log(previousData);
                         _a.label = 3;
                     case 3:
                         item.lastmodifiedby = this.sessionInfo ? this.sessionInfo.userName : item.lastmodifiedby;
                         return [4 /*yield*/, this.usergroupconfigDAO.findAll({ groupid: item.groupid })];
                     case 4:
                         mdata = _a.sent();
-                        console.log(mdata);
                         if (!item.id) {
                             if (mdata.length > 0) {
                                 return [2 /*return*/, "groupid"];

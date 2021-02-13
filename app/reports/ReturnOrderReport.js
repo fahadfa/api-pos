@@ -45,6 +45,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var App_1 = require("../../utils/App");
@@ -56,6 +59,8 @@ var DesignerserviceRepository_1 = require("../repos/DesignerserviceRepository");
 var typeorm_2 = require("typeorm");
 var SalesTableService_1 = require("../services/SalesTableService");
 var SalesTableDAO_1 = require("../repos/SalesTableDAO");
+var UnSyncedTransactions_1 = require("../../entities/UnSyncedTransactions");
+var uuid_1 = __importDefault(require("uuid"));
 var ReturnOrderReport = /** @class */ (function () {
     function ReturnOrderReport() {
         this.db = typeorm_1.getManager();
@@ -69,7 +74,7 @@ var ReturnOrderReport = /** @class */ (function () {
     }
     ReturnOrderReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, data_1, batchesList, result, new_data_1, i_1, date, statusQuery, salesLineQuery, inventtransQuery, designerServices, _i, designerServices_1, service, salesLine, salesLineData, _loop_1, _a, salesLineData_1, item, sNo_1, error_1;
+            var queryRunner, unSyncedData_1, data_1, batchesList, result, new_data_1, i_1, date, statusQuery, salesLineQuery, inventtransQuery, lineids, inventtransids, designerServices, _i, designerServices_1, service, salesLine, salesLineData, _loop_1, _a, salesLineData_1, item, sNo_1, error_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -82,7 +87,8 @@ var ReturnOrderReport = /** @class */ (function () {
                         _b.sent();
                         _b.label = 3;
                     case 3:
-                        _b.trys.push([3, 16, 18, 20]);
+                        _b.trys.push([3, 19, 21, 23]);
+                        unSyncedData_1 = [];
                         return [4 /*yield*/, this.query_to_data(params)];
                     case 4:
                         data_1 = _b.sent();
@@ -120,7 +126,7 @@ var ReturnOrderReport = /** @class */ (function () {
                             i_1++;
                         });
                         data_1.batches = new_data_1;
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 12];
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 15];
                         date = new Date().toISOString();
                         statusQuery = "UPDATE salestable SET \n                          originalprinted = 'true',\n                          status = 'POSTED',\n                          lastmodifieddate = '" + date + "' \n                          WHERE salesid = '" + params.salesId + "' or \n                          salesgroup = '" + params.salesId + "' or \n                          deliverystreet = '" + params.salesId + "'";
                         // await this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED");
@@ -135,56 +141,64 @@ var ReturnOrderReport = /** @class */ (function () {
                         return [4 /*yield*/, queryRunner.query(inventtransQuery)];
                     case 6:
                         _b.sent();
-                        // let batches: any = await this.inventTransDAO.findAll({ invoiceid: params.salesId });
-                        // for (let item of batches) {
-                        // item.transactionClosed = true;
-                        // this.inventTransDAO.save(item);
-                        // await this.updateInventoryService.updateInventtransTable(item, false, true, queryRunner);
-                        // }
                         return [4 /*yield*/, this.updateSalesLineData(params.salesId)];
                     case 7:
-                        // let batches: any = await this.inventTransDAO.findAll({ invoiceid: params.salesId });
-                        // for (let item of batches) {
-                        // item.transactionClosed = true;
-                        // this.inventTransDAO.save(item);
-                        // await this.updateInventoryService.updateInventtransTable(item, false, true, queryRunner);
-                        // }
+                        _b.sent();
+                        unSyncedData_1.push({
+                            id: uuid_1.default(),
+                            transactionId: params.salesId,
+                            transactionTable: "salestable",
+                            updatedOn: new Date(),
+                        });
+                        return [4 /*yield*/, this.db.query("select id from salesline where salesid = '" + params.salesId + "'")];
+                    case 8:
+                        lineids = _b.sent();
+                        return [4 /*yield*/, this.db.query("select id from inventtrans where invoiceid = '" + params.salesId + "'")];
+                    case 9:
+                        inventtransids = _b.sent();
+                        lineids.map(function (v) {
+                            unSyncedData_1.push({
+                                id: uuid_1.default(),
+                                transactionId: v.id,
+                                transactionTable: "salesline",
+                                updatedOn: new Date(),
+                            });
+                        });
+                        inventtransids.map(function (v) {
+                            unSyncedData_1.push({
+                                id: uuid_1.default(),
+                                transactionId: v.id,
+                                transactionTable: "inventtrans",
+                                updatedOn: new Date(),
+                            });
+                        });
+                        return [4 /*yield*/, queryRunner.manager.getRepository(UnSyncedTransactions_1.UnSyncedTransactions).save(unSyncedData_1)];
+                    case 10:
                         _b.sent();
                         return [4 /*yield*/, this.salesTableDAO.search({ deliveryStreet: params.salesId })];
-                    case 8:
+                    case 11:
                         designerServices = _b.sent();
                         console.log(designerServices);
                         _i = 0, designerServices_1 = designerServices;
-                        _b.label = 9;
-                    case 9:
-                        if (!(_i < designerServices_1.length)) return [3 /*break*/, 12];
+                        _b.label = 12;
+                    case 12:
+                        if (!(_i < designerServices_1.length)) return [3 /*break*/, 15];
                         service = designerServices_1[_i];
                         service.status = "PAID";
-                        // this.salesTableService.sessionInfo = {
-                        //   useName: "SYSTEM",
-                        //   inventlocationid: service.inventLocationId,
-                        //   defaultcustomerid: service.cusAccount,
-                        //   dataareaid: service.dataareaid,
-                        //   salesmanid: [
-                        //     {
-                        //       salesman: service.salesmanId,
-                        //     },
-                        //   ],
-                        // };
                         this.salesTableService.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.salesTableService.saveQuotation(service, queryRunner)];
-                    case 10:
-                        _b.sent();
-                        _b.label = 11;
-                    case 11:
-                        _i++;
-                        return [3 /*break*/, 9];
-                    case 12: return [4 /*yield*/, this.salesline_query_to_data(params)];
                     case 13:
+                        _b.sent();
+                        _b.label = 14;
+                    case 14:
+                        _i++;
+                        return [3 /*break*/, 12];
+                    case 15: return [4 /*yield*/, this.salesline_query_to_data(params)];
+                    case 16:
                         salesLine = _b.sent();
                         console.log(salesLine);
                         return [4 /*yield*/, this.salesline_query(params)];
-                    case 14:
+                    case 17:
                         salesLineData = _b.sent();
                         _loop_1 = function (item) {
                             console.log(item.link_id);
@@ -225,21 +239,21 @@ var ReturnOrderReport = /** @class */ (function () {
                         });
                         // console.log(data);
                         return [4 /*yield*/, queryRunner.commitTransaction()];
-                    case 15:
+                    case 18:
                         // console.log(data);
                         _b.sent();
                         return [2 /*return*/, data_1];
-                    case 16:
+                    case 19:
                         error_1 = _b.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 17:
+                    case 20:
                         _b.sent();
                         throw error_1;
-                    case 18: return [4 /*yield*/, queryRunner.release()];
-                    case 19:
+                    case 21: return [4 /*yield*/, queryRunner.release()];
+                    case 22:
                         _b.sent();
                         return [7 /*endfinally*/];
-                    case 20: return [2 /*return*/];
+                    case 23: return [2 /*return*/];
                 }
             });
         });

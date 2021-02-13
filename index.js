@@ -56,7 +56,7 @@ var Watcher_1 = require("./utils/Watcher");
 var http = require("http");
 var Store_1 = require("./utils/Store");
 var App_1 = require("./utils/App");
-var sysService_1 = require("./sysService");
+var SysService_1 = require("./SysService");
 var port = 5000;
 var ENV_STORE_ID = process.env ? process.env.ENV_STORE_ID : null;
 var count = 0;
@@ -139,7 +139,7 @@ var run = function () { return __awaiter(_this, void 0, void 0, function () {
 }); };
 run();
 var sync = function () { return __awaiter(_this, void 0, void 0, function () {
-    var child_process, fs, syncFileUpdate, syncDFile, macAddress, _a, syncMFile, syncTFile, sync1File, sync2File, syncFFile, healthFile, salesCheckFile, err_1;
+    var child_process, fs, syncFileUpdate, syncDFile, macAddress, _a, syncTFile, syncPFile, salesCheckFile, err_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -158,37 +158,21 @@ var sync = function () { return __awaiter(_this, void 0, void 0, function () {
             case 1:
                 _a.systemAddress = _b.sent(),
                     _a.storeId = ENV_STORE_ID;
-                return [4 /*yield*/, sysService_1.SysService.SelectedMacAddress(ENV_STORE_ID)];
+                return [4 /*yield*/, SysService_1.SysService.SelectedMacAddress(ENV_STORE_ID, Log_1.log)];
             case 2:
                 macAddress = (_a.selectAddress = _b.sent(),
                     _a);
                 console.log(JSON.stringify(macAddress));
                 Log_1.log.warn(JSON.stringify(macAddress));
                 if (!true) return [3 /*break*/, 3];
-                syncMFile = __dirname + "/syncM.ts";
-                syncMFile = fs.existsSync(syncMFile) ? __dirname + "/syncM.ts" : __dirname + "/syncM.js";
-                child_process.fork(syncMFile);
-                Log_1.log.warn("syncMFile:", syncMFile);
                 syncTFile = __dirname + "/syncT.ts";
                 syncTFile = fs.existsSync(syncTFile) ? __dirname + "/syncT.ts" : __dirname + "/syncT.js";
                 child_process.fork(syncTFile);
                 Log_1.log.warn("syncTFile:", syncTFile);
-                sync1File = __dirname + "/sync1.ts";
-                sync1File = fs.existsSync(sync1File) ? __dirname + "/sync1.ts" : __dirname + "/sync1.js";
-                child_process.fork(sync1File);
-                Log_1.log.warn("syncFile1:", sync1File);
-                sync2File = __dirname + "/sync2.ts";
-                sync2File = fs.existsSync(sync2File) ? __dirname + "/sync2.ts" : __dirname + "/sync2.js";
-                child_process.fork(sync2File);
-                Log_1.log.warn("syncFile2:", sync2File);
-                syncFFile = __dirname + "/syncF.ts";
-                syncFFile = fs.existsSync(syncFFile) ? __dirname + "/syncF.ts" : __dirname + "/syncF.js";
-                child_process.fork(syncFFile);
-                Log_1.log.warn("syncFile:", syncFFile);
-                healthFile = __dirname + "/health.ts";
-                healthFile = fs.existsSync(healthFile) ? __dirname + "/health.ts" : __dirname + "/health.js";
-                child_process.fork(healthFile);
-                Log_1.log.warn("healthFile:", healthFile);
+                syncPFile = __dirname + "/syncP.ts";
+                syncPFile = fs.existsSync(syncPFile) ? __dirname + "/syncP.ts" : __dirname + "/syncP.js";
+                child_process.fork(syncPFile);
+                Log_1.log.warn("syncP:", syncPFile);
                 salesCheckFile = __dirname + "/salesCheck.ts";
                 salesCheckFile = fs.existsSync(salesCheckFile) ? __dirname + "/salesCheck.ts" : __dirname + "/salesCheck.js";
                 child_process.fork(salesCheckFile);
@@ -229,7 +213,7 @@ try {
     //   let macAddress = {
     //     systemAddress: await App.getMacAddress(),
     //     storeId: ENV_STORE_ID,
-    //     selectAddress: await SysService.SelectedMacAddress(ENV_STORE_ID),
+    //     selectAddress: await SysService.SelectedMacAddress(ENV_STORE_ID, log),
     //   };
     //   log.warn(JSON.stringify(macAddress));
     //   if (macAddress.selectAddress && macAddress.systemAddress && macAddress.selectAddress == macAddress.systemAddress) {
@@ -280,7 +264,7 @@ process.on("uncaughtException", function (err) {
                     Log_1.log.error("ERROR-CODE :: " + errorObj.code);
                     Log_1.log.error("======== ERROR ======== ");
                     if (errorObj && errorObj.code == "57P03") {
-                        sysService_1.SysService.ResetService();
+                        SysService_1.SysService.ResetService(Log_1.log);
                     }
                 }
                 catch (error) {

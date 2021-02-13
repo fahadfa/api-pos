@@ -76,7 +76,6 @@ var ReqItemTableService = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
                         query = { compcode: this.sessionInfo.compcode };
-                        console.log(query);
                         return [4 /*yield*/, this.reqItemTableRepository.find({
                                 relations: [],
                                 where: query,

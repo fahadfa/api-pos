@@ -136,7 +136,6 @@ var FixedAssetTableService = /** @class */ (function () {
                         return [4 /*yield*/, this.validate(item)];
                     case 1:
                         cond = _a.sent();
-                        console.log(cond);
                         if (!(cond == true || cond == "updated")) return [3 /*break*/, 3];
                         item.dataareaid = this.sessionInfo.dataareaid;
                         return [4 /*yield*/, this.fixedassettableRepository.save(item)];
@@ -169,11 +168,9 @@ var FixedAssetTableService = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 7, , 8]);
                         if (!id) return [3 /*break*/, 5];
-                        console.log(id);
                         return [4 /*yield*/, this.fixedassettableRepository.entity(id)];
                     case 1:
                         entity = _a.sent();
-                        console.log(entity);
                         if (!entity) return [3 /*break*/, 3];
                         entity.deleted = true;
                         entity.deletedby = this.sessionInfo.userName;
@@ -277,7 +274,6 @@ var FixedAssetTableService = /** @class */ (function () {
                         data.nextrec = prevYear == year ? data.nextrec : 1;
                         hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);
                         salesId = data.format.replace(hashString, year) + "-" + data.nextrec;
-                        console.log(salesId);
                         return [4 /*yield*/, this.rawQuery.updateNumberSequence(data.numbersequence, data.nextrec)];
                     case 4:
                         _a.sent();

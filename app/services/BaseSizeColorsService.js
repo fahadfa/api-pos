@@ -231,7 +231,6 @@ var BaseSizeColorsService = /** @class */ (function () {
                                         return [4 /*yield*/, this_1.rawQuery.getbasesizeid({ baseId: base.id, sizeId: size.id })];
                                     case 9:
                                         basesize = _a.sent();
-                                        console.log(basesize);
                                         if (!!basesize) return [3 /*break*/, 11];
                                         basesizeData = {
                                             base: {

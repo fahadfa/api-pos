@@ -68,7 +68,6 @@ var UsesrInfoService = /** @class */ (function () {
                         data.Custgroup = {};
                         _a.label = 3;
                     case 3:
-                        console.log(data);
                         if (data) {
                             return [2 /*return*/, data];
                         }
@@ -140,7 +139,6 @@ var UsesrInfoService = /** @class */ (function () {
                         return [4 /*yield*/, this.validate(reqData)];
                     case 1:
                         cond = _a.sent();
-                        console.log(cond);
                         if (!(cond == true)) return [3 /*break*/, 4];
                         reqData.lastmodifieddate = new Date(App_1.App.DateNow());
                         reqData.lastmodifiedby = this.sessionInfo.userName;
@@ -176,16 +174,12 @@ var UsesrInfoService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log(item.accountnum);
                         if (!(!item.id || item.id == "" || item.id == "0")) return [3 /*break*/, 1];
                         item.id = null;
                         return [3 /*break*/, 3];
-                    case 1:
-                        console.log(item.id);
-                        return [4 /*yield*/, this.userinfoDAO.entity(item.id)];
+                    case 1: return [4 /*yield*/, this.userinfoDAO.entity(item.id)];
                     case 2:
                         previousData = _a.sent();
-                        console.log(previousData);
                         _a.label = 3;
                     case 3:
                         item.lastmodifiedby = this.sessionInfo.userName;
@@ -198,7 +192,6 @@ var UsesrInfoService = /** @class */ (function () {
                     case 5:
                         item.id = uuid();
                         item.deleted = false;
-                        console.log(item.id);
                         item.normalPassword = Math.random().toString(36).substring(7);
                         item.password = App_1.App.HashSync(item.normalPassword);
                         item.createddatetime = new Date(App_1.App.DateNow());

@@ -67,7 +67,6 @@ var CusttableService = /** @class */ (function () {
                         data = _a.sent();
                         _a.label = 3;
                     case 3:
-                        console.log(data);
                         if (data) {
                             return [2 /*return*/, data];
                         }
@@ -145,7 +144,6 @@ var CusttableService = /** @class */ (function () {
                                 customergroup_1.indexOf(element) == customergroup_1.length - 1 ? "'" + element + "'" : "'" + element + "', ";
                         });
                         sabicCustomers_1.forEach(function (element) {
-                            console.log(element);
                             item.sabiccustomers +=
                                 sabicCustomers_1.indexOf(element) == sabicCustomers_1.length - 1 ? "'" + element + "'" : "'" + element + "', ";
                         });
@@ -231,11 +229,9 @@ var CusttableService = /** @class */ (function () {
                     case 3:
                         _a.trys.push([3, 9, 11, 13]);
                         delete reqData.Custgroup;
-                        console.log(reqData.Custgroup);
                         return [4 /*yield*/, this.validate(reqData)];
                     case 4:
                         cond = _a.sent();
-                        console.log(cond);
                         if (!(cond == true)) return [3 /*break*/, 7];
                         reqData.walkincustomer = true;
                         return [4 /*yield*/, queryRunner.manager.getRepository(Custtable_1.Custtable).save(reqData)];
@@ -276,17 +272,13 @@ var CusttableService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log(item.accountnum);
                         previousData = null;
                         if (!(!item.accountnum || item.accountnum == "" || item.accountnum == "0")) return [3 /*break*/, 1];
                         item.accountnum = null;
                         return [3 /*break*/, 3];
-                    case 1:
-                        console.log(item.accountnum);
-                        return [4 /*yield*/, this.custtableDAO.findOne({ accountnum: item.accountnum })];
+                    case 1: return [4 /*yield*/, this.custtableDAO.findOne({ accountnum: item.accountnum })];
                     case 2:
                         previousData = _a.sent();
-                        console.log(previousData);
                         _a.label = 3;
                     case 3:
                         mdata = [];
@@ -346,7 +338,6 @@ var CusttableService = /** @class */ (function () {
                         year = new Date().getFullYear().toString().substr(2, 2);
                         data.nextrec = prevYear == year ? data.nextrec : 1;
                         accountNum = data.format.replace(hashString, regionNumber + "-" + showroomId + "-" + year + "-" + data.nextrec);
-                        console.log(accountNum);
                         return [4 /*yield*/, this.rawQuery.updateNumberSequence(data.numbersequence, data.nextrec)];
                     case 3:
                         _a.sent();

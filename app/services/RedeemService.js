@@ -55,15 +55,11 @@ var RedeemService = /** @class */ (function () {
                         return [4 /*yield*/, this.getToken()];
                     case 1:
                         token = _a.sent();
-                        console.log(token);
                         url = "http://pos.al-jazeerapaints.com:200/api/CustomerPoints?mobileNum=" + params.mobile + "&inventLocationId=" + params.inventLocationId;
-                        console.log(url);
                         this.axios.defaults.headers["Token"] = token;
-                        console.log(this.axios.defaults.headers);
                         return [4 /*yield*/, this.axios.get(url)];
                     case 2:
                         data = _a.sent();
-                        console.log(data);
                         return [2 /*return*/, data.data];
                     case 3:
                         error_1 = _a.sent();
@@ -83,15 +79,11 @@ var RedeemService = /** @class */ (function () {
                         return [4 /*yield*/, this.getToken()];
                     case 1:
                         token = _a.sent();
-                        console.log(token);
                         url = "http://pos.al-jazeerapaints.com:200/api/CustomerSlabs?mobileNum=" + params.mobile;
-                        console.log(url);
                         this.axios.defaults.headers["Token"] = token;
-                        console.log(this.axios.defaults.headers);
                         return [4 /*yield*/, this.axios.get(url)];
                     case 2:
                         data = _a.sent();
-                        console.log(data);
                         return [2 /*return*/, data.data];
                     case 3:
                         error_2 = _a.sent();
@@ -132,7 +124,6 @@ var RedeemService = /** @class */ (function () {
                         _a.trys.push([0, 2, , 3]);
                         this.phoneVerificationService.sessionInfo = this.sessionInfo;
                         reqData = { customerId: "REDEEM_SERVICE", phoneNumber: reqdata.mobile, otp: reqdata.otp };
-                        console.log(reqData);
                         return [4 /*yield*/, this.phoneVerificationService.verfiyOtp(reqData)];
                     case 1:
                         data = _a.sent();
@@ -155,16 +146,11 @@ var RedeemService = /** @class */ (function () {
                         return [4 /*yield*/, this.getToken()];
                     case 1:
                         token = _a.sent();
-                        console.log(token);
                         url = "http://pos.al-jazeerapaints.com:200/api/ActiveSlabs";
-                        console.log(url);
                         this.axios.defaults.headers["Token"] = token;
-                        console.log(this.axios.defaults.headers);
                         return [4 /*yield*/, this.axios.get(url)];
                     case 2:
                         data = _a.sent();
-                        console.log(Object.keys(data));
-                        console.log();
                         return [2 /*return*/, data.data];
                     case 3:
                         error_5 = _a.sent();
@@ -184,16 +170,11 @@ var RedeemService = /** @class */ (function () {
                         return [4 /*yield*/, this.getToken()];
                     case 1:
                         token = _a.sent();
-                        console.log(token);
                         url = "http://pos.al-jazeerapaints.com:200/api/Redeem";
-                        console.log(url);
                         this.axios.defaults.headers["Token"] = token;
-                        console.log(this.axios.defaults.headers);
                         return [4 /*yield*/, this.axios.post(url, reqData)];
                     case 2:
                         data = _a.sent();
-                        console.log(Object.keys(data));
-                        console.log();
                         return [2 /*return*/, data.data];
                     case 3:
                         error_6 = _a.sent();
@@ -212,7 +193,6 @@ var RedeemService = /** @class */ (function () {
                         _a.trys.push([0, 2, , 3]);
                         token = void 0;
                         url = Props_1.Props.REDEEM_URL + "?clientId=" + Props_1.Props.REDEEM_CLIENT_ID + "&clientSecret=" + Props_1.Props.REDEEM_CLIENT_SECRET;
-                        console.log(url);
                         return [4 /*yield*/, this.axios.post(url)];
                     case 1:
                         data = _a.sent();

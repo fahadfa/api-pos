@@ -158,7 +158,6 @@ var FixedAssetGroupService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         previousItem = null;
-                        console.log(item.groupid);
                         if (!(!item.groupid || item.groupid.toString() == "" || item.groupid.toString() == "0")) return [3 /*break*/, 1];
                         item.groupid = null;
                         return [3 /*break*/, 3];
@@ -221,7 +220,6 @@ var FixedAssetGroupService = /** @class */ (function () {
                         data.nextrec = prevYear == year ? data.nextrec : 1;
                         hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);
                         salesId = data.format.replace(hashString, data.nextrec) + "-" + year;
-                        console.log(salesId);
                         return [4 /*yield*/, this.rawQuery.updateNumberSequence(data.numbersequence, data.nextrec)];
                     case 3:
                         _a.sent();

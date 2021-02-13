@@ -65,7 +65,6 @@ var HistoryUsesrInfoService = /** @class */ (function () {
                         data.Custgroup = {};
                         _a.label = 3;
                     case 3:
-                        console.log(data);
                         if (data) {
                             return [2 /*return*/, data];
                         }

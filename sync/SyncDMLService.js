@@ -45,7 +45,7 @@ var log;
 var SyncDMLService = /** @class */ (function () {
     //private db: any;
     function SyncDMLService(slog) {
-        this.limitData = 1000;
+        this.limitData = 500;
         log = slog;
     }
     SyncDMLService.prototype.deleteExecute = function () {
@@ -109,9 +109,10 @@ var SyncDMLService = /** @class */ (function () {
                         utcDateTime = utcDate.rows[0]["utc_date"];
                         currentTime = moment().toISOString();
                         log.info("Db Date: " + utcDateTime);
-                        log.info("Sys Date: " + currentTime);
+                        log.info("currentTime Date: " + currentTime + ", " + new Date(Date.parse(currentTime)) + ", " + new Date(utcDateTime) + " ");
+                        log.info("Sys Date: " + App_1.App.SyncMinDiff(new Date(utcDateTime), new Date(Date.parse(currentTime))));
                         // log.info("currentTime Date: ", currentTime);
-                        if (App_1.App.DaysDiff(new Date(utcDateTime), new Date(currentTime)) != 0) {
+                        if (App_1.App.DaysDiff(new Date(utcDateTime), new Date(Date.parse(currentTime))) != 0) {
                             log.error("+++++++++++++++++++++++ INVALID DATE SYNC +++++++++++++++++++++++");
                             return [2 /*return*/, Promise.resolve("")];
                         }

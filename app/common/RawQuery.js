@@ -953,7 +953,7 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "select \n            statusid as status from workflow\n            where orderid= '" + salesid + "' limit 1";
+                        query = "select \n            statusid as status, selected_lines as \"salesTable\" from workflow\n            where orderid= '" + salesid + "' limit 1";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         data = _a.sent();

@@ -34,6 +34,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var App_1 = require("../../utils/App");
@@ -42,6 +45,8 @@ var RawQuery_1 = require("../common/RawQuery");
 var InventTransDAO_1 = require("../repos/InventTransDAO");
 var UpdateInventoryService_1 = require("../services/UpdateInventoryService");
 var typeorm_2 = require("typeorm");
+var uuid_1 = __importDefault(require("uuid"));
+var UnSyncedTransactions_1 = require("../../entities/UnSyncedTransactions");
 var OrderReceiveReport = /** @class */ (function () {
     function OrderReceiveReport() {
         this.db = typeorm_1.getManager();
@@ -52,7 +57,7 @@ var OrderReceiveReport = /** @class */ (function () {
     }
     OrderReceiveReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, id, status_1, data_1, salesLine, i_1, checkPrevData, date, query, salesLineQuery, inventtransQuery, error_1;
+            var queryRunner, id, unSyncedData_1, status_1, data_1, salesLine, i_1, checkPrevData, date, query, salesLineQuery, inventtransQuery, lineids, inventtransids, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -65,8 +70,9 @@ var OrderReceiveReport = /** @class */ (function () {
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        _a.trys.push([3, 11, 13, 15]);
+                        _a.trys.push([3, 14, 16, 18]);
                         id = params.salesId;
+                        unSyncedData_1 = [];
                         return [4 /*yield*/, this.query_to_data(id)];
                     case 4:
                         data_1 = _a.sent();
@@ -86,7 +92,7 @@ var OrderReceiveReport = /** @class */ (function () {
                             v.salesQty = parseInt(v.salesQty);
                             data_1.quantity += v.salesQty;
                         });
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 9];
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 12];
                         return [4 /*yield*/, this.db.query("select * from salestable where intercompanyoriginalsalesid  = '" + data_1.interCompanyOriginalSalesId + "' and status='POSTED' ")];
                     case 6:
                         checkPrevData = _a.sent();
@@ -113,22 +119,53 @@ var OrderReceiveReport = /** @class */ (function () {
                         return [4 /*yield*/, this.db.query(inventtransQuery)];
                     case 8:
                         _a.sent();
-                        _a.label = 9;
-                    case 9: return [4 /*yield*/, queryRunner.commitTransaction()];
+                        unSyncedData_1.push({
+                            id: uuid_1.default(),
+                            transactionId: params.salesId,
+                            transactionTable: "salestable",
+                            updatedOn: new Date(),
+                        });
+                        return [4 /*yield*/, this.db.query("select id from salesline where salesid = '" + params.salesId + "'")];
+                    case 9:
+                        lineids = _a.sent();
+                        return [4 /*yield*/, this.db.query("select id from inventtrans where invoiceid = '" + params.salesId + "'")];
                     case 10:
+                        inventtransids = _a.sent();
+                        lineids.map(function (v) {
+                            unSyncedData_1.push({
+                                id: uuid_1.default(),
+                                transactionId: v.id,
+                                transactionTable: "salesline",
+                                updatedOn: new Date(),
+                            });
+                        });
+                        inventtransids.map(function (v) {
+                            unSyncedData_1.push({
+                                id: uuid_1.default(),
+                                transactionId: v.id,
+                                transactionTable: "inventtrans",
+                                updatedOn: new Date(),
+                            });
+                        });
+                        return [4 /*yield*/, queryRunner.manager.getRepository(UnSyncedTransactions_1.UnSyncedTransactions).save(unSyncedData_1)];
+                    case 11:
+                        _a.sent();
+                        _a.label = 12;
+                    case 12: return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 13:
                         _a.sent();
                         return [2 /*return*/, data_1];
-                    case 11:
+                    case 14:
                         error_1 = _a.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 12:
+                    case 15:
                         _a.sent();
                         throw error_1;
-                    case 13: return [4 /*yield*/, queryRunner.release()];
-                    case 14:
+                    case 16: return [4 /*yield*/, queryRunner.release()];
+                    case 17:
                         _a.sent();
                         return [7 /*endfinally*/];
-                    case 15: return [2 /*return*/];
+                    case 18: return [2 /*return*/];
                 }
             });
         });

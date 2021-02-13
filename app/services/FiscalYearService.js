@@ -98,7 +98,6 @@ var FiscalYearService = /** @class */ (function () {
                         cond = _b.sent();
                         if (!(cond == true)) return [3 /*break*/, 8];
                         data = [];
-                        console.log();
                         year = item.yearNo;
                         i = 1;
                         _b.label = 2;
@@ -128,9 +127,7 @@ var FiscalYearService = /** @class */ (function () {
                     case 5:
                         i++;
                         return [3 /*break*/, 2];
-                    case 6:
-                        console.log(data);
-                        return [4 /*yield*/, this.fiscalyearRepository.save(data)];
+                    case 6: return [4 /*yield*/, this.fiscalyearRepository.save(data)];
                     case 7:
                         fiscalyearData = _b.sent();
                         returnData = { id: item.yearNo, message: "SAVED_SUCCESSFULLY" };
@@ -164,12 +161,10 @@ var FiscalYearService = /** @class */ (function () {
                     case 1: return [4 /*yield*/, this.fiscalyearRepository.findOne({ yearNo: item.yearNo })];
                     case 2:
                         previousItem = _a.sent();
-                        console.log(previousItem);
                         _a.label = 3;
                     case 3: return [4 /*yield*/, this.fiscalyearRepository.search({ yearNo: item.yearNo })];
                     case 4:
                         condData = _a.sent();
-                        console.log(condData);
                         if (condData.length > 0) {
                             return [2 /*return*/, "year"];
                         }

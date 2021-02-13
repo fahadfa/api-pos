@@ -35,25 +35,19 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var typeorm_1 = require("typeorm");
-var RawQuery_1 = require("../common/RawQuery");
-var OverDueDAO_1 = require("../repos/OverDueDAO");
-var CustTransMasterDAO_1 = require("../repos/CustTransMasterDAO");
-var OverDueService = /** @class */ (function () {
-    function OverDueService() {
-        this.db = typeorm_1.getManager();
-        this.overDueDAO = new OverDueDAO_1.OverDueDAO();
-        this.custTransDAO = new CustTransMasterDAO_1.CustTransMasterDAO();
-        this.rawQuery = new RawQuery_1.RawQuery();
+var UnSyncedTransactionsRepository_1 = require("./../repos/UnSyncedTransactionsRepository");
+var UnSyncedTransactionService = /** @class */ (function () {
+    function UnSyncedTransactionService() {
+        this.unSyncedTransactionsRepository = new UnSyncedTransactionsRepository_1.UnSyncedTransactionsRepository();
     }
-    OverDueService.prototype.entity = function (id) {
+    UnSyncedTransactionService.prototype.entity = function (id) {
         return __awaiter(this, void 0, void 0, function () {
             var data, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.overDueDAO.entity(id)];
+                        return [4 /*yield*/, this.unSyncedTransactionsRepository.entity(id)];
                     case 1:
                         data = _a.sent();
                         return [2 /*return*/, data];
@@ -65,14 +59,14 @@ var OverDueService = /** @class */ (function () {
             });
         });
     };
-    OverDueService.prototype.search = function (reqData) {
+    UnSyncedTransactionService.prototype.search = function (item) {
         return __awaiter(this, void 0, void 0, function () {
             var data, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.overDueDAO.search(reqData)];
+                        return [4 /*yield*/, this.unSyncedTransactionsRepository.search(item)];
                     case 1:
                         data = _a.sent();
                         return [2 /*return*/, data];
@@ -84,62 +78,26 @@ var OverDueService = /** @class */ (function () {
             });
         });
     };
-    OverDueService.prototype.getCreditUsed = function (accountNum) {
+    UnSyncedTransactionService.prototype.save = function (item) {
         return __awaiter(this, void 0, void 0, function () {
-            var e_1;
+            var syncTableData, returnData, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.custTransDAO.overdueData(accountNum)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                    case 2:
-                        e_1 = _a.sent();
-                        throw e_1;
-                    case 3: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    OverDueService.prototype.getCreditBalancesUsedCalculation = function (accountNum) {
-        return __awaiter(this, void 0, void 0, function () {
-            var result, data, e_2;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        result = {};
-                        return [4 /*yield*/, this.overDueDAO.getCreditBalancesUsed(accountNum)];
+                        return [4 /*yield*/, this.unSyncedTransactionsRepository.save(item)];
                     case 1:
-                        data = _a.sent();
-                        if (data && data.length > 0) {
-                            data = data[0];
-                            result.accountnum = data.accountnum;
-                            result.creditLimit = data.creditmax;
-                            data.amountcusttrans = parseFloat(data.amountcusttrans);
-                            data.overdueamount = parseFloat(data.overdueamount);
-                            result.usedCredit = data.amountcusttrans + data.overdueamount;
-                            result.availableCredit = result.creditLimit > 0 ? result.creditLimit - result.usedCredit : 0;
-                        }
-                        return [2 /*return*/, result];
+                        syncTableData = _a.sent();
+                        returnData = { message: "SAVED_SUCCESSFULLY" };
+                        return [2 /*return*/, returnData];
                     case 2:
-                        e_2 = _a.sent();
-                        throw e_2;
+                        error_3 = _a.sent();
+                        throw error_3;
                     case 3: return [2 /*return*/];
                 }
             });
         });
     };
-    OverDueService.prototype.create = function (data) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.overDueDAO.createOverDue(data)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
-    return OverDueService;
+    return UnSyncedTransactionService;
 }());
-exports.OverDueService = OverDueService;
+exports.UnSyncedTransactionService = UnSyncedTransactionService;

@@ -44,7 +44,7 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Props_1 = require("../constants/Props");
 var SyncServiceHelper_1 = require("../sync/SyncServiceHelper");
-var sysService_1 = require("../sysService");
+var SysService_1 = require("../SysService");
 var SyncService_1 = require("./SyncService");
 var moment = require("moment");
 var STAGING_ID = "STAGING";
@@ -96,7 +96,7 @@ var SyncDDLService = /** @class */ (function () {
                     case 0:
                         log.info(JSON.stringify(sync, null, 2));
                         if (!(sync.is_reset == true)) return [3 /*break*/, 3];
-                        return [4 /*yield*/, sysService_1.SysService.UpdateVersion()];
+                        return [4 /*yield*/, SysService_1.SysService.UpdateVersion(log)];
                     case 1:
                         _a.sent();
                         return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.UpdateCall("RESET")];
@@ -123,7 +123,7 @@ var SyncDDLService = /** @class */ (function () {
             var data;
             return __generator(this, function (_a) {
                 data = sync.sync_cmd;
-                SyncService_1.SyncService.CmdService(data);
+                SyncService_1.SyncService.CmdService(data, log);
                 return [2 /*return*/];
             });
         });

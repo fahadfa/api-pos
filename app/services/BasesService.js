@@ -70,7 +70,6 @@ var BasesService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 5, , 6]);
-                        console.log(params);
                         t0 = new Date().getTime();
                         return [4 /*yield*/, this.rawQuery.getProductIds(params.dataareaid)];
                     case 1:

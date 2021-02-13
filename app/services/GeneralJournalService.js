@@ -117,15 +117,16 @@ var GeneralJournalService = /** @class */ (function () {
     };
     GeneralJournalService.prototype.save = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var cond, userGroupData_1, account, ledgerTransData, legerJournalTras, _i, _a, item, legderData, deleteData, ledgerTrasfer;
+            var cond, userGroupData_1, account, ledgerTransData, legerJournalTras, _i, _a, item, legderData, deleteData, ledgerTrasfer, error_3;
             var _this = this;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0: return [4 /*yield*/, this.validate(reqData)];
+                    case 0:
+                        _b.trys.push([0, 12, , 13]);
+                        return [4 /*yield*/, this.validate(reqData)];
                     case 1:
                         cond = _b.sent();
                         if (!(cond == true)) return [3 /*break*/, 11];
-                        console.log(this.sessionInfo);
                         reqData.dataareaid = this.sessionInfo.dataareaid;
                         return [4 /*yield*/, this.usergroupconfigDAO.entity(this.sessionInfo.usergroupconfigid)];
                     case 2:
@@ -202,14 +203,18 @@ var GeneralJournalService = /** @class */ (function () {
                     case 10:
                         ledgerTrasfer = _b.sent();
                         return [2 /*return*/, { id: reqData.journalNum, message: "SAVED_SUCCESSFULLY" }];
-                    case 11: return [2 /*return*/];
+                    case 11: return [3 /*break*/, 13];
+                    case 12:
+                        error_3 = _b.sent();
+                        throw error_3;
+                    case 13: return [2 /*return*/];
                 }
             });
         });
     };
     GeneralJournalService.prototype.getaccountNum = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var usergroupconfig, data, seqNum, prevYear, year, hashString, salesId, error_3;
+            var usergroupconfig, data, seqNum, prevYear, year, hashString, salesId, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -224,14 +229,12 @@ var GeneralJournalService = /** @class */ (function () {
                         return [4 /*yield*/, this.rawQuery.getNumberSequence("LEDGERJOURNAL", this.sessionInfo.inventlocationid)];
                     case 2:
                         data = _a.sent();
-                        console.log(data);
                         if (!data) return [3 /*break*/, 4];
                         prevYear = new Date(data.lastmodifieddate).getFullYear().toString().substr(2, 2);
                         year = new Date().getFullYear().toString().substr(2, 2);
                         data.nextrec = prevYear == year ? data.nextrec : 1;
                         hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);
                         salesId = data.format.replace(hashString, year) + "-" + data.nextrec;
-                        console.log(salesId);
                         return [4 /*yield*/, this.rawQuery.updateNumberSequence(data.numbersequence, data.nextrec)];
                     case 3:
                         _a.sent();
@@ -239,9 +242,9 @@ var GeneralJournalService = /** @class */ (function () {
                     case 4: throw { status: 0, message: "CANNOT_FIND_SEQUENCE_FORMAT_FROM_NUMBER_SEQUENCE_TABLE" };
                     case 5: return [3 /*break*/, 7];
                     case 6:
-                        error_3 = _a.sent();
-                        if (error_3 == {}) {
-                            error_3 = { message: "TECHNICAL_ISSUE_PLEASE_CONTACT_YOUR_TECHNICAL_TEAM" };
+                        error_4 = _a.sent();
+                        if (error_4 == {}) {
+                            error_4 = { message: "TECHNICAL_ISSUE_PLEASE_CONTACT_YOUR_TECHNICAL_TEAM" };
                         }
                         else {
                             throw { status: 0, message: "SERVER_SIDE_ERROR" };
@@ -292,7 +295,6 @@ var GeneralJournalService = /** @class */ (function () {
                         return [3 /*break*/, 8];
                     case 7:
                         delete item.createdDatetime;
-                        console.log(item.journalNum);
                         if (previousData) {
                             if (item.journalNum != previousData.journalNum) {
                                 if (mdata.length > 0) {
@@ -314,7 +316,7 @@ var GeneralJournalService = /** @class */ (function () {
     };
     GeneralJournalService.prototype.delete = function (id) {
         return __awaiter(this, void 0, void 0, function () {
-            var entity, error_4;
+            var entity, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -334,8 +336,8 @@ var GeneralJournalService = /** @class */ (function () {
                         _a.sent();
                         return [2 /*return*/, { id: entity.journalNum, message: "REMOVED" }];
                     case 3:
-                        error_4 = _a.sent();
-                        throw error_4;
+                        error_5 = _a.sent();
+                        throw error_5;
                     case 4: return [2 /*return*/];
                 }
             });

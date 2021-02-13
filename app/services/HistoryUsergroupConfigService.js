@@ -67,7 +67,6 @@ var HistoryUsergroupConfigService = /** @class */ (function () {
                         data ? (data.Custgroup = {}) : (data = {});
                         _a.label = 3;
                     case 3:
-                        console.log(data);
                         if (data) {
                             return [2 /*return*/, data];
                         }
@@ -157,7 +156,6 @@ var HistoryUsergroupConfigService = /** @class */ (function () {
                         return [4 /*yield*/, this.validate(reqData)];
                     case 1:
                         cond = _a.sent();
-                        console.log(cond);
                         if (!(cond == true)) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.usergroupconfigDAO.save(reqData)];
                     case 2:

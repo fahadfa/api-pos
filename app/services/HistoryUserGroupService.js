@@ -69,7 +69,6 @@ var HistoryUserGroupService = /** @class */ (function () {
                         data.Custgroup = {};
                         _a.label = 3;
                     case 3:
-                        console.log(data);
                         if (data) {
                             data.permissiondata = JSON.parse(data.permissiondata);
                             return [2 /*return*/, data];

@@ -69,7 +69,6 @@ var InventsizeService = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 8, , 9]);
                         data = void 0;
-                        console.log(reqData);
                         if (!(reqData.itemid && reqData.configid)) return [3 /*break*/, 6];
                         return [4 /*yield*/, this.rawQuery.getSizeCodes(reqData)];
                     case 1:
@@ -103,7 +102,6 @@ var InventsizeService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 8, , 9]);
-                        console.log(params);
                         if (!(params.itemid && params.configid)) return [3 /*break*/, 6];
                         params.inventlocationid = this.sessionInfo.inventlocationid;
                         return [4 /*yield*/, this.rawQuery.getSizeCodesInStock(params)];
@@ -135,7 +133,6 @@ var InventsizeService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 7, , 8]);
-                        console.log(params);
                         if (!(params.itemid && params.configid)) return [3 /*break*/, 5];
                         t0 = new Date().getTime();
                         data = [];
@@ -152,7 +149,6 @@ var InventsizeService = /** @class */ (function () {
                         data = [];
                         _a.label = 4;
                     case 4:
-                        console.log(data.length);
                         t1 = new Date().getTime();
                         data.map(function (v) {
                             v.price = 0;

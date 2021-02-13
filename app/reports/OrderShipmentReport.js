@@ -45,6 +45,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var App_1 = require("../../utils/App");
@@ -56,6 +59,8 @@ var UpdateInventoryService_1 = require("../services/UpdateInventoryService");
 var SvgToDataURL = require("svg-to-dataurl");
 var QRCode = require("qrcode-svg");
 var typeorm_2 = require("typeorm");
+var UnSyncedTransactions_1 = require("../../entities/UnSyncedTransactions");
+var uuid_1 = __importDefault(require("uuid"));
 var OrderShipmentReport = /** @class */ (function () {
     function OrderShipmentReport() {
         this.db = typeorm_1.getManager();
@@ -66,7 +71,7 @@ var OrderShipmentReport = /** @class */ (function () {
     }
     OrderShipmentReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, id, status_1, data_1, salesLine, list, chunkArray, saleslineCopy, cond, date, query, salesLineQuery, inventtransQuery, newSalesline, sNo_1, quantity, _loop_1, this_1, _i, list_1, val, error_1;
+            var queryRunner, id, unSyncedData_1, status_1, data_1, salesLine, list, chunkArray, saleslineCopy, cond, date, query, salesLineQuery, inventtransQuery, lineids, inventtransids, newSalesline, sNo_1, quantity, _loop_1, this_1, _i, list_1, val, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -79,9 +84,10 @@ var OrderShipmentReport = /** @class */ (function () {
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        _a.trys.push([3, 17, 19, 21]);
+                        _a.trys.push([3, 20, 22, 24]);
                         console.log("OrderShipmentReport===================");
                         id = params.salesId;
+                        unSyncedData_1 = [];
                         return [4 /*yield*/, this.query_to_data(id)];
                     case 4:
                         data_1 = _a.sent();
@@ -97,12 +103,12 @@ var OrderShipmentReport = /** @class */ (function () {
                         chunkArray = _a.sent();
                         // console.log(chunkArray);
                         list = list.concat(chunkArray);
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 11];
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 14];
                         saleslineCopy = JSON.parse(JSON.stringify(salesLine));
                         return [4 /*yield*/, this.stockOnHandCheck(saleslineCopy, data_1.inventLocationId, id)];
                     case 7:
                         cond = _a.sent();
-                        if (!cond) return [3 /*break*/, 10];
+                        if (!cond) return [3 /*break*/, 13];
                         date = new Date().toISOString();
                         query = "UPDATE salestable SET originalprinted = '" + true + "', status = 'POSTED'";
                         if (date) {
@@ -122,10 +128,41 @@ var OrderShipmentReport = /** @class */ (function () {
                         return [4 /*yield*/, queryRunner.query(inventtransQuery)];
                     case 9:
                         _a.sent();
-                        return [3 /*break*/, 11];
-                    case 10: throw { message: "SOME_OF_THE_ITEMS_ARE_OUT_OF_STOCK" };
-                    case 11: return [4 /*yield*/, queryRunner.commitTransaction()];
+                        unSyncedData_1.push({
+                            id: uuid_1.default(),
+                            transactionId: params.salesId,
+                            transactionTable: "salestable",
+                            updatedOn: new Date(),
+                        });
+                        return [4 /*yield*/, this.db.query("select id from salesline where salesid = '" + params.salesId + "'")];
+                    case 10:
+                        lineids = _a.sent();
+                        return [4 /*yield*/, this.db.query("select id from inventtrans where invoiceid = '" + params.salesId + "'")];
+                    case 11:
+                        inventtransids = _a.sent();
+                        lineids.map(function (v) {
+                            unSyncedData_1.push({
+                                id: uuid_1.default(),
+                                transactionId: v.id,
+                                transactionTable: "salesline",
+                                updatedOn: new Date(),
+                            });
+                        });
+                        inventtransids.map(function (v) {
+                            unSyncedData_1.push({
+                                id: uuid_1.default(),
+                                transactionId: v.id,
+                                transactionTable: "inventtrans",
+                                updatedOn: new Date(),
+                            });
+                        });
+                        return [4 /*yield*/, queryRunner.manager.getRepository(UnSyncedTransactions_1.UnSyncedTransactions).save(unSyncedData_1)];
                     case 12:
+                        _a.sent();
+                        return [3 /*break*/, 14];
+                    case 13: throw { message: "SOME_OF_THE_ITEMS_ARE_OUT_OF_STOCK" };
+                    case 14: return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 15:
                         _a.sent();
                         newSalesline = [];
                         sNo_1 = 1;
@@ -181,18 +218,18 @@ var OrderShipmentReport = /** @class */ (function () {
                         };
                         this_1 = this;
                         _i = 0, list_1 = list;
-                        _a.label = 13;
-                    case 13:
-                        if (!(_i < list_1.length)) return [3 /*break*/, 16];
+                        _a.label = 16;
+                    case 16:
+                        if (!(_i < list_1.length)) return [3 /*break*/, 19];
                         val = list_1[_i];
                         return [5 /*yield**/, _loop_1(val)];
-                    case 14:
+                    case 17:
                         _a.sent();
-                        _a.label = 15;
-                    case 15:
+                        _a.label = 18;
+                    case 18:
                         _i++;
-                        return [3 /*break*/, 13];
-                    case 16:
+                        return [3 /*break*/, 16];
+                    case 19:
                         // console.log("#####", newSalesline, "######");
                         data_1.salesLine = newSalesline;
                         data_1.quantity = 0;
@@ -206,17 +243,17 @@ var OrderShipmentReport = /** @class */ (function () {
                         // console.log(qrString);
                         //data.qr = await QRCode.toDataURL("{name: 'naveen'}");
                         return [2 /*return*/, data_1];
-                    case 17:
+                    case 20:
                         error_1 = _a.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 18:
+                    case 21:
                         _a.sent();
                         throw error_1;
-                    case 19: return [4 /*yield*/, queryRunner.release()];
-                    case 20:
+                    case 22: return [4 /*yield*/, queryRunner.release()];
+                    case 23:
                         _a.sent();
                         return [7 /*endfinally*/];
-                    case 21: return [2 /*return*/];
+                    case 24: return [2 /*return*/];
                 }
             });
         });

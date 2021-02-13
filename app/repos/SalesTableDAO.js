@@ -76,6 +76,27 @@ var SalesTableDAO = /** @class */ (function () {
             });
         });
     };
+    SalesTableDAO.prototype.searchWorkflow = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        console.log(data);
+                        return [4 /*yield*/, this.dao
+                                .createQueryBuilder("SalesTable")
+                                .leftJoin("SalesTable.movementType", "movementType")
+                                .addSelect("movementType.id")
+                                .addSelect("movementType.movementType")
+                                .addSelect("movementType.movementArabic")
+                                .where(data)
+                                .andWhere("SalesTable.transkind != 'SALESORDER'")
+                                .orderBy("SalesTable.createddatetime", "DESC")
+                                .getOne()];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
     SalesTableDAO.prototype.transferorderEntity = function (id) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {

@@ -608,9 +608,6 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                 switch (_a.label) {
                                                     case 0:
                                                         i = reqData.salesLine.findIndex(function (v) { return freeItems_1[j].id == v.id; });
-                                                        if (item.addedBatch) {
-                                                            console.log(i);
-                                                        }
                                                         freeItemDiscounts = [];
                                                         itemDiscount = parseFloat(reqData.salesLine[i].salesprice) / 2;
                                                         buy_one_get_one += parseFloat(itemDiscount) * parseInt(reqData.salesLine[i].salesQty);
@@ -660,9 +657,6 @@ var ReturnOrderAmountService = /** @class */ (function () {
                                                         grossTotal +=
                                                             (parseFloat(reqData.salesLine[i].salesprice) + parseFloat(reqData.salesLine[i].colorantprice)) *
                                                                 parseInt(reqData.salesLine[i].salesQty);
-                                                        if (item.addedBatch) {
-                                                            console.log("2", i, reqData.salesLine[i].lineTotalDisc, reqData.salesLine[i].salesprice, reqData.salesLine[i].salesQty, itemDiscount);
-                                                        }
                                                         return [2 /*return*/];
                                                 }
                                             });
@@ -940,9 +934,7 @@ var ReturnOrderAmountService = /** @class */ (function () {
                     case 4:
                         reqData.netAmount = total;
                         reqData.amount = grossTotal;
-                        reqData.salesLine.map(function (v) {
-                            console.log(v.itemid, v.isItemFree, v.lineTotalDisc, v.id);
-                        });
+                        reqData.salesLine.map(function (v) { });
                         return [4 /*yield*/, this.calData(reqData)];
                     case 5:
                         _b.sent();

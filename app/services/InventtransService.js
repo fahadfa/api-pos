@@ -345,11 +345,9 @@ var InventtransService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        console.log(this.sessionInfo);
                         return [4 /*yield*/, this.inventtransDAO.save(reqData)];
                     case 1:
                         data = _a.sent();
-                        console.log(data);
                         return [2 /*return*/, data.id];
                     case 2:
                         error_5 = _a.sent();

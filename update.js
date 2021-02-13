@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var Log_1 = require("./utils/Log");
 var Store_1 = require("./utils/Store");
-var sysService_1 = require("./sysService");
+var SysService_1 = require("./SysService");
 var cron = require("node-cron");
 var healthCount = 0;
 var UpdateSyncService = function () {
@@ -63,7 +63,7 @@ var UpdateSyncService = function () {
         autoupdater.on("download.error", function (err) {
             Log_1.ulog.error("Error when downloading: " + err);
             setTimeout(function () {
-                sysService_1.SysService.ResetService();
+                SysService_1.SysService.ResetService(Log_1.ulog);
             }, 60000);
         });
         autoupdater.on("end", function () {
@@ -100,7 +100,7 @@ var extratFolder = function () {
     var zip = new AdmZip(__dirname + "/" + fileName);
     zip.extractAllTo("../", true);
     fs.unlinkSync(__dirname + "/" + fileName);
-    sysService_1.SysService.ResetService();
+    SysService_1.SysService.ResetService(Log_1.ulog);
 };
 // export var UpdateService = () => {
 //   cmd.get("sc query  jpos-offline", (err: any, data: any) => {
@@ -133,7 +133,7 @@ var main = function () {
     //     log.error(err);
     //   }
     // });
-    sysService_1.SysService.UpdateVersion();
+    SysService_1.SysService.UpdateVersion(Log_1.ulog);
     Store_1.setItem("syncdate", new Date().toISOString(), "sync -> main");
     try {
         UpdateSyncService();

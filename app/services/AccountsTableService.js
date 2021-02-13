@@ -119,7 +119,6 @@ var AccountsTableService = /** @class */ (function () {
                     case 1:
                         cond = _a.sent();
                         if (!(cond == true)) return [3 /*break*/, 3];
-                        console.log(this.sessionInfo);
                         return [4 /*yield*/, this.accountsTableDAO.save(reqData)];
                     case 2:
                         account = _a.sent();
@@ -167,7 +166,6 @@ var AccountsTableService = /** @class */ (function () {
                         data.nextrec = prevYear == year ? data.nextrec : 1;
                         hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);
                         salesId = data.format.replace(hashString, data.nextrec) + "-" + year;
-                        console.log(salesId);
                         return [4 /*yield*/, this.rawQuery.updateNumberSequence(data.numbersequence, data.nextrec)];
                     case 3:
                         _a.sent();
@@ -211,7 +209,6 @@ var AccountsTableService = /** @class */ (function () {
                             item.createdDatetime = new Date(App_1.App.DateNow());
                         }
                         else {
-                            console.log(item.accountNum);
                             if (item.accountNum != previousData.accountNum) {
                                 if (mdata.length > 0) {
                                     return [2 /*return*/, "accountNum"];

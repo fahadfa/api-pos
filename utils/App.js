@@ -328,6 +328,13 @@ var App = /** @class */ (function () {
         var diff = (t2 - t1) / (24 * 3600 * 1000);
         return parseInt(diff);
     };
+    App.SyncMinDiff = function (d1, d2) {
+        var t2 = d2.getTime();
+        var t1 = d1.getTime();
+        var diff = (t2 - t1) / (3600 * 1000);
+        console.log(diff);
+        return parseInt(diff);
+    };
     App.PrintLog = function (routerName, routerType, sessionInfo) {
         Log_1.log.info(new Date().toISOString() + " : " + routerName + " :  " + routerType + " : " + JSON.stringify(sessionInfo));
     };

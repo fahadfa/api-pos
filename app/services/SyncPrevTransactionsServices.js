@@ -244,10 +244,8 @@ var SyncPrevTransactionsService = /** @class */ (function () {
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
-                                        console.log(line);
                                         if (line.INVENTTRANSID && line.INVENTTRANSID != "") {
                                             colorantdata = salesLineData.find(function (v) { return v.ITEMID == "HSN-00001" && v.CONFIGID == line.INVENTTRANSID && v.SALESQTY == line.SALESQTY; });
-                                            console.log(colorantdata);
                                             if (colorantdata) {
                                                 line.COLORANTPRICE = colorantdata.SALESPRICE;
                                                 line.LineSalesTax += colorantdata.LineSalesTax;

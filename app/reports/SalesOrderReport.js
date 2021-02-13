@@ -34,6 +34,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
 var App_1 = require("../../utils/App");
@@ -41,6 +44,8 @@ var SalesTableService_1 = require("../services/SalesTableService");
 var RawQuery_1 = require("../common/RawQuery");
 var InventTransDAO_1 = require("../repos/InventTransDAO");
 var UpdateInventoryService_1 = require("../services/UpdateInventoryService");
+var UnSyncedTransactions_1 = require("../../entities/UnSyncedTransactions");
+var uuid_1 = __importDefault(require("uuid"));
 var SalesOrderReport = /** @class */ (function () {
     function SalesOrderReport() {
         this.db = typeorm_1.getManager();
@@ -51,14 +56,24 @@ var SalesOrderReport = /** @class */ (function () {
     }
     SalesOrderReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, data_1, date, inventtransQuery, salesLine, list_1, j, chunkArray, newSalesline_1, sNo_1, quantity_1, error_1;
+            var queryRunner, unSyncedData_1, id, data_1, lineids, inventtransids, date, inventtransQuery, salesLine, list_1, j, chunkArray, newSalesline_1, sNo_1, quantity_1, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 6, , 7]);
+                        queryRunner = typeorm_1.getConnection().createQueryRunner();
+                        return [4 /*yield*/, queryRunner.connect()];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.startTransaction()];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        _a.trys.push([3, 14, 16, 18]);
+                        unSyncedData_1 = [];
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
-                    case 1:
+                    case 4:
                         data_1 = _a.sent();
                         data_1 = data_1.length >= 1 ? data_1[0] : {};
                         data_1.paymentMode = data_1.paymentType == "ONLINE" ? "Online" : data_1.paymentMode;
@@ -91,27 +106,63 @@ var SalesOrderReport = /** @class */ (function () {
                             data_1.paymentModeAr = "السيولة النقدية";
                         }
                         data_1.twoCopies = data_1.originalPrinted ? false : true;
-                        if (!(data_1.status != "RESERVED")) return [3 /*break*/, 3];
+                        if (!(data_1.status != "RESERVED")) return [3 /*break*/, 10];
                         data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
-                        if (!(data_1.originalPrinted == false)) return [3 /*break*/, 3];
+                        if (!(data_1.originalPrinted == false)) return [3 /*break*/, 10];
+                        unSyncedData_1.push({
+                            id: uuid_1.default(),
+                            transactionId: params.salesId,
+                            transactionTable: "salestable",
+                            updatedOn: new Date(),
+                        });
+                        return [4 /*yield*/, this.db.query("select id from salesline where salesid = '" + params.salesId + "'")];
+                    case 5:
+                        lineids = _a.sent();
+                        return [4 /*yield*/, this.db.query("select id from inventtrans where invoiceid = '" + params.salesId + "'")];
+                    case 6:
+                        inventtransids = _a.sent();
+                        lineids.map(function (v) {
+                            unSyncedData_1.push({
+                                id: uuid_1.default(),
+                                transactionId: v.id,
+                                transactionTable: "salesline",
+                                updatedOn: new Date(),
+                            });
+                        });
+                        inventtransids.map(function (v) {
+                            unSyncedData_1.push({
+                                id: uuid_1.default(),
+                                transactionId: v.id,
+                                transactionTable: "inventtrans",
+                                updatedOn: new Date(),
+                            });
+                        });
                         date = new Date().toISOString();
-                        this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "PRINTED", date);
+                        return [4 /*yield*/, this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "PRINTED", date)];
+                    case 7:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.manager.getRepository(UnSyncedTransactions_1.UnSyncedTransactions).save(unSyncedData_1)];
+                    case 8:
+                        _a.sent();
                         inventtransQuery = "UPDATE inventtrans set reserve_status = 'PRINTED' ";
                         if (date) {
                             inventtransQuery += ",dateinvent = '" + date + "' ";
                         }
                         inventtransQuery += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "'";
                         return [4 /*yield*/, this.db.query(inventtransQuery)];
-                    case 2:
+                    case 9:
                         _a.sent();
-                        _a.label = 3;
-                    case 3: return [4 /*yield*/, this.salesline_query_to_data(id)];
-                    case 4:
+                        _a.label = 10;
+                    case 10: return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 11:
+                        _a.sent();
+                        return [4 /*yield*/, this.salesline_query_to_data(id)];
+                    case 12:
                         salesLine = _a.sent();
                         list_1 = [];
                         j = 0;
                         return [4 /*yield*/, this.chunkArray(salesLine, 8)];
-                    case 5:
+                    case 13:
                         chunkArray = _a.sent();
                         console.log(chunkArray);
                         list_1 = list_1.concat(chunkArray);
@@ -199,11 +250,18 @@ var SalesOrderReport = /** @class */ (function () {
                             });
                             return [2 /*return*/, data_1];
                         }
-                        return [3 /*break*/, 7];
-                    case 6:
+                        return [3 /*break*/, 18];
+                    case 14:
                         error_1 = _a.sent();
+                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                    case 15:
+                        _a.sent();
                         throw error_1;
-                    case 7: return [2 /*return*/];
+                    case 16: return [4 /*yield*/, queryRunner.release()];
+                    case 17:
+                        _a.sent();
+                        return [7 /*endfinally*/];
+                    case 18: return [2 /*return*/];
                 }
             });
         });
