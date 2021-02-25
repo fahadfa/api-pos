@@ -59,7 +59,7 @@ var MovementReport = /** @class */ (function () {
     }
     MovementReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, id, unSyncedData_1, status_1, data_1, salesLine, date, query, salesLineQuery, voucherData, query_1, inventtransQuery, inventtransHsnQuery, lineids, inventtransids, error_1;
+            var queryRunner, id, unSyncedData_1, status_1, data_1, salesLine, linesCount, date, query, salesLineQuery, voucherData, query_1, inventtransQuery, inventtransHsnQuery, lineids, inventtransids, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -72,7 +72,7 @@ var MovementReport = /** @class */ (function () {
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        _a.trys.push([3, 16, 18, 20]);
+                        _a.trys.push([3, 17, 19, 21]);
                         id = params.salesId;
                         unSyncedData_1 = [];
                         return [4 /*yield*/, this.query_to_data(id)];
@@ -92,19 +92,23 @@ var MovementReport = /** @class */ (function () {
                         data_1.salesLine.map(function (v) {
                             data_1.quantity += parseInt(v.salesQty);
                         });
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 14];
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 15];
+                        return [4 /*yield*/, this.db.query(" select count(1) as apptype from salesline where salesid in ('" + params.salesId + "')")];
+                    case 6:
+                        linesCount = _a.sent();
+                        linesCount = linesCount.length > 0 ? linesCount[0].apptype : 0;
                         date = new Date().toISOString();
-                        query = "UPDATE salestable SET originalprinted = '" + true + "', status = 'POSTED'";
+                        query = "UPDATE salestable SET originalprinted = '" + true + "', status = 'POSTED', apptype=" + linesCount + " ";
                         if (date) {
                             query += ",lastmodifieddate = '" + date + "' ";
                         }
                         query += " WHERE salesid = '" + params.salesId.toUpperCase() + "'";
                         return [4 /*yield*/, queryRunner.query(query)];
-                    case 6:
+                    case 7:
                         _a.sent();
                         salesLineQuery = " UPDATE salesline SET \n        status = 'POSTED',\n        lastmodifieddate = '" + date + "' \n        WHERE salesid = '" + params.salesId + "' ";
                         queryRunner.query(salesLineQuery);
-                        if (!data_1.voucherDiscChecked) return [3 /*break*/, 8];
+                        if (!data_1.voucherDiscChecked) return [3 /*break*/, 9];
                         voucherData = {
                             salesId: data_1.salesId,
                             voucherNum: data_1.voucherNum,
@@ -112,17 +116,17 @@ var MovementReport = /** @class */ (function () {
                         };
                         query_1 = "\n          UPDATE discountvoucher\n          SET  salesid='" + voucherData.salesId + "',\n          is_used=0, \n          used_numbers=used_numbers+1\n          WHERE voucher_num='" + voucherData.voucherNum + "';\n          ";
                         return [4 /*yield*/, queryRunner.query(query_1)];
-                    case 7:
-                        _a.sent();
-                        _a.label = 8;
                     case 8:
+                        _a.sent();
+                        _a.label = 9;
+                    case 9:
                         inventtransQuery = "UPDATE inventtrans SET transactionclosed = " + true + ", reserve_status = 'POSTED' ";
                         if (date) {
                             inventtransQuery += ",dateinvent = '" + date + "' ";
                         }
                         inventtransQuery += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "' and itemid!='HSN-00001'";
                         return [4 /*yield*/, queryRunner.query(inventtransQuery)];
-                    case 9:
+                    case 10:
                         _a.sent();
                         inventtransHsnQuery = "UPDATE inventtrans SET transactionclosed = " + false + ", reserve_status = 'POSTED' ";
                         if (date) {
@@ -130,7 +134,7 @@ var MovementReport = /** @class */ (function () {
                         }
                         inventtransHsnQuery += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "' and itemid='HSN-00001'";
                         return [4 /*yield*/, queryRunner.query(inventtransHsnQuery)];
-                    case 10:
+                    case 11:
                         _a.sent();
                         unSyncedData_1.push({
                             id: uuid_1.default(),
@@ -139,10 +143,10 @@ var MovementReport = /** @class */ (function () {
                             updatedOn: new Date(),
                         });
                         return [4 /*yield*/, this.db.query("select id from salesline where salesid = '" + params.salesId + "'")];
-                    case 11:
+                    case 12:
                         lineids = _a.sent();
                         return [4 /*yield*/, this.db.query("select id from inventtrans where invoiceid = '" + params.salesId + "'")];
-                    case 12:
+                    case 13:
                         inventtransids = _a.sent();
                         lineids.map(function (v) {
                             unSyncedData_1.push({
@@ -161,24 +165,24 @@ var MovementReport = /** @class */ (function () {
                             });
                         });
                         return [4 /*yield*/, queryRunner.manager.getRepository(UnSyncedTransactions_1.UnSyncedTransactions).save(unSyncedData_1)];
-                    case 13:
+                    case 14:
                         _a.sent();
-                        _a.label = 14;
-                    case 14: return [4 /*yield*/, queryRunner.commitTransaction()];
-                    case 15:
+                        _a.label = 15;
+                    case 15: return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 16:
                         _a.sent();
                         return [2 /*return*/, data_1];
-                    case 16:
+                    case 17:
                         error_1 = _a.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 17:
+                    case 18:
                         _a.sent();
                         throw error_1;
-                    case 18: return [4 /*yield*/, queryRunner.release()];
-                    case 19:
+                    case 19: return [4 /*yield*/, queryRunner.release()];
+                    case 20:
                         _a.sent();
                         return [7 /*endfinally*/];
-                    case 20: return [2 /*return*/];
+                    case 21: return [2 /*return*/];
                 }
             });
         });

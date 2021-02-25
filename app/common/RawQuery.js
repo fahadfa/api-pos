@@ -181,8 +181,9 @@ var RawQuery = /** @class */ (function () {
             });
         });
     };
-    RawQuery.prototype.updateSalesTable = function (salesId, status, date) {
+    RawQuery.prototype.updateSalesTable = function (salesId, status, date, apptype) {
         if (date === void 0) { date = null; }
+        if (apptype === void 0) { apptype = null; }
         return __awaiter(this, void 0, void 0, function () {
             var query, saleslineQuery, data;
             return __generator(this, function (_a) {
@@ -192,6 +193,7 @@ var RawQuery = /** @class */ (function () {
                         if (date) {
                             query += "\n      , lastmodifieddate = '" + date + "' ";
                         }
+                        query += apptype ? ", apptype = " + apptype + " " : " ";
                         query += " WHERE salesid = '" + salesId + "' or salesgroup = '" + salesId + "' or deliverystreet = '" + salesId + "' ";
                         saleslineQuery = "UPDATE salesline SET status = '" + status + "'  ";
                         if (date) {
@@ -296,7 +298,7 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "\n    select \n        a.itemid,\n        a.configid,\n        a.inventsizeid,\n        a.batchno as \"batchNo\",\n        a.batchno as batchno,\n        a.availabilty,\n        a.reservedquantity as \"reservedQuantity\",\n        (a.availabilty + a.reservedquantity) as \"totalAvailable\",\n        a.batchexpdate,\n        a.nameen as nameEn,\n        a.namear as nameAr,\n        a.sizenameen as \"sizeNameEn\",\n        a.sizenamear as \"sizeNameAr\" from\n        (select \n        UPPER(i.itemid) as itemid,\n        bs.namealias as nameen,\n        bs.itemname as namear,\n        UPPER(i.configid) as configid,\n        UPPER(i.inventsizeid) as inventsizeid,\n        UPPER(i.batchno) as batchno,\n        to_char((CASE \n          WHEN UPPER(i.batchno) = '-' THEN now()\n          WHEN UPPER(i.batchno) = '--' THEN now()\n          ELSE b.expdate\n          END\n        ),'yyyy-MM-dd') as batchexpdate,\n        sz.description as \"sizenameen\",\n        sz.\"name\" as \"sizenamear\",\n        sum(qty) as availabilty,\n        abs(sum(case\n          when reserve_status ='RESERVED' then qty\n          else 0\n          end\n          )) as reservedquantity\n        from inventtrans i\n        left join inventbatch b on i.batchno = b.inventbatchid and i.itemid = b.itemid\n        inner join inventtable bs on i.itemid = bs.itemid\n        left join inventsize sz on lower(sz.inventsizeid) = lower(i.inventsizeid) and sz.itemid = i.itemid\n        inner join configtable c on c.itemid = i.itemid and lower(c.configid) = lower(i.configid)\n        where transactionclosed  = true and inventlocationid = '" + reqData.inventlocationid + "' and i.itemid not like 'HSN-%'\n        ";
+                        query = "\n    select \n        a.itemid,\n        a.configid,\n        a.inventsizeid,\n        a.batchno as \"batchNo\",\n        a.batchno as batchno,\n        a.availabilty,\n        a.reservedquantity as \"reservedQuantity\",\n        (a.availabilty + a.reservedquantity) as \"totalAvailable\",\n        a.batchexpdate,\n        a.nameen as nameEn,\n        a.namear as nameAr,\n        a.sizenameen as \"sizeNameEn\",\n        a.sizenamear as \"sizeNameAr\" from\n        (select \n        UPPER(i.itemid) as itemid,\n        bs.namealias as nameen,\n        bs.itemname as namear,\n        UPPER(i.configid) as configid,\n        UPPER(i.inventsizeid) as inventsizeid,\n        UPPER(i.batchno) as batchno,\n        to_char((CASE \n          WHEN UPPER(i.batchno) = '-' THEN now()\n          WHEN UPPER(i.batchno) = '--' THEN now()\n          ELSE b.expdate\n          END\n        ),'yyyy-MM-dd') as batchexpdate,\n        sz.description as \"sizenameen\",\n        sz.\"name\" as \"sizenamear\",\n        sum(qty) as availabilty,\n        abs(sum(case\n          when reserve_status ='RESERVED' then qty\n          else 0\n          end\n          )) as reservedquantity\n        from inventtrans i\n        left join inventbatch b on i.batchno = b.inventbatchid and i.itemid = b.itemid and i.configid = b.configid \n        inner join inventtable bs on i.itemid = bs.itemid\n        left join inventsize sz on lower(sz.inventsizeid) = lower(i.inventsizeid) and sz.itemid = i.itemid\n        inner join configtable c on c.itemid = i.itemid and lower(c.configid) = lower(i.configid)\n        where transactionclosed  = true and inventlocationid = '" + reqData.inventlocationid + "' and i.itemid not like 'HSN-%'\n        ";
                         if (reqData.itemId) {
                             query = query + (" and LOWER(i.itemid) = LOWER('" + reqData.itemId + "')");
                             if (reqData.configid) {

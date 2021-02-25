@@ -74,7 +74,7 @@ var ReturnOrderReport = /** @class */ (function () {
     }
     ReturnOrderReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, unSyncedData_1, data_1, batchesList, result, new_data_1, i_1, date, statusQuery, salesLineQuery, inventtransQuery, lineids, inventtransids, designerServices, _i, designerServices_1, service, salesLine, salesLineData, _loop_1, _a, salesLineData_1, item, sNo_1, error_1;
+            var queryRunner, unSyncedData_1, data_1, batchesList, result, new_data_1, i_1, date, linesCount, statusQuery, salesLineQuery, inventtransQuery, lineids, inventtransids, designerServices, _i, designerServices_1, service, salesLine, salesLineData, _loop_1, _a, salesLineData_1, item, sNo_1, error_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -87,7 +87,7 @@ var ReturnOrderReport = /** @class */ (function () {
                         _b.sent();
                         _b.label = 3;
                     case 3:
-                        _b.trys.push([3, 19, 21, 23]);
+                        _b.trys.push([3, 20, 22, 24]);
                         unSyncedData_1 = [];
                         return [4 /*yield*/, this.query_to_data(params)];
                     case 4:
@@ -126,9 +126,13 @@ var ReturnOrderReport = /** @class */ (function () {
                             i_1++;
                         });
                         data_1.batches = new_data_1;
-                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 15];
+                        if (!(data_1.status != "POSTED")) return [3 /*break*/, 16];
                         date = new Date().toISOString();
-                        statusQuery = "UPDATE salestable SET \n                          originalprinted = 'true',\n                          status = 'POSTED',\n                          lastmodifieddate = '" + date + "' \n                          WHERE salesid = '" + params.salesId + "' or \n                          salesgroup = '" + params.salesId + "' or \n                          deliverystreet = '" + params.salesId + "'";
+                        return [4 /*yield*/, this.db.query(" select count(1) as apptype from salesline where salesid in ('" + params.salesId + "')")];
+                    case 6:
+                        linesCount = _b.sent();
+                        linesCount = linesCount.length > 0 ? linesCount[0].apptype : 0;
+                        statusQuery = "UPDATE salestable SET \n                          originalprinted = 'true',\n                          status = 'POSTED',\n                          apptype = " + linesCount + ",\n                          lastmodifieddate = '" + date + "' \n                          WHERE salesid = '" + params.salesId + "' or \n                          salesgroup = '" + params.salesId + "' or \n                          deliverystreet = '" + params.salesId + "'";
                         // await this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED");
                         queryRunner.query(statusQuery);
                         salesLineQuery = " UPDATE salesline SET \n        status = 'POSTED',\n        lastmodifieddate = '" + date + "' \n        WHERE salesid = '" + params.salesId + "' ";
@@ -139,10 +143,10 @@ var ReturnOrderReport = /** @class */ (function () {
                         }
                         inventtransQuery += " WHERE invoiceid = '" + params.salesId.toUpperCase() + "'";
                         return [4 /*yield*/, queryRunner.query(inventtransQuery)];
-                    case 6:
+                    case 7:
                         _b.sent();
                         return [4 /*yield*/, this.updateSalesLineData(params.salesId)];
-                    case 7:
+                    case 8:
                         _b.sent();
                         unSyncedData_1.push({
                             id: uuid_1.default(),
@@ -151,10 +155,10 @@ var ReturnOrderReport = /** @class */ (function () {
                             updatedOn: new Date(),
                         });
                         return [4 /*yield*/, this.db.query("select id from salesline where salesid = '" + params.salesId + "'")];
-                    case 8:
+                    case 9:
                         lineids = _b.sent();
                         return [4 /*yield*/, this.db.query("select id from inventtrans where invoiceid = '" + params.salesId + "'")];
-                    case 9:
+                    case 10:
                         inventtransids = _b.sent();
                         lineids.map(function (v) {
                             unSyncedData_1.push({
@@ -173,32 +177,32 @@ var ReturnOrderReport = /** @class */ (function () {
                             });
                         });
                         return [4 /*yield*/, queryRunner.manager.getRepository(UnSyncedTransactions_1.UnSyncedTransactions).save(unSyncedData_1)];
-                    case 10:
+                    case 11:
                         _b.sent();
                         return [4 /*yield*/, this.salesTableDAO.search({ deliveryStreet: params.salesId })];
-                    case 11:
+                    case 12:
                         designerServices = _b.sent();
                         console.log(designerServices);
                         _i = 0, designerServices_1 = designerServices;
-                        _b.label = 12;
-                    case 12:
-                        if (!(_i < designerServices_1.length)) return [3 /*break*/, 15];
+                        _b.label = 13;
+                    case 13:
+                        if (!(_i < designerServices_1.length)) return [3 /*break*/, 16];
                         service = designerServices_1[_i];
                         service.status = "PAID";
                         this.salesTableService.sessionInfo = this.sessionInfo;
                         return [4 /*yield*/, this.salesTableService.saveQuotation(service, queryRunner)];
-                    case 13:
-                        _b.sent();
-                        _b.label = 14;
                     case 14:
+                        _b.sent();
+                        _b.label = 15;
+                    case 15:
                         _i++;
-                        return [3 /*break*/, 12];
-                    case 15: return [4 /*yield*/, this.salesline_query_to_data(params)];
-                    case 16:
+                        return [3 /*break*/, 13];
+                    case 16: return [4 /*yield*/, this.salesline_query_to_data(params)];
+                    case 17:
                         salesLine = _b.sent();
                         console.log(salesLine);
                         return [4 /*yield*/, this.salesline_query(params)];
-                    case 17:
+                    case 18:
                         salesLineData = _b.sent();
                         _loop_1 = function (item) {
                             console.log(item.link_id);
@@ -239,21 +243,21 @@ var ReturnOrderReport = /** @class */ (function () {
                         });
                         // console.log(data);
                         return [4 /*yield*/, queryRunner.commitTransaction()];
-                    case 18:
+                    case 19:
                         // console.log(data);
                         _b.sent();
                         return [2 /*return*/, data_1];
-                    case 19:
+                    case 20:
                         error_1 = _b.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 20:
+                    case 21:
                         _b.sent();
                         throw error_1;
-                    case 21: return [4 /*yield*/, queryRunner.release()];
-                    case 22:
+                    case 22: return [4 /*yield*/, queryRunner.release()];
+                    case 23:
                         _b.sent();
                         return [7 /*endfinally*/];
-                    case 23: return [2 /*return*/];
+                    case 24: return [2 /*return*/];
                 }
             });
         });

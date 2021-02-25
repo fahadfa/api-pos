@@ -190,8 +190,8 @@ var PhoneVerificationService = /** @class */ (function () {
                         return [4 /*yield*/, this.save(phoneVerification)];
                     case 1:
                         data = _a.sent();
-                        message = "Your OTP is";
-                        return [4 /*yield*/, this.sms.sendMessage(phoneVerification.countryCode, phoneVerification.phoneNumber, phoneVerification.otpSent)];
+                        message = "Your OTP is ";
+                        return [4 /*yield*/, this.sms.sendMessage(phoneVerification.countryCode, phoneVerification.phoneNumber, message + phoneVerification.otpSent)];
                     case 2:
                         _a.sent();
                         return [2 /*return*/, { id: data.id, message: "OTP Sent" }];

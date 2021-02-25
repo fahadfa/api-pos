@@ -51,13 +51,13 @@ var InventoryOnHandReport = /** @class */ (function () {
                     case 0:
                         selfStore = params.inventlocationid == this.sessionInfo.inventlocationid;
                         data = [];
-                        if (!(selfStore || (params.inventlocationid == "ALL"))) return [3 /*break*/, 2];
+                        if (!(selfStore || params.inventlocationid == "ALL")) return [3 /*break*/, 2];
                         return [4 /*yield*/, this.query_to_data(params, this.sessionInfo.inventlocationid)];
                     case 1:
                         data = _a.sent();
                         _a.label = 2;
                     case 2:
-                        if (!(!selfStore || (params.inventlocationid == "ALL"))) return [3 /*break*/, 4];
+                        if (!(!selfStore || params.inventlocationid == "ALL")) return [3 /*break*/, 4];
                         return [4 /*yield*/, this.query_to_ecom_data(params)];
                     case 3:
                         ecomdata = _a.sent();
@@ -137,11 +137,11 @@ var InventoryOnHandReport = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         query = "";
-                        query = "\n    select \n    a.itemid,\n    a.configid,\n    a.inventsizeid,\n    " + (params.batchCheck
+                        query = "\n    select \n    distinct on (a.itemid,a.configid,   a.inventsizeid " + (params.batchCheck ? ", a.batchno " : "") + ")\n    a.itemid,\n    a.configid,\n    a.inventsizeid,\n    " + (params.batchCheck
                             ? "a.batchno as batchno,\n           a.batchexpdate,"
                             : "") + "\n    a.availabilty as \"physicalAvailable\",\n    a.reservedquantity as \"reservedQuantity\",\n    (a.availabilty + a.reservedquantity) as \"totalAvailable\",\n    a.nameen as nameEn,\n    a.namear as nameAr,\n    a.sizenameen as \"sizeNameEn\",\n    a.sizenamear as \"sizeNameAr\",\n    a.warehouseNameEn,\n    a.WareHouseNameAr \n    from\n    (select \n    UPPER(i.itemid) as itemid,\n    bs.namealias as nameen,\n    bs.itemname as namear,\n    UPPER(i.configid) as configid,\n    UPPER(i.inventsizeid) as inventsizeid,\n    " + (params.batchCheck
                             ? "UPPER(i.batchno) as batchno,\n    to_char(b.expdate, 'yyyy-MM-dd') as batchexpdate,"
-                            : "") + "\n    sz.description as \"sizenameen\",\n    sz.\"name\" as \"sizenamear\",\n    sum(qty) as availabilty,\n    abs(sum(case\n      when reserve_status ='RESERVED' then qty\n      else 0\n      end\n      )) as reservedquantity,\n    w.name as warehousenamear, \n    w.namealias as warehousenameen\n    from inventtrans i\n    left join inventbatch b on i.batchno = b.inventbatchid and i.itemid = b.itemid\n    inner join inventtable bs on i.itemid = bs.itemid\n    left join inventsize sz on lower(sz.inventsizeid) = lower(i.inventsizeid) and sz.itemid = i.itemid\n    inner join configtable c on c.itemid = i.itemid and lower(c.configid) = lower(i.configid)\n    inner join inventlocation w on w.inventlocationid=i.inventlocationid\n    ";
+                            : "") + "\n    sz.description as \"sizenameen\",\n    sz.\"name\" as \"sizenamear\",\n    sum(qty) as availabilty,\n    abs(sum(case\n      when reserve_status ='RESERVED' then qty\n      else 0\n      end\n      )) as reservedquantity,\n    w.name as warehousenamear, \n    w.namealias as warehousenameen\n    from inventtrans i\n    left join inventbatch b on i.batchno = b.inventbatchid and i.itemid = b.itemid and i.configid = b.configid \n    inner join inventtable bs on i.itemid = bs.itemid\n    left join inventsize sz on lower(sz.inventsizeid) = lower(i.inventsizeid) and sz.itemid = i.itemid\n    inner join configtable c on c.itemid = i.itemid and lower(c.configid) = lower(i.configid)\n    inner join inventlocation w on w.inventlocationid=i.inventlocationid\n    ";
                         // if (params.key == "ALL") {
                         //   const warehouseQuery = `select regionalwarehouse from usergroupconfig where id= '${this.sessionInfo.usergroupconfigid}' limit 1`;
                         //   let regionalWarehouses = await this.db.query(warehouseQuery);
@@ -198,7 +198,6 @@ var InventoryOnHandReport = /** @class */ (function () {
                         warehouses = reportWarehouses[0].reportwarehouse.split(",").filter(function (item) {
                             return item !== _this.sessionInfo.inventlocationid;
                         });
-                        ;
                         query += " where oi.erp_code in (" + warehouses.map(function (item) { return "'" + item + "'"; }).join(",") + ") ";
                         return [3 /*break*/, 3];
                     case 2:
