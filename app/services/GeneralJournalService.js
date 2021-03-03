@@ -36,11 +36,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var App_1 = require("../../utils/App");
+var GeneralJournal_1 = require("../../entities/GeneralJournal");
 var GeneralJournalDAO_1 = require("../repos/GeneralJournalDAO");
 var UsergroupconfigDAO_1 = require("../repos/UsergroupconfigDAO");
 var RawQuery_1 = require("../common/RawQuery");
 var LedgerJournalTransDAO_1 = require("../repos/LedgerJournalTransDAO");
+var LedgerJournalTrans_1 = require("../../entities/LedgerJournalTrans");
 var LedgerTransDAO_1 = require("../repos/LedgerTransDAO");
+var typeorm_1 = require("typeorm");
 var GeneralJournalService = /** @class */ (function () {
     function GeneralJournalService() {
         this.generalJournalDAO = new GeneralJournalDAO_1.GeneralJournalDAO();
@@ -72,8 +75,8 @@ var GeneralJournalService = /** @class */ (function () {
                                     ? ele.lastModifiedDate.toISOString().substr(0, 10)
                                     : ele.lastModifiedDate;
                                 ele.transdDate = ele.transdDate ? ele.transdDate.toISOString().substr(0, 10) : ele.transdDate;
-                                ele.amountCurCredit = Math.ceil(ele.amountCurCredit);
-                                ele.amountCurDebit = Math.ceil(ele.amountCurDebit);
+                                ele.amountCurCredit = parseFloat(ele.amountCurCredit);
+                                ele.amountCurDebit = parseFloat(ele.amountCurDebit);
                             });
                             data.legerJournalTras = legerJournalTras;
                             return [2 /*return*/, data];
@@ -105,6 +108,7 @@ var GeneralJournalService = /** @class */ (function () {
                             i.status = i.posted == 0 || i.posted == null ? "OPEN" : "POSTED";
                             i.createdDatetime = i.createdDatetime ? i.createdDatetime.toLocaleDateString() : i.createdDatetime;
                             i.lastModifiedDate = i.lastModifiedDate ? i.lastModifiedDate.toLocaleDateString() : i.lastModifiedDate;
+                            i.legerJournalTras.sort(function (item1, item2) { return item1.lineNum - item2.lineNum; });
                         });
                         return [2 /*return*/, data];
                     case 2:
@@ -117,97 +121,100 @@ var GeneralJournalService = /** @class */ (function () {
     };
     GeneralJournalService.prototype.save = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var cond, userGroupData_1, account, ledgerTransData, legerJournalTras, _i, _a, item, legderData, deleteData, ledgerTrasfer, error_3;
-            var _this = this;
+            var queryRunner, cond, userGroupData, account, _i, _a, item, customer, error_3;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _b.trys.push([0, 12, , 13]);
-                        return [4 /*yield*/, this.validate(reqData)];
+                        queryRunner = typeorm_1.getConnection().createQueryRunner();
+                        return [4 /*yield*/, queryRunner.connect()];
                     case 1:
+                        _b.sent();
+                        return [4 /*yield*/, queryRunner.startTransaction()];
+                    case 2:
+                        _b.sent();
+                        _b.label = 3;
+                    case 3:
+                        _b.trys.push([3, 18, 20, 22]);
+                        return [4 /*yield*/, this.validate(reqData)];
+                    case 4:
                         cond = _b.sent();
-                        if (!(cond == true)) return [3 /*break*/, 11];
+                        if (!(cond == true)) return [3 /*break*/, 17];
                         reqData.dataareaid = this.sessionInfo.dataareaid;
                         return [4 /*yield*/, this.usergroupconfigDAO.entity(this.sessionInfo.usergroupconfigid)];
-                    case 2:
-                        userGroupData_1 = _b.sent();
-                        reqData.journalName = userGroupData_1.journalnameid;
-                        return [4 /*yield*/, this.generalJournalDAO.save(reqData)];
-                    case 3:
-                        account = _b.sent();
-                        ledgerTransData = [];
-                        reqData.legerJournalTras.map(function (item) {
-                            item.journalNum = reqData.journalNum;
-                            item.region = userGroupData_1.regionId;
-                            item.department = userGroupData_1.departmentid;
-                            item.costcenter = userGroupData_1.costCenterId;
-                            item.employee = userGroupData_1.employeeid;
-                            item.project = userGroupData_1.projectid;
-                            item.salesman = userGroupData_1.salesmanid;
-                            item.brand = userGroupData_1.brandid;
-                            item.productline = userGroupData_1.productlineid;
-                            item.dataareaid = _this.sessionInfo.dataareaid;
-                            item.currencyCode = userGroupData_1.currencycode;
-                            item.modifiedDateTime = new Date(App_1.App.DateNow());
-                            item.lastModifiedBy = _this.sessionInfo.userName;
-                            item.lastModifiedDate = new Date(App_1.App.DateNow());
-                        });
-                        return [4 /*yield*/, this.legerJournalTrasDAO.save(reqData.legerJournalTras)];
-                    case 4:
-                        legerJournalTras = _b.sent();
-                        _i = 0, _a = reqData.legerJournalTras;
-                        _b.label = 5;
                     case 5:
-                        if (!(_i < _a.length)) return [3 /*break*/, 9];
-                        item = _a[_i];
-                        legderData = {
-                            accountNum: item.accountNum,
-                            transDate: item.transdDate,
-                            txt: item.txt,
-                            region: userGroupData_1.regionId,
-                            department: userGroupData_1.departmentid,
-                            costcenter: userGroupData_1.costCenterId,
-                            employee: userGroupData_1.employeeid,
-                            project: userGroupData_1.projectid,
-                            salesman: userGroupData_1.salesmanid,
-                            brand: userGroupData_1.brandid,
-                            productline: userGroupData_1.productlineid,
-                            journalNum: userGroupData_1.journalnameid,
-                            modifiedDateTime: item.lastModifiedDate,
-                            lastModifiedDate: item.lastModifiedDate,
-                            modifiedBy: item.modifiedBy,
-                            createdDateTime: item.createDateTime,
-                            createdBy: this.sessionInfo.userName,
-                            currencyCode: userGroupData_1.currencycode,
-                            amountMst: item.amountCurCredit != 0 && item.amountCurCredit ? item.amountCurCredit : -item.amountCurDebit,
-                            recid: item.recid,
-                            recversion: item.recversion,
-                            accountpltype: item.accountType,
-                            dataareaid: userGroupData_1.dataareaid,
-                        };
-                        return [4 /*yield*/, this.ledgerTrasDAO.search({
-                                accountNum: item.accountNum,
-                                journalNum: item.journalNum,
-                            })];
+                        userGroupData = _b.sent();
+                        reqData.journalName = userGroupData.journalnameid;
+                        return [4 /*yield*/, queryRunner.manager.getRepository(GeneralJournal_1.GeneralJournal).save(reqData)];
                     case 6:
-                        deleteData = _b.sent();
-                        return [4 /*yield*/, this.ledgerTrasDAO.delete(deleteData)];
+                        account = _b.sent();
+                        _i = 0, _a = reqData.legerJournalTras;
+                        _b.label = 7;
                     case 7:
-                        _b.sent();
-                        ledgerTransData.push(legderData);
-                        _b.label = 8;
+                        if (!(_i < _a.length)) return [3 /*break*/, 15];
+                        item = _a[_i];
+                        if (!(item.amountCurCredit == 0 && item.amountCurDebit == 0)) return [3 /*break*/, 8];
+                        throw { status: 0, message: "INVALID_AMOUNT" };
                     case 8:
-                        _i++;
-                        return [3 /*break*/, 5];
-                    case 9: return [4 /*yield*/, this.ledgerTrasDAO.save(ledgerTransData)];
+                        if (!(reqData.log == "cash" && !userGroupData.ledgeraccount)) return [3 /*break*/, 9];
+                        throw { status: 0, message: "INVALID_LEDGER_ACCOUNT" };
+                    case 9:
+                        item.journalNum = reqData.journalNum;
+                        item.region = userGroupData.regionId;
+                        if (!(reqData.log == "cash" && item.accountType == 0)) return [3 /*break*/, 10];
+                        item.accountNum =
+                            item.accountNum && item.accountNum != "" ? item.accountNum : userGroupData.ledgeraccount;
+                        return [3 /*break*/, 12];
                     case 10:
-                        ledgerTrasfer = _b.sent();
-                        return [2 /*return*/, { id: reqData.journalNum, message: "SAVED_SUCCESSFULLY" }];
-                    case 11: return [3 /*break*/, 13];
+                        if (!(reqData.log == "cash" && item.accountType == 1)) return [3 /*break*/, 12];
+                        return [4 /*yield*/, this.rawQuery.getCustomer(item.accountNum)];
+                    case 11:
+                        customer = _b.sent();
+                        customer = customer && customer.length > 0 ? customer[0] : null;
+                        if (customer && customer.walkincustomer == true) {
+                            item.accountNum = userGroupData.defaultcustomerid;
+                        }
+                        _b.label = 12;
                     case 12:
+                        item.department = userGroupData.departmentid;
+                        item.costcenter = userGroupData.costCenterId;
+                        item.employee = userGroupData.employeeid;
+                        item.project = userGroupData.projectid;
+                        item.salesman = userGroupData.salesmanid;
+                        item.brand = userGroupData.brandid;
+                        item.productline = userGroupData.productlineid;
+                        item.dataareaid = this.sessionInfo.dataareaid;
+                        item.currencyCode = userGroupData.currencycode;
+                        item.modifiedDateTime = new Date(App_1.App.DateNow());
+                        item.lastModifiedBy = this.sessionInfo.userName;
+                        item.lastModifiedDate = new Date(App_1.App.DateNow());
+                        return [4 /*yield*/, queryRunner.manager.getRepository(LedgerJournalTrans_1.LedgerJournalTrans).save(item)];
+                    case 13:
+                        _b.sent();
+                        _b.label = 14;
+                    case 14:
+                        _i++;
+                        return [3 /*break*/, 7];
+                    case 15: 
+                    // let account: GeneralJournal = await this.generalJournalDAO.save(reqData);
+                    // let legerJournalTras: LedgerJournalTrans[] = await this.legerJournalTrasDAO.save(reqData.legerJournalTras);
+                    return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 16:
+                        // let account: GeneralJournal = await this.generalJournalDAO.save(reqData);
+                        // let legerJournalTras: LedgerJournalTrans[] = await this.legerJournalTrasDAO.save(reqData.legerJournalTras);
+                        _b.sent();
+                        return [2 /*return*/, { id: reqData.journalNum, message: "SAVED_SUCCESSFULLY" }];
+                    case 17: return [3 /*break*/, 22];
+                    case 18:
                         error_3 = _b.sent();
+                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                    case 19:
+                        _b.sent();
                         throw error_3;
-                    case 13: return [2 /*return*/];
+                    case 20: return [4 /*yield*/, queryRunner.release()];
+                    case 21:
+                        _b.sent();
+                        return [7 /*endfinally*/];
+                    case 22: return [2 /*return*/];
                 }
             });
         });
@@ -232,7 +239,7 @@ var GeneralJournalService = /** @class */ (function () {
                         if (!data) return [3 /*break*/, 4];
                         prevYear = new Date(data.lastmodifieddate).getFullYear().toString().substr(2, 2);
                         year = new Date().getFullYear().toString().substr(2, 2);
-                        data.nextrec = prevYear == year ? data.nextrec : 1;
+                        data.nextrec = prevYear == year ? data.nextrec : "00001";
                         hashString = data.format.slice(data.format.indexOf("#"), data.format.lastIndexOf("#") + 1);
                         salesId = data.format.replace(hashString, year) + "-" + data.nextrec;
                         return [4 /*yield*/, this.rawQuery.updateNumberSequence(data.numbersequence, data.nextrec)];

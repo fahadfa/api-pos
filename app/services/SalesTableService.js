@@ -987,9 +987,9 @@ var SalesTableService = /** @class */ (function () {
                         date = new Date(data.lastmodifieddate).toLocaleString();
                         prevYear = new Date(data.lastmodifieddate).getFullYear().toString().substr(2, 2);
                         year = new Date(App_1.App.DateNow()).getFullYear().toString().substr(2, 2);
-                        data.nextrec = prevYear == year ? data.nextrec : "000001";
+                        data.nextrec = prevYear == year ? data.nextrec : "00001";
                         if (data.nextrec == 1 || data.nextrec == "1") {
-                            data.nextrec = "000001";
+                            data.nextrec = "00001";
                         }
                         salesId = data.format.replace(hashString, year) + "-" + data.nextrec;
                         item.numberSequenceGroup = data.numbersequence;
@@ -2344,6 +2344,7 @@ var SalesTableService = /** @class */ (function () {
                         if (reqData.designServiceRedeemAmount > 0) {
                             promiseList.push(this.saveSalesOrderDesignerService(reqData, queryRunner));
                         }
+                        promiseList.push(this.saveSalesOrderRedeem(reqData, queryRunner));
                         _b.label = 21;
                     case 21:
                         Log_1.log.info("6---------------------------- " + reqData.paymentType + reqData.onlineAmount);

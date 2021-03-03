@@ -191,6 +191,7 @@ var HistoricalSalesordersService = /** @class */ (function () {
                         salesData_1.voucherNum = data.VOUCHERNUM;
                         salesData_1.painter = data.Painter;
                         salesData_1.redeemPoints = data.REDEEMPOINTS;
+                        salesData_1.originalprinted = true;
                         salesData_1.redeemAmount = data.REDEEMAMT;
                         salesData_1.ajpenddisc = data.AJPEndDisc;
                         salesData_1.taxGroup = data.TaxGroup;
@@ -452,6 +453,7 @@ var HistoricalSalesordersService = /** @class */ (function () {
                         salesData = data;
                         salesLine = data.salesLine;
                         delete salesData.salesLine;
+                        salesData.invoiceDate = salesData.lastModifiedDate;
                         salesData.linesCount = salesLine.length;
                         return [4 /*yield*/, queryRunner.manager.getRepository(SalesTable_1.SalesTable).save(salesData)];
                     case 3:

@@ -91,7 +91,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                     case 3: return [2 /*return*/, _a.sent()];
                     case 4: throw { status: 0, message: "INVOICE_ID_NOT_RELATED_TO_THIS_STORE" };
                     case 5: return [3 /*break*/, 7];
-                    case 6: throw { status: 0, message: "cant receive order from test participating stores" };
+                    case 6: throw { status: 0, message: "cant receive order from jpos installed stores" };
                     case 7: return [3 /*break*/, 9];
                     case 8:
                         error_1 = _a.sent();
@@ -376,9 +376,9 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                         date = new Date(data.lastmodifieddate).toLocaleString();
                         prevYear = new Date(data.lastmodifieddate).getFullYear().toString().substr(2, 2);
                         year = new Date(App_1.App.DateNow()).getFullYear().toString().substr(2, 2);
-                        data.nextrec = prevYear == year ? data.nextrec : "000001";
+                        data.nextrec = prevYear == year ? data.nextrec : "00001";
                         if (data.nextrec == 1 || data.nextrec == "1") {
-                            data.nextrec = "000001";
+                            data.nextrec = "00001";
                         }
                         salesId = data.format.replace(hashString, year) + "-" + data.nextrec;
                         item.numberSequenceGroup = data.numbersequence;
