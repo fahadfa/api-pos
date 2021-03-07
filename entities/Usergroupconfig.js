@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var typeorm_1 = require("typeorm");
+var Usergroup_1 = require("./Usergroup");
 var Usergroupconfig = /** @class */ (function () {
     function Usergroupconfig() {
     }
@@ -409,6 +410,11 @@ var Usergroupconfig = /** @class */ (function () {
         typeorm_1.Column({ name: "return_order_days" }),
         __metadata("design:type", Number)
     ], Usergroupconfig.prototype, "returnOrderDays", void 0);
+    __decorate([
+        typeorm_1.JoinColumn({ name: "usergroupid" }),
+        typeorm_1.ManyToOne(function (type) { return Usergroup_1.Usergroup; }),
+        __metadata("design:type", Usergroup_1.Usergroup)
+    ], Usergroupconfig.prototype, "usergroup", void 0);
     Usergroupconfig = __decorate([
         typeorm_1.Entity("usergroupconfig")
     ], Usergroupconfig);
