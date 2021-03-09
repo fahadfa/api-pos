@@ -263,18 +263,6 @@ var Usergroupconfig = /** @class */ (function () {
         __metadata("design:type", String)
     ], Usergroupconfig.prototype, "movementsequenceformat", void 0);
     __decorate([
-        typeorm_1.Column({ name: "rmsigningauthority" }),
-        __metadata("design:type", String)
-    ], Usergroupconfig.prototype, "rmsigningauthority", void 0);
-    __decorate([
-        typeorm_1.Column({ name: "rasigningauthority" }),
-        __metadata("design:type", String)
-    ], Usergroupconfig.prototype, "rasigningauthority", void 0);
-    __decorate([
-        typeorm_1.Column({ name: "designer_signing_authority" }),
-        __metadata("design:type", String)
-    ], Usergroupconfig.prototype, "designerSigningAuthority", void 0);
-    __decorate([
         typeorm_1.Column({ name: "transferordersequencegroup" }),
         __metadata("design:type", String)
     ], Usergroupconfig.prototype, "transferordersequencegroup", void 0);
@@ -403,9 +391,41 @@ var Usergroupconfig = /** @class */ (function () {
         __metadata("design:type", String)
     ], Usergroupconfig.prototype, "showroomDistrictCode", void 0);
     __decorate([
+        typeorm_1.Column({ name: "rmsigningauthority" }),
+        __metadata("design:type", String)
+    ], Usergroupconfig.prototype, "rmsigningauthority", void 0);
+    __decorate([
+        typeorm_1.JoinColumn({ name: "rmsigningauthority" }),
+        typeorm_1.ManyToOne(function (type) { return Usergroup_1.Usergroup; }),
+        __metadata("design:type", Usergroup_1.Usergroup)
+    ], Usergroupconfig.prototype, "rm", void 0);
+    __decorate([
+        typeorm_1.Column({ name: "rasigningauthority" }),
+        __metadata("design:type", String)
+    ], Usergroupconfig.prototype, "rasigningauthority", void 0);
+    __decorate([
+        typeorm_1.JoinColumn({ name: "rasigningauthority" }),
+        typeorm_1.ManyToOne(function (type) { return Usergroup_1.Usergroup; }),
+        __metadata("design:type", Usergroup_1.Usergroup)
+    ], Usergroupconfig.prototype, "ra", void 0);
+    __decorate([
+        typeorm_1.Column({ name: "designer_signing_authority" }),
+        __metadata("design:type", String)
+    ], Usergroupconfig.prototype, "designerSigningAuthority", void 0);
+    __decorate([
+        typeorm_1.JoinColumn({ name: "designer_signing_authority" }),
+        typeorm_1.ManyToOne(function (type) { return Usergroup_1.Usergroup; }),
+        __metadata("design:type", Usergroup_1.Usergroup)
+    ], Usergroupconfig.prototype, "designer", void 0);
+    __decorate([
         typeorm_1.Column({ name: "sales_coordinator_signing_authority" }),
         __metadata("design:type", String)
     ], Usergroupconfig.prototype, "salesCoordinatorSigningAuthority", void 0);
+    __decorate([
+        typeorm_1.JoinColumn({ name: "sales_coordinator_signing_authority" }),
+        typeorm_1.ManyToOne(function (type) { return Usergroup_1.Usergroup; }),
+        __metadata("design:type", Usergroup_1.Usergroup)
+    ], Usergroupconfig.prototype, "salesCoordinator", void 0);
     __decorate([
         typeorm_1.Column({ name: "return_order_days" }),
         __metadata("design:type", Number)

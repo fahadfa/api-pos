@@ -49,6 +49,10 @@ var UsergroupconfigDAO = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.dao
                             .createQueryBuilder("Usergroupconfig")
                             .innerJoinAndSelect("Usergroupconfig.usergroup", "usergroup")
+                            .leftJoinAndSelect("Usergroupconfig.rm", "rm")
+                            .leftJoinAndSelect("Usergroupconfig.ra", "ra")
+                            .leftJoinAndSelect("Usergroupconfig.designer", "designer")
+                            .leftJoinAndSelect("Usergroupconfig.salesCoordinator", "salesCoordinator")
                             .where(data)
                             .andWhere("usergroup.deleted=false or usergroup.deleted IS NULL")
                             .getMany()];
