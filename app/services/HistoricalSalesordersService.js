@@ -193,7 +193,7 @@ var HistoricalSalesordersService = /** @class */ (function () {
                         salesData_1.voucherNum = data.VOUCHERNUM;
                         salesData_1.painter = data.Painter;
                         salesData_1.redeemPoints = data.REDEEMPOINTS;
-                        salesData_1.originalprinted = true;
+                        salesData_1.originalPrinted = true;
                         salesData_1.redeemAmount = data.REDEEMAMT;
                         salesData_1.ajpenddisc = data.AJPEndDisc;
                         salesData_1.taxGroup = data.TaxGroup;
@@ -379,8 +379,8 @@ var HistoricalSalesordersService = /** @class */ (function () {
                                                 var index = salesData_1.salesLine.indexOf(v);
                                                 salesData_1.salesLine[index].isItemFree = v.SupplMultipleQty > 0 ? true : false;
                                                 salesData_1.salesLine[index].linkId = line.recid;
-                                                line.multipleQty = v.SupplMultipleQty > 0 ? v.SupplMultipleQty : line.multipleQty;
-                                                line.freeQty = v.SupplFreeQty > 0 ? v.SupplFreeQty : line.freeQty;
+                                                line.multipleQty = v.supplMultipleQty > 0 ? v.supplMultipleQty : line.multipleQty;
+                                                line.freeQty = v.supplFreeQty > 0 ? v.supplFreeQty : line.freeQty;
                                             });
                                             line.isParent = true;
                                             line.appliedDiscounts.push({
