@@ -598,7 +598,7 @@ var SalesTableService = /** @class */ (function () {
                                 reqData.transkind = "('ORDERRECEIVE')";
                                 break;
                             case "purchaseorder":
-                                reqData.transkind = "('PURCHASEORDER', 'PURCHASERETURN')";
+                                reqData.transkind = "('PURCHASEORDER', 'PURCHASERETURN', 'PACKINGSLIP')";
                                 break;
                             case "purchaseorderreturn":
                                 reqData.transkind = "('PURCHASERETURN')";
@@ -720,7 +720,7 @@ var SalesTableService = /** @class */ (function () {
                                 reqData.transkind = "('ORDERRECEIVE')";
                                 break;
                             case "purchaseorder":
-                                reqData.transkind = "('PURCHASEORDER')";
+                                reqData.transkind = "('PURCHASEORDER', 'PACKINGSLIP')";
                                 break;
                             case "designerservice":
                                 reqData.transkind = "('DESIGNERSERVICE')";
@@ -2287,6 +2287,9 @@ var SalesTableService = /** @class */ (function () {
                         item.taxGroup = reqData.taxGroup;
                         item.lineAmount = parseFloat(item.salesprice) * parseFloat(item.salesQty);
                         item.taxItemGroup = taxItemGroup;
+                        if (item.isItemFree && item.lineTotalDisc == 0) {
+                            item.lineTotalDisc = item.enddiscamt > 0 ? item.enddiscamt : item.lineTotalDisc;
+                        }
                         if (reqData.status == "PAID") {
                             unSyncedData.push({
                                 id: uuid(),
