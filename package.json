@@ -1,6 +1,6 @@
 {
   "name": "jpos-api",
-  "version": "2.5.66",
+  "version": "2.5.67",
   "main": "index.js",
   "scripts": {
     "start": "npm run build:live",
@@ -68,4 +68,4 @@
     "repo": "devops-jazeera/api-pos",
     "branch": "master"
   }
-}
+
