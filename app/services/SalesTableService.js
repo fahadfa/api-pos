@@ -424,6 +424,9 @@ var SalesTableService = /** @class */ (function () {
                     j.quantity = parseInt(j.quantity);
                 });
             }
+            else {
+                v.batch = [];
+            }
             v.appliedDiscounts = v.appliedDiscounts ? v.appliedDiscounts : [];
             v.appliedDiscounts.map(function (value) {
                 value.percentage = value.percentage ? parseFloat(value.percentage) : 0;
@@ -2160,7 +2163,7 @@ var SalesTableService = /** @class */ (function () {
     };
     SalesTableService.prototype.saveSalesOrder = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, unSyncedData, promiseList, salesLine_7, returnData, salestatus, _a, saleslineArray, cond, customerRecords, customerRecord_1, defaultcustomer, mobileCustomer, salesTable_1, taxItemGroup, _i, salesLine_6, item, salesline, condData, customerDetails, pmobileno, userName, ptokenData, pmessage, pmail, imail, error_15;
+            var queryRunner, unSyncedData, promiseList, salesLine_7, returnData, salestatus, _a, saleslineArray, cond, customerRecords, customerRecord_1, defaultcustomer, mobileCustomer, salesTable_1, taxItemGroup, _i, salesLine_6, item, salesline, condData, customerDetails, pmobileno, userName, redeemData, ptokenData, pmessage, pmail, imail, error_15;
             var _this = this;
             return __generator(this, function (_b) {
                 switch (_b.label) {
@@ -2358,7 +2361,15 @@ var SalesTableService = /** @class */ (function () {
                         if (reqData.designServiceRedeemAmount > 0) {
                             promiseList.push(this.saveSalesOrderDesignerService(reqData, queryRunner));
                         }
-                        promiseList.push(this.saveSalesOrderRedeem(reqData, queryRunner));
+                        if (reqData.redeemAmount > 0 && reqData.redeemPoints > 0) {
+                            redeemData = this.redeemService.getCustomerPoints({ mobile: reqData.mobileNo && reqData.mobileNo.length == 9 ? "0" + reqData.mobileNo : reqData.mobileNo, inventLocationId: this.sessionInfo.inventlocationid });
+                            if (redeemData && redeemData.BalancePoints > reqData.redeemPoints) {
+                                promiseList.push(this.saveSalesOrderRedeem(reqData, queryRunner));
+                            }
+                            else {
+                                throw { status: 0, message: "ZERO_BALANCE_POINTS" };
+                            }
+                        }
                         _b.label = 21;
                     case 21:
                         Log_1.log.info("6---------------------------- " + reqData.paymentType + reqData.onlineAmount);
@@ -3375,7 +3386,7 @@ var SalesTableService = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         batches = [];
-                        return [4 /*yield*/, this.rawQuery.sales_inventoryOnHand({
+                        return [4 /*yield*/, this.rawQuery.fifo_inventory_check({
                                 inventlocationid: this.sessionInfo.inventlocationid,
                                 itemId: item.itemid,
                                 configid: item.configId,
@@ -3516,7 +3527,9 @@ var SalesTableService = /** @class */ (function () {
                             promiseList.push(this.saveSalesOrderDesignerService(reqData, queryRunner));
                         }
                         userName = this.sessionInfo.userName;
-                        promiseList.push(this.saveSalesOrderRedeem(reqData, queryRunner));
+                        if (reqData.redeemAmount > 0 && reqData.redeemPoints > 0) {
+                            promiseList.push(this.saveSalesOrderRedeem(reqData, queryRunner));
+                        }
                         imail = function () { return __awaiter(_this, void 0, void 0, function () {
                             var template;
                             return __generator(this, function (_a) {
