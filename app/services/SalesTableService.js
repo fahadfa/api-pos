@@ -2141,7 +2141,7 @@ var SalesTableService = /** @class */ (function () {
                             TransactionId: reqData.salesId,
                             MobileNo: reqData.mobileNo && reqData.mobileNo.length == 9 ? "0" + reqData.mobileNo : reqData.mobileNo,
                             InvoiceNo: reqData.salesId,
-                            InvoiceAmount: reqData.netAmount,
+                            InvoiceAmount: reqData.redeemAmount,
                             RedeemPoints: reqData.redeemPoints,
                             SyncStatus: 0,
                             InventLocationId: this.sessionInfo.inventlocationid,
