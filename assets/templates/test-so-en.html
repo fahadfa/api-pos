@@ -263,15 +263,17 @@
           </td>
           <td colspan="4" valign="bottom" style="width: 40%">
             <table align="center" style="text-align: center">
-              {{#if this.originalPrinted}}
+              
               <tr>
                 <td class="copy-text">
+                  {{#if this.originalPrinted}}
                   <span>COPY</span><br>
+                  {{/if}}
                   <span>Sales Invoice</span><br>
                   <span>{{salesId}}</span>
                 </td>
               </tr>
-              {{/if}}
+              
               <!-- <tr>
               <td>Sales Invoice</td>
             </tr>
@@ -541,15 +543,17 @@
         </td>
         <td colspan="3" valign="bottom" style="width: 33%">
           <table align="center" style="text-align: center">
-            {{#if this.originalPrinted}}
+            
             <tr>
               <td class="copy-text">
+                {{#if this.originalPrinted}}
                 <span>COPY</span><br>
+                {{/if}}
                 <span>Sales Invoice</span><br>
                 <span>{{salesId}}</span>
               </td>
             </tr>
-            {{/if}}
+            
             <!-- <tr>
               <td>Sales Invoice</td>
             </tr>

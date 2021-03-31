@@ -111,7 +111,7 @@ var QuotationReport = /** @class */ (function () {
                     case 12:
                         salesLine = _a.sent();
                         data_1.vat = salesLine && salesLine.length > 0 ? parseInt(salesLine[0].vat) : "-";
-                        return [4 /*yield*/, this.chunkArray(salesLine, 6)];
+                        return [4 /*yield*/, this.chunkArray(salesLine, 10)];
                     case 13:
                         salesLine = _a.sent();
                         i = 1;
