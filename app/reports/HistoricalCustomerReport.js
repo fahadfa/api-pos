@@ -265,7 +265,8 @@ var HistoricalCustomerReport = /** @class */ (function () {
                     case 1:
                         token = _a.sent();
                         console.log(token);
-                        url = "http://pos.al-jazeerapaints.com:200/API/HistoricalData?MobileNo=" + params.custaccount + "&fromDate=" + params.fromDate + "&toDate=" + params.toDate;
+                        params.custaccount = params.custaccount ? params.custaccount.toUpperCase() : params.custaccount;
+                        url = Props_1.Props.AXAPTA_URL + ("/HistoricalData?MobileNo=" + params.custaccount + "&fromDate=" + params.fromDate + "&toDate=" + params.toDate);
                         axios.defaults.headers["Token"] = token;
                         console.log(url);
                         return [4 /*yield*/, axios.get(url)];

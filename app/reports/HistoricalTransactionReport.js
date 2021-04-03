@@ -353,7 +353,8 @@ var HistoricalTransactionReport = /** @class */ (function () {
                     case 1:
                         token = _a.sent();
                         console.log(token);
-                        url = "http://pos.al-jazeerapaints.com:200/API/HistoricalData?OrderId=" + params.salesId;
+                        params.salesId = params.salesId ? params.salesId.toUpperCase() : params.salesId;
+                        url = Props_1.Props.AXAPTA_URL + +("/HistoricalData?OrderId=" + params.salesId);
                         axios.defaults.headers["Token"] = token;
                         return [4 /*yield*/, axios.get(url)];
                     case 2:
