@@ -52,13 +52,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var pg_1 = require("pg");
 var Config = __importStar(require("../utils/Config"));
 var App_1 = require("../utils/App");
+console.log("-------------------SyncServiceHelper staring-------------------------");
+Config.setEnvConfig();
 var format = require("pg-format");
 var STORE_ID = process.env.ENV_STORE_ID || "LOCAL";
 var moment = require("moment");
 pg_1.types.setTypeParser(1114, function (stringValue) {
     return stringValue.replace(" ", "T");
 });
-Config.setEnvConfig();
 var SyncServiceHelper = /** @class */ (function () {
     function SyncServiceHelper() {
     }
@@ -386,12 +387,13 @@ var SyncServiceHelper = /** @class */ (function () {
     //     })
     // }
     SyncServiceHelper.StageDBOptions = function () {
+        var stageDbOptions = Config.getStageDb();
         return {
-            host: Config.stageDbOptions.host,
-            port: Config.stageDbOptions.port,
-            user: Config.stageDbOptions.username,
-            password: Config.stageDbOptions.password,
-            database: Config.stageDbOptions.database,
+            host: stageDbOptions.host,
+            port: stageDbOptions.port,
+            user: stageDbOptions.username,
+            password: stageDbOptions.password,
+            database: stageDbOptions.database,
             max: 25,
             idleTimeoutMillis: 0,
         };
@@ -416,14 +418,26 @@ var SyncServiceHelper = /** @class */ (function () {
             idleTimeoutMillis: 0,
         };
     };
+    SyncServiceHelper.LayeredStageDBOptions = function () {
+        var syncStageDbOptions = Config.syncStageDbOptions; //Config.getSyncDb();
+        return {
+            host: syncStageDbOptions.host,
+            port: syncStageDbOptions.port,
+            user: syncStageDbOptions.username,
+            password: syncStageDbOptions.password,
+            database: syncStageDbOptions.database,
+            max: 25,
+            idleTimeoutMillis: 0,
+        };
+    };
     SyncServiceHelper.UpdateCall = function (type, log, data) {
         return __awaiter(this, void 0, void 0, function () {
-            var sql, stageDb;
+            var sql, layeredstageDb;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         sql = null;
-                        stageDb = SyncServiceHelper.StageDBOptions();
+                        layeredstageDb = SyncServiceHelper.LayeredStageDBOptions();
                         if (type == "RESET") {
                             sql = "UPDATE sync_source SET  is_reset = false, updated_on = '" + moment().toISOString() + "'  WHERE id='" + STORE_ID + "' ";
                         }
@@ -440,7 +454,7 @@ var SyncServiceHelper = /** @class */ (function () {
                             sql = "UPDATE sync_source SET  mac_address = '" + data + "', updated_on = '" + moment().toISOString() + "'  WHERE id='" + STORE_ID + "' ";
                         }
                         if (!sql) return [3 /*break*/, 2];
-                        return [4 /*yield*/, SyncServiceHelper.BatchQuery(stageDb, [sql], log)];
+                        return [4 /*yield*/, SyncServiceHelper.BatchQuery(layeredstageDb, [sql], log)];
                     case 1:
                         _a.sent();
                         _a.label = 2;

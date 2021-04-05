@@ -14,7 +14,9 @@ exports.encrypt = function (text) {
 };
 exports.decrypt = function (hash) {
     var decipher = cryptoData.createDecipheriv(algorithm, secretKey, Buffer.from(hash.iv, "hex"));
+   
     var decrpyted = Buffer.concat([decipher.update(Buffer.from(hash.content, "hex")), decipher.final()]);
+   
     return decrpyted.toString();
 };
 exports.btoa = function (str) {

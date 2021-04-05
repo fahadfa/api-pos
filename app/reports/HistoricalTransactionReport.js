@@ -51,9 +51,9 @@ var HistoricalTransactionReport = /** @class */ (function () {
             return __generator(this, function (_f) {
                 switch (_f.label) {
                     case 0:
-                        _f.trys.push([0, 21, , 22]);
+                        _f.trys.push([0, 22, , 23]);
                         id = params.salesId;
-                        if (!id) return [3 /*break*/, 19];
+                        if (!id) return [3 /*break*/, 20];
                         return [4 /*yield*/, this.query_to_data(id, params)];
                     case 1:
                         data_1 = _f.sent();
@@ -107,16 +107,19 @@ var HistoricalTransactionReport = /** @class */ (function () {
                         data_1.disc = data_1.disc ? data_1.disc : 0;
                         // console.log(data.salesLine);
                         data_1.vatGrand = data_1.salesLine.length > 0 ? parseInt(data_1.salesLine[0].vatGrand) : "-";
-                        return [3 /*break*/, 18];
-                    case 9: return [4 /*yield*/, this.oldDataUrl(params)];
+                        return [3 /*break*/, 19];
+                    case 9: return [4 /*yield*/, App_1.App.checkInternet()];
                     case 10:
+                        if (!_f.sent()) return [3 /*break*/, 19];
+                        return [4 /*yield*/, this.oldDataUrl(params)];
+                    case 11:
                         olddata = _f.sent();
                         data_1 = {};
                         salesTableFromAxpta = olddata.OrderTable && olddata.OrderTable.length > 0 ? olddata.OrderTable[0] : {};
                         salesLinesFromAxpta = olddata.OrderLine && olddata.OrderLine.length > 0 ? olddata.OrderLine : [];
                         data_1.inventLocationId = salesLinesFromAxpta && salesLinesFromAxpta.length > 0 ?
                             salesLinesFromAxpta[0].INVENTLOCATIONID : "";
-                        if (!(data_1.inventLocationId == params.inventlocationid)) return [3 /*break*/, 17];
+                        if (!(data_1.inventLocationId == params.inventlocationid)) return [3 /*break*/, 18];
                         data_1.salesId = salesTableFromAxpta.SALESID;
                         data_1.interCompanyOriginalSalesId = salesTableFromAxpta.INTERCOMPANYORIGINALSALESID;
                         data_1.custAccount = salesTableFromAxpta.CUSTACCOUNT;
@@ -162,7 +165,7 @@ var HistoricalTransactionReport = /** @class */ (function () {
                         data_1.salesman = salesTableFromAxpta.SALESNAME;
                         data_1.deliveryDate = salesTableFromAxpta.DELIVERYDATE;
                         data_1.salesLine = [{}, {}];
-                        if (!(salesLinesFromAxpta && salesLinesFromAxpta.length > 0)) return [3 /*break*/, 16];
+                        if (!(salesLinesFromAxpta && salesLinesFromAxpta.length > 0)) return [3 /*break*/, 17];
                         items = salesLinesFromAxpta.map(function (d) { return "'" + d.ITEMID + "'"; }).join(",");
                         sizes = salesLinesFromAxpta.map(function (d) { return "'" + d.CONFIGID + "'"; }).join(",");
                         frominvloc_1 = salesLinesFromAxpta[0].INVENTLOCATIONID;
@@ -171,10 +174,10 @@ var HistoricalTransactionReport = /** @class */ (function () {
                         wquery = "select i.inventlocationid,i.namealias as wnamealias,i.\"name\" as wname from inventlocation i where i.inventlocationid in('" + frominvloc_1 + "','" + toinvloc_1 + "');";
                         console.log(wquery);
                         return [4 /*yield*/, this.db.query(query)];
-                    case 11:
+                    case 12:
                         names_1 = _f.sent();
                         return [4 /*yield*/, this.db.query(wquery)];
-                    case 12:
+                    case 13:
                         invlocation = _f.sent();
                         // console.log(items);
                         // console.log(names);
@@ -218,18 +221,18 @@ var HistoricalTransactionReport = /** @class */ (function () {
                         to = invlocation.find(function (loc) { return loc.inventlocationid == toinvloc_1; });
                         data_1.lastmodifieddate = App_1.App.convertUTCDateToLocalDate(new Date(data_1.lastmodifieddate), params.timeZoneOffSet);
                         _d = data_1;
-                        if (!(data_1.transkind == "SALESORDER" || data_1.transkind == "RETURNORDER")) return [3 /*break*/, 14];
+                        if (!(data_1.transkind == "SALESORDER" || data_1.transkind == "RETURNORDER")) return [3 /*break*/, 15];
                         return [4 /*yield*/, this.saleAndReturnOrderLines(data_1, salesLines, params, {
                                 from: from,
                                 to: to
                             })];
-                    case 13:
-                        _e = _f.sent();
-                        return [3 /*break*/, 15];
                     case 14:
-                        _e = salesLines;
-                        _f.label = 15;
+                        _e = _f.sent();
+                        return [3 /*break*/, 16];
                     case 15:
+                        _e = salesLines;
+                        _f.label = 16;
+                    case 16:
                         _d.salesLine = _e;
                         if (data_1.transkind !== "SALESORDER" || data_1.transkind !== "RETURNORDER") {
                             sNo_2 = 1;
@@ -326,18 +329,18 @@ var HistoricalTransactionReport = /** @class */ (function () {
                         //     data.quantity += parseInt(v.quantity);
                         // });
                         data_1.disc = data_1.disc ? data_1.disc : 0;
-                        _f.label = 16;
-                    case 16: return [3 /*break*/, 18];
-                    case 17: throw { message: Props_1.Props.DATA_NOT_FOUND };
-                    case 18: 
+                        _f.label = 17;
+                    case 17: return [3 /*break*/, 19];
+                    case 18: throw { message: Props_1.Props.DATA_NOT_RELATED_STOTE };
+                    case 19: 
                     // console.log("=================final review=======================",data)
                     return [2 /*return*/, data_1];
-                    case 19: throw { message: "Select Invoice ID" };
-                    case 20: return [3 /*break*/, 22];
-                    case 21:
+                    case 20: throw { message: "Select Invoice ID" };
+                    case 21: return [3 /*break*/, 23];
+                    case 22:
                         error_1 = _f.sent();
                         throw error_1;
-                    case 22: return [2 /*return*/];
+                    case 23: return [2 /*return*/];
                 }
             });
         });
@@ -354,12 +357,13 @@ var HistoricalTransactionReport = /** @class */ (function () {
                         token = _a.sent();
                         console.log(token);
                         params.salesId = params.salesId ? params.salesId.toUpperCase() : params.salesId;
-                        url = Props_1.Props.AXAPTA_URL + +("/HistoricalData?OrderId=" + params.salesId);
+                        url = Props_1.Props.AXAPTA_URL + ("/HistoricalData?OrderId=" + params.salesId);
+                        console.log(url);
                         axios.defaults.headers["Token"] = token;
                         return [4 /*yield*/, axios.get(url)];
                     case 2:
                         data = _a.sent();
-                        // console.log(data);
+                        console.log(data);
                         // this.otpStore.set(params.mobile, { token: data.data.otp_token, validate: false });
                         return [2 /*return*/, data.data];
                     case 3:
