@@ -266,7 +266,7 @@ var PhoneVerificationService = /** @class */ (function () {
                         groupPhoneNums = _a.sent();
                         sendMsgPromisesList_1 = [];
                         saveList_1 = [];
-                        otp_1 = App_1.App.generateOTP(4);
+                        otp_1 = App_1.App.generate (4);
                         otpexpire_1 = new Date(App_1.App.DateNow());
                         groupPhoneNums.forEach(function (uiitem) {
                             var phoneVerification = new PhoneVerification_1.PhoneVerification();
@@ -300,7 +300,7 @@ var PhoneVerificationService = /** @class */ (function () {
     PhoneVerificationService.prototype.verfiyOtp = function (item) {
         return __awaiter(this, void 0, void 0, function () {
             var phoneVerification, error_8;
-            return __generator(this, function (_a) {
+            return __generator(this, function (a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 9, , 10]);
@@ -311,16 +311,16 @@ var PhoneVerificationService = /** @class */ (function () {
                     case 1:
                         phoneVerification = _a.sent();
                         if (!phoneVerification) return [3 /*break*/, 7];
-                        if (!(phoneVerification.otpSent == item.otp)) return [3 /*break*/, 5];
+                        if (!(phoneVerification. == ) return [3 /*break*/, 5];
                         if (!(phoneVerification.otpExpiryTime.getTime() > new Date(App_1.App.DateNow()).getTime())) return [3 /*break*/, 3];
                         phoneVerification.verificationStatus = "Verified";
                         return [4 /*yield*/, this.save(phoneVerification)];
                     case 2:
                         _a.sent();
                         return [2 /*return*/, { message: "VERIFIED", status: true }];
-                    case 3: throw Props_1.Props.OTP_EXPIRED;
-                    case 4: return [3 /*break*/, 6];
-                    case 5: throw { status: 0, message: "INVALID_OTP" };
+                    case 3: throw Props_1.Props.EXPIRED;
+                    case 4: return [3 /*break*/, 8
+                    case 5: throw { status: 0, message: " };
                     case 6: return [3 /*break*/, 8];
                     case 7: throw { status: 0, message: "INVALID_MOBILE_NUMBER" };
                     case 8: return [3 /*break*/, 10];
