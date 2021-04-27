@@ -225,19 +225,19 @@
 
         </table>
         <div>
-            <table id="invoiceDetails" style="margin-top: 20px;" width="100%" class="item-table" cellpadding="0"
-                cellspacing="0">
+            <table id="invoiceDetails" style="margin-top: 20px;color: black;font-weight: bold;" width="100%"
+                class="item-table" cellpadding="0" cellspacing="0">
                 <thead>
                     <tr>
-                        <th class="th" style="font-weight:normal">S.No</th>
-                        <th class="th" style="font-weight:normal">Item No</th>
-                        <th class="th" style="font-weight:normal">Description</th>
-                        <!-- <th class="th" style="font-weight:normal">Shipping Date</th> -->
-                        <th class="th" style="font-weight:normal">Qty</th>
-                        <th class="th" style="font-weight:normal">Price</th>
-                        <th class="th" style="font-weight:normal">Discount</th>
-                        <th class="th" style="font-weight:normal">Net Amnt Before VAT</th>
-                        <th class="th" style="font-weight:normal">
+                        <th class="th">S.No</th>
+                        <th class="th">Item No</th>
+                        <th class="th">Description</th>
+                        <!-- <th class="th" >Shipping Date</th> -->
+                        <th class="th">Qty</th>
+                        <th class="th">Price</th>
+                        <th class="th">Discount</th>
+                        <th class="th">Net Amnt Before VAT</th>
+                        <th class="th">
                             <table style="border-collapse: collapse !important;border:none !important;width:100%">
                                 <tr class="td">
                                     <td class="inline-table"
@@ -250,121 +250,127 @@
                                 </tr>
                             </table>
                         </th>
-                        <th class="th" style="font-weight:normal">Net Amnt after VAT</th>
+                        <th class="th">Net Amnt after VAT</th>
                     </tr>
                 </thead>
-                {{#each salesLine}}
-                <tr class="tab-data">
-                    <td class="td">{{this.sNo}}</td>
-                    <td class="td">
-                        <div style="font-size:13px">
-                            {{this.itemid}}
-                        </div>
+                <tbody style="color: black;font-weight: bold;">
+                    {{#each salesLine}}
+                    <tr class="tab-data">
+                        <td class="td">{{this.sNo}}</td>
+                        <td class="td">
+                            <div style="font-size:13px">
+                                {{this.itemid}}
+                            </div>
 
 
-                    </td>
-                    <td class="td description-data">
+                        </td>
+                        <td class="td description-data">
 
-                        <span style="font-size:13px">
-                            {{this.inventsizeid}}
-                        </span>
-                        <span>
+                            <span style="font-size:13px">
+                                {{this.inventsizeid}}
+                            </span>
+                            <span>
 
-                        </span>
+                            </span>
 
 
 
-                    </td>
-                    <!-- <td class="td">{{deliveryDate}}</td> -->
-                    <td class="td">
+                        </td>
+                        <!-- <td class="td">{{deliveryDate}}</td> -->
+                        <td class="td">
 
-                        {{this.salesQty}}
-                    </td>
-                    <td class="td">
+                            {{this.salesQty}}
+                        </td>
+                        <td class="td">
 
-                        {{this.salesprice}}
-                    </td>
-                    <td class="td">
-                        {{this.lineTotalDisc}}
-                    </td>
-                    <td class="td">{{this.lineAmountBeforeVat}}</td>
-                    <td class="td">
-                        <table style="border-collapse: collapse;border:none !important;width:100%">
-                            <tr class="td inline-table">
-                                <td class="inline-table" style="border:none;">{{this.vat}}%</td>
-                            </tr>
-                            <tr>
-                                <td class="td" style="border:none !important;"> {{this.vatAmount}} </td>
-                            </tr>
-                        </table>
+                            {{this.salesprice}}
+                        </td>
+                        <td class="td">
+                            {{this.lineTotalDisc}}
+                        </td>
+                        <td class="td">{{this.lineAmountBeforeVat}}</td>
+                        <td class="td">
+                            <table style="border-collapse: collapse;border:none !important;width:100%">
+                                <tr class="td inline-table">
+                                    <td class="inline-table" style="border:none;">{{this.vat}}%</td>
+                                </tr>
+                                <tr>
+                                    <td class="td" style="border:none !important;"> {{this.vatAmount}} </td>
+                                </tr>
+                            </table>
 
-                    </td>
-                    <td class="td">
-                        {{this.lineAmount}}
-                    </td>
+                        </td>
+                        <td class="td">
+                            {{this.lineAmount}}
+                        </td>
 
+                    </tr>
+
+
+                    {{/each}}
+                </tbody>
+            </table>
+            <table id="gtotal" class="textbold" align="right" width="100%" cellpadding="0" cellspacing="0"
+                style="position: relative; top: 20px;heigh:250px; font-size: 8px !important;">
+                <tr class="tdright">
+                    <td class="tdcenter" colspan="2">Sales Order</td>
+                    <td class="tdright" colspan="1">Gross Total</td>
+                    <td colspan="1">{{this.quantity}}</td>
+                    <td colspan="1">{{this.amount}}</td>
                 </tr>
 
+                <!-- <tr class="tdright">
+                  <td rowspan="4">&nbsp;</td>
+                  <td class="tdright">Total Quantity</td>
+                  <td>:</td>
+                  <td>
+                      {{this.quantity}}
+                  </td>
+              </tr> -->
+                <tr class="tdright">
+                    <!-- <td rowspan="4">&nbsp;</td> -->
 
-                {{/each}}
+                    <td class="tdleft">Cash Amount</td>
+                    <td class="tdleft">{{this.cashAmount}}</td>
+                    <td class="tdcenter borderNone"></td>
+
+                    <td class="tdright borderLeftNone">Shipping Charges</td>
+                    <td class="tdright">{{this.shippingAmount}}</td>
+                </tr>
+                <tr class="tdright">
+                    <td class="tdleft">Card Amount</td>
+                    <td class="tdleft">{{this.cardAmount}}</td>
+                    <td class="tdcenter borderNone"></td>
+
+                    <td class="tdright borderLeftNone">Discount</td>
+                    <td>{{this.disc}}</td>
+                </tr>
+                <tr class="tdright">
+                    <td class="tdleft">Design Service Redeem Amount</td>
+                    <td class="tdleft">{{this.designServiceRedeemAmount}}</td>
+                    <td class="tdcenter borderNone"></td>
+
+                    <td class="tdright borderLeftNone">VAT ({{this.vat}}%)</td>
+                    <td>{{this.vatAmount}}</td>
+                </tr>
+                <tr class="tdright">
+                    <td class="tdleft">Redeem Amount</td>
+                    <td class="tdleft">{{this.redeemAmount}}</td>
+                    <td class="tdcenter borderNone"></td>
+
+                    <td class="tdright borderLeftNone">Net Amount</td>
+                    <td>{{this.netAmount}}</td>
+                </tr>
+
+                {{#if interCompanyOriginalSalesId}}
+                <tr class="tdright">
+                    <td class="tdleft" colspan="2">Purchase Reference Number</td>
+                    <td class="tdleft" colspan="2">{{interCompanyOriginalSalesId}}</td>
+                </tr>
+                {{/if}}
             </table>
 
 
-
-            <table width="100%" style="text-align:right; margin-top: 8px">
-                <tr class="tab-data">
-                    <td class="td">{{this.sNo}}</td>
-                    <td class="td">
-                        <div style="font-size:13px">
-                            {{this.itemid}}
-                        </div>
-
-
-                    </td>
-                    <td class="td description-data">
-
-                        <span style="font-size:13px">
-                            {{this.inventsizeid}}
-                        </span>
-                        <span>
-
-                        </span>
-
-
-
-                    </td>
-                    <!-- <td class="td">{{deliveryDate}}</td> -->
-                    <td class="td">
-
-                        {{this.salesQty}}
-                    </td>
-                    <td class="td">
-
-                        {{this.salesprice}}
-                    </td>
-                    <td class="td">
-                        {{this.lineTotalDisc}}
-                    </td>
-                    <td class="td">{{this.lineAmountBeforeVat}}</td>
-                    <td class="td">
-                        <table style="border-collapse: collapse;border:none !important;width:100%">
-                            <tr class="td inline-table">
-                                <td class="inline-table" style="border:none;">{{this.vat}}%</td>
-                            </tr>
-                            <tr>
-                                <td class="td" style="border:none !important;"> {{this.vatAmount}} </td>
-                            </tr>
-                        </table>
-
-                    </td>
-                    <td class="td">
-                        {{this.lineAmount}}
-                    </td>
-
-                </tr>
-
-
-            </table>
         </div>
 
     </div>

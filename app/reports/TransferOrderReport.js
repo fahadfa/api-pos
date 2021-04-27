@@ -55,11 +55,11 @@ var TransferOrderReport = /** @class */ (function () {
     }
     TransferOrderReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, status_1, data_1, shipOrderData, salesLine, sNo_1, error_1;
+            var id, status_1, data_1, shipOrderData, salesLine, quantity_1, sNo_1, saleslines, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 4, , 5]);
+                        _a.trys.push([0, 5, , 6]);
                         console.log("TransferOrderReport");
                         id = params.salesId;
                         return [4 /*yield*/, this.query_to_data(id)];
@@ -75,25 +75,63 @@ var TransferOrderReport = /** @class */ (function () {
                         if (data_1.status != "POSTED" && shipOrderData.length != 0) {
                             this.rawQuery.updateSalesTable(params.salesId.toUpperCase(), "POSTED", new Date().toISOString());
                         }
+                        console.log(data_1);
                         return [4 /*yield*/, this.salesline_query_to_data(id)];
                     case 3:
                         salesLine = _a.sent();
-                        // salesLine = salesLine.length > 0 ? salesLine : [];
-                        data_1.salesLine = salesLine;
-                        data_1.quantity = 0;
+                        quantity_1 = 0;
                         sNo_1 = 1;
-                        data_1.salesLine.map(function (v) {
+                        salesLine.map(function (v) {
                             v.sNo = sNo_1;
                             v.salesQty = parseInt(v.salesQty);
-                            data_1.quantity += parseInt(v.salesQty);
+                            quantity_1 += parseInt(v.salesQty);
                             sNo_1 += 1;
                         });
+                        return [4 /*yield*/, this.chunkArray(salesLine, 12)];
+                    case 4:
+                        saleslines = _a.sent();
+                        data_1.salesLine = saleslines.map(function (v) {
+                            var salesLine = {};
+                            salesLine.salesLine = v;
+                            salesLine.quantity = 0;
+                            salesLine.salesId = data_1.salesId;
+                            salesLine.custAccount = data_1.custAccount;
+                            salesLine.status = data_1.status;
+                            salesLine.statusEn = data_1.statusEn;
+                            salesLine.statusAr = data_1.statusAr;
+                            salesLine.transkindEn = data_1.transkindEn;
+                            salesLine.transkindAr = data_1.transkindAr;
+                            salesLine.transkind = data_1.transkind;
+                            salesLine.vatamount = data_1.vatamount;
+                            salesLine.netAmount = data_1.netAmount;
+                            salesLine.disc = data_1.disc;
+                            salesLine.notes = data_1.notes;
+                            salesLine.amount = data_1.amount;
+                            salesLine.createddatetime = data_1.createddatetime;
+                            salesLine.lastmodifieddate = data_1.lastmodifieddate;
+                            salesLine.originalPrinted = data_1.originalPrinted;
+                            salesLine.inventLocationId = data_1.inventLocationId;
+                            salesLine.fwnamealias = data_1.fwnamealias;
+                            salesLine.fwname = data_1.fwname;
+                            salesLine.twnamealias = data_1.twnamealias;
+                            salesLine.twname = data_1.twname;
+                            salesLine.interCompanyOriginalSalesId = data_1.interCompanyOriginalSalesId;
+                            v.forEach(function (element) {
+                                element.salesQty = parseInt(element.salesQty);
+                                salesLine.quantity += element.salesQty;
+                            });
+                            return salesLine;
+                        });
+                        // salesLine = salesLine.length > 0 ? salesLine : [];
+                        // data.salesLine = salesLine;
+                        // data.quantity = 0;
+                        console.log(data_1);
                         // data.qr =  await QRCode.toDataURL(JSON.stringify(data));
                         return [2 /*return*/, data_1];
-                    case 4:
+                    case 5:
                         error_1 = _a.sent();
                         throw error_1;
-                    case 5: return [2 /*return*/];
+                    case 6: return [2 /*return*/];
                 }
             });
         });
@@ -119,7 +157,7 @@ var TransferOrderReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 // console.log(result.salesLine[0].product.nameEnglish);
                 renderData = result;
-                console.log(params.lang);
+                console.log(renderData);
                 file = params.lang == "en" ? "to-en" : "to-ar";
                 try {
                     return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];
@@ -152,6 +190,26 @@ var TransferOrderReport = /** @class */ (function () {
                     case 0:
                         salesQuery = "\n            select\n            distinct on (ln.id)\n            ln.itemid as itemid,\n            ln.inventsizeid as inventsizeid,\n            ln.configid as configid,\n            ln.colorantid,\n            ln.salesqty as \"salesQty\",\n            b.itemname as \"prodNameAr\",\n            b.namealias as \"prodNameEn\",\n            c.name as \"colNameAr\",\n            c.name as \"colNameEn\",\n            s.description as \"sizeNameEn\",\n            s.name as \"sizeNameAr\"\n            from salesline ln\n            inner join inventtable b on b.itemid = ln.itemid\n            inner join configtable c on c.configid = ln.configid and c.itemid = ln.itemid\n            inner join inventsize s on s.inventsizeid=ln.inventsizeid and s.itemid = ln.itemid\n            where ln.salesid = '" + id + "'\n            ";
                         return [4 /*yield*/, this.db.query(salesQuery)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    TransferOrderReport.prototype.chunkArray = function (myArray, chunk_size) {
+        return __awaiter(this, void 0, void 0, function () {
+            var index, arrayLength, tempArray, myChunk;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        index = 0;
+                        arrayLength = myArray.length;
+                        tempArray = [];
+                        for (index = 0; index < arrayLength; index += chunk_size) {
+                            myChunk = myArray.slice(index, index + chunk_size);
+                            // Do something if you want with the group
+                            tempArray.push(myChunk);
+                        }
+                        return [4 /*yield*/, tempArray];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });

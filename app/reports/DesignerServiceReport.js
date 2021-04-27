@@ -59,7 +59,7 @@ var DesignerServiceReport = /** @class */ (function () {
     }
     DesignerServiceReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, id, unSyncedData_1, status_1, data_1, date, linesCount, status_2, statusQuery, saleslineStatusQuery, lineids, inventtransids, desinerService, amount, designerServiceData, salesLine, error_1;
+            var queryRunner, id, unSyncedData_1, status_1, data_1, date, linesCount, status_2, statusQuery, saleslineStatusQuery, lineids, inventtransids, desinerService, amount, designerServiceData, salesLine, line, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -158,7 +158,17 @@ var DesignerServiceReport = /** @class */ (function () {
                         data_1.salesLine.map(function (v) {
                             data_1.quantity += parseInt(v.salesQty);
                         });
-                        data_1.vat = data_1.salesLine.length > 0 ? parseInt(data_1.salesLine[0].vat) : "-";
+                        if (data_1.salesLine.length > 0) {
+                            line = data_1.salesLine[0];
+                            data_1.vat = data_1.salesLine.length > 0 ? parseInt(data_1.salesLine[0].vat) : "-";
+                            data_1.vatAmount = line.vatAmount;
+                            data_1.cashAmount = line.cashAmount;
+                            data_1.cardAmount = line.cardAmount;
+                            data_1.redeemAmount = line.redeemAmount;
+                            data_1.designServiceRedeemAmount = line.designServiceRedeemAmount;
+                            data_1.shippingAmount = line.shippingAmount;
+                            data_1.paymentMode = line.paymentMode;
+                        }
                         console.log(data_1);
                         return [4 /*yield*/, queryRunner.commitTransaction()];
                     case 14:
@@ -225,7 +235,7 @@ var DesignerServiceReport = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        salesQuery = "\n            select\n            ROW_NUMBER()  OVER (ORDER BY  ln.salesid) As \"sNo\",\n            ln.itemid as itemid,\n            cast(ln.salesqty as INTEGER) as \"salesQty\",\n            ln.configid as configid,\n            to_char(ln.salesprice , 'FM999,999,999,990D00') as salesprice,\n            to_char(ln.linetotaldisc , 'FM999,999,999,990D00') as \"lineTotalDisc\",\n            to_char(ln.vat , 'FM999,999,999,990D00') as vat,\n            to_char(ln.vatamount, 'FM999,999,990d00') as \"vatAmount\",\n            to_char(ln.salesprice- ln.linetotaldisc +ln.vatamount, 'FM999,999,999,990D00') as \"lineAmount\",\n            to_char(ln.salesprice- ln.linetotaldisc, 'FM999,999,999,990D00') as \"lineAmountBeforeVat\",\n            ln.inventsizeid as inventsizeid\n            from salesline ln\n            left join designer_products dp on dp.code = ln.itemid\n            where ln.salesid='" + id + "'\n            ";
+                        salesQuery = "\n            select\n            ROW_NUMBER()  OVER (ORDER BY  ln.salesid) As \"sNo\",\n            ln.itemid as itemid,\n            cast(ln.salesqty as INTEGER) as \"salesQty\",\n            ln.configid as configid,\n            to_char(ln.salesprice , 'FM999,999,999,990D00') as salesprice,\n            to_char(ln.linetotaldisc , 'FM999,999,999,990D00') as \"lineTotalDisc\",\n            to_char(ln.vat , 'FM999,999,999,990D00') as vat,\n            to_char(ln.vatamount, 'FM999,999,990d00') as \"vatAmount\",\n            to_char(ln.salesprice- ln.linetotaldisc +ln.vatamount, 'FM999,999,999,990D00') as \"lineAmount\",\n            to_char(ln.salesprice- ln.linetotaldisc, 'FM999,999,999,990D00') as \"lineAmountBeforeVat\",\n            s.cash_amount as \"cashAmount\",\n            s.card_amount as \"cardAmount\",\n            s.redeemptsamt as \"redeemAmount\",\n            s.design_service_redeem_amount as \"designServiceRedeemAmount\",\n            to_char(s.shipping_amount, 'FM999999999990.000') as \"shippingAmount\",\n            s.payment as \"paymentMode\",\n            ln.inventsizeid as inventsizeid\n            from salesline ln\n            left join salestable s on ln.salesid=s.salesid \n            left join designer_products dp on dp.code = ln.itemid\n            where ln.salesid='" + id + "'\n            ";
                         return [4 /*yield*/, this.db.query(salesQuery)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }

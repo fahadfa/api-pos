@@ -57,7 +57,7 @@ var OrderReceiveReport = /** @class */ (function () {
     }
     OrderReceiveReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, id, unSyncedData_1, status_1, data_1, salesLine, i_1, checkPrevData, linesCount, date, query, salesLineQuery, inventtransQuery, lineids, inventtransids, error_1;
+            var queryRunner, id, unSyncedData_1, status_1, data_1, salesLine, i_1, checkPrevData, linesCount, date, query, salesLineQuery, inventtransQuery, lineids, inventtransids, saleslines, quantity_1, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -70,7 +70,7 @@ var OrderReceiveReport = /** @class */ (function () {
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        _a.trys.push([3, 15, 17, 19]);
+                        _a.trys.push([3, 16, 18, 20]);
                         id = params.salesId;
                         unSyncedData_1 = [];
                         return [4 /*yield*/, this.query_to_data(id)];
@@ -158,18 +158,57 @@ var OrderReceiveReport = /** @class */ (function () {
                     case 13: return [4 /*yield*/, queryRunner.commitTransaction()];
                     case 14:
                         _a.sent();
-                        return [2 /*return*/, data_1];
+                        console.log(data_1);
+                        return [4 /*yield*/, this.chunkArray(data_1.salesLine, 10)];
                     case 15:
+                        saleslines = _a.sent();
+                        quantity_1 = 0;
+                        data_1.salesLine = saleslines.map(function (v) {
+                            var salesLine = {};
+                            salesLine.salesLine = v;
+                            salesLine.salesId = data_1.salesId;
+                            salesLine.custAccount = data_1.custAccount;
+                            salesLine.status = data_1.status;
+                            salesLine.transkind = data_1.transkind;
+                            salesLine.statusEn = data_1.statusEn;
+                            salesLine.statusAr = data_1.statusAr;
+                            salesLine.transkindEn = data_1.transkindEn;
+                            salesLine.transkindAr = data_1.transkindAr;
+                            salesLine.vatamount = data_1.vatamount;
+                            salesLine.netAmount = data_1.netAmount;
+                            salesLine.disc = data_1.disc;
+                            salesLine.amount = data_1.amount;
+                            salesLine.createddatetime = data_1.createddatetime;
+                            salesLine.originalPrinted = data_1.originalPrinted;
+                            salesLine.inventLocationId = data_1.inventLocationId;
+                            salesLine.notes = data_1.notes;
+                            salesLine.fwnamealias = data_1.fwnamealias;
+                            salesLine.fwname = data_1.fwname;
+                            salesLine.twnamealias = data_1.twnamealias;
+                            salesLine.twname = data_1.twname;
+                            salesLine.interCompanyOriginalSalesId = data_1.interCompanyOriginalSalesId;
+                            salesLine.transferid = data_1.transferid;
+                            v.forEach(function (element) {
+                                element.salesQty = parseInt(element.salesQty);
+                                quantity_1 += element.salesQty;
+                            });
+                            return salesLine;
+                        });
+                        data_1.salesLine.map(function (v) {
+                            v.quantity = quantity_1;
+                        });
+                        return [2 /*return*/, data_1];
+                    case 16:
                         error_1 = _a.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 16:
+                    case 17:
                         _a.sent();
                         throw error_1;
-                    case 17: return [4 /*yield*/, queryRunner.release()];
-                    case 18:
+                    case 18: return [4 /*yield*/, queryRunner.release()];
+                    case 19:
                         _a.sent();
                         return [7 /*endfinally*/];
-                    case 19: return [2 /*return*/];
+                    case 20: return [2 /*return*/];
                 }
             });
         });
@@ -265,6 +304,26 @@ var OrderReceiveReport = /** @class */ (function () {
                     case 0:
                         salesQuery = "\n            select\n            ln.salesid,\n            ln.itemid,\n            ln.batchno,\n            ln.configid,\n            ln.inventsizeid,\n            ln.status,\n            ln.colorantid as  colorantid,\n            ln.salesqty as \"salesQty\",\n            ln.prodnamear as \"prodNameAr\",\n            ln.prodnameen as \"prodNameEn\",\n            ln.colNameAr as \"colNameAr\",\n            ln.colNameEn as \"colNameEn\",\n            ln.sizeNameEn as \"sizeNameEn\",\n            ln.sizeNameAr as \"sizeNameAr\"\n            from\n            (\n                select\n                distinct on (i.id, i.invoiceid, i.itemid, i.configid, i.inventsizeid, i.batchno, i.qty, i.sales_line_id)\n                i.invoiceid as salesid,\n                i.batchno,\n                i.itemid,\n                i.configid,\n                i.inventsizeid,\n                st.status as status,\n                ABS(i.qty) as salesqty,\n                b.itemname as prodnamear,\n                b.namealias as prodnameen,\n                c.name as colNameAr,\n                c.name as colNameEn,\n                s.description as sizeNameEn,\n                s.name as sizeNameAr,\n                sl.colorantid as  colorantid,\n                sl.linenum\n                from inventtrans i\n                left join salestable st on st.salesid = i.invoiceid\n                left join salesline sl on sl.id = i.sales_line_id\n                left join inventtable b on i.itemid=b.itemid\n                left join inventsize s on s.itemid = i.itemid and i.inventsizeid = s.inventsizeid\n                left join configtable c on c.configid = i.configid and c.itemid = i.itemid\n            where invoiceid='" + id + "'\n            ) as ln\n            ";
                         return [4 /*yield*/, this.db.query(salesQuery)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    OrderReceiveReport.prototype.chunkArray = function (myArray, chunk_size) {
+        return __awaiter(this, void 0, void 0, function () {
+            var index, arrayLength, tempArray, myChunk;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        index = 0;
+                        arrayLength = myArray.length;
+                        tempArray = [];
+                        for (index = 0; index < arrayLength; index += chunk_size) {
+                            myChunk = myArray.slice(index, index + chunk_size);
+                            // Do something if you want with the group
+                            tempArray.push(myChunk);
+                        }
+                        return [4 /*yield*/, tempArray];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });

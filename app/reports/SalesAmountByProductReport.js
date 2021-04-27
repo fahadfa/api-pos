@@ -176,8 +176,9 @@ var SalesAmountByProductReport = /** @class */ (function () {
                         fDate.setHours(0, 0, 0);
                         tDate = new Date(params.toDate);
                         tDate.setHours(0, 0, 0);
-                        fromDate = App_1.App.convertUTCDateToLocalDate(fDate, params.timeZoneOffSet ? params.timeZoneOffSet : 0);
-                        toDate = App_1.App.convertUTCDateToLocalDate(tDate, params.timeZoneOffSet ? params.timeZoneOffSet : 0);
+                        fromDate = App_1.App.convertUTCDateToLocalDate(fDate, params.timeZoneOffSet ? -1 * params.timeZoneOffSet : 0);
+                        toDate = App_1.App.convertUTCDateToLocalDate(tDate, params.timeZoneOffSet ? -1 * params.timeZoneOffSet : 0);
+                        console.log(fromDate, toDate);
                         sql = "\n    select s.itemid, b.itemname as prodnamear, b.namealias as prodnameen,\n    s.configid , c.name as colNameAr,c.name as colNameEn,\n    s.inventsizeid , size.description as sizeNameEn,size.name as sizeNameAr,\n    to_char (sum(s.lineamount)::float, 'FM999999990.00') as \"lineAmount\"\n    from salestable st left join\n    salesline s on st.salesid =s.salesid \n    left join inventtable b on s.itemid=b.itemid\n                    left join inventsize size on size.itemid =s.itemid and size.inventsizeid = s.inventsizeid\n                    left join configtable c on c.configid = s.configid and c.itemid = s.itemid\n    where st.transkind ='SALESORDER' \n    and st.lastmodifieddate between '" + fromDate + "'::timestamp and ('" + toDate + "'::timestamp + '1 day'::interval)\n    ";
                         if (params.itemid) {
                             sql = sql + ("  and s.itemid ='" + params.itemid + "'");

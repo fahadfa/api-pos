@@ -48,9 +48,7 @@ var DataAccess = /** @class */ (function () {
                 Log_1.log.debug("connection created successfully");
                 return [2 /*return*/];
             });
-        }); }).catch(function (err) {
-            Log_1.log.info(err);
-        });
+        }); });
     };
     return DataAccess;
 }());

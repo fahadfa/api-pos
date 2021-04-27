@@ -64,12 +64,12 @@ var AppReport = /** @class */ (function () {
     AppReport.prototype.getRouter = function () {
         var _this = this;
         this.router.get("/:code/:type", function (request, response) { return __awaiter(_this, void 0, void 0, function () {
-            var params, code, paramsType, type, reqData, resData_1, report, dataFound, _i, _a, action, ns, _b, error_1;
+            var params, code, paramsType, type, reqData, resData_1, report, dataFound, _i, _a, action, ns, _b, out, error_1;
             var _this = this;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        _c.trys.push([0, 9, , 10]);
+                        _c.trys.push([0, 16, , 17]);
                         params = request.params;
                         code = params.code;
                         paramsType = request.params;
@@ -112,75 +112,108 @@ var AppReport = /** @class */ (function () {
                         _i++;
                         return [3 /*break*/, 1];
                     case 8:
-                        if (dataFound == true) {
-                            if (type == "data") {
-                                response.send({ status: 1, data: resData_1 });
-                            }
-                            else if (type == "html") {
-                                this.report
-                                    .then(function () {
-                                    return _this.jsreport
-                                        .render({
-                                        template: {
-                                            content: resData_1,
-                                            engine: "none",
-                                            recipe: "html",
-                                        },
-                                    })
-                                        .then(function (out) {
-                                        out.stream.pipe(response);
-                                    })
-                                        .catch(function (err) {
-                                        Log_1.log.error(err);
-                                        throw err;
-                                    });
-                                })
-                                    .catch(function (err) {
-                                    Log_1.log.error(err);
-                                    throw err;
-                                });
-                            }
-                            else if (type == "excel") {
-                                this.report
-                                    .then(function () {
-                                    return _this.jsreport
-                                        .render({
-                                        template: {
-                                            content: resData_1,
-                                            engine: "none",
-                                            recipe: "html-to-xlsx",
-                                        },
-                                    })
-                                        .then(function (out) {
-                                        response.set({
-                                            "Content-Type": "application/vnd.ms-excel",
-                                            // instead of report.xlsx you can use any name you want, for example test.xlsx, etc
-                                            "Content-Disposition": 'attachment; filename="report.xlsx',
-                                        });
-                                        out.stream.pipe(response);
-                                    })
-                                        .catch(function (err) {
-                                        Log_1.log.error(err);
-                                        throw err;
-                                    });
-                                })
-                                    .catch(function (err) {
-                                    Log_1.log.error(err);
-                                    throw err;
-                                });
-                            }
-                        }
-                        else {
-                            throw { message: "No Report Found!!!" };
-                        }
-                        return [3 /*break*/, 10];
+                        if (!(dataFound == true)) return [3 /*break*/, 14];
+                        if (!(type == "data")) return [3 /*break*/, 9];
+                        response.send({ status: 1, data: resData_1 });
+                        return [3 /*break*/, 13];
                     case 9:
+                        if (!(type == "html")) return [3 /*break*/, 10];
+                        this.report
+                            .then(function () {
+                            return _this.jsreport
+                                .render({
+                                template: {
+                                    content: resData_1,
+                                    engine: "none",
+                                    recipe: "html",
+                                },
+                            })
+                                .then(function (out) {
+                                out.stream.pipe(response);
+                            })
+                                .catch(function (err) {
+                                Log_1.log.error(err);
+                                throw err;
+                            });
+                        })
+                            .catch(function (err) {
+                            Log_1.log.error(err);
+                            throw err;
+                        });
+                        return [3 /*break*/, 13];
+                    case 10:
+                        if (!(type == "excel")) return [3 /*break*/, 11];
+                        this.report
+                            .then(function () {
+                            return _this.jsreport
+                                .render({
+                                template: {
+                                    content: resData_1,
+                                    engine: "none",
+                                    recipe: "html-to-xlsx",
+                                },
+                            })
+                                .then(function (out) {
+                                response.set({
+                                    "Content-Type": "application/vnd.ms-excel",
+                                    // instead of report.xlsx you can use any name you want, for example test.xlsx, etc
+                                    "Content-Disposition": 'attachment; filename="report.xlsx',
+                                });
+                                out.stream.pipe(response);
+                            })
+                                .catch(function (err) {
+                                Log_1.log.error(err);
+                                throw err;
+                            });
+                        })
+                            .catch(function (err) {
+                            Log_1.log.error(err);
+                            throw err;
+                        });
+                        return [3 /*break*/, 13];
+                    case 11:
+                        if (!(type == "pdf")) return [3 /*break*/, 13];
+                        return [4 /*yield*/, this.report
+                                .then(function () { return __awaiter(_this, void 0, void 0, function () {
+                                var out;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0: return [4 /*yield*/, this.jsreport.render({
+                                                template: {
+                                                    content: resData_1,
+                                                    engine: "none",
+                                                    recipe: "chrome-pdf",
+                                                },
+                                            })];
+                                        case 1:
+                                            out = _a.sent();
+                                            return [2 /*return*/, out];
+                                    }
+                                });
+                            }); })
+                                .catch(function (err) {
+                                Log_1.log.error(err);
+                                throw err;
+                            })];
+                    case 12:
+                        out = _c.sent();
+                        response.set({
+                            "content-Type": "application/pdf",
+                        });
+                        // return out.content;
+                        // console.log(out.content)
+                        response.send(out.content);
+                        _c.label = 13;
+                    case 13: return [3 /*break*/, 15];
+                    case 14: throw { message: "No Report Found!!!" };
+                    case 15: return [3 /*break*/, 17];
+                    case 16:
                         error_1 = _c.sent();
                         Log_1.log.error(error_1);
                         error_1 = typeof error_1 == "string" ? { message: error_1 } : error_1;
                         response.send({ status: 0, error: error_1 });
-                        return [3 /*break*/, 10];
-                    case 10: return [2 /*return*/];
+                        return [3 /*break*/, 17];
+                    case 17: return [2 /*return*/];
                 }
             });
         }); });

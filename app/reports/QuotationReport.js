@@ -67,6 +67,8 @@ var QuotationReport = /** @class */ (function () {
                         data_1.isPurchOrder = data_1.transkind == "PURCHASEORDER";
                         data_1.isPurchQuotation = data_1.transkind == "PURCHASEREQUEST";
                         data_1.vat = parseInt(data_1.vat);
+                        console.log("==========================================================");
+                        console.log(data_1);
                         data_1.originalPrinted = data_1.originalPrinted ? data_1.originalPrinted : false;
                         if (!(data_1.originalPrinted && data_1.status == "CONVERTED")) return [3 /*break*/, 3];
                         status_1 = "CONVERTED";
@@ -118,6 +120,7 @@ var QuotationReport = /** @class */ (function () {
                         quantity_1 = 0;
                         data_1.salesLine = salesLine.map(function (v) {
                             var salesLine = {};
+                            salesLine.salesId = data_1.salesId;
                             salesLine.salesLine = v;
                             salesLine.quantity = 0;
                             v.forEach(function (element) {
@@ -128,6 +131,7 @@ var QuotationReport = /** @class */ (function () {
                                 salesLine.netAmount = data_1.netAmount;
                                 salesLine.disc = data_1.disc;
                                 salesLine.amount = data_1.amount;
+                                salesLine.salesman = data_1.salesman;
                             });
                             quantity_1 += salesLine.quantity;
                             return salesLine;
@@ -140,6 +144,7 @@ var QuotationReport = /** @class */ (function () {
                             v.customername = data_1.customername;
                             v.cvatNum = data_1.cvatNum;
                             v.deliveryaddress = data_1.deliveryaddress;
+                            v.notes = data_1.notes;
                             v.quantity = quantity_1;
                             v.isSalesOrder = data_1.isSalesOrder;
                             v.isSalesQuotation = data_1.isSalesQuotation;

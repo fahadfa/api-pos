@@ -8,9 +8,15 @@
   <style>
     /* Styles go here */
 
+    footer {
+      position: fixed;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+    }
     body {
       font-family: " Courier New", Courier, monospace !important;
-      font-size: 14px;
+      font-size: 8px;
       width: 100%;
       background: #fff;
       padding: 0px;
@@ -49,25 +55,10 @@
     }
 
     @page {
-      margin: 1cm;
+      margin: 20mm;
     }
 
-    @media print {
-      tfoot {
-        display: table-footer-group;
-        border: 0 !important;
-        border-color: 1px solid #fff;
-      }
-
-      @page {
-        margin: 2cm 0.5cm 1cm 0.5cm;
-      }
-
-      #footer {
-        border: none;
-        border: 0;
-      }
-    }
+  
 
     .copy-box {
       border: 2px solid #000;
@@ -149,6 +140,15 @@
       body {
         margin: 0;
       }
+      tfoot {
+        display: table-footer-group;
+        border: 0 !important;
+        border-color: 1px solid #fff;
+      }
+
+      @page {
+        margin: 1.6cm 0.5cm 7cm 0.5cm;
+      }
     }
 
     #bg__watermark {
@@ -200,7 +200,7 @@
   
       <div class="page-footer"></div> -->
     {{#each salesLine}}
-    <table>
+    <table style="width:100%">
       <thead>
         <tr>
           <td>
@@ -291,6 +291,14 @@
                           {{createddatetime}}
                         </td>
                       </tr>
+
+                      <tr class="billing">
+                        <td class="textboldtd">Notes</td>
+                        <td>:</td>
+                        <td>{{this.notes}}</td>
+                      </tr>
+
+
                     </table>
                   </td>
                 </tr>
@@ -307,16 +315,17 @@
                   <th class="th">Colorant</th>
                   <th class="th">Qty</th>
                 </tr>
+                <tbody style="color: black;font-weight: bold;">
                 {{#each lines}}
                 <tr class="tab-data">
                   <td class="td">{{this.sNo}}</td>
                   <td class="td">
-                    <div style="font-size: 13px;">
+                    <div style="font-size: 8px;">
                       {{this.itemid}}
                     </div>
                   </td>
                   <td class="td description-data">
-                    <span style="font-size: 14px;">
+                    <span style="font-size: 8px;">
                       {{this.prodNameEn}}
                     </span>
                   </td>
@@ -338,6 +347,7 @@
                 </tr>
 
                 {{/each}}
+              </tbody>
               </table>
 
               <table width="100%" style="text-align: right; margin-top: 8px;">
@@ -352,12 +362,12 @@
               </table>
 
               <table style="width: 100%; border-collapse: collapse;">
-                <tr style="border: 1px dotted #ccc !important;">
+                <tr style="">
                   <td style="font-size: 13px;" align="left" colspan="2">
                     We confirm that we have received all the items without any damages
                   </td>
 
-                  <td align="right">{{quantity}}</td>
+                  <!-- <td align="right">{{quantity}}</td> -->
                 </tr>
                 <!-- <tr>
                     <td style="font-size: 14px;width:30%" align="left">
@@ -387,8 +397,9 @@
         </tr>
       </tbody>
     </table>
+    <p style="page-break-after: always;"></p>
     {{/each}}
-    <table width="100%" style="background: #fff; border-top: 1px dotted #8a8989; padding-top: 0px;">
+    <!-- <table width="100%" style="background: #fff; border-top: 1px dotted #8a8989; padding-top: 0px;">
       <tr>
         <td style="width: 33%; font-size: 15px; text-align: left;">
           Receiver
@@ -412,7 +423,7 @@
       <tr>
         <td>Signature :</td>
       </tr>
-    </table>
+    </table> -->
   </section>
 
   {{#unless documentStatus}}
@@ -424,7 +435,7 @@
   
       <div class="page-footer"></div> -->
     {{#each salesLine}}
-    <table>
+    <table style="width:100%">
       <thead>
         <tr>
           <td>
@@ -433,7 +444,7 @@
         </tr>
       </thead>
 
-      <tbody>
+      <tbody >
         <tr>
           <td>
             <div class="page">
@@ -531,6 +542,7 @@
                   <th class="th">Colorant</th>
                   <th class="th">Qty</th>
                 </tr>
+                <tbody style="color: black;font-weight: bold;">
                 {{#each lines}}
                 <tr class="tab-data">
                   <td class="td">{{this.sNo}}</td>
@@ -562,6 +574,7 @@
                 </tr>
 
                 {{/each}}
+              </tbody>
               </table>
 
               <table width="100%" style="text-align: right; margin-top: 8px;">
@@ -576,12 +589,12 @@
               </table>
 
               <table style="width: 100%; border-collapse: collapse;">
-                <tr style="border: 1px dotted #ccc !important;">
+                <tr>
                   <td style="font-size: 13px;" align="left" colspan="2">
                     We confirm that we have received all the items without any damages
                   </td>
 
-                  <td align="right">{{quantity}}</td>
+                  <!-- <td align="right">{{quantity}}</td> -->
                 </tr>
                 <!-- <tr>
                     <td style="font-size: 14px;width:30%" align="left">
@@ -611,34 +624,42 @@
         </tr>
       </tbody>
     </table>
+    <p style="page-break-after: always;"></p>
     {{/each}}
-    <table width="100%" style="background: #fff; border-top: 1px dotted #8a8989; padding-top: 0px;">
-      <tr>
-        <td style="width: 33%; font-size: 15px; text-align: left;">
-          Receiver
-        </td>
-        <td style="width: 33%; font-size: 15px; text-align: center;">
-          Salesman
-        </td>
-        <td style="width: 33%; font-size: 15px; text-align: right;">
-          Signature
-        </td>
-      </tr>
 
-      <tr>
-        <td style="width: 33%;" align="left">Receiver Name:</td>
-        <td style="width: 33%;" align="middle">{{this.salesman}}</td>
-        <td style="width: 33%;" align="right"></td>
-      </tr>
-      <tr>
-        <td>Date :</td>
-      </tr>
-      <tr>
-        <td>Signature :</td>
-      </tr>
-    </table>
   </section>
   {{/unless}}
 </body>
+
+<footer>
+  <div style="width:100%;height:50px;border-top: 1px dotted #8a8989;">
+
+  </div>
+  <table width="100%" style="background: #fff;  padding-top: 0px;">
+    <tr>
+      <td style="width: 33%; font-size: 15px; text-align: left;">
+        Receiver
+      </td>
+      <td style="width: 33%; font-size: 15px; text-align: center;">
+        Salesman
+      </td>
+      <td style="width: 33%; font-size: 15px; text-align: right;">
+        Signature
+      </td>
+    </tr>
+
+    <tr>
+      <td style="width: 33%;" align="left">Receiver Name:</td>
+      <td style="width: 33%;" align="middle">{{this.salesman}}</td>
+      <td style="width: 33%;" align="right"></td>
+    </tr>
+    <tr>
+      <td>Date :</td>
+    </tr>
+    <tr>
+      <td>Signature :</td>
+    </tr>
+  </table>
+</footer>
 
 </html>

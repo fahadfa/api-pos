@@ -34,30 +34,21 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var SyncServiceHelper_1 = require("../sync/SyncServiceHelper");
 var Props_1 = require("../constants/Props");
 var App_1 = require("../utils/App");
 var moment = require("moment");
-var Config = __importStar(require("../utils/Config"));
 var STAGING_ID = "STAGING";
 var STORE_ID = process.env.ENV_STORE_ID || "LOCAL-TEST";
 var SyncDMLService = /** @class */ (function () {
     function SyncDMLService(slog) {
         this.limitData = 500;
-        Config.setEnvConfig();
         this.log = slog;
     }
     SyncDMLService.prototype.deleteExecute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var layerStageDbConfig, stageDbConfig, localDbConfig, sql, syncResults, sysDeleteQuery, tableDeleteQuery, err_1;
+            var stageDbConfig, localDbConfig, sql, syncResults, sysDeleteQuery, tableDeleteQuery, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -65,7 +56,6 @@ var SyncDMLService = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 5, , 6]);
-                        layerStageDbConfig = SyncServiceHelper_1.SyncServiceHelper.LayeredStageDBOptions();
                         stageDbConfig = SyncServiceHelper_1.SyncServiceHelper.StageDBOptions();
                         localDbConfig = SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions();
                         sql = "SELECT table_id, table_name, table_value, deleted_on FROM sync_delete_data order by deleted_on asc limit 250";
@@ -101,18 +91,17 @@ var SyncDMLService = /** @class */ (function () {
     SyncDMLService.prototype.execute = function (type, priority, fallback) {
         if (priority === void 0) { priority = 9; }
         return __awaiter(this, void 0, void 0, function () {
-            var layeredStageDbConfig, stageDbConfig, localDbConfig, sql, utcDate, utcDateTime, currentTime, syncResults, sourceDB, targetDB, error_1;
+            var stageDbConfig, localDbConfig, sql, utcDate, utcDateTime, currentTime, syncResults, sourceDB, targetDB, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.log.info("###########################################");
                         // App.Sleep(2000);
                         this.log.debug("!!!!!!!!!!!!!!!!!!!! " + STORE_ID + " - " + new Date().toISOString() + "!!!!!!!!!!!!!!!!!!!!");
-                        layeredStageDbConfig = SyncServiceHelper_1.SyncServiceHelper.LayeredStageDBOptions();
                         stageDbConfig = SyncServiceHelper_1.SyncServiceHelper.StageDBOptions();
                         localDbConfig = SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions();
                         sql = "SELECT to_char (now(), 'YYYY-MM-DD\"T\"HH24:MI:SS') as utc_date";
-                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(layeredStageDbConfig, sql, this.log)];
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(stageDbConfig, sql, this.log)];
                     case 1:
                         utcDate = _a.sent();
                         utcDateTime = utcDate.rows[0]["utc_date"];
@@ -139,7 +128,7 @@ var SyncDMLService = /** @class */ (function () {
                         else {
                             sql = " select * from sync_table \n        where (target_id = '" + STORE_ID + "' ) \n        and active = true \n        and map_table = '" + fallback.table_name + "' \n        order by updated_on  ASC \n        limit 1";
                         }
-                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(layeredStageDbConfig, sql, this.log)];
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(stageDbConfig, sql, this.log)];
                     case 3:
                         syncResults = _a.sent();
                         syncResults = syncResults ? syncResults.rows : [];
@@ -147,8 +136,6 @@ var SyncDMLService = /** @class */ (function () {
                         this.log.debug(JSON.stringify(syncResults, null, 2));
                         if (!syncResults)
                             return [2 /*return*/, Promise.resolve("")];
-                        syncResults.last_update = moment(syncResults.last_update).format();
-                        syncResults.last_update = new Date(syncResults.last_update).toISOString();
                         if (!(syncResults.source_id != syncResults.target_id)) return [3 /*break*/, 5];
                         sourceDB = syncResults.source_id == STAGING_ID ? stageDbConfig : localDbConfig;
                         targetDB = syncResults.target_id == STORE_ID ? localDbConfig : stageDbConfig;
@@ -185,7 +172,7 @@ var SyncDMLService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        updateSyncConfig = SyncServiceHelper_1.SyncServiceHelper.LayeredStageDBOptions();
+                        updateSyncConfig = SyncServiceHelper_1.SyncServiceHelper.StageDBOptions();
                         batchSql = [];
                         isChunkEnd = false;
                         offset = 0;
@@ -301,16 +288,16 @@ var SyncDMLService = /** @class */ (function () {
     };
     SyncDMLService.prototype.fallBackData = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var layeredstageDbConfig, sql, soruceRes, err_3;
+            var stageDbConfig, sql, soruceRes, err_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        layeredstageDbConfig = SyncServiceHelper_1.SyncServiceHelper.LayeredStageDBOptions();
+                        stageDbConfig = SyncServiceHelper_1.SyncServiceHelper.StageDBOptions();
                         sql = "select *  from sync_fallback where target_id='" + STORE_ID + "' and is_synced = false order by from_date asc limit 10";
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(layeredstageDbConfig, sql, this.log)];
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(stageDbConfig, sql, this.log)];
                     case 2:
                         soruceRes = _a.sent();
                         if (soruceRes && soruceRes.rows && soruceRes.rows) {
@@ -330,16 +317,16 @@ var SyncDMLService = /** @class */ (function () {
     };
     SyncDMLService.prototype.fallBackDataUpdate = function (id) {
         return __awaiter(this, void 0, void 0, function () {
-            var layeredstageDbConfig, sql, soruceRes, err_4;
+            var stageDbConfig, sql, soruceRes, err_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        layeredstageDbConfig = SyncServiceHelper_1.SyncServiceHelper.LayeredStageDBOptions();
+                        stageDbConfig = SyncServiceHelper_1.SyncServiceHelper.StageDBOptions();
                         sql = "update sync_fallback set is_synced = true  where id = '" + id + "'";
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(layeredstageDbConfig, [sql], this.log)];
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(stageDbConfig, [sql], this.log)];
                     case 2:
                         soruceRes = _a.sent();
                         return [3 /*break*/, 4];

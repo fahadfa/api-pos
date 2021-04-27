@@ -71,11 +71,11 @@ var typeorm_2 = require("typeorm");
 var moment = require("moment");
 // to generate uuid for salesline data
 var uuid = require("uuid");
-var Sms_1 = require("../../utils/Sms");
 var SalesLine_1 = require("../../entities/SalesLine");
 var Designerservice_1 = require("../../entities/Designerservice");
 var InventTrans_1 = require("../../entities/InventTrans");
 var UnSyncedTransactions_1 = require("../../entities/UnSyncedTransactions");
+var PhoneVerificationService_1 = require("./PhoneVerificationService");
 var SalesTableService = /** @class */ (function () {
     function SalesTableService() {
         this.salesOrderTokensDAO = new SalesOrderTokensDAO_1.SalesOrderTokensDAO();
@@ -93,6 +93,7 @@ var SalesTableService = /** @class */ (function () {
         this.updateInventoryService = new UpdateInventoryService_1.UpdateInventoryService();
         this.updateInventoryService.sessionInfo = this.sessionInfo;
         this.redeemService = new RedeemService_1.RedeemService();
+        this.sms = new PhoneVerificationService_1.PhoneVerificationService();
         this.db = typeorm_1.getManager();
     }
     SalesTableService.prototype.entity = function (id, type) {
@@ -849,6 +850,7 @@ var SalesTableService = /** @class */ (function () {
                         item.warehouse = { inventLocationId: item.inventLocationId };
                         item.createdby = this.sessionInfo.userName;
                         item.createddatetime = new Date(App_1.App.DateNow());
+                        item.postedDateTime = new Date();
                         item.countryCode = item.countryCode ? item.countryCode : 966;
                         salesIdExists = true;
                         _a.label = 4;
@@ -1956,7 +1958,12 @@ var SalesTableService = /** @class */ (function () {
                         days = paymTerDays[0].numofdays;
                         now = new Date(App_1.App.DateNow());
                         dueDate = new Date(App_1.App.DateNow());
-                        dueDate.setDate(dueDate.getDate() + days);
+                        if (reqData.paymtermid == 'EM') {
+                            dueDate = new Date(dueDate.getFullYear(), dueDate.getMonth() + 1, 0);
+                        }
+                        else {
+                            dueDate.setDate(dueDate.getDate() + days);
+                        }
                         overDue = new Overdue_1.Overdue();
                         overDue.accountNum = reqData.custAccount;
                         overDue.payment = 0;
@@ -2337,11 +2344,14 @@ var SalesTableService = /** @class */ (function () {
                         customerDetails = customerRecord_1 ? customerRecord_1 : {};
                         if (reqData.mobileNo) {
                             pmobileno = function () { return __awaiter(_this, void 0, void 0, function () {
-                                var message, sms;
+                                var message, smsData;
                                 return __generator(this, function (_a) {
                                     message = "  \u0631\u0636\u0627\u0624\u0643\u0645 \u0647\u0648 \u0647\u062F\u0641\u0646\u0627 \u062F\u0647\u0627\u0646\u0627\u062A \u0627\u0644\u062C\u0632\u064A\u0631\u0629 \u062C\u0648\u062F\u0629 \u0648\u062C\u0645\u0627\u0644 \u0642\u064A\u0645\u0629 \u0645\u0634\u062A\u0631\u064A\u0627\u062A\u0643\u0645 \u0647\u064A " + reqData.netAmount.toFixed(2) + " ";
-                                    sms = new Sms_1.Sms();
-                                    return [2 /*return*/, sms.sendMessage("966", reqData.mobileNo, message)];
+                                    smsData = {
+                                        mobileno: "966" + reqData.mobileNo,
+                                        msg: message
+                                    };
+                                    return [2 /*return*/, this.sms.sendSMS(smsData)];
                                 });
                             }); };
                             promiseList.push(pmobileno());
@@ -2396,12 +2406,15 @@ var SalesTableService = /** @class */ (function () {
                             }); };
                             promiseList.push(ptokenData());
                             pmessage = function () { return __awaiter(_this, void 0, void 0, function () {
-                                var message, sms;
+                                var message, smsData;
                                 return __generator(this, function (_a) {
                                     message = " Please click on the below link to complete payment of " + reqData.onlineAmount.toFixed(2) + " SAR \n " + reqData.url + " ";
                                     try {
-                                        sms = new Sms_1.Sms();
-                                        return [2 /*return*/, sms.sendMessage("966", reqData.mobileNo, message)];
+                                        smsData = {
+                                            mobileno: "966" + reqData.mobileNo,
+                                            msg: message
+                                        };
+                                        return [2 /*return*/, this.sms.sendSMS(smsData)];
                                     }
                                     catch (error) {
                                         Log_1.log.error(error);
@@ -3509,11 +3522,14 @@ var SalesTableService = /** @class */ (function () {
                         promiseList.push(this.saveSalesOrderUpdateVocharDiscount(reqData, queryRunner));
                         if (reqData.mobileNo) {
                             pmobileno = function () { return __awaiter(_this, void 0, void 0, function () {
-                                var message, sms;
+                                var message, smsData;
                                 return __generator(this, function (_a) {
                                     message = "  \u0631\u0636\u0627\u0624\u0643\u0645 \u0647\u0648 \u0647\u062F\u0641\u0646\u0627 \u062F\u0647\u0627\u0646\u0627\u062A \u0627\u0644\u062C\u0632\u064A\u0631\u0629 \u062C\u0648\u062F\u0629 \u0648\u062C\u0645\u0627\u0644 \u0642\u064A\u0645\u0629 \u0645\u0634\u062A\u0631\u064A\u0627\u062A\u0643\u0645 \u0647\u064A " + reqData.netAmount + " ";
-                                    sms = new Sms_1.Sms();
-                                    return [2 /*return*/, sms.sendMessage("966", reqData.mobileNo, message)];
+                                    smsData = {
+                                        mobileno: "966" + reqData.mobileNo,
+                                        msg: message
+                                    };
+                                    return [2 /*return*/, this.sms.sendSMS(smsData)];
                                 });
                             }); };
                             promiseList.push(pmobileno());

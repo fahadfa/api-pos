@@ -98,12 +98,12 @@ var RawQuery = /** @class */ (function () {
                             ? this.sessionInfo.salesmanid[0].salesman
                             : null) + "'\n          END\n           ) as salesman,\n           (CASE \n            WHEN c.dimension6_!='' THEN concat(d.num)\n            ELSE '" + (this.sessionInfo && this.sessionInfo.salesmanid.length > 0
                             ? this.sessionInfo.salesmanid[0].salesmanid
-                            : null) + "'\n        END\n         ) as salesmanid\n       from custtable c\n       left join dimensions d on c.dimension6_ = d.num\n       where accountnum in ('" + accountNum1 + "' ";
+                            : null) + "'\n        END\n         ) as salesmanid\n       from custtable c\n       left join dimensions d on c.dimension6_ = d.num\n       where UPPER(accountnum) in (UPPER('" + accountNum1 + "') ";
                         if (accountnum2) {
-                            query += ", '" + accountnum2 + "'";
+                            query += ", UPPER('" + accountnum2 + "') ";
                         }
                         if (accountnum3) {
-                            query += ", '" + accountnum3 + "'";
+                            query += ", UPPER('" + accountnum3 + "') ";
                         }
                         query += ") ";
                         return [4 /*yield*/, this.db.query(query)];
@@ -302,7 +302,7 @@ var RawQuery = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "\n    select distinct on (itemid, configid, inventsizeid , batchno)\n        UPPER(i.itemid) as itemid,\n        bs.namealias as nameen,\n        bs.itemname as namear,\n        UPPER(i.configid) as configid,\n        UPPER(i.inventsizeid) as inventsizeid,\n        UPPER(i.batchno) as \"batchNo\",\n        UPPER(i.batchno) as batchno,\n        to_char((CASE \n          WHEN UPPER(i.batchno) = '-' THEN now()\n          WHEN UPPER(i.batchno) = '--' THEN now()\n          ELSE b.expdate\n          END\n        ),'yyyy-MM-dd') as batchexpdate,\n        sz.description as \"sizeNameEn\",\n        sz.\"name\" as \"sizeNameAr\",\n        sum(qty) as availabilty,\n        sum(qty) as \"physicalAvailable\",\n        (sum(qty)+(sum(case\n          when reserve_status ='RESERVED' then qty\n          else 0\n          end\n          ))) as \"totalAvailable\",\n        abs(sum(case\n          when reserve_status ='RESERVED' then qty\n          else 0\n          end\n          )) as reservedquantity,\n        abs(sum(case\n          when reserve_status ='RESERVED' then qty\n          else 0\n          end\n          )) as \"reservedQuantity\"\n        from inventtrans i\n        left join inventbatch b on i.batchno = b.inventbatchid and i.itemid = b.itemid and lower(i.configid) = lower(b.configid) \n        inner join inventtable bs on i.itemid = bs.itemid\n        left join inventsize sz on lower(sz.inventsizeid) = lower(i.inventsizeid) and sz.itemid = i.itemid\n        where transactionclosed  = true and inventlocationid = '" + reqData.inventlocationid + "' and i.itemid not like 'HSN-%'\n        ";
+                        query = "\n    select distinct on (itemid, configid, inventsizeid , batchno)\n        UPPER(i.itemid) as itemid,\n        bs.namealias as nameen,\n        bs.itemname as namear,\n        UPPER(i.configid) as configid,\n        UPPER(i.inventsizeid) as inventsizeid,\n        UPPER(i.batchno) as \"batchNo\",\n        UPPER(i.batchno) as batchno,\n        to_char((CASE \n          WHEN UPPER(i.batchno) = '-' THEN now()\n          WHEN UPPER(i.batchno) = '--' THEN now()\n          ELSE b.expdate\n          END\n        ),'yyyy-MM-dd') as batchexpdate,\n        sz.description as \"sizeNameEn\",\n        sz.\"name\" as \"sizeNameAr\",\n        sum(i.qty) as availabilty,\n        sum(i.qty) as \"physicalAvailable\",\n        abs(sum(case\n          when i.reserve_status ='RESERVED' then i.qty\n          else 0\n          end\n          )) as reservedquantity,\n        abs(sum(case\n          when reserve_status ='RESERVED' then qty\n          else 0\n          end\n          )) as \"reservedQuantity\"\n        from inventtrans i\n        left join inventbatch b on i.batchno = b.inventbatchid and i.itemid = b.itemid and lower(i.configid) = lower(b.configid) \n        inner join inventtable bs on i.itemid = bs.itemid\n        left join inventsize sz on lower(sz.inventsizeid) = lower(i.inventsizeid) and sz.itemid = i.itemid\n        where transactionclosed  = true and inventlocationid = '" + reqData.inventlocationid + "' and i.itemid not like 'HSN-%'\n        ";
                         if (reqData.itemId) {
                             query = query + (" and LOWER(i.itemid) = LOWER('" + reqData.itemId + "')");
                             if (reqData.configid) {
@@ -315,17 +315,15 @@ var RawQuery = /** @class */ (function () {
                                 query = query + (" and LOWER(i.invoiceid)!=LOWER('" + reqData.salesId + "')");
                             }
                         }
-                        query += " group by UPPER(i.itemid), UPPER(i.configid), UPPER(i.inventsizeid), UPPER(i.batchno),  i.inventlocationid,\n  bs.namealias, bs.itemname, b.expdate, sz.description, sz.\"name\" having (sum(qty)+(sum(case\n    when reserve_status ='RESERVED' then qty\n    else 0\n    end\n    ))) >0\n    ";
+                        query += " group by UPPER(i.itemid), UPPER(i.configid), UPPER(i.inventsizeid), UPPER(i.batchno),  i.inventlocationid,\n  bs.namealias, bs.itemname, b.expdate, sz.description, sz.\"name\"\n    ";
                         console.log(query);
                         return [4 /*yield*/, this.db.query(query)];
                     case 1:
                         result = _a.sent();
-                        // result.map((v:any)=>{
-                        //   v.totalAvailable = parseInt(v.availabilty) + parseInt(v.reservedquantity)
-                        //   v.physicalAvailable = parseInt(v.availabilty)
-                        //   v.reservedQuantity = parseInt(v.reservedquantity)
-                        // })
-                        return [2 /*return*/, result];
+                        result.map(function (v) {
+                            v.totalAvailable = parseInt(v.availabilty) + parseInt(v.reservedquantity);
+                        });
+                        return [2 /*return*/, result.filter(function (v) { return v.totalAvailable > 0; })];
                 }
             });
         });
@@ -1095,13 +1093,17 @@ var RawQuery = /** @class */ (function () {
             });
         });
     };
-    RawQuery.prototype.getDesignerServiceList = function (customerid, mobileno) {
+    RawQuery.prototype.getDesignerServiceList = function (customerid, mobileno, inventlocation) {
         return __awaiter(this, void 0, void 0, function () {
             var query;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        query = "\n                select distinct d.invoiceid, d.customerid, \n                cast(coalesce(d.balanceamount, 0) as Decimal(10,2)) as \"balanceAmount\", \n                cast((coalesce(d.designerserviceamount, 0) - coalesce(d.balanceamount, 0)) as Decimal(10,2)) as \"usedAmount\", \n                cast(coalesce(d.designerserviceamount, 0) as Decimal(10,2)) as \"designerserviceAmount\",\n                lastmodifieddate\n                from \n                (\n                select \n                a.invoiceid, \n                a.customerid,\n                a.custphone,\n                s.lastmodifieddate,\n                (select ABS(sum(b.amount)) from designerservice b where b.invoiceid=a.invoiceid and b.customerid = a.customerid and b.custphone= a.custphone group by b.invoiceid, b.customerid, b.custphone ) \n                as balanceamount,\n                (select ABS(sum(e.amount)) from designerservice e where e.amount > 0 and e.recordtype = 1 and e.invoiceid=a.invoiceid and e.customerid = a.customerid and e.custphone = a.custphone group by e.invoiceid, e.customerid, e.custphone)\n                as designerserviceamount\n                from designerservice a \n                inner join salestable s on s.salesid = a.invoiceid \n                where a.customerid = '" + customerid + "' and a.custphone = '" + mobileno + "'\n                )  as d where d.balanceamount > 0 order by lastmodifieddate\n                    ";
+                        query = "\n                select distinct d.invoiceid, d.customerid, d.inventlocationid,\n                cast(coalesce(d.balanceamount, 0) as Decimal(10,2)) as \"balanceAmount\", \n                cast((coalesce(d.designerserviceamount, 0) - coalesce(d.balanceamount, 0)) as Decimal(10,2)) as \"usedAmount\", \n                cast(coalesce(d.designerserviceamount, 0) as Decimal(10,2)) as \"designerserviceAmount\",\n                lastmodifieddate\n                from \n                (\n                select \n                a.invoiceid, \n                a.customerid,\n                a.custphone,\n                s.lastmodifieddate,s.inventlocationid ,\n                (select ABS(sum(b.amount)) from designerservice b where b.invoiceid=a.invoiceid and b.customerid = a.customerid and b.custphone= a.custphone group by b.invoiceid, b.customerid, b.custphone ) \n                as balanceamount,\n                (select ABS(sum(e.amount)) from designerservice e where e.amount > 0 and e.recordtype = 1 and e.invoiceid=a.invoiceid and e.customerid = a.customerid and e.custphone = a.custphone group by e.invoiceid, e.customerid, e.custphone)\n                as designerserviceamount\n                from designerservice a \n                inner join salestable s on s.salesid = a.invoiceid \n                where a.customerid = '" + customerid + "' and a.custphone = '" + mobileno + "'\n                )  as d where d.balanceamount > 0 ";
+                        if (inventlocation) {
+                            query += " and d.inventlocationid='" + inventlocation + "' ";
+                        }
+                        query += "order by lastmodifieddate";
                         return [4 /*yield*/, this.db.query(query)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }

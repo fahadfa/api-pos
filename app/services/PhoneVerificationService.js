@@ -34,14 +34,23 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var App_1 = require("../../utils/App");
 var Sms_1 = require("../../utils/Sms");
 var Props_1 = require("../../constants/Props");
 var PhoneVerification_1 = require("../../entities/PhoneVerification");
 var PhoneVerificationDAO_1 = require("../repos/PhoneVerificationDAO");
+var Config = __importStar(require("../../utils/Config"));
 var PhoneVerificationService = /** @class */ (function () {
     function PhoneVerificationService() {
+        this.axios = require("axios");
         this.phoneVerificationDAO = new PhoneVerificationDAO_1.PhoneVerificationDAO();
         this.sms = new Sms_1.Sms();
     }
@@ -164,7 +173,7 @@ var PhoneVerificationService = /** @class */ (function () {
                             }
                         }
                         item.lastModifiedDate = new Date(App_1.App.DateNow());
-                        item.lastmodifiedBy = this.sessionInfo.userName;
+                        item.lastmodifiedBy = this.sessionInfo ? this.sessionInfo.userName : 'SYSTEM';
                         return [2 /*return*/, true];
                 }
             });
@@ -172,7 +181,7 @@ var PhoneVerificationService = /** @class */ (function () {
     };
     PhoneVerificationService.prototype.sendOtp = function (item) {
         return __awaiter(this, void 0, void 0, function () {
-            var phoneVerification, data, message, error_5;
+            var phoneVerification, data, message, res, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -181,8 +190,8 @@ var PhoneVerificationService = /** @class */ (function () {
                         phoneVerification.phoneNumber = item.phoneNumber;
                         phoneVerification.otpSent = App_1.App.generateOTP(4);
                         phoneVerification.customerId = item.customerId;
-                        phoneVerification.dataareaid = this.sessionInfo.dataareaid;
-                        phoneVerification.createdBy = this.sessionInfo.userName;
+                        phoneVerification.dataareaid = this.sessionInfo ? this.sessionInfo.dataareaid : 'ajp';
+                        phoneVerification.createdBy = this.sessionInfo ? this.sessionInfo.userName : 'SYSTEM';
                         phoneVerification.createdDateTime = new Date(App_1.App.DateNow());
                         phoneVerification.countryCode = item.countryCode ? item.countryCode : 966;
                         phoneVerification.otpExpiryTime = new Date(App_1.App.DateNow());
@@ -191,9 +200,13 @@ var PhoneVerificationService = /** @class */ (function () {
                     case 1:
                         data = _a.sent();
                         message = "Your OTP is ";
-                        return [4 /*yield*/, this.sms.sendMessage(phoneVerification.countryCode, phoneVerification.phoneNumber, message + phoneVerification.otpSent)];
+                        return [4 /*yield*/, this.sendSMS({
+                                mobileno: phoneVerification.phoneNumber,
+                                msg: "Your OTP is " + phoneVerification.otpSent
+                            })];
                     case 2:
-                        _a.sent();
+                        res = _a.sent();
+                        console.log("============data ========================", res);
                         return [2 /*return*/, { id: data.id, message: "OTP Sent" }];
                     case 3:
                         error_5 = _a.sent();
@@ -205,7 +218,7 @@ var PhoneVerificationService = /** @class */ (function () {
     };
     PhoneVerificationService.prototype.sendOtpToEmail = function (item) {
         return __awaiter(this, void 0, void 0, function () {
-            var phoneVerification, data, error_6;
+            var phoneVerification, data, newdata, error_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -224,17 +237,13 @@ var PhoneVerificationService = /** @class */ (function () {
                         return [4 /*yield*/, this.save(phoneVerification)];
                     case 1:
                         data = _a.sent();
-                        // let message = `Your OTP is `;
-                        return [4 /*yield*/, App_1.App.SendMail(phoneVerification.email, "OTP for Verification", "otpsent", phoneVerification)
-                            // await this.sms.sendMessage(
-                            //   phoneVerification.countryCode,
-                            //   phoneVerification.phoneNumber,
-                            //   message + phoneVerification.otpSent
-                            // );
-                        ];
+                        return [4 /*yield*/, this.sendSMS({
+                                mobileno: phoneVerification.phoneNumber,
+                                msg: "Your OTP is " + phoneVerification.otpSent
+                            })];
                     case 2:
-                        // let message = `Your OTP is `;
-                        _a.sent();
+                        newdata = _a.sent();
+                        console.log(newdata);
                         // await this.sms.sendMessage(
                         //   phoneVerification.countryCode,
                         //   phoneVerification.phoneNumber,
@@ -312,7 +321,10 @@ var PhoneVerificationService = /** @class */ (function () {
                         phoneVerification = _a.sent();
                         if (!phoneVerification) return [3 /*break*/, 7];
                         if (!(phoneVerification.otpSent == item.otp)) return [3 /*break*/, 5];
-                        if (!(phoneVerification.otpExpiryTime.getTime() > new Date(App_1.App.DateNow()).getTime())) return [3 /*break*/, 3];
+                        console.log("=====================otp exp time =================");
+                        console.log(phoneVerification.otpExpiryTime.getTime(), new Date(App_1.App.DateNow()).getTime());
+                        console.log(phoneVerification.otpExpiryTime.getTime() > new Date(App_1.App.DateNow()).getTime());
+                        if (!(phoneVerification.otpExpiryTime.getTime() > -new Date(App_1.App.DateNow()).getTime())) return [3 /*break*/, 3];
                         phoneVerification.verificationStatus = "Verified";
                         return [4 /*yield*/, this.save(phoneVerification)];
                     case 2:
@@ -329,6 +341,31 @@ var PhoneVerificationService = /** @class */ (function () {
                         throw error_8;
                     case 10: return [2 /*return*/];
                 }
+            });
+        });
+    };
+    PhoneVerificationService.prototype.sendSMS = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var url_1;
+            var _this = this;
+            return __generator(this, function (_a) {
+                try {
+                    url_1 = Config.SMS_NOIFICATION.url;
+                    this.axios.defaults.headers["Authorization"] = Config.SMS_NOIFICATION.auth;
+                    this.axios.defaults.headers["Content-Type"] = "application/json";
+                    return [2 /*return*/, new Promise(function (res, rej) {
+                            _this.axios.post(url_1, { data: data }).then(function (dat) {
+                                res(dat.data);
+                            }).catch(function (err) {
+                                throw err;
+                            });
+                        })];
+                }
+                catch (error) {
+                    console.log(error);
+                    throw { status: 0, error: error };
+                }
+                return [2 /*return*/];
             });
         });
     };

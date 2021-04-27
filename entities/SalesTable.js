@@ -430,6 +430,10 @@ var SalesTable = /** @class */ (function () {
         typeorm_1.Column({ name: "apptype" }),
         __metadata("design:type", Number)
     ], SalesTable.prototype, "linesCount", void 0);
+    __decorate([
+        typeorm_1.Column({ name: "posteddatetime" }),
+        __metadata("design:type", Date)
+    ], SalesTable.prototype, "postedDateTime", void 0);
     SalesTable = __decorate([
         typeorm_1.Entity("salestable")
     ], SalesTable);

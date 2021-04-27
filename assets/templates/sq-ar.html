@@ -60,7 +60,7 @@
     @media print {
 
       @page {
-        margin: 3.6cm 0.5cm 5.5cm 0.5cm;
+        margin: 1.6cm 0.5cm 5.5cm 0.5cm;
       }
 
       thead {
@@ -164,6 +164,11 @@
                 <td>:</td>
                 <td>{{deliveryaddress}}</td>
               </tr>
+              <tr class="billing">
+                <td>وصف</td>
+                <td>:</td>
+                <td>{{notes}}</td>
+              </tr>
             </table>
           </td>
           <td width="20%" style="text-align: center">
@@ -257,7 +262,7 @@
               <th class="th">المبلغ الكلي</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody style="color: black;font-weight: bold;">
             {{#each salesLine}}
 
             <tr class="tab-data" style="font-size: 8px !important">
@@ -298,7 +303,7 @@
           </tbody>
         </table>
 
-        <table width="100%" style="text-align: right; border-bottom: 1px dotted #8a8989; margin-top: 8px">
+        <table width="100%" style="text-align: right; margin-top: 8px">
           <tr class="header">
             <td style="width: 50%">
               <table align="left"></table>
@@ -345,6 +350,9 @@
 </body>
 
 <footer>
+  <div style="width:100%;height:50px;border-top: 1px dotted #8a8989;">
+
+  </div>
   <table width="100%" style="background: #fff">
     <tr>
       <td style="width: 33%; font-size: 12px; text-align: right">

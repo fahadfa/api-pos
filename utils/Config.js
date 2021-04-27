@@ -70,17 +70,6 @@ exports.stageDbOptions = {
     max: 25,
     idleTimeoutMillis: 0,
 };
-exports.syncStageDbOptions = {
-    name: "syncstage",
-    type: "postgres",
-    host: "xxxx",
-    port: 5432,
-    username: "xxxx",
-    password: "xxxx",
-    database: "xxxx",
-    max: 25,
-    idleTimeoutMillis: 0,
-};
 exports.mailOptions = {
     host: "smtp.gmail.com",
     port: 465,
@@ -102,29 +91,25 @@ exports.setEnvConfig = function () {
         }
     }
     console.log(envData);
-exports.setSyncStagingConfig();
     exports.setStagingConfig();
 };
 var CrpytoData_1 = require("./CrpytoData");
 var fs_1 = require("fs");
 var Props_1 = require("../constants/Props");
-
-exports.setSyncStagingConfig = function () {
+exports.setStagingConfig = function () {
     try {
-        var data = fs_1.readFileSync(__dirname + "/../sync_id_rsa", "utf-8");
+        var data = fs_1.readFileSync(__dirname + "/../../id_rsa", "utf-8");
+        console.log("readFileSync Data:", data);
+        var decodeData = CrpytoData_1.decrypt(JSON.parse(data));
+        data = JSON.parse(decodeData);
+        console.log(decodeData);
         if (data) {
-           
-            var decodeData = CrpytoData_1.decrypt(JSON.parse(data));
-            data = JSON.parse(decodeData);
-          
-            if (data) {
-                exports.syncStageDbOptions.host = data.dbHost;
-                exports.syncStageDbOptions.port = data.dbPort;
-                exports.syncStageDbOptions.username = data.dbUser;
-                exports.syncStageDbOptions.database = data.dbDatabase;
-                exports.syncStageDbOptions.password = data.dbPassword;
-                console.log(" \n\n Sync Production DB set succesfully .... \n\n ");
-            }
+            exports.stageDbOptions.host = data.host;
+            exports.stageDbOptions.port = data.port;
+            exports.stageDbOptions.username = data.username;
+            exports.stageDbOptions.database = data.database;
+            exports.stageDbOptions.password = data.password;
+            console.log(" \n\n Production DB set succesfully .... \n\n ");
         }
     }
     catch (error) {
@@ -136,7 +121,7 @@ var fs_1 = require("fs");
 exports.setStagingConfig = function () {
     try {
         var data = fs_1.readFileSync(__dirname + "/../id_rsa", "utf-8");
-       
+        console.log("readFileSync Data:", data);
         var decodeData = CrpytoData_1.decrypt(JSON.parse(data));
         data = JSON.parse(decodeData);
         if (data) {
@@ -207,13 +192,8 @@ exports.SALES_CHECK = {
         "DESIGNERSERVICE",
         "DESIGNERSERVICERETURN",
     ],
-    POSTED: "select  transkind, count(1),  inventlocationid from salestable  where  and inventlocationid = 'XXXX-XXXX' and status in ( 'POSTED', 'PRINTED') and transkind in ( 'PACKINGSLIP', 'SALESORDER', 'INVENTORYMOVEMENT', 'RETURNORDER', 'ORDERRECEIVE', 'ORDERSHIPMENT', 'DESIGNERSERVICE', 'DESIGNERSERVICERETURN') and lastmodifieddate <= 'YYYY-MM-DDTHH:mm:SS' group by  transkind, inventlocationid order by  inventlocationid, transkind",
-    NOT_POSTED: "select  transkind, count(1),  inventlocationid from salestable  where  inventlocationid = 'XXXX-XXXX' and status NOT in ( 'POSTED', 'PRINTED') and transkind in ( 'PACKINGSLIP', 'SALESORDER', 'INVENTORYMOVEMENT', 'RETURNORDER', 'ORDERRECEIVE', 'ORDERSHIPMENT', 'DESIGNERSERVICE', 'DESIGNERSERVICERETURN') and lastmodifieddate <= 'YYYY-MM-DDTHH:mm:SS' group by  transkind, inventlocationid order by  inventlocationid, transkind",
-    SALES_LINES: "select  'LINES', count(s.status), s.inventlocationid from salesline sl inner join salestable s on sl.salesid = s.salesid where  s.inventlocationid = 'XXXX-XXXX' and s.status in ('POSTED', 'PRINTED') and s.transkind in ( 'PACKINGSLIP', 'SALESORDER', 'INVENTORYMOVEMENT', 'RETURNORDER', 'ORDERRECEIVE', 'ORDERSHIPMENT', 'DESIGNERSERVICE', 'DESIGNERSERVICERETURN') and s.lastmodifieddate <= 'YYYY-MM-DDTHH:mm:SS' group by  s.inventlocationid, s.transkind order by  s.inventlocationid",
+    POSTED: "select  transkind, count(1),  inventlocationid from salestable  where syncstatus in (0,2) and inventlocationid = 'XXXX-XXXX' and status in ( 'POSTED', 'PRINTED') and transkind in ( 'SALESORDER', 'INVENTORYMOVEMENT', 'RETURNORDER', 'ORDERRECEIVE', 'ORDERSHIPMENT', 'DESIGNERSERVICE', 'DESIGNERSERVICERETURN') and lastmodifieddate <= 'YYYY-MM-DDTHH:mm:SS' group by  transkind, inventlocationid order by  inventlocationid, transkind",
+    NOT_POSTED: "select  transkind, count(1),  inventlocationid from salestable  where syncstatus in (0,2) and inventlocationid = 'XXXX-XXXX' and status NOT in ( 'POSTED', 'PRINTED') and transkind in ( 'SALESORDER', 'INVENTORYMOVEMENT', 'RETURNORDER', 'ORDERRECEIVE', 'ORDERSHIPMENT', 'DESIGNERSERVICE', 'DESIGNERSERVICERETURN') and lastmodifieddate <= 'YYYY-MM-DDTHH:mm:SS' group by  transkind, inventlocationid order by  inventlocationid, transkind",
+    SALES_LINES: "select  'LINES', count(s.status), s.inventlocationid from salesline sl inner join salestable s on sl.salesid = s.salesid where syncstatus in (0,2) and  s.inventlocationid = 'XXXX-XXXX' and s.status in ('POSTED', 'PRINTED') and s.transkind in ( 'SALESORDER', 'INVENTORYMOVEMENT', 'RETURNORDER', 'ORDERRECEIVE', 'ORDERSHIPMENT', 'DESIGNERSERVICE', 'DESIGNERSERVICERETURN') and s.lastmodifieddate <= 'YYYY-MM-DDTHH:mm:SS' group by  s.inventlocationid, s.transkind order by  s.inventlocationid",
 };
-exports.getSyncDb = function () {
-    return exports.syncStageDbOptions;
-};
-exports.getStageDb = function () {
-    return exports.stageDbOptions;
-};
+

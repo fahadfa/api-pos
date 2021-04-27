@@ -234,8 +234,8 @@ var HistoricalSalesordersService = /** @class */ (function () {
                                 salesLine.numberSequenceGroupId = v.NUMBERSEQUENCEGROUPID;
                                 salesLine.inventLocationId = v.INVENTLOCATIONID;
                                 salesData_1.inventLocationId = v.INVENTLOCATIONID;
-                                salesLine.inventTransid = v.INVENTTRANSID;
-                                salesLine.colorantId = v.INVENTTRANSID;
+                                salesLine.inventTransid = v.INVENTTRANSID != 'empty' && v.INVENTTRANSID ? v.INVENTTRANSID : null;
+                                salesLine.colorantId = v.INVENTTRANSID != 'empty' && v.INVENTTRANSID ? v.INVENTTRANSID : null;
                                 salesLine.colorantprice = 0;
                                 salesLine.salesDeliverNow = v.SALESDELIVERNOW;
                                 salesLine.salesStatus = v.SALESSTATUS;
@@ -264,6 +264,16 @@ var HistoricalSalesordersService = /** @class */ (function () {
                                 salesLine.InteriorExteriorPer = v.InteriorExteriorPer;
                                 salesLine.PromotionDiscEqual = v.PromotionDiscEqual;
                                 salesLine.PromotionDiscEqualRecId = v.PromotionDiscEqualRecId;
+                                if (v.INVENTTRANSID && v.INVENTTRANSID != "" && v.INVENTTRANSID != 'empty') {
+                                    var colorantdata = data.salesLine.find(function (d) { return d.ITEMID == "HSN-00001" && d.CONFIGID == v.INVENTTRANSID && parseInt(d.SALESQTY) == parseInt(v.SALESQTY); });
+                                    if (colorantdata) {
+                                        salesLine.colorantPrice = colorantdata.SALESPRICE;
+                                        salesLine.vatamount += parseFloat(colorantdata.LineSalesTax);
+                                    }
+                                    else {
+                                        salesLine.colorantPrice = 0;
+                                    }
+                                }
                                 salesLine.id = uuid();
                                 salesLine.batches = {
                                     id: uuid(),

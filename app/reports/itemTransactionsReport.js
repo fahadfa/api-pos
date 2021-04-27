@@ -213,8 +213,8 @@ var itemTransactionsReport = /** @class */ (function () {
                         fDate.setHours(0, 0, 0);
                         tDate = new Date(params.toDate);
                         tDate.setHours(0, 0, 0);
-                        fromDate = App_1.App.convertUTCDateToLocalDate(fDate, params.timeZoneOffSet);
-                        toDate = App_1.App.convertUTCDateToLocalDate(tDate, params.timeZoneOffSet);
+                        fromDate = App_1.App.convertUTCDateToLocalDate(fDate, params.timeZoneOffSet ? -1 * params.timeZoneOffSet : 0);
+                        toDate = App_1.App.convertUTCDateToLocalDate(tDate, params.timeZoneOffSet ? -1 * params.timeZoneOffSet : 0);
                         query = "\n    select \n    distinct on (j.invoiceid, j.itemid, j.configid, j.inventsizeid, j.batchno, j.date)\n    j.invoiceid,\n    j.transtype,\n    j.statusen as \"statusEn\",\n    j.statusar as \"statusAr\",\n    j.transkinden as \"transkindEn\",\n    j.transkindar as \"transkindAr\",\n    j.date as date,\n    j.configid,\n    j.itemid,\n    j.inventsizeid,\n    j.batchno,\n    sum(j.qtyin) as \"qtyIn\",\n    sum(j.qtyout) as \"qtyOut\",\n    j.inventlocationid,\n    j.warehousenamear as \"wareHouseNameAr\",\n    j.warehousenameen as \"wareHouseNameEn\",\n    j.itemnamear as \"itemNameAr\",\n    j.itemnameen as \"itemNameEn\",\n    j.sizenameen as \"sizeNameEn\",\n    j.sizenamear as \"sizeNameAr\"\n    from\n       (\n         select \n        i.invoiceid,\n        st.transkind as transtype,\n        als.en as statusen,\n        als.ar as statusar,\n        alt.en as transkinden,\n        alt.ar as transkindar,\n        to_char(i.dateinvent, 'YYYY-MM-DD') as date,\n        sz.description as sizenameen,\n        sz.\"name\"  as sizenamear,\n        i.configid,\n        i.itemid,\n        i.inventsizeid,\n        i.batchno,\n        case when qty>0 then abs(qty) else 0 end as qtyin,\n        case when qty<0 then abs(qty) else 0 end as qtyout,\n        i.inventlocationid as inventlocationid,\n        w.name as warehousenamear,\n        w.namealias as warehousenameen,\n        p.itemname as itemnamear,\n        p.namealias as itemnameen\n        from inventtrans i \n        left join inventsize sz on sz.inventsizeid  = i.inventsizeid and sz.itemid = i.itemid\n        left join inventlocation w on w.inventlocationid=i.inventlocationid\n        left join salestable st on st.salesid = i.invoiceid\n        left join inventtable p on p.itemid = i.itemid\n        left join app_lang als on als.id = st.status\n        left join app_lang alt on alt.id = st.transkind\n        where dateinvent >= '" + fromDate + "' ::timestamp and \n        dateinvent < ('" + toDate + "' ::timestamp + '1 day'::interval) and transactionclosed = true and i.itemid not like 'HSN-%' ";
                         if (!(params.inventlocationid == "ALL")) return [3 /*break*/, 2];
                         warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
@@ -249,8 +249,12 @@ var itemTransactionsReport = /** @class */ (function () {
                         }
                         query = query + " and i.reserve_status!='RESERVED' ";
                         query += " ) as j group by \n    j.invoiceid,\n    j.transtype,\n    j.statusen,\n    j.statusar,\n    j.transkinden,\n    j.transkindar,\n    j.date,\n    j.configid,\n    j.itemid,\n    j.inventsizeid,\n    j.batchno,\n    j.inventlocationid,\n    j.warehousenamear,\n    j.wareHousenameen,\n    j.itemnamear,\n    j.itemnameen,\n    j.sizenameen,\n    j.sizenamear\n    order by j.date, j.itemid, j.invoiceid\n    ";
+                        console.log(query);
+                        return [4 /*yield*/, this.db.query("SET client_encoding TO 'UTF8';")];
+                    case 4:
+                        _a.sent();
                         return [4 /*yield*/, this.db.query(query)];
-                    case 4: return [2 /*return*/, _a.sent()];
+                    case 5: return [2 /*return*/, _a.sent()];
                 }
             });
         });

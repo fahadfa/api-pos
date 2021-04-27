@@ -155,7 +155,7 @@ var UsergroupConfigService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
+                        _a.trys.push([0, 6, , 7]);
                         return [4 /*yield*/, this.validate(reqData)];
                     case 1:
                         cond = _a.sent();
@@ -177,14 +177,18 @@ var UsergroupConfigService = /** @class */ (function () {
                         if (cond == "groupname") {
                             throw { status: 0, message: "RECORD_ALREADY_EXISTS" };
                         }
+                        else if (cond == "invalid_customer") {
+                            throw { status: 0, message: "INVALID_DEFAULT_CUSTOMER" };
+                        }
                         else {
                             throw { status: 0, message: "INVALID_DATA" };
                         }
-                        return [3 /*break*/, 6];
-                    case 5:
+                        _a.label = 5;
+                    case 5: return [3 /*break*/, 7];
+                    case 6:
                         error_5 = _a.sent();
                         throw error_5;
-                    case 6: return [2 /*return*/];
+                    case 7: return [2 /*return*/];
                 }
             });
         });
@@ -208,7 +212,7 @@ var UsergroupConfigService = /** @class */ (function () {
     };
     UsergroupConfigService.prototype.validate = function (item) {
         return __awaiter(this, void 0, void 0, function () {
-            var previousData, mdata;
+            var previousData, mdata, custData;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -225,6 +229,15 @@ var UsergroupConfigService = /** @class */ (function () {
                         return [4 /*yield*/, this.usergroupconfigDAO.findAll({ groupid: item.groupid })];
                     case 4:
                         mdata = _a.sent();
+                        return [4 /*yield*/, this.rawQuery.getCustomer(item.defaultcustomerid)];
+                    case 5:
+                        custData = _a.sent();
+                        if (custData) {
+                            item.defaultcustomerid = custData.accountnum;
+                        }
+                        else {
+                            return [2 /*return*/, "invalid_customer"];
+                        }
                         if (!item.id) {
                             if (mdata.length > 0) {
                                 return [2 /*return*/, "groupid"];

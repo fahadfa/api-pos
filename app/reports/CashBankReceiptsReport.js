@@ -45,7 +45,7 @@ var CashBankReceiptsReport = /** @class */ (function () {
     }
     CashBankReceiptsReport.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, resData, query, type, error_1;
+            var data, resData_1, query, type, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -56,7 +56,7 @@ var CashBankReceiptsReport = /** @class */ (function () {
                         data.map(function (v) {
                             v.amount = v.amountdb && parseFloat(v.amountdb) > 0 ? parseFloat(v.amountdb) : parseFloat(v.amountcr);
                         });
-                        resData = {};
+                        resData_1 = {};
                         query = "select en, ar from app_lang ";
                         if (params.receiptType == "cash") {
                             query += " where id = 'CASH_COLLECTION_REPORT' ";
@@ -71,10 +71,14 @@ var CashBankReceiptsReport = /** @class */ (function () {
                     case 2:
                         type = _a.sent();
                         type = type && type.length > 0 ? type[0] : {};
-                        resData.typeEn = type.en;
-                        resData.typeAr = type.ar;
-                        resData.data = data;
-                        return [2 /*return*/, resData];
+                        resData_1.typeEn = type.en;
+                        resData_1.typeAr = type.ar;
+                        resData_1.amount = 0;
+                        data.forEach(function (element) {
+                            resData_1.amount += parseFloat(element.amountcr);
+                        });
+                        resData_1.data = data;
+                        return [2 /*return*/, resData_1];
                     case 3:
                         error_1 = _a.sent();
                         throw error_1;
@@ -151,8 +155,9 @@ var CashBankReceiptsReport = /** @class */ (function () {
                             fDate.setHours(0, 0, 0);
                             tDate = new Date(params.toDate);
                             tDate.setHours(0, 0, 0);
-                            fromDate = App_1.App.convertUTCDateToLocalDate(fDate, params.timeZoneOffSet ? params.timeZoneOffSet : 0);
-                            toDate = App_1.App.convertUTCDateToLocalDate(tDate, params.timeZoneOffSet ? params.timeZoneOffSet : 0);
+                            fromDate = App_1.App.convertUTCDateToLocalDate(fDate, params.timeZoneOffSet ? -1 * params.timeZoneOffSet : 0);
+                            toDate = App_1.App.convertUTCDateToLocalDate(tDate, params.timeZoneOffSet ? -1 * params.timeZoneOffSet : 0);
+                            console.log(fromDate, toDate);
                             query += "and j.lastmodifieddate >= '" + fromDate + "' ::timestamp\n      AND  j.lastmodifieddate < ('" + toDate + "' ::timestamp + '1 day'::interval) ";
                         }
                         if (params.receiptType && params.receiptType != "ALL") {

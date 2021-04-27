@@ -242,6 +242,7 @@ var ReturnOrderReport = /** @class */ (function () {
                         salesLine = _b.sent();
                         data_1.salesLine = salesLine.map(function (v) {
                             var salesLine = {};
+                            salesLine.quantity = quantity_1;
                             salesLine.salesLine = v;
                             salesLine.vat = data_1.vat;
                             salesLine.wareHouseNameEn = data_1.wareHouseNameEn;
@@ -399,8 +400,6 @@ var ReturnOrderReport = /** @class */ (function () {
             var renderData, file;
             return __generator(this, function (_a) {
                 renderData = result;
-                console.log("===========================data===============================");
-                console.log(renderData);
                 file = params.lang == "en" ? "ro-en" : "ro-ar";
                 try {
                     return [2 /*return*/, App_1.App.HtmlRender(file, renderData)];

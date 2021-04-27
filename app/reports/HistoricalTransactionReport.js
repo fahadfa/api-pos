@@ -93,7 +93,7 @@ var HistoricalTransactionReport = /** @class */ (function () {
                                 // console.table(data.salesLine[index]);
                                 // console.log("salles quantity",v.salesQty)
                                 data_1.salesLine[index].actualsalesqty = parseInt(v.actualsalesqty);
-                                data_1.quantity += parseInt(v.actualsalesqty);
+                                data_1.quantity += parseInt(v.salesQty);
                                 console.log(v.actualsalesqty, v.salesQty, data_1.quantity);
                                 // data.salesLine[index].vatAmount=data.vatamount;
                             });
@@ -180,8 +180,8 @@ var HistoricalTransactionReport = /** @class */ (function () {
                     case 13:
                         invlocation = _f.sent();
                         // console.log(items);
-                        // console.log(names);
-                        // console.log("===================names====================");
+                        console.log(names_1);
+                        console.log("===================names====================");
                         salesLinesFromAxpta.sort(function (a, b) { return a.LINENUM - b.LINENUM; });
                         data_1.vatAmount = data_1.vatamount;
                         salesLines = salesLinesFromAxpta.map(function (item, index) {
@@ -205,12 +205,14 @@ var HistoricalTransactionReport = /** @class */ (function () {
                             line.linetotaldisc = item.LineTotalDisc;
                             var product = names_1.find(function (prod) { return prod.itemid == line.itemid && prod.configid == line.configid; });
                             console.table(product);
-                            line.prodNameAr = product.prodnamear;
-                            line.prodNameEn = product.prodnameen;
-                            // line.colNameAr=product.sizenameen
-                            // line.colNameEn=item.
-                            line.sizeNameEn = product.sizenameen;
-                            line.sizeNameAr = product.sizenamear;
+                            if (product) {
+                                line.prodNameAr = product.prodnamear;
+                                line.prodNameEn = product.prodnameen;
+                                // line.colNameAr=product.sizenameen
+                                // line.colNameEn=item.
+                                line.sizeNameEn = product.sizenameen;
+                                line.sizeNameAr = product.sizenamear;
+                            }
                             line.lineAmountBeforeVat = ((item.LINEAMOUNT / line.saleslineqty) * line.salesQty + (line.colorantprice * line.salesQty) - (line.linetotaldisc / line.saleslineqty) * line.salesQty);
                             line.vat = parseInt(item.LineSalesTaxPercent);
                             // line.colorant=item.
@@ -236,6 +238,7 @@ var HistoricalTransactionReport = /** @class */ (function () {
                         _d.salesLine = _e;
                         if (data_1.transkind !== "SALESORDER" || data_1.transkind !== "RETURNORDER") {
                             sNo_2 = 1;
+                            data_1.quantity = 0;
                             data_1.salesLine.map(function (v, index) {
                                 data_1.salesLine[index].sNo = sNo_2++;
                                 data_1.quantity += parseInt(v.salesQty);
@@ -368,6 +371,7 @@ var HistoricalTransactionReport = /** @class */ (function () {
                         return [2 /*return*/, data.data];
                     case 3:
                         e_1 = _a.sent();
+                        console.log(e_1);
                         throw { message: Props_1.Props.DATA_NOT_FOUND };
                     case 4: return [2 /*return*/];
                 }

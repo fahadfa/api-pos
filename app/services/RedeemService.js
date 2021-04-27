@@ -64,6 +64,7 @@ var RedeemService = /** @class */ (function () {
                         if (redeemData && redeemData.BalancePoints < 0) {
                             redeemData.BalancePoints = 0;
                         }
+                        // await this.getOtp(params)
                         return [2 /*return*/, redeemData];
                     case 3:
                         error_1 = _a.sent();
@@ -109,6 +110,8 @@ var RedeemService = /** @class */ (function () {
                         return [4 /*yield*/, this.phoneVerificationService.sendOtp(reqData)];
                     case 1:
                         data = _a.sent();
+                        console.log("=========================getOtp RDEEDEm=================================");
+                        console.log(data);
                         return [2 /*return*/, { status: 1, message: data.message }];
                     case 2:
                         error_3 = _a.sent();

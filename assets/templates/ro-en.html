@@ -113,7 +113,7 @@
 <body>
   <div id="bg__watermark">
     <!-- <p id="bg__text__watermark">Only for testing</p> -->
-  </div>  
+  </div>
   <div>
     {{#each salesLine}}
     <table width="98%" style="margin-top: 100px;" cellpadding="0" cellspacing="0">
@@ -208,7 +208,7 @@
 
 
     </table>
-    <div >
+    <div>
       <table id="invoiceDetails" style="margin-top: 20px;" width="100%" class="item-table" cellpadding="0"
         cellspacing="0">
         <thead>
@@ -239,54 +239,58 @@
             <th class="th">Net Amnt after VAT</th>
           </tr>
         </thead>
-        {{#each salesLine}}
-        <tr class="tab-data">
-          <td class="td">{{this.sNo}}</td>
-          <td class="td">
-            {{this.itemid}}
-          </td>
-          <td class="td description-data">
-            <span>
-              {{this.prodNameEn}}, {{# if this.colorant}} {{this.colorant}}, {{else}} {{this.configid}}, {{/if}}
-              {{this.inventsizeid}}, {{this.batchno}}
-            </span>
-          </td>
-          <td class="td">
-            {{this.salesQty}}
-          </td>
-          <td class="td">
-            {{this.salesprice}}
-          </td>
-          <td class="td">
-            {{this.colorantprice}}
-          </td>
-          <td class="td">
-            {{this.lineTotalDisc}}
-          </td>
-          <td class="td">{{this.lineAmountBeforeVat}}</td>
-          <td class="td">
-            <table style="border-collapse: collapse;border:none !important;width:100%">
-              <tr class="td inline-table">
-                <td class="inline-table" style="border:none;">{{this.vat}}%</td>
-              </tr>
-              <tr>
-                <td class="td" style="border:none !important;">{{this.vatAmount}}</td>
-              </tr>
-            </table>
-          </td>
-          <td class="td">
-            {{this.lineAmount}}
-          </td>
-        </tr>
-        {{/each}}
+        <tbody style="color: black;font-weight: bold;">
+
+
+          {{#each salesLine}}
+          <tr class="tab-data">
+            <td class="td">{{this.sNo}}</td>
+            <td class="td">
+              {{this.itemid}}
+            </td>
+            <td class="td description-data">
+              <span>
+                {{this.prodNameEn}}, {{# if this.colorant}} {{this.colorant}}, {{else}} {{this.configid}}, {{/if}}
+                {{this.inventsizeid}}, {{this.batchno}}
+              </span>
+            </td>
+            <td class="td">
+              {{this.salesQty}}
+            </td>
+            <td class="td">
+              {{this.salesprice}}
+            </td>
+            <td class="td">
+              {{this.colorantprice}}
+            </td>
+            <td class="td">
+              {{this.lineTotalDisc}}
+            </td>
+            <td class="td">{{this.lineAmountBeforeVat}}</td>
+            <td class="td">
+              <table style="border-collapse: collapse;border:none !important;width:100%">
+                <tr class="td inline-table">
+                  <td class="inline-table" style="border:none;">{{this.vat}}%</td>
+                </tr>
+                <tr>
+                  <td class="td" style="border:none !important;">{{this.vatAmount}}</td>
+                </tr>
+              </table>
+            </td>
+            <td class="td">
+              {{this.lineAmount}}
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
       </table>
 
-      
+
 
       <table width="100%" style="text-align:right; margin-top: 8px">
         <tr class="header">
           <td style="width:100%; text-align: right;">
-            <table width="100%" id="gtotal"style="font-size:8px; text-align: left;">
+            <table width="100%" id="gtotal" style="font-size:8px; text-align: left;">
               <!-- <tr class="billing" style="border-top: 1px solid black">
                               <td width="80%" style="font-size:15px;font-weight:600">Gross Total</td>
                               <td width="2%">:</td>

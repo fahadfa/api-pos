@@ -139,9 +139,9 @@ var MovementLinesReport = /** @class */ (function () {
                         fDate.setHours(0, 0, 0);
                         tDate = new Date(params.toDate);
                         tDate.setHours(0, 0, 0);
-                        fromDate = App_1.App.convertUTCDateToLocalDate(fDate, params.timeZoneOffSet ? params.timeZoneOffSet : 0);
-                        toDate = App_1.App.convertUTCDateToLocalDate(tDate, params.timeZoneOffSet ? params.timeZoneOffSet : 0);
-                        query = "\n            select \n            distinct\n            sl.salesid as \"salesId\",\n            sl.itemid,\n            i.itemname as \"ItemNameAr\",\n            i.namealias as \"ItemNameEn\", \n            sl.configid,\n            sl.inventsizeid,\n            sl.salesqty \"Quantity\",\n            s.custaccount,\n            s.status,\n            al.en as \"statusEn\",\n            al.ar as \"statusAr\",\n            s.dimension6_ as salesman,\n            s.createddatetime,\n            sl.inventlocationid,\n            d.\"name\" as \"salesmanEn\",\n            d.description as \"salesmanAr\",\n            m.movementtype as \"movementtypeEn\",\n            m.movementarabic as \"movementtypeAr\",\n            w.namealias as wnamealias,\n            w.name as wname\n            from salesline sl\n            inner join salestable s on s.salesid = sl.salesid \n            inner join movementtype m on m.id = s.movement_type_id\n            left join app_lang al on al.id = s.status\n            left join inventtable i on i.itemid = sl.itemid \n            left join dimensions d on d.num = s.dimension6_ \n            left join inventlocation w on w.inventlocationid = sl.inventlocationid\n            where s.transkind in ('INVENTORYMOVEMENT')\n            and s.lastmodifieddate >= '" + fromDate + "' ::timestamp\n            AND  s.lastmodifieddate < ('" + toDate + "' ::timestamp + '1 day'::interval) \n            ";
+                        fromDate = App_1.App.convertUTCDateToLocalDate(fDate, params.timeZoneOffSet ? -1 * params.timeZoneOffSet : 0);
+                        toDate = App_1.App.convertUTCDateToLocalDate(tDate, params.timeZoneOffSet ? -1 * params.timeZoneOffSet : 0);
+                        query = "\n            select \n            distinct\n            sl.salesid as \"salesId\",\n            sl.itemid,\n            i.itemname as \"ItemNameAr\",\n            i.namealias as \"ItemNameEn\", \n            sl.configid,\n            sl.inventsizeid,\n            sl.salesqty \"Quantity\",\n            s.custaccount,\n            s.status,\n            coalesce(al.en,al1.en )as \"statusEn\",\n            coalesce(al.ar,al1.ar )as \"statusAr\",\n            s.dimension6_ as salesman,\n            s.createddatetime,\n            sl.inventlocationid,\n            d.\"name\" as \"salesmanEn\",\n            d.description as \"salesmanAr\",\n            m.movementtype as \"movementtypeEn\",\n            m.movementarabic as \"movementtypeAr\",\n            w.namealias as wnamealias,\n            w.name as wname\n            from salesline sl\n            inner join salestable s on s.salesid = sl.salesid \n            inner join movementtype m on m.id = s.movement_type_id\n            left join workflow wf  on wf.orderid =s.salesid \n            left join app_lang al on al.id = wf.statusid\n            left join app_lang al1 on al1.id = s.status \n            left join inventtable i on i.itemid = sl.itemid \n            left join dimensions d on d.num = s.dimension6_ \n            left join inventlocation w on w.inventlocationid = sl.inventlocationid\n            where s.transkind in ('INVENTORYMOVEMENT')\n            and s.lastmodifieddate >= '" + fromDate + "' ::timestamp\n            AND  s.lastmodifieddate < ('" + toDate + "' ::timestamp + '1 day'::interval) \n            ";
                         if (!(params.inventlocationid && params.inventlocationid == "ALL")) return [3 /*break*/, 2];
                         warehouseQuery = "select regionalwarehouse from usergroupconfig where inventlocationid= '" + params.key + "' limit 1";
                         return [4 /*yield*/, this.db.query(warehouseQuery)];
@@ -164,7 +164,7 @@ var MovementLinesReport = /** @class */ (function () {
                             query += " and s.movement_type_id = '" + params.movementType + "' ";
                         }
                         if (params.status && params.status != "ALL") {
-                            query += " and s.status in ('" + params.status + "') ";
+                            query += " and wf.statusid in ('" + params.status + "') ";
                         }
                         if (params.accountnum) {
                             query += " and (s.custaccount = '" + params.accountnum + "' or s.mobileno ='" + params.accountnum + "' or s.invoiceaccount='" + params.accountnum + "') ";
@@ -173,6 +173,7 @@ var MovementLinesReport = /** @class */ (function () {
                             query += " and (s.dimension6_ = '" + params.salesmanid + "') ";
                         }
                         query += " order by s.createddatetime ASC ";
+                        console.log(query);
                         return [4 /*yield*/, this.db.query(query)];
                     case 4: return [2 /*return*/, _a.sent()];
                 }

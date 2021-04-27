@@ -126,8 +126,8 @@ var AccountStatementReport = /** @class */ (function () {
                         fDate.setHours(0, 0, 0);
                         tDate = new Date(params.toDate);
                         tDate.setHours(0, 0, 0);
-                        fromDate = App_1.App.convertUTCDateToLocalDate(fDate, params.timeZoneOffSet);
-                        toDate = App_1.App.convertUTCDateToLocalDate(tDate, params.timeZoneOffSet);
+                        fromDate = App_1.App.convertUTCDateToLocalDate(fDate, params.timeZoneOffSet ? -1 * params.timeZoneOffSet : 0);
+                        toDate = App_1.App.convertUTCDateToLocalDate(tDate, params.timeZoneOffSet ? -1 * params.timeZoneOffSet : 0);
                         query = "select lj.accountNum as \"accountNum\", \n            accnt.accountname as \"nameAr\", \n            accnt.accountnamealias as \"nameEn\", \n            lj.transdate as \"journalDate\",\n            lj.journalnum as \"journalNum\",\n            lj.txt  as \"transactionText\",\n            to_char(lj.amountmst,   'FM999999999.00') as amount,\n            to_char(SUM(lj.amountmst) over(partition by lj.accountnum order by lj.accountnum, lj.txt rows unbounded preceding),  'FM999999999.00') as accumulated\n            from ledgertrans lj, accountstable accnt\n            where accnt.accountnum = lj.accountnum and lj.transdate is not null\n            and lj.transdate >= '" + fromDate + "' ::timestamp\n            and lj.transdate <= ('" + toDate + "' ::timestamp + '1 day'::interval) ";
                         if (params.ledgerAccount) {
                             query += "  and lj.accountnum='" + params.ledgerAccount + "'";

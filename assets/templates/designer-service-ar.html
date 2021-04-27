@@ -206,7 +206,7 @@
     
     </table>
     <div>
-      <table id="invoiceDetails" style="margin-top: 20px;" width="100%" class="item-table" cellpadding="0"
+      <table id="invoiceDetails" style="margin-top: 20px;color: black;font-weight: bold;" width="100%" class="item-table" cellpadding="0"
         cellspacing="0">
         <thead>
           <tr>
@@ -241,6 +241,7 @@
             <th class="th" style="font-size: 12px; font-weight: normal">المبلغ الكلي</th>
           </tr>
         </thead>
+        <tbody style="color: black;font-weight: bold;">
         {{#each salesLine}}
         <tr class="tab-data">
           <td class="td">{{this.sNo}}</td>
@@ -293,6 +294,7 @@
 
       </tr>
         {{/each}}
+        </tbody>
       </table>
 
       <table width="100%" style="text-align:right; margin-top: 8px;">
@@ -370,6 +372,51 @@
           </td>
         </tr>
       </table>
+
+      <table id="gtotal" class="textbold" align="left" width="100%" cellpadding="0" cellspacing="0"
+      style="position: relative; top: 0px; font-size: 8px !important">
+      <tr class="tdright">
+        <td class="tdcenter" colspan="2">طلب المبيعات</td>
+        <td class="tdleft" colspan="1">المجموع الكلي</td>
+        <td colspan="1">{{this.quantity}}</td>
+        <td colspan="1">{{this.amount}}</td>
+      </tr>
+      <tr class="tdright">
+        <!-- <td rowspan="4">&nbsp;</td> -->
+        <td class="tdright">مبلغ نقدي</td>
+        <td class="tdright">{{ this.cashAmount}}</td>
+        <td class="tdcenter borderNone"></td>
+        <td class="tdleft borderLeftNone">رسوم الشحن</td>
+        <td>{{this.shippingAmount}}</td>
+      </tr>
+      <tr class="tdright">
+        <td class="tdright">مبلغ البطاقة</td>
+        <td class="tdright">{{ this.cardAmount }}</td>
+        <td class="tdcenter borderNone"></td>
+        <td class="tdleft borderLeftNone">الخصم</td>
+        <td>{{this.disc}}</td>
+      </tr>
+      <tr class="tdright">
+        <td class="tdright" style="font-size: 13px">مبلغ خدمة تنسيق الوان</td>
+        <td class="tdright">{{ this.designServiceRedeemAmount }}</td>
+        <td class="tdcenter borderNone"></td>
+        <td class="tdleft borderLeftNone" style="font-size: 13px">ضريبة القيمة المضافة ({{this.vat}}%)</td>
+        <td>{{this.vatAmount}}</td>
+      </tr>
+      <tr class="tdright">
+        <td class="tdright">استرداد القيمة</td>
+        <td class="tdright">{{this.redeemAmount}}</td>
+        <td class="tdcenter borderNone"></td>
+        <td class="tdleft borderLeftNone">المبلغ الصافي</td>
+        <td>{{this.netAmount}}</td>
+      </tr>
+      {{#if this.interCompanyOriginalSalesId}}
+      <tr class="tdright">
+        <td class="tdleft" colspan="2">الرقم المرجعي للشراء</td>
+        <td class="tdleft" colspan="2">{{this.interCompanyOriginalSalesId}}</td>
+      </tr>
+      {{/if}}
+    </table>
     </div>
    
 </body>

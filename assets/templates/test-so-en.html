@@ -349,7 +349,7 @@
       </table>
 
       <table class="dash" width="100%" cellpadding="0" cellspacing="0" style="position: relative;top: 2px;">
-        <thead>
+        <thead style="font-size: 9px;">
           <tr>
             <th class="th">S.No</th>
             <th class="th">Item No</th>
@@ -362,7 +362,7 @@
             <th class="th">Discount</th>
             <th class="th">Net Amnt Before VAT</th>
             <th class="th">
-              <table style="border-collapse: collapse !important; border: none !important; width: 100%">
+              <table style="border-collapse: collapse !important; border: none !important; width: 100%;">
                 <tr class="td">
                   <td class="inline-table" style="
                       border-collapse: collapse !important;
@@ -381,7 +381,10 @@
             <th class="th">Net Amnt After VAT</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody style="
+        color: black;
+        font-weight: bold;
+    ">
           {{#each lines}}
           <tr class="tab-data">
             <td class="tdcenter">{{this.sNo}}</td>
@@ -644,7 +647,10 @@
           <th class="th">Net Amnt after VAT</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody style="
+      color: black;
+      font-weight: bold;
+  ">
         {{#each lines}}
         <tr class="tab-data">
           <td class="tdcenter">{{this.sNo}}</td>

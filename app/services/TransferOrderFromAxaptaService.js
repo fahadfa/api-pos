@@ -415,11 +415,13 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                                 transferID: transferID,
                             },
                         };
+                        console.log(url, Props_1.Props._TOKEN, reqData);
                         return [4 /*yield*/, this.axios.post(url, reqData)];
                     case 1:
                         data = _a.sent();
                         data = data.data;
                         if (data.error) {
+                            console.log(data.error);
                             throw data.error.message;
                         }
                         else {
@@ -429,6 +431,7 @@ var TransferOrderFromAxaptaService = /** @class */ (function () {
                     case 2:
                         error_5 = _a.sent();
                         Log_1.log.error(error_5);
+                        console.log(error_5);
                         throw { status: 0, message: error_5 };
                     case 3: return [2 /*return*/];
                 }

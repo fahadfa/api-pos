@@ -63,7 +63,7 @@ var count = 0;
 Config.setEnvConfig();
 var conn = null;
 var run = function () { return __awaiter(_this, void 0, void 0, function () {
-    var appExpress, express, httpServer, lastSyncDate, diff, error_1;
+    var appExpress, express, httpServer, error_1;
     var _this = this;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -117,44 +117,6 @@ var run = function () { return __awaiter(_this, void 0, void 0, function () {
                             return [2 /*return*/, Log_1.log.log("info", "\n                    ***********************************************\n                            server is listening on " + port + "\n                    ***********************************************\n          ")];
                         });
                     }); });
-                    try {
-                        // let MacAddress = async () => {
-                        //   let macAddress = {
-                        //     systemAddress: await App.getMacAddress(),
-                        //     storeId: ENV_STORE_ID,
-                        //     selectAddress: await SysService.SelectedMacAddress(ENV_STORE_ID, log),
-                        //   };
-                        //   log.warn(JSON.stringify(macAddress));
-                        //   if (macAddress.selectAddress && macAddress.systemAddress && macAddress.selectAddress == macAddress.systemAddress) {
-                        //     console.log("proceed");
-                        //   } else {
-                        //     try {
-                        //       log.error("auto: duplicate-dtoreid: " + macAddress.storeId);
-                        //       log.error(JSON.stringify(macAddress));
-                        //       await App.SendMail(
-                        //         "searneni@jazeeratech.in; nreddy@jazeeratech.in; sprasad@jazeeratech.in;",
-                        //         "Duplicate-Storeid: " + macAddress.storeId,
-                        //         "duplicate-store-id",
-                        //         macAddress
-                        //       );
-                        //     } catch (err) {
-                        //       log.error(err);
-                        //     }
-                        //   }
-                        // };
-                        // MacAddress();
-                        Log_1.log.info("ENV_STORE_ID: " + ENV_STORE_ID);
-                        if (ENV_STORE_ID) {
-                            lastSyncDate = null;
-                            diff = null;
-                            Store_1.StoreInIt();
-                            sync();
-                        }
-                    }
-                    catch (error) {
-                        Log_1.log.error("Sync Error");
-                        Log_1.log.error(error);
-                    }
                 }
                 return [3 /*break*/, 5];
             case 4:
@@ -246,6 +208,44 @@ var syncTimeDiff = function () {
         return 0;
     }
 };
+try {
+    // let MacAddress = async () => {
+    //   let macAddress = {
+    //     systemAddress: await App.getMacAddress(),
+    //     storeId: ENV_STORE_ID,
+    //     selectAddress: await SysService.SelectedMacAddress(ENV_STORE_ID, log),
+    //   };
+    //   log.warn(JSON.stringify(macAddress));
+    //   if (macAddress.selectAddress && macAddress.systemAddress && macAddress.selectAddress == macAddress.systemAddress) {
+    //     console.log("proceed");
+    //   } else {
+    //     try {
+    //       log.error("auto: duplicate-dtoreid: " + macAddress.storeId);
+    //       log.error(JSON.stringify(macAddress));
+    //       await App.SendMail(
+    //         "searneni@jazeeratech.in; nreddy@jazeeratech.in; sprasad@jazeeratech.in;",
+    //         "Duplicate-Storeid: " + macAddress.storeId,
+    //         "duplicate-store-id",
+    //         macAddress
+    //       );
+    //     } catch (err) {
+    //       log.error(err);
+    //     }
+    //   }
+    // };
+    // MacAddress();
+    Log_1.log.info("ENV_STORE_ID: " + ENV_STORE_ID);
+    if (ENV_STORE_ID) {
+        var lastSyncDate = null;
+        var diff = null;
+        Store_1.StoreInIt();
+        sync();
+    }
+}
+catch (error) {
+    Log_1.log.error("Sync Error");
+    Log_1.log.error(error);
+}
 process.on("uncaughtException", function (err) {
     Log_1.log.error("Caught exception: " + err);
     setTimeout(function () {

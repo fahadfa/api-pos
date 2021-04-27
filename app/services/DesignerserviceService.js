@@ -88,7 +88,8 @@ var DesignerserviceService = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 4, , 5]);
                         if (!item.accountnum) return [3 /*break*/, 2];
-                        return [4 /*yield*/, this.rawQuery.getDesignerServiceList(item.accountnum, item.mobileNo)];
+                        item.inventlocationid = item.inventlocationid ? item.inventlocationid : this.sessionInfo.inventlocationid;
+                        return [4 /*yield*/, this.rawQuery.getDesignerServiceList(item.accountnum, item.mobileNo, item.inventlocationid)];
                     case 1:
                         data = _a.sent();
                         data.map(function (v) {

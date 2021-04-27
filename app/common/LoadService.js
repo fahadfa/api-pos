@@ -79,20 +79,20 @@ var LoadService = /** @class */ (function () {
                         param.additionalcustomer = this.sessionInfo.additionalcustomer
                             ? this.sessionInfo.additionalcustomer
                                 .split(",")
-                                .map(function (d) { return "'" + d + "'"; })
+                                .map(function (d) { return "'" + d.toUpperCase() + "'"; })
                                 .join(",")
                             : null;
                         param.customergroup = this.sessionInfo.customergroup
                             ? this.sessionInfo.customergroup
                                 .split(",")
-                                .map(function (d) { return "'" + d + "'"; })
+                                .map(function (d) { return "'" + d.toUpperCase() + "'"; })
                                 .join(",")
                             : null;
                         param.sabiccustomers = this.sessionInfo.sabiccustomers
                             ? this.sessionInfo.sabiccustomers
                                 .trim()
                                 .split(",")
-                                .map(function (d) { return "'" + d + "'"; })
+                                .map(function (d) { return "'" + d.toUpperCase() + "'"; })
                                 .join(",")
                             : null;
                         query = "select distinct on (c.accountnum) \n            c.accountnum, \n            c.name as name, \n            c.namealias, \n            c.address, \n            (CASE \n              WHEN c.phone='null' THEN NULL\n              ELSE c.phone\n          END\n           )as phone,\n            c.districtcode,\n            c.citycode, \n            c.rcusttype, \n            c.pricegroup,\n            c.inventlocation,\n            c.walkincustomer,\n            c.custgroup,\n            c.cashdisc,\n            c.salesgroup,\n            c.currency,\n            c.vendaccount,\n            c.vatnum,\n            c.countryregionid,\n            c.inventlocation,\n            c.email,\n            c.blocked,\n            c.taxgroup,\n            c.paymmode,\n            c.paymtermid,\n            c.creditmax,\n            c.bankaccount,\n            c.invoiceaddress,\n            c.city,\n            c.custtype,\n            CAST(td.taxvalue AS INTEGER) as tax,\n            c.walkincustomer,\n            c.dimension as regionid,\n            c.dimension2_ as departmentid,\n            c.dimension3_ as costcenterid,\n            c.dimension4_ as employeeid,\n            c.dimension5_ as projectid,\n            (CASE \n              WHEN c.dimension6_!='' THEN concat(c.dimension6_,' - ', d.description)\n              ELSE '" + (this.sessionInfo.salesmanid.length > 0 ? this.sessionInfo.salesmanid[0].salesman : null) + "'\n          END\n           ) as salesman,\n           (CASE \n            WHEN c.dimension6_!='' THEN c.dimension6_\n            ELSE '" + (this.sessionInfo.salesmanid.length > 0 ? this.sessionInfo.salesmanid[0].salesmanid : null) + "'\n        END\n         ) as salesmanid,\n           c.dimension7_ as brandid,\n           c.dimension8_ as productlineid\n           from custtable c\n           left join dimensions d on c.dimension6_ = d.num\n           left join taxgroupdata tg on tg.taxgroup = c.taxgroup\n           left join taxdata td on td.taxcode = tg.taxcode ";
@@ -114,19 +114,19 @@ var LoadService = /** @class */ (function () {
                         }
                         if (param.custgroup || param.additionalcustomer || param.sabiccustomers) {
                             if (param.type == "LEDGER") {
-                                query += "and c.walkincustomer != true and ( 1=1 ";
+                                query += "and ( 1=1 ";
                             }
                             else {
                                 query += "and ( c.walkincustomer = true  ";
                             }
                             if (param.customergroup) {
-                                query += " or c.custgroup in (" + param.customergroup + ") ";
+                                query += " or UPPER(c.custgroup) in (" + param.customergroup + ") ";
                             }
                             if (param.additionalcustomer) {
-                                query += " or c.accountnum in (" + param.additionalcustomer + ") ";
+                                query += " or UPPER(c.accountnum) in (" + param.additionalcustomer + ") ";
                             }
                             if (param.sabiccustomers) {
-                                query += " or c.accountnum in (" + param.sabiccustomers + ") ";
+                                query += " or UPPER(c.accountnum) in (" + param.sabiccustomers + ") ";
                             }
                             query += " ) ";
                         }
@@ -138,7 +138,7 @@ var LoadService = /** @class */ (function () {
                                 query += " or c.walkincustomer = true ";
                             }
                         }
-                        query += "  and c.deleted = false and lower(c.dataareaid)='" + this.sessionInfo.dataareaid.toLowerCase() + "' " + (param.type == "DESIGNERSERVICE" ? " and c.accountnum!='" + this.sessionInfo.defaultcustomerid + "'" : "") + " order by accountnum DESC limit 15";
+                        query += "  and c.deleted = false and lower(c.dataareaid)='" + this.sessionInfo.dataareaid.toLowerCase() + "' " + (param.type == "DESIGNERSERVICE" ? " and UPPER(c.accountnum)!=UPPER('" + this.sessionInfo.defaultcustomerid + "') " : "") + " order by accountnum DESC limit 15";
                         console.log(query);
                         return [4 /*yield*/, this.db.query(query)];
                     case 2:

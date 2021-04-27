@@ -250,12 +250,12 @@ var OpeningBalanceService = /** @class */ (function () {
     };
     OpeningBalanceService.prototype.get_open_bal_data_for_onhand = function (reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var mssqlClient, mssqlString, connectionString, query, rows, numberSequences, result, _i, numberSequences_1, item, query_1, rows_1, query_2, rows_2, query_3, rows_3, query_4, rows_4, query_5, rows_5, query_6, rows_6, query_7, rows_7, query_8, rows_8, err_3;
+            var mssqlClient, mssqlString, connectionString, query, rows, numberSequences, result, _i, numberSequences_1, item, query_1, rows_1, query_2, rows_2, query_3, rows_3, query_4, rows_4, query_5, rows_5, query_6, rows_6, query_7, rows_7, query_8, rows_8, query_9, rows_9, err_3;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 25, , 26]);
+                        _a.trys.push([0, 27, , 28]);
                         mssqlClient = require("mssql");
                         mssqlString = "mssql://" + reqData.username + ":" + reqData.password + "@" + reqData.host + "/" + reqData.database;
                         connectionString = mssqlString;
@@ -282,11 +282,11 @@ var OpeningBalanceService = /** @class */ (function () {
                                 v.qty = 1;
                             }
                         });
-                        if (!(numberSequences.length > 0)) return [3 /*break*/, 22];
+                        if (!(numberSequences.length > 0)) return [3 /*break*/, 24];
                         _i = 0, numberSequences_1 = numberSequences;
                         _a.label = 4;
                     case 4:
-                        if (!(_i < numberSequences_1.length)) return [3 /*break*/, 21];
+                        if (!(_i < numberSequences_1.length)) return [3 /*break*/, 23];
                         item = numberSequences_1[_i];
                         console.log(item);
                         item.lastmodifieddate = new Date(App_1.App.DateNow());
@@ -296,7 +296,7 @@ var OpeningBalanceService = /** @class */ (function () {
                     case 5:
                         rows_1 = _a.sent();
                         item.nextrec = rows_1.recordset.length > 0 ? (rows_1.recordset[0].nextrec ? rows_1.recordset[0].nextrec : 1) : 1;
-                        return [3 /*break*/, 20];
+                        return [3 /*break*/, 22];
                     case 6:
                         if (!(item.transkind == "SALESORDER")) return [3 /*break*/, 8];
                         query_2 = "SELECT right(MAX(LTRIM(RTRIM(SALESID))),5) + 1 nextrec FROM SALESTABLE WHERE SALESTYPE=3 AND YEAR(DELIVERYDATE)=YEAR(getdate()) ";
@@ -304,7 +304,7 @@ var OpeningBalanceService = /** @class */ (function () {
                     case 7:
                         rows_2 = _a.sent();
                         item.nextrec = rows_2.recordset.length > 0 ? (rows_2.recordset[0].nextrec ? rows_2.recordset[0].nextrec : 1) : 1;
-                        return [3 /*break*/, 20];
+                        return [3 /*break*/, 22];
                     case 8:
                         if (!(item.transkind == "TRANSFERORDER")) return [3 /*break*/, 10];
                         query_3 = "SELECT right(MAX(LTRIM(RTRIM(SALESID))),5) + 1 nextrec FROM SALESTABLE WHERE SALESTYPE=5 AND YEAR(DELIVERYDATE)=YEAR(getdate())";
@@ -312,7 +312,7 @@ var OpeningBalanceService = /** @class */ (function () {
                     case 9:
                         rows_3 = _a.sent();
                         item.nextrec = rows_3.recordset.length > 0 ? (rows_3.recordset[0].nextrec ? rows_3.recordset[0].nextrec : 1) : 1;
-                        return [3 /*break*/, 20];
+                        return [3 /*break*/, 22];
                     case 10:
                         if (!(item.transkind == "ORDERSHIPMENT")) return [3 /*break*/, 12];
                         query_4 = "SELECT right(MAX(LTRIM(RTRIM(SALESID))),5) + 1 nextrec FROM SALESTABLE WHERE SALESTYPE=6 AND YEAR(DELIVERYDATE)=YEAR(getdate())";
@@ -320,7 +320,7 @@ var OpeningBalanceService = /** @class */ (function () {
                     case 11:
                         rows_4 = _a.sent();
                         item.nextrec = rows_4.recordset.length > 0 ? (rows_4.recordset[0].nextrec ? rows_4.recordset[0].nextrec : 1) : 1;
-                        return [3 /*break*/, 20];
+                        return [3 /*break*/, 22];
                     case 12:
                         if (!(item.transkind == "ORDERRECEIVE")) return [3 /*break*/, 14];
                         query_5 = "SELECT right(MAX(LTRIM(RTRIM(SALESID))),5) + 1 nextrec FROM SALESTABLE WHERE SALESTYPE=7 AND YEAR(DELIVERYDATE)=YEAR(getdate())";
@@ -328,7 +328,7 @@ var OpeningBalanceService = /** @class */ (function () {
                     case 13:
                         rows_5 = _a.sent();
                         item.nextrec = rows_5.recordset.length > 0 ? (rows_5.recordset[0].nextrec ? rows_5.recordset[0].nextrec : 1) : 1;
-                        return [3 /*break*/, 20];
+                        return [3 /*break*/, 22];
                     case 14:
                         if (!(item.transkind == "LEDGERJOURNAL")) return [3 /*break*/, 16];
                         query_6 = "SELECT right(MAX(LTRIM(RTRIM(JOURNALNUM))),5)+1 nextrec FROM LEDGERJOURNALTABLE WHERE YEAR(POSTEDDATETIME)=YEAR(getdate());";
@@ -336,7 +336,7 @@ var OpeningBalanceService = /** @class */ (function () {
                     case 15:
                         rows_6 = _a.sent();
                         item.nextrec = rows_6.recordset.length > 0 ? (rows_6.recordset[0].nextrec ? rows_6.recordset[0].nextrec : 1) : 1;
-                        return [3 /*break*/, 20];
+                        return [3 /*break*/, 22];
                     case 16:
                         if (!(item.transkind == "INVENTORYMOVEMENT")) return [3 /*break*/, 18];
                         query_7 = "SELECT right(MAX(LTRIM(RTRIM(SALESID))),5) + 1 as nextrec FROM SALESTABLE WHERE SALESTYPE=10 AND YEAR(DELIVERYDATE)=YEAR(getdate())";
@@ -344,7 +344,7 @@ var OpeningBalanceService = /** @class */ (function () {
                     case 17:
                         rows_7 = _a.sent();
                         item.nextrec = rows_7.recordset.length > 0 ? (rows_7.recordset[0].nextrec ? rows_7.recordset[0].nextrec : 1) : 1;
-                        return [3 /*break*/, 20];
+                        return [3 /*break*/, 22];
                     case 18:
                         if (!(item.transkind == "RETURNORDER")) return [3 /*break*/, 20];
                         query_8 = "SELECT right(MAX(LTRIM(RTRIM(SALESID))),5) + 1 as  nextrec FROM SALESTABLE WHERE SALESTYPE=4 AND YEAR(DELIVERYDATE)=YEAR(getdate())";
@@ -352,21 +352,29 @@ var OpeningBalanceService = /** @class */ (function () {
                     case 19:
                         rows_8 = _a.sent();
                         item.nextrec = rows_8.recordset.length > 0 ? (rows_8.recordset[0].nextrec ? rows_8.recordset[0].nextrec : 1) : 1;
-                        return [3 /*break*/, 20];
+                        return [3 /*break*/, 22];
                     case 20:
+                        if (!(item.transkind == "PACKINGSLIP")) return [3 /*break*/, 22];
+                        query_9 = "SELECT right(MAX(LTRIM(RTRIM(SALESID))),5) + 1 as  nextrec FROM SALESTABLE WHERE SALESTYPE=11 AND YEAR(DELIVERYDATE)=YEAR(getdate())";
+                        return [4 /*yield*/, this.pool.request().query(query_9)];
+                    case 21:
+                        rows_9 = _a.sent();
+                        item.nextrec = rows_9.recordset.length > 0 ? (rows_9.recordset[0].nextrec ? rows_9.recordset[0].nextrec : 1) : 1;
+                        return [3 /*break*/, 22];
+                    case 22:
                         _i++;
                         return [3 /*break*/, 4];
-                    case 21: return [3 /*break*/, 23];
-                    case 22: throw { status: 0, message: "SOMETHING WRONG PLEASE CONTACT IT TEAM" };
-                    case 23: return [4 /*yield*/, this.pool.close()];
-                    case 24:
+                    case 23: return [3 /*break*/, 25];
+                    case 24: throw { status: 0, message: "SOMETHING WRONG PLEASE CONTACT IT TEAM" };
+                    case 25: return [4 /*yield*/, this.pool.close()];
+                    case 26:
                         _a.sent();
                         return [2 /*return*/, { status: 1, data: result, numberSequences: numberSequences }];
-                    case 25:
+                    case 27:
                         err_3 = _a.sent();
                         Log_1.log.error(err_3);
                         throw { status: 0, message: "INVALID_CREDENTIALS" };
-                    case 26: return [2 /*return*/];
+                    case 28: return [2 /*return*/];
                 }
             });
         });

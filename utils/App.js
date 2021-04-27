@@ -251,16 +251,24 @@ var App = /** @class */ (function () {
         return otp;
     };
     App.CreateEmailAccount = function () {
-        return nodemailer_1.createTransport({
-            host: Config.mailOptions.host,
-            port: Config.mailOptions.port,
-            secure: true,
-            requireTLS: true,
-            auth: {
-                user: Config.mailOptions.user,
-                pass: Config.mailOptions.pass,
-            },
-        });
+        if (!this.transport) {
+            console.log(Config.mailOptions);
+            this.transport = nodemailer_1.createTransport({
+                host: Config.mailOptions.host,
+                port: Config.mailOptions.port,
+                secure: true,
+                service: "gmail",
+                requireTLS: false,
+                auth: {
+                    user: Config.mailOptions.user,
+                    pass: Config.mailOptions.pass,
+                },
+                tls: {
+                    rejectUnauthorized: false,
+                },
+            });
+        }
+        return this.transport;
     };
     App.ValildateUserAccess = function (data, component, access) {
         return __awaiter(this, void 0, void 0, function () {
@@ -469,6 +477,7 @@ var App = /** @class */ (function () {
     App.REMOVED_SUCCESSFULLY = "Removed Successfully.";
     App.INVALID_DATA = "Please enter valid data.";
     App.NON_ALPHA_NUMARIC = /[^\w\s]/g;
+    App.transport = null;
     App.SystemSleep = require("system-sleep");
     return App;
 }());

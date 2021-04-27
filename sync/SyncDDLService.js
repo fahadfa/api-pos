@@ -56,7 +56,7 @@ var SyncDDLService = /** @class */ (function () {
     }
     SyncDDLService.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var sync, currentTime, sql, layeredstageDb, syncResults, error_1;
+            var sync, currentTime, sql, stageDb, syncResults, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -66,9 +66,9 @@ var SyncDDLService = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 4, , 5]);
-                        layeredstageDb = SyncServiceHelper_1.SyncServiceHelper.LayeredStageDBOptions();
+                        stageDb = SyncServiceHelper_1.SyncServiceHelper.StageDBOptions();
                         sql = "select * from sync_source\n            where id='" + STORE_ID + "' \n            and (sync_ddl IS NOT NULL or is_reset = true or sync_cmd is not null)";
-                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(layeredstageDb, sql, log)];
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(stageDb, sql, log)];
                     case 2:
                         syncResults = _a.sent();
                         syncResults = syncResults.rows;
@@ -130,13 +130,12 @@ var SyncDDLService = /** @class */ (function () {
     };
     SyncDDLService.prototype.syncDDL = function (sync, currentTime) {
         return __awaiter(this, void 0, void 0, function () {
-            var e_1, _a, params, sql, layeredStageDb, stageDb, localDb, syncResults, syncResults_1, syncResults_1_1, res, err_1, syncDDLval, index, err_2, e_1_1, err_3;
+            var e_1, _a, params, sql, stageDb, localDb, syncResults, syncResults_1, syncResults_1_1, res, err_1, syncDDLval, index, err_2, e_1_1, err_3;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         params = "";
                         sql = "";
-                        layeredStageDb = SyncServiceHelper_1.SyncServiceHelper.LayeredStageDBOptions();
                         stageDb = SyncServiceHelper_1.SyncServiceHelper.StageDBOptions();
                         localDb = SyncServiceHelper_1.SyncServiceHelper.LocalDBOptions();
                         _b.label = 1;
@@ -149,7 +148,7 @@ var SyncDDLService = /** @class */ (function () {
                         if (params && params.length)
                             params = params.substring(0, params.length - 1);
                         sql = " SELECT id,summary FROM sync_ddl WHERE id IN (" + params + ")";
-                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(layeredStageDb, sql, log)];
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.ExecuteQuery(stageDb, sql, log)];
                     case 2:
                         syncResults = _b.sent();
                         syncResults = syncResults.rows;
@@ -192,7 +191,7 @@ var SyncDDLService = /** @class */ (function () {
                         else {
                             sql = "UPDATE sync_source SET  sync_ddl= '{" + syncDDLval + "}' WHERE id='" + sync.id + "'";
                         }
-                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(layeredStageDb, [sql], log)];
+                        return [4 /*yield*/, SyncServiceHelper_1.SyncServiceHelper.BatchQuery(stageDb, [sql], log)];
                     case 12:
                         _b.sent();
                         return [3 /*break*/, 15];

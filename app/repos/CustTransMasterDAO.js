@@ -90,7 +90,7 @@ var CustTransMasterDAO = /** @class */ (function () {
     };
     CustTransMasterDAO.prototype.overdueData = function (account) {
         return __awaiter(this, void 0, void 0, function () {
-            var creditLimit, custData, availableCredit, custTransOverDues, salesIds, query, overDues, usedAmount;
+            var creditLimit, custData, availableCredit, custTransOverDuesQuery, custTransOverDues, salesIds, query, overDues, usedAmount;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.db.query("select\n        c.accountnum,\n        c.creditmax as \"creditLimit\" \n        from custtable c\n        where c.accountnum in ('" + account + "')")];
@@ -104,19 +104,22 @@ var CustTransMasterDAO = /** @class */ (function () {
                         custData.creditLimit = creditLimit;
                         custData.usedCredit = custData.usedCredit ? custData.usedCredit : 0;
                         availableCredit = parseFloat(custData.creditLimit) - parseFloat(custData.usedCredit);
-                        return [4 /*yield*/, this.db.query("select \n        invoice as \"salesId\",\n        accountnum as \"accountNum\",\n        sum(amountmst) as \"invoiceAmount\",\n        sum(balance) as balance,\n        transdate as \"invoicedate\",\n        duedate as \"actualDueDate\",\n        duedate  as \"duedate\"\n      from  cust_trans ct where  transtype IN (2) and  ct.accountnum in ('" + account + "')  group by invoice, accountnum, transdate, duedate having sum(amountmst) >0;\n        ")];
+                        custTransOverDuesQuery = "select \n    invoice as \"salesId\",\n    accountnum as \"accountNum\",\n    sum(amountmst) as \"invoiceAmount\",\n    sum(balance) as balance,\n    transdate as \"invoicedate\",\n    duedate as \"actualDueDate\",\n    duedate  as \"duedate\",\n    payment\n  from  cust_trans ct where  transtype IN (2) and  ct.accountnum in ('" + account + "')  group by invoice, accountnum, transdate, duedate, payment having sum(amountmst) >0;\n    ";
+                        console.log(custTransOverDuesQuery);
+                        return [4 /*yield*/, this.db.query(custTransOverDuesQuery)];
                     case 3:
                         custTransOverDues = _a.sent();
                         salesIds = custTransOverDues.map(function (item) {
                             return item.salesId;
                         });
-                        custTransOverDues = custTransOverDues.filter(function (item) { return item.payment == 0; });
+                        custTransOverDues = custTransOverDues.filter(function (item) { return parseInt(item.payment) == 0; });
                         // console.log(salesIds, availableCredit);
                         salesIds = salesIds.length > 0 ? salesIds.map(function (d) { return "'" + d + "'"; }).join(",") : null;
-                        query = "select \n    salesid as \"salesId\",\n    accountnum as \"accountNum\",\n    invoiceamount as \"invoiceAmount\",\n    invoiceamount as balance,\n    invoicedate,\n    actualduedate as \"actualDueDate\",\n    duedate as \"duedate\"\n    from  overdue ct \n        where  \n        ct.accountnum in ('" + account + "') and  \n        payment=0 and invoiceamount > 0 \n          ";
+                        query = "select \n    salesid as \"salesId\",\n    accountnum as \"accountNum\",\n    invoiceamount as \"invoiceAmount\",\n    invoiceamount as balance,\n    invoicedate,\n    actualduedate as \"actualDueDate\",\n    duedate as \"duedate\",\n    payment\n    from  overdue ct \n        where  \n        ct.accountnum in ('" + account + "') and  \n        payment=0 and invoiceamount > 0 \n          ";
                         if (salesIds) {
                             query += "and salesid not in (" + salesIds + ")";
                         }
+                        console.log(query);
                         return [4 /*yield*/, this.db.query(query)];
                     case 4:
                         overDues = _a.sent();
