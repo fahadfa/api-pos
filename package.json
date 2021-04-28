@@ -6,11 +6,11 @@
     "start": "npm run build:live",
     "build": "tsc -p .",
     "build:live": "nodemon --watch 'src/**/*.ts' --exec ts-node src/index.ts",
-    "live": "nodemon --watch src/**/*.ts --exec ts-node src/index.ts"
+   ec ts-node src/index.ts"
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": 
   },
   "keywords": [],
   "author": "",
@@ -25,9 +25,20 @@
     "bcryptjs": "2.4.3",
     "body-parser": "1.18.3",
     "convert-excel-to-json": "1.6.1",
-    "csvjson": "5.1.0",
+    "csvjson": "5.0",
     "csvtojson": "2.0.10",
     "express": "4.16.4",
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        
     "express-fileupload": "1.1.6",
     "handlebars": "4.5.3",
     "html-pdf": "2.2.0",
@@ -36,7 +47,7 @@
     "jsreport-core": "2.4.3",
     "jsreport-html-to-xlsx": "2.4.0",
     "jsreport-xlsx": "2.1.0",
-    "mobily-sms": "1.0.0",
+    "mobily",
     "mssql": "5.1.0",
     "msnodesqlv8": "0.8.6",
     "moment": "2.24.0",
@@ -49,7 +60,7 @@
     "pg": "7.10.0",
     "pg-format": "1.0.4",
     "puppeteer": "1.15.0",
-    "qrcode": "1.4.4",
+    "qrcode": "1.4",
     "randomstring": "1.1.5",
     "swagger-jsdoc": "3.2.6",
     "swagger-ui-express": "4.0.2",
