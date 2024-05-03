@@ -3,20 +3,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Props = /** @class */ (function () {
     function Props() {
     }
-    Props.APP_NAME = "XXXX";
-    Props.SALT_KEY = "XXXX";
+    Props.APP_NAME = "app_name";
+    Props.SALT_KEY = "salt_key";
     Props.ACCESS_READ = "READ";
     Props.ACCESS_WRITE = "WRITE";
-    Props.REDEEM_CLIENT_ID = "XXXX";
-    Props.REDEEM_CLIENT_SECRET = "XXXX";
-    Props.REDEEM_URL = "XXXX";
-    Props.AXAPTA_URL = "XXXX";
-    Props.ECOMMERCE_PAYMENT_URL = "XXXX";
-    Props._URL = "XXXXX";
+    Props.REDEEM_CLIENT_ID = "client_id";
+    Props.REDEEM_CLIENT_SECRET = "client_secret";
+    Props.REDEEM_URL = "_url";
+    Props.AXAPTA_URL = "axapta_url";
+    Props.ECOMMERCE_PAYMENT_URL = "payment_url";
+    Props._URL = "_url";
     Props._TOKEN = "XXXX";
     Props.EXPIRE_TIME = "XXXX";
-    Props.SMS_USER = "XXXX";
-    Props.SMS_PASS = "XXXX";
+    Props.SMS_USER = "user";
+    Props.SMS_PASS = "pass";
     Props.DAY = "day";
     Props.WEEK = "week";
     Props.MONTH = "month";
