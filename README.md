@@ -1,2 +1,2 @@
-#api-pos
+api-pos
 For auto update
